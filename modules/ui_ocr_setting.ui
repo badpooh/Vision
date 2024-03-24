@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>935</width>
-    <height>635</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="btn_save">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>50</y>
+     <x>380</x>
+     <y>40</y>
      <width>75</width>
      <height>24</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="btn_load">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>100</y>
+     <x>380</x>
+     <y>80</y>
      <width>75</width>
      <height>24</height>
     </rect>
@@ -39,57 +39,91 @@
     <string>LOAD</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="check_box_1">
+  <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>40</y>
-     <width>100</width>
-     <height>20</height>
+     <x>10</x>
+     <y>10</y>
+     <width>341</width>
+     <height>581</height>
     </rect>
    </property>
-   <property name="text">
-    <string>VOLTAGE L-L</string>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
-  </widget>
-  <widget class="QCheckBox" name="check_box_2">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>90</y>
-     <width>100</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>VOLTAGE L-N</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="check_box_3">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>140</y>
-     <width>100</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CURRENT RMS</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="check_box_4">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>190</y>
-     <width>110</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CURRENT Fund.</string>
-   </property>
+   <widget class="QCheckBox" name="check_box_1">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>VOLTAGE L-L</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="check_box_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>100</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>VOLTAGE L-N</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="check_box_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Vol. Fund. L-L</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="check_box_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>160</y>
+      <width>110</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Vol. Fund. L-N</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>291</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>OCR TEST ITEM</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
