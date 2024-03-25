@@ -1,115 +1,73 @@
 import cv2
 import easyocr
 import numpy as np
+from itertools import chain
 
 image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\old\PyOpenCv\testImage\A2500_1.png"
 # 이미지 불러오기
 
-image = cv2.imread(image_path)  # 'image_path.jpg'를 불러올 이미지 파일 경로로 변경하세요.
-
-# 이미지의 너비와 높이 가져오기
-height, width  = image.shape[:2]
-resized_image_1 = image[int(height*0.229):height, 0:int(width*0.1875)]
-resized_image = cv2.resize(resized_image_1, None, None, 2, 2, cv2.INTER_CUBIC)
-
-resized_image_2 = image[int(height*0.26):int(height*0.354), int(width*0.2):width]
-resized_image_2_1 = cv2.resize(resized_image_2, None, None, 2, 2, cv2.INTER_CUBIC)
-
-resized_image_3 = image[int(height*0.375):height, int(width*0.212):int(width*0.437)]
-resized_image_3_1 = cv2.resize(resized_image_3, None, None, 2, 2, cv2.INTER_CUBIC)
-
-blurred = cv2.GaussianBlur(resized_image, (0, 0), 3)
-sharpened = cv2.addWeighted(resized_image, 1.5, blurred, -0.5, 0)
-
-blurred1 = cv2.GaussianBlur(resized_image_2_1, (0, 0), 3)
-sharpened1 = cv2.addWeighted(resized_image_2_1, 1.5, blurred1, -0.5, 0)
-
-blurred2 = cv2.GaussianBlur(resized_image_3_1, (0, 0), 3)
-sharpened2 = cv2.addWeighted(resized_image_3_1, 1.5, blurred2, -0.5, 0)
-
-reader = easyocr.Reader(['en'], gpu=True)
-results = reader.readtext(sharpened, detail=0)
-print(results)
-
-results1 = reader.readtext(sharpened1, detail=0)
-print(results1)
-
-results2 = reader.readtext(sharpened2, detail=0)
-print(results2)
-
-right_text = ["Line-to-Line", "Line-to-Neutral", "LL Fund.", "LN Fund.", "LL THD %", "LN THD %", "Frequency", "Residual"]
-right_text1 = ["Line-to-Line Voltage", "Min", "Max"]
-right_text2 = ["AB", "BC", "CA", "Average"]
-
-right_text_set = set(text.strip() for text in right_text)
-right_text_set1 = set(text.strip() for text in right_text1)
-right_text_set2 = set(text.strip() for text in right_text2)
-
-# OCR 결과도 집합으로 변환
-ocr_results_set = set(result.strip() for result in results)
-ocr_results_set1 = set(result.strip() for result in results1)
-ocr_results_set2 = set(result.strip() for result in results2)
-
-# OCR 결과 중에서 정답과 매칭되지 않는 단어 찾기
-not_matched_from_ocr = ocr_results_set - right_text_set
-not_matched_from_ocr1 = ocr_results_set1 - right_text_set1
-not_matched_from_ocr2 = ocr_results_set2 - right_text_set2
-
-# 정답 중에서 OCR 결과와 매칭되지 않는 단어 찾기
-not_matched_from_right_text = right_text_set - ocr_results_set
-not_matched_from_right_text1 = right_text_set1 - ocr_results_set1
-not_matched_from_right_text2 = right_text_set2 - ocr_results_set2
-
-# 매칭되지 않는 단어 프린트
-print("OCR에서 읽고 정답과 매칭되지 않는 단어들:")
-for word in not_matched_from_ocr:
-    print(word)
-
-print("정답에만 있고 OCR에서 매칭되지 않는 단어들:")
-for word in not_matched_from_right_text:
-    print(word)
-
-# 모두 매칭되는 경우 확인
-if not not_matched_from_ocr and not not_matched_from_right_text:
-    print("모든 텍스트가 정확히 매칭되었습니다.")
-else:
-    print("일부 텍스트가 매칭되지 않았습니다.")
+def cut_image(image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
+    height, width = image.shape[:2]
+    cropped_image = image[int(height*height_ratio_start):int(height*height_ratio_end),
+                          int(width*width_ratio_start):int(width*width_ratio_end)]
+    resized_image = cv2.resize(cropped_image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
     
-#####################
-print("OCR에서 읽고 정답과 매칭되지 않는 단어들:")
-for word in not_matched_from_ocr1:
-    print(word)
+    # 이미지 블러 처리 및 선명하게 만들기
+    blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
+    sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
+    return sharpened_image
 
-print("정답에만 있고 OCR에서 매칭되지 않는 단어들:")
-for word in not_matched_from_right_text1:
-    print(word)
+def voltageLL_uitest(image_path):
+    image = cv2.imread(image_path)
 
-# 모두 매칭되는 경우 확인
-if not not_matched_from_ocr1 and not not_matched_from_right_text1:
-    print("모든 텍스트가 정확히 매칭되었습니다.")
-else:
-    print("일부 텍스트가 매칭되지 않았습니다.")
+    sharpened_image_1 = cut_image(image, 0.229, 1, 0, 0.1875)
+    sharpened_image_2 = cut_image(image, 0.26, 0.354, 0.2, 1)
+    sharpened_image_3 = cut_image(image, 0.375, 1, 0.212, 0.437)
+    
+    reader = easyocr.Reader(['en'])
+    ocr_results_1 = reader.readtext(sharpened_image_1, detail=0)
+    ocr_results_2 = reader.readtext(sharpened_image_2, detail=0)
+    ocr_results_3 = reader.readtext(sharpened_image_3, detail=0)
 
-#####################
-print("OCR에서 읽고 정답과 매칭되지 않는 단어들:")
-for word in not_matched_from_ocr2:
-    print(word)
+    ocr_right_1 = ["Line-to-Line", "Line-to-Neutral", "LL Fund.", "LN Fund.", "LL THD %", "LN THD %", "Frequency", "Residual"]
+    ocr_right_2 = ["Line-to-Line Voltage", "Min", "Max"]
+    ocr_right_3 = ["AB", "BC", "CA", "Average"]
 
-print("정답에만 있고 OCR에서 매칭되지 않는 단어들:")
-for word in not_matched_from_right_text2:
-    print(word)
+    right_set_1 = set(text.strip() for text in ocr_right_1)
+    right_set_2 = set(text.strip() for text in ocr_right_2)
+    right_set_3 = set(text.strip() for text in ocr_right_3)
 
-# 모두 매칭되는 경우 확인
-if not not_matched_from_ocr1 and not not_matched_from_right_text2:
-    print("모든 텍스트가 정확히 매칭되었습니다.")
-else:
-    print("일부 텍스트가 매칭되지 않았습니다.")
+    ocr_set_1 = set(result.strip() for result in ocr_results_1)
+    ocr_set_2 = set(result.strip() for result in ocr_results_2)
+    ocr_set_3 = set(result.strip() for result in ocr_results_3)
 
 
+    leave_ocr_all = [
+    (ocr_set_1 - right_set_1),
+    (ocr_set_2 - right_set_2),
+    (ocr_set_3 - right_set_3),
+    ]
+    leave_right_all = [
+        (right_set_1 - ocr_set_1),
+        (right_set_2 - ocr_set_2),
+        (right_set_3 - ocr_set_3),
+    ]
+    
+    ocr_error = list(chain(*leave_ocr_all))
+    right_error = list(chain(*leave_right_all))
+
+    # OCR 결과와 매칭되지 않아 남은 단어
+    print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
+    print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
+
+    
+    
+    # cv2.imshow('Image with Size Info', sharpened_image_3)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+voltageLL_uitest(image_path)
 # 이미지 보여주기
-cv2.imshow('Image with Size Info', sharpened2)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
 
 
 # 색 감 비교 코드
