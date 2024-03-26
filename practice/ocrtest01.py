@@ -3,7 +3,7 @@ import easyocr
 import numpy as np
 from itertools import chain
 
-image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\old\PyOpenCv\testImage\A2500_1.png"
+image_path = r"\\10.10.10.11\pnt\nfs\A2500_20240326_165256.png"
 # 이미지 불러오기
 
 def cut_image(image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
