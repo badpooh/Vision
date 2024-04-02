@@ -27,8 +27,14 @@ class SetupTesting:
     def setup_all_test(self):
         self.address = 57101
         self.value = 1
+
+        hex_string = "A5A5"
+        self.bytes_data = bytes.fromhex(hex_string)
+
+        self.address1 = 57102
         if self.client:
             self.response = self.client.write_register(self.address, self.value)
+            self.response = self.client.write_register(self.address1, hex_string)
             print("good")
         else:
             print(self.response.isError())

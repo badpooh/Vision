@@ -36,6 +36,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_setup_test_2.clicked.connect(self.switch_to_setupTestPage)
         self.btn_connect.clicked.connect(self.setup_connect)
         self.btn_disconnect.clicked.connect(self.setup_disconnect)
+        self.btn_setup_test_start.clicked.connect(self.setup_start)
         
         self.pushButton_2.clicked.connect(self.ocr_start)
         
@@ -58,6 +59,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         
     def setup_disconnect(self):
         self.setup_test.tcp_disconnect()
+
+    def setup_start(self):
+        self.setup_test.setup_all_test()
     
     def callback_ocr_list(self, tc_box_index, checkBox_contents):
         print(f"Box {checkBox_contents} index: {tc_box_index}")
