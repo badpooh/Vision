@@ -3,8 +3,6 @@ import cv2
 import easyocr
 import numpy as np
 from itertools import chain
-import os, glob
-from datetime import datetime
 
 voltage_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_1\a7300_mea_voltage.png"
 current_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_1\a7300_mea_current.png"
