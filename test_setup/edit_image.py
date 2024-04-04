@@ -1,11 +1,15 @@
 import cv2
 import easyocr
+from roi_and_answer import RoiAnswer
 
-voltage_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\a7300_mea_voltage.png"
+voltage_image_path = r".\image_test\a7300_mea_voltage.png"
+
+roi_and_answer = RoiAnswer()
+rois = roi_and_answer.roi()
 
 class EditImage:
 
-    ## 이미지 커팅 기본 method
+    ########################## 이미지 커팅 기본 method ##########################
     def image_cut(self, image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
         height, width = image.shape[:2]
         cropped_image = image[int(height*height_ratio_start):int(height*height_ratio_end),
@@ -16,26 +20,15 @@ class EditImage:
         blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
         sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
         return sharpened_image
+    ####################################################
     
     def image_cut_custom(self, image):
         image = cv2.imread(image)
-        resized_image = cv2.resize(image, None, None, 2, 2, cv2.INTER_CUBIC)
+        resized_image = cv2.resize(image, None, None, 3, 3, cv2.INTER_CUBIC)
         blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
         sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
-        
-        rois = {
-            "1": [2*x for x in [176, 181, 298, 35]],
-            "2": [2*x for x in [176, 215, 298, 35]],
-            "3": [2*x for x in [176, 253, 298, 35]],
-            "4": [2*x for x in [176, 287, 298, 35]],
-            "5": [2*x for x in [176, 325, 298, 35]],
-            "6": [2*x for x in [176, 359, 298, 35]],
-            "7": [2*x for x in [176, 397, 298, 35]],
-            "8": [2*x for x in [176, 431, 298, 35]],
-        }
 
-        # OCR 라이브러리 초기화
-        reader = easyocr.Reader(['en'], gpu=True)
+        reader = easyocr.Reader(['en'])
 
         # 각 ROI에 대해 OCR 처리 및 결과 수집
         ocr_results = {}
