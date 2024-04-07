@@ -28,3 +28,15 @@ class RoiAnswer:
                         ]
     rois_answer_current = ["CT Primary Current [A]", "CT Secondary Current [A]", "Reference Current [A]", "Min. Measured Current [mA]",
                         "TDD Reference Selection", "TDD Nominal Current [A]"]
+    
+    
+    def color_detection_data(self):
+        
+        measurement = [5, 70, 10, 10, 47, 180, 139]
+        mea_voltage = [110, 130, 10, 10, 255, 255, 255]
+        mea_current = [110, 170, 10, 10, 255, 255, 255]
+        mea_demand = [110, 220, 10, 10, 255, 255, 255]
+        mea_power = [110, 270, 10, 10, 255, 255, 255]
+        
+        return measurement, mea_voltage, mea_current,mea_demand, mea_power
+    

@@ -4,6 +4,7 @@ import easyocr
 import numpy as np
 from itertools import chain
 
+
 voltage_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_1\a7300_mea_voltage.png"
 current_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_1\a7300_mea_current.png"
 demand_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_1\a7300_mea_demand.png"
