@@ -4,13 +4,15 @@ from pymodbus.client import ModbusTcpClient as ModbusClient
 import time
 import os, glob
 from datetime import datetime
+from pymodbus.register_write_message import WriteSingleRegisterRequest
 
 from ocrsettingtest import Ocrsetting
     
 class SetupTesting:
     
     SERVER_IP = '10.10.26.159'  # 장치 IP 주소
-    SERVER_PORT = 5100  #A7300
+    SERVER_PORT = 5100  #A7300 - 터치용
+    SERVER_PORT1 = 502  #A7300 - 설정용
 
     image_path = r"\\10.10.20.30\screenshot"
 
@@ -19,8 +21,18 @@ class SetupTesting:
     file_time_diff = {}
 
     def __init__(self):
-        self.A7300client = ModbusClient(self.SERVER_IP, port=self.SERVER_PORT)
+        self.A7300client = ModbusClient(self.SERVER_IP, port=self.SERVER_PORT1)
         self.connection = self.A7300client.connect()
+        self.A7300client.write_register(2900, 2300)
+        self.A7300client.write_register(2900, 0)
+        self.A7300client.write_register(2900, 700)
+        self.A7300client.write_register(2900, 1)
+        self.A7300client.read_holding_registers(2900, 1)
+        self.A7300client.write_register(2901, 2300)
+        self.A7300client.write_register(2901, 0)
+        self.A7300client.write_register(2901, 1600)
+        self.A7300client.write_register(2901, 1)
+        self.A7300client.read_holding_registers(2901, 1)
 
     def tcp_connect(self):
         self.A7300client = ModbusClient(self.SERVER_IP, port=self.SERVER_PORT)
@@ -80,6 +92,29 @@ class SetupTesting:
             else:
                 print(self.response3.isError())
 
+    def change_wiring(self):
+            if self.A7300client:
+                
+                # print(self.readRes)
+                # self.address1 = 2901
+                # self.value4 = 2300
+                # self.value5 = 1
+                # self.value6 = 1600
+                # self.value7 = 1
+                # self.response4 = self.A7300client.write_register(self.address1, self.value4)
+                # self.response5 = self.A7300client.write_register(self.address1, self.value5)
+                # self.response6 = self.A7300client.write_register(self.address1, self.value6)
+                # self.response7 = self.A7300client.write_register(self.address1, self.value7)
+                time.sleep(1)
+                self.response8 = self.A7300client.write_register(6001, 1)
+                time.sleep(1)
+                self.response9 = self.A7300client.write_register(6000, 1)
+                time.sleep(1)
+                self.response10 = self.A7300client.read_holding_registers(6000, 1)
+                
+            else:
+                print(self.response10.isError())
+
 
     def load_image_file(self):
         for file_path in glob.glob(self.search_pattern, recursive=True):
@@ -98,11 +133,14 @@ class SetupTesting:
 
 
 test123 = SetupTesting()
-ocr = Ocrsetting()
-test123.moving_cursor()
-time.sleep(2)
-test123.setup_all_test()
-path123 = test123.load_image_file()
-ocr.meas_vol_test(path123)
+# ocr = Ocrsetting()
+# test123.moving_cursor()
+# time.sleep(2)
+# test123.setup_all_test()
+# path123 = test123.load_image_file()
+# ocr.meas_vol_test(path123)
 
+# test123.tcp_disconnect()
+test123.change_wiring()
 test123.tcp_disconnect()
+
