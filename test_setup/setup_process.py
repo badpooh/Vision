@@ -1,15 +1,19 @@
 import cv2
 import easyocr
 import numpy as np
-from roi_and_answer import RoiAnswer
+from config_setup import ConfigSetup
 
 path123 = r".\image_test\a7300_mea_voltage.png"
 
-clr_location = RoiAnswer()
+clr_location = ConfigSetup()
 measurement, mea_voltage = clr_location.color_location()
 
 
 class SetupProcess:
+    
+    ##통신 연결
+    ##내부 터치 (Measurement 영역만 진행)
+    
     
     # 색 감 비교 코드
     def meas_vol_test(self, path123):

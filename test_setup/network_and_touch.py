@@ -1,18 +1,64 @@
 from os import error
-from urllib import response
 from pymodbus.client import ModbusTcpClient as ModbusClient
+import threading
 import time
 import os, glob
 from datetime import datetime
-from pymodbus.register_write_message import WriteSingleRegisterRequest
 
-from ocrsettingtest import Ocrsetting
+class ModbusManager:
+    
+    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
+    TOUCH_PORT = 5100  #내부터치
+    SETUP_PORT = 502  #설정
+    
+    def __init__(self):
+        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
+        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        
+    def tcp_connect(self):
+        if not self.touch_client.connect():
+            print("Failed to connect touch client")
+        if not self.setup_client.connect():
+            print("Failed to connect setup client")
+            
+    def check_connection(self):
+        while True:
+            if not self.touch_client.is_socket_open():
+                print("Touch client disconnected, reconnecting...")
+                self.touch_client.connect()
+            if not self.setup_client.is_socket_open():
+                print("Setup client disconnected, reconnecting...")
+                self.setup_client.connect()
+            time.sleep(1)
+    
+    def start_monitoring(self):
+        threading.Thread(target=self.check_connection, daemon=True).start()
+        
+class TouchManager:
+    
+    def measurement_touch(self):
+        pass
+
+    def event_touch(self):
+        pass
+
+    def network_touch(self):
+        pass
+    
+    def control_touch(self):
+        pass
+        
+    def system_touch(self):
+        pass
+    
+
+    
     
 class SetupTesting:
     
     SERVER_IP = '10.10.26.159'  # 장치 IP 주소
-    SERVER_PORT = 5100  #A7300 - 터치용
-    SERVER_PORT1 = 502  #A7300 - 설정용
+    TOUCH_PORT = 5100  #A7300 - 터치용
+    SETUP_PORT = 502  #A7300 - 설정용
 
     image_path = r"\\10.10.20.30\screenshot"
 
@@ -35,7 +81,7 @@ class SetupTesting:
         self.A7300client.read_holding_registers(2901, 1)
 
     def tcp_connect(self):
-        self.A7300client = ModbusClient(self.SERVER_IP, port=self.SERVER_PORT)
+        self.A7300client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
         connection = self.A7300client.connect()
         if connection:
             print("Success")
