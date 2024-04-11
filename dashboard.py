@@ -6,14 +6,15 @@ from resources_rc import*
 from ui_dashboard import Ui_MainWindow
 from modules.ocr_setting import OcrSetting
 from modules.ocr_process import ImgOCR
-from modules.setup_testing import SetupTesting
+from test_setup.setup_process import SetupProcess, ModbusManager
 
 
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
     
     ocr = ImgOCR()
-    setup_test = SetupTesting()
+    modbus_con = ModbusManager()
+    meter_setup_process = SetupProcess()
     
     def __init__(self):
         super().__init__()
@@ -55,13 +56,13 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(2)   
         
     def setup_connect(self):
-        self.setup_test.tcp_connect()
+        self.modbus_con.start_monitoring()
         
     def setup_disconnect(self):
-        self.setup_test.tcp_disconnect()
+        self.modbus_con.tcp_disconnect()
 
     def setup_start(self):
-        self.setup_test.setup_all_test()
+        self.meter_setup_process.measurement_test()
     
     def callback_ocr_list(self, tc_box_index, checkBox_contents):
         print(f"Box {checkBox_contents} index: {tc_box_index}")

@@ -47,7 +47,7 @@ class ConfigSetup:
     
     def touch_data(self):
         
-        mea_voltage = []
+        mea_voltage = [320, 210]
         mea_voltage_1 = []
         mea_voltage_2 = []
         mea_voltage_3 = []
