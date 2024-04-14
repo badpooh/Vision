@@ -1,28 +1,97 @@
 from os import error
 import threading
 import time
-import cv2
 import numpy as np
 import os, glob
+import cv2
+import easyocr
 from datetime import datetime
+import time
+from pymodbus.client import ModbusTcpClient as ModbusClient
+import threading
 
 from config_setup import ConfigSetup
+
+class ModbusManager:
+    
+    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
+    TOUCH_PORT = 5100  #내부터치
+    SETUP_PORT = 502  #설정
+    
+    def __init__(self):
+        self.is_connected = False 
+        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
+        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        
+    def tcp_connect(self):
+        if self.touch_client.connect() and self.setup_client.connect():
+            self.is_connected = True
+            print("is connected")
+        if not self.touch_client.connect():
+            print("Failed to connect touch client")
+        if not self.setup_client.connect():
+            print("Failed to connect setup client")
+            
+    def check_connection(self):
+        while self.is_connected:
+            if not self.touch_client.is_socket_open():
+                print("Touch client disconnected, reconnecting...")
+                if self.touch_client.connect():
+                    print("touch_client connected")
+            if not self.setup_client.is_socket_open():
+                print("Setup client disconnected, reconnecting...")
+                if self.setup_client.connect():
+                    print("setup_client connected")
+            time.sleep(1)
+    
+    def start_monitoring(self):
+        self.tcp_connect()
+        threading.Thread(target=self.check_connection, daemon=True).start()
+
+    def tcp_disconnect(self):
+        self.touch_client.close()
+        self.setup_client.close()
+        self.is_connected = False
+        print("is disconnected")
         
 class TouchManager:
-
+    
+    mobus_manager = ModbusManager()
     config_data = ConfigSetup()
     measurement = config_data.color_detection_data
-
-    def color_detection(image, x, y, w, h, R, G, B):
-            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            selected_area = image_rgb[y:y+h, x:x+w]
-            average_color = np.mean(selected_area, axis=(0, 1))
-            target_color = np.array([R, G, B])
-            color_difference = np.linalg.norm(average_color - target_color)
-            return color_difference
+    main_menu_1, side_menu_1, data_view_1 = config_data.touch_data
+    ui_test_mode, screen_capture, pos_x, pos_y, touch_mode = config_data.touch_address_data
+    hex_value = int("A5A5", 16)
     
-    def measurement_touch(self):
-        # self.color_detection(image, *self.measurement)
+    def __init__(self):
+        self.client_check = self.mobus_manager.touch_client
+        
+    def touch_write(self, address, value, delay=0.6):
+        self.client_check.write_register(address, value)
+        time.sleep(delay)
+    
+    def data_view_touch(self):
+        if self.client_check:
+            self.touch_write(self.ui_test_mode, 1)
+            for _ in range(2):
+                self.touch_write(self.pos_x, self.main_menu_1[0])
+                self.touch_write(self.pos_y, self.main_menu_1[1])
+                self.touch_write(self.touch_mode, 1)
+                self.touch_write(self.touch_mode, 0)
+            self.touch_write(self.screen_capture, self.hex_value)
+            for _ in range(2):
+                self.touch_write(self.pos_x, 400)
+                self.touch_write(self.pos_y, 160)
+                self.touch_write(self.touch_mode, 1)
+                self.touch_write(self.touch_mode, 0)
+            self.touch_write(self.pos_x, 620)
+            self.touch_write(self.pos_y, 150)
+            self.touch_write(self.touch_mode, 1)
+            self.touch_write(self.touch_mode, 0)
+            self.touch_write(self.screen_capture, self.hex_value)
+        else:
+            print("client Error")
+
 
 
 
@@ -40,6 +109,49 @@ class TouchManager:
     def system_touch(self):
         pass
     
+class EditImage:
+    
+    config_data = ConfigSetup()
+    rois = config_data.roi
+    
+    ########################## 이미지 커팅 기본 method ##########################
+    def image_cut(self, image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
+        height, width = image.shape[:2]
+        cropped_image = image[int(height*height_ratio_start):int(height*height_ratio_end),
+                            int(width*width_ratio_start):int(width*width_ratio_end)]
+        resized_image = cv2.resize(cropped_image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+        
+        # 이미지 블러 처리 및 선명하게 만들기
+        blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
+        sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
+        return sharpened_image
+    ####################################################
+    
+    def image_cut_custom(self, image):
+        image = cv2.imread(image)
+        resized_image = cv2.resize(image, None, None, 3, 3, cv2.INTER_CUBIC)
+        blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
+        sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
+
+        reader = easyocr.Reader(['en'])
+
+        # 각 ROI에 대해 OCR 처리 및 결과 수집
+        ocr_results = {}
+        for roi_key, (x, y, w, h) in self.rois.items():
+            roi_image = sharpened_image[y:y+h, x:x+w]
+            cv2.imshow('Image with Size Info', roi_image)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
+
+            # 추출된 텍스트 합치기
+            extracted_texts = ' '.join([text[1] for text in text_results])
+
+            ocr_results[roi_key] = extracted_texts
+
+        # OCR 결과 출력
+        for roi_key, text in ocr_results.items():
+            print(f'ROI {roi_key}: {text}')
 
     
     

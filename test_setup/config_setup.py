@@ -47,21 +47,32 @@ class ConfigSetup:
     
     def touch_data(self):
         
-        mea_voltage = [320, 210]
-        mea_voltage_1 = []
-        mea_voltage_2 = []
-        mea_voltage_3 = []
-        mea_voltage_4 = []
-        mea_voltage_5 = []
-        mea_voltage_6 = []
-        mea_voltage_7 = []
-        mea_current = []
-        mea_demand = []
-        mea_power = []
+        main_menu_1 = [100, 85]
+        main_menu_2 = [260, 85]
+        main_menu_3 = [390, 85]
+        main_menu_4 = [560, 85]
+        main_menu_5 = [720, 85]
+        side_menu_1 = [80, 135]
+        side_menu_2 = [80, 180]
+        side_menu_3 = [80, 225]
+        side_menu_4 = [80, 270]
+        side_menu_5 = []
+        side_menu_6 = []
+        side_menu_7 = []
+        side_menu_8 = []
+        data_view_1 = [320, 210]
+        data_view_2 = [620, 210]
+        data_view_3 = [320, 280]
+        data_view_4 = [620, 280]
+        data_view_5 = [320, 360]
+        data_view_6 = [620, 360]
+        data_view_7 = [320, 430]
+        data_view_8 = [620, 430]
         
-        return mea_voltage, mea_voltage_1, mea_voltage_2, mea_voltage_3, mea_voltage_4, mea_voltage_5, mea_voltage_6, mea_voltage_7, mea_current,mea_demand, mea_power
+        
+        return main_menu_1, main_menu_2, main_menu_3, main_menu_4, main_menu_5, side_menu_1, side_menu_2, side_menu_3, side_menu_4, side_menu_5, side_menu_6, side_menu_7, side_menu_8, data_view_1, data_view_2, data_view_3, data_view_4, data_view_5, data_view_6, data_view_7, data_view_8
     
-    def address_data(self):
+    def setup_address_data(self):
         
         #### smartsheet의 address는 1-based
         #### 아래의 address는 0-based
@@ -78,6 +89,16 @@ class ConfigSetup:
         rotating_sequence = 6040
         
         return measurement_setup_access, wiring, min_measured_secondary_voltage, vt_primary_voltage, vt_secondary_voltage, reference_voltage_mode, primary_reference_voltage, sliding_reference_voltage_setup_access, sliding_reference_voltage, rotating_sequence
+    
+    def touch_address_data(self):
+        
+        ui_test_mode = 57100
+        screen_capture = 57101
+        pos_x = 57110
+        pos_y = 57111
+        touch_mode = 57112
+        
+        return ui_test_mode, screen_capture, pos_x, pos_y, touch_mode
         
         
         

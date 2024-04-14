@@ -1,83 +1,58 @@
 import cv2
-import easyocr
 import numpy as np
-import time
-from pymodbus.client import ModbusTcpClient as ModbusClient
-import threading
+import os, glob
+from datetime import datetime
+
+from network_and_touch import TouchManager
 
 
-path123 = r".\image_test\a7300_mea_voltage.png"
-
-
-class ModbusManager:
-    
-    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
-    TOUCH_PORT = 5100  #내부터치
-    SETUP_PORT = 502  #설정
-    
-    def __init__(self):
-        self.is_connected = False 
-        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
-        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
-        
-    def tcp_connect(self):
-        if self.touch_client.connect() and self.setup_client.connect():
-            self.is_connected = True
-            print("is connected")
-        if not self.touch_client.connect():
-            print("Failed to connect touch client")
-        if not self.setup_client.connect():
-            print("Failed to connect setup client")
-            
-    def check_connection(self):
-        while self.is_connected:
-            if not self.touch_client.is_socket_open():
-                print("Touch client disconnected, reconnecting...")
-                if self.touch_client.connect():
-                    print("touch_client connected")
-            if not self.setup_client.is_socket_open():
-                print("Setup client disconnected, reconnecting...")
-                if self.setup_client.connect():
-                    print("setup_client connected")
-            time.sleep(1)
-    
-    def start_monitoring(self):
-        self.tcp_connect()
-        threading.Thread(target=self.check_connection, daemon=True).start()
-
-    def tcp_disconnect(self):
-        self.touch_client.close()
-        self.setup_client.close()
-        self.is_connected = False
-        print("is disconnected")
+image_directory = r"\\10.10.20.30\screenshot"
 
 
 class SetupProcess:
-
-    mobus_manager = ModbusManager()
-
-    def __init__(self):
-        self.client_check = self.mobus_manager.touch_client
     
-    def measurement_test(self):
-        if self.client_check:
-            self.client_check.write_register(57100, 1)
-            time.sleep(0.6)
-            for _ in range(2):
-                self.client_check.write_register(57110, 100)
-                time.sleep(0.6)
-                self.client_check.write_register(57111, 85)
-                time.sleep(0.6)
-                self.client_check.write_register(57112, 1)
-                time.sleep(0.6)
-                self.client_check.write_register(57112, 0)
-                time.sleep(0.6)
-            self.hex_value = int("A5A5", 16)
-            self.client_check.write_register(57101, self.hex_value)
+    touch_manager = TouchManager()
+    measurement, mea_voltage = touch_manager.measurement
+    search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
+    now = datetime.now()
+    file_time_diff = {}
+    
+    def load_image_file(self):
+        for file_path in glob.glob(self.search_pattern, recursive=True):
+            creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
+            time_diff = abs((self.now - creation_time).total_seconds())
+            self.file_time_diff[file_path] = time_diff
 
+        closest_file = min(self.file_time_diff, key=self.file_time_diff.get, default=None)
+        normalized_path = os.path.normpath(closest_file)
+
+        print("가장 가까운 시간에 생성된 파일:", normalized_path)
+
+        return normalized_path
+    
+    def color_detection(image, x, y, w, h, R, G, B):
+            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            selected_area = image_rgb[y:y+h, x:x+w]
+            average_color = np.mean(selected_area, axis=(0, 1))
+            target_color = np.array([R, G, B])
+            color_difference = np.linalg.norm(average_color - target_color)
+            return color_difference
+
+    def wiring_test(self):
+        self.image_path = self.load_image_file()
+        color_result = self.color_detection(self.image_path, *self.measurement)
+        color_result1 = self.color_detection(self.image_path, *self.mea_voltage)
+        
+        if color_result < 5 and color_result1 < 5:
+            cut_voltage_image = self.cut_image(self.image_path, 0.25, 1, 0.2, 1)
+            ocr_error, right_error = self.measurement_voltage_uitest(cut_voltage_image)
+            if not ocr_error and not right_error:
+                print("pass")
+            else:
+                print("Fail")
         else:
-            print("client Error")
-
+            print("fail")
+    
 
     
     
