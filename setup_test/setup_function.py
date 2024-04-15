@@ -120,9 +120,9 @@ class TouchManager:
     def system_touch(self):
         pass
     
-class EditImage:
+class OCRImageManager:
     
-    rois = config_data.roi()
+    rois = config_data.roi_params()
     
     ########################## 이미지 커팅 기본 method ##########################
     def image_cut(self, image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
@@ -163,11 +163,28 @@ class EditImage:
         for roi_key, text in ocr_results.items():
             print(f'ROI {roi_key}: {text}')
 
-        return ocr_results
+        return extracted_texts
 
-class UiTest:
+class ModbusLabels:
+    
+    mobus_manager = ModbusManager()
+    setup_client = mobus_manager.setup_client
+    addresses = config_data.setup_mapping()
+    
+    def check_voltage(self):
+        
+        if self.setup_client:
+            results = []
+            for _ in self.addresses.item():
+                results = self.setup_client.read_holding_registers(_, 1)
+            
+        else:
+            print("setup client error")
+        
 
-    answer_voltage, answer_voltage = config_data.roi_answers()
+class Evaluation:
+
+    answer_voltage, answer_current = config_data.match_labels()
 
     def measurement_voltage_uitest(self, ocr_results_1):
 

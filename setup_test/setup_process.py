@@ -4,7 +4,7 @@ import os, glob
 from datetime import datetime
 import time
 
-from setup_test.setup_function import TouchManager, ModbusManager, EditImage, UiTest
+from setup_test.setup_function import TouchManager, ModbusManager, OCRImageManager, Evaluation
 
 
 image_directory = r"\\10.10.20.30\screenshot"
@@ -14,8 +14,8 @@ class SetupProcess:
     
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
-    edit_image = EditImage()
-    image_uitest = UiTest()
+    edit_image = OCRImageManager()
+    image_uitest = Evaluation()
     measurement = touch_manager.measurement
     mea_voltage = touch_manager.mea_voltage
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')

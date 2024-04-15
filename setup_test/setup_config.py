@@ -1,9 +1,9 @@
 
 class ConfigSetup:
 
-    def roi(self):
+    def roi_params(self):
         n=3
-        rois = {
+        params = {
             "1": [n*x for x in [176, 181, 298, 35]],
             "2": [n*x for x in [477, 181, 298, 35]],
             "3": [n*x for x in [176, 215, 298, 35]],
@@ -21,18 +21,17 @@ class ConfigSetup:
             "15": [n*x for x in [176, 431, 298, 35]],
             "16": [n*x for x in [477, 431, 298, 35]],
         }
-        return rois
+        return params
     
-    def roi_answers(self):
+    def match_labels(self):
 
-        answer_voltage = ["Wiring", "Min. Measured Secondary Voltage [V]", "VT Primary L-L Voltage [V]", 
+        label_voltage = ["Wiring", "Min. Measured Secondary Voltage [V]", "VT Primary L-L Voltage [V]", 
                             "VT Secondary L-L Voltage [V]", "Primary Reference Voltage [V]", "Sliding Reference Voltage",
                             "Rotating Sequence"
                             ]
-        answer_current = ["CT Primary Current [A]", "CT Secondary Current [A]", "Reference Current [A]", "Min. Measured Current [mA]",
-                            "TDD Reference Selection", "TDD Nominal Current [A]"]
+        label_current = ["CT Primary Current [A]", "CT Secondary Current [A]", "Reference Current [A]", "Min. Measured Current [mA]", "TDD Reference Selection", "TDD Nominal Current [A]"]
         
-        return answer_voltage, answer_current
+        return label_voltage, label_current
     
     
     def color_detection_data(self):
@@ -72,23 +71,26 @@ class ConfigSetup:
         
         return main_menu_1, side_menu_1, data_view_1, # main_menu_2, main_menu_3, main_menu_4, main_menu_5,  side_menu_2, side_menu_3, side_menu_4, side_menu_5, side_menu_6, side_menu_7, side_menu_8,  data_view_2, data_view_3, data_view_4, data_view_5, data_view_6, data_view_7, data_view_8
     
-    def setup_address_data(self):
+    def setup_mapping(self):
         
         #### smartsheet의 address는 1-based
         #### 아래의 address는 0-based
-        #### 기본은 UINT16으로 UINT32만 주석처리
-        measurement_setup_access = 6000
-        wiring = 6001
-        min_measured_secondary_voltage = 6008
-        vt_primary_voltage = 6005 #32
-        vt_secondary_voltage = 6007
-        reference_voltage_mode = 6009
-        primary_reference_voltage = 6003 #32
-        sliding_reference_voltage_setup_access = 6050
-        sliding_reference_voltage = 6051
-        rotating_sequence = 6040
+        # measurement_setup_access = 6000
+        # sliding_reference_voltage_setup_access = 6050
+        mappings = {
+        6001: {"description": "Wiring", "values": {0: "3P4W", 1: "3P3W"}},
+        6003: {"description": "Reference voltage", "type": "uint32"},
+        6005: {"description": "PT Primary Voltage", "type": "uint32"},
+        6007: {"description": "PT Secondary Voltage", "type": "uint16"},
+        6008: {"description": "Minimum measured secondary voltage", "type": "uint16"},
+        6009: {"description": "Reference voltage mode", "values": {0:"Line-to-Line", 1:"Line-to-Neutral"}},
+        6040: {"description": "Rotating sequence", "values": {0:"Auto", 1:"Positive", 2:"Negative"}},
+        6051: {"description": "Wiring", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
+        }
         
-        return measurement_setup_access, wiring, min_measured_secondary_voltage, vt_primary_voltage, vt_secondary_voltage, reference_voltage_mode, primary_reference_voltage, sliding_reference_voltage_setup_access, sliding_reference_voltage, rotating_sequence
+        return mappings
+    
+
     
     def touch_address_data(self):
         
