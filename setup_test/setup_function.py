@@ -3,6 +3,7 @@ import threading
 import time
 import numpy as np
 import os, glob
+from itertools import chain
 import cv2
 import easyocr
 from datetime import datetime
@@ -10,11 +11,13 @@ import time
 from pymodbus.client import ModbusTcpClient as ModbusClient
 import threading
 
-from config_setup import ConfigSetup
+from setup_test.setup_config import ConfigSetup
+
+config_data = ConfigSetup()
 
 class ModbusManager:
     
-    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
+    SERVER_IP = '10.10.26.156'  # 장치 IP 주소
     TOUCH_PORT = 5100  #내부터치
     SETUP_PORT = 502  #설정
     
@@ -57,10 +60,9 @@ class ModbusManager:
 class TouchManager:
     
     mobus_manager = ModbusManager()
-    config_data = ConfigSetup()
-    measurement = config_data.color_detection_data
-    main_menu_1, side_menu_1, data_view_1 = config_data.touch_data
-    ui_test_mode, screen_capture, pos_x, pos_y, touch_mode = config_data.touch_address_data
+    measurement, mea_voltage = config_data.color_detection_data()
+    main_menu_1, side_menu_1, data_view_1 = config_data.touch_data()
+    ui_test_mode, screen_capture, pos_x, pos_y, touch_mode = config_data.touch_address_data()
     hex_value = int("A5A5", 16)
     
     def __init__(self):
@@ -71,6 +73,7 @@ class TouchManager:
         time.sleep(delay)
     
     def data_view_touch(self):
+        ############ Wiring에서 3P4W -> 3P3W로 변경완료 ###############
         if self.client_check:
             self.touch_write(self.ui_test_mode, 1)
             for _ in range(2):
@@ -79,16 +82,24 @@ class TouchManager:
                 self.touch_write(self.touch_mode, 1)
                 self.touch_write(self.touch_mode, 0)
             self.touch_write(self.screen_capture, self.hex_value)
-            for _ in range(2):
-                self.touch_write(self.pos_x, 400)
-                self.touch_write(self.pos_y, 160)
-                self.touch_write(self.touch_mode, 1)
-                self.touch_write(self.touch_mode, 0)
+            self.touch_write(self.pos_x, self.data_view_1[0])
+            self.touch_write(self.pos_y, self.data_view_1[1])
+            self.touch_write(self.touch_mode, 1)
+            self.touch_write(self.touch_mode, 0)
+            self.touch_write(self.pos_x, 400)
+            self.touch_write(self.pos_y, 160)
+            self.touch_write(self.touch_mode, 1)
+            self.touch_write(self.touch_mode, 0)
+            self.touch_write(self.pos_x, 340)
+            self.touch_write(self.pos_y, 430)
+            self.touch_write(self.touch_mode, 1)
+            self.touch_write(self.touch_mode, 0)
             self.touch_write(self.pos_x, 620)
             self.touch_write(self.pos_y, 150)
             self.touch_write(self.touch_mode, 1)
             self.touch_write(self.touch_mode, 0)
             self.touch_write(self.screen_capture, self.hex_value)
+            ########### 완료 후 스크린샷 까지 ###################
         else:
             print("client Error")
 
@@ -111,8 +122,7 @@ class TouchManager:
     
 class EditImage:
     
-    config_data = ConfigSetup()
-    rois = config_data.roi
+    rois = config_data.roi()
     
     ########################## 이미지 커팅 기본 method ##########################
     def image_cut(self, image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
@@ -153,7 +163,40 @@ class EditImage:
         for roi_key, text in ocr_results.items():
             print(f'ROI {roi_key}: {text}')
 
-    
+        return ocr_results
+
+class UiTest:
+
+    answer_voltage, answer_voltage = config_data.roi_answers()
+
+    def measurement_voltage_uitest(self, ocr_results_1):
+
+            ocr_right_1 = self.answer_voltage
+
+            right_set_1 = set(text.strip() for text in ocr_right_1)
+
+            ocr_set_1 = set(result.strip() for result in ocr_results_1)
+
+
+            leave_ocr_all = [
+            (ocr_set_1 - right_set_1),
+            ]
+            leave_right_all = [
+                (right_set_1 - ocr_set_1),
+            ]
+            
+            ocr_error = list(chain(*leave_ocr_all))
+            right_error = list(chain(*leave_right_all))
+
+            # OCR 결과와 매칭되지 않아 남은 단어
+            print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
+            print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
+            
+            # cv2.imshow('Image with Size Info', image)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+            
+            return ocr_error, right_error    
     
 # class SetupTesting:
     

@@ -43,7 +43,7 @@ class ConfigSetup:
         mea_demand = [110, 220, 10, 10, 255, 255, 255]
         mea_power = [110, 270, 10, 10, 255, 255, 255]
         
-        return measurement, mea_voltage, mea_current,mea_demand, mea_power
+        return measurement, mea_voltage, #mea_current,mea_demand, mea_power
     
     def touch_data(self):
         
@@ -70,7 +70,7 @@ class ConfigSetup:
         data_view_8 = [620, 430]
         
         
-        return main_menu_1, main_menu_2, main_menu_3, main_menu_4, main_menu_5, side_menu_1, side_menu_2, side_menu_3, side_menu_4, side_menu_5, side_menu_6, side_menu_7, side_menu_8, data_view_1, data_view_2, data_view_3, data_view_4, data_view_5, data_view_6, data_view_7, data_view_8
+        return main_menu_1, side_menu_1, data_view_1, # main_menu_2, main_menu_3, main_menu_4, main_menu_5,  side_menu_2, side_menu_3, side_menu_4, side_menu_5, side_menu_6, side_menu_7, side_menu_8,  data_view_2, data_view_3, data_view_4, data_view_5, data_view_6, data_view_7, data_view_8
     
     def setup_address_data(self):
         
