@@ -169,17 +169,16 @@ class ModbusLabels:
     
     mobus_manager = ModbusManager()
     setup_client = mobus_manager.setup_client
-    addresses = config_data.setup_mapping()
+    mappings_value, mappings_uint16, mappings_uint32 = config_data.setup_mapping()
     
-    def check_voltage(self):
-        
-        if self.setup_client:
-            results = []
-            for _ in self.addresses.item():
-                results = self.setup_client.read_holding_registers(_, 1)
-            
+    def read_modbus_value(self, address):
+        response = self.setup_client.read_holding_registers(address, count=1)
+        if response.isError():
+            print("Error reading Modbus address", address)
+            return None
         else:
-            print("setup client error")
+            value = response.registers[0]
+            return self.mappings_value[address]["values"].get(value, "Unknown Value")
         
 
 class Evaluation:

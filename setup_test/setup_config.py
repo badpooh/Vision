@@ -75,20 +75,24 @@ class ConfigSetup:
         
         #### smartsheet의 address는 1-based
         #### 아래의 address는 0-based
-        # measurement_setup_access = 6000
-        # sliding_reference_voltage_setup_access = 6050
-        mappings = {
+        mappings_value = {
         6001: {"description": "Wiring", "values": {0: "3P4W", 1: "3P3W"}},
-        6003: {"description": "Reference voltage", "type": "uint32"},
-        6005: {"description": "PT Primary Voltage", "type": "uint32"},
-        6007: {"description": "PT Secondary Voltage", "type": "uint16"},
-        6008: {"description": "Minimum measured secondary voltage", "type": "uint16"},
         6009: {"description": "Reference voltage mode", "values": {0:"Line-to-Line", 1:"Line-to-Neutral"}},
         6040: {"description": "Rotating sequence", "values": {0:"Auto", 1:"Positive", 2:"Negative"}},
-        6051: {"description": "Wiring", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
+        6051: {"description": "Sliding reference voltage type", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
+        }
+
+        mappings_uint16 = {
+        6007: {"description": "PT Secondary Voltage", "type": "uint16"},
+        6008: {"description": "Minimum measured secondary voltage", "type": "uint16"},
         }
         
-        return mappings
+        mappings_uint32 = {
+        6003: {"description": "Reference voltage", "type": "uint32"},
+        6005: {"description": "PT Primary Voltage", "type": "uint32"},
+        }
+        
+        return mappings_value, mappings_uint16, mappings_uint32
     
 
     
@@ -101,7 +105,3 @@ class ConfigSetup:
         touch_mode = 57112
         
         return ui_test_mode, screen_capture, pos_x, pos_y, touch_mode
-        
-        
-        
-    

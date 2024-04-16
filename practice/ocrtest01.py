@@ -2,6 +2,7 @@ import cv2
 import easyocr
 import numpy as np
 from itertools import chain
+from pymodbus.client import ModbusTcpClient as ModbusClient
 
 image_path = r"\\10.10.10.11\pnt\nfs\A2500_20240326_165256.png"
 # 이미지 불러오기
@@ -66,10 +67,6 @@ def voltageLL_uitest(image_path):
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
-voltageLL_uitest(image_path)
-# 이미지 보여주기
-
-
 # 색 감 비교 코드
 # image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 # x, y, w, h = 120, 130, 10, 10 
@@ -80,3 +77,60 @@ voltageLL_uitest(image_path)
 
 # print("Average color of selected area:", average_color)
 # print("Difference from target color:", color_difference)
+
+
+
+client = ModbusClient('10.10.26.156', port=502)
+
+modbus_mappings = {
+6001: {"description": "Wiring", "values": {0: "3P4W", 1: "3P3W"}},
+6003: {"description": "Reference voltage", "type": "uint32"},
+6005: {"description": "PT Primary Voltage", "type": "uint32"},
+6007: {"description": "PT Secondary Voltage", "type": "uint16"},
+6008: {"description": "Minimum measured secondary voltage", "type": "uint16"},
+6009: {"description": "Reference voltage mode", "values": {0:"Line-to-Line", 1:"Line-to-Neutral"}},
+6040: {"description": "Rotating sequence", "values": {0:"Auto", 1:"Positive", 2:"Negative"}},
+6051: {"description": "Sliding reference voltage type", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
+}
+
+
+def read_modbus_value(client, address):
+    """주어진 주소에서 Modbus 값을 읽고, 매핑된 문자열로 변환합니다."""
+    response = client.read_holding_registers(address, count=1)
+    if response.isError():
+        print("Error reading Modbus address", address)
+        return None
+    else:
+        value = response.registers[0]
+        return modbus_mappings[address]["values"].get(value, "Unknown Value")
+
+# Modbus 클라이언트 설정 및 데이터 읽기
+
+# client.connect()
+
+# wiring_status = read_modbus_value(client, 6001)
+# print("Wiring Configuration:", wiring_status)
+
+# client.close()
+
+
+def read_uint32(client, address):
+    """주어진 주소에서 32비트 데이터를 읽어 반환합니다."""
+    response = client.read_holding_registers(address, count=2)  # 2개 레지스터 읽기
+    if response.isError():
+        print("Error reading Modbus address", address)
+        return None
+    else:
+        # 두 레지스터 결합 (Big Endian)
+        high_register = response.registers[0]
+        low_register = response.registers[1]
+        value = (low_register << 16) + high_register  # 상위 레지스터를 왼쪽으로 16비트 시프트 후 하위 레지스터와 합산
+        return value
+
+client.connect()
+
+vt_primary_voltage = read_uint32(client, 6003)  # 32비트 값 읽기 예
+print("VT Primary Voltage:", vt_primary_voltage)
+
+client.close()
+
