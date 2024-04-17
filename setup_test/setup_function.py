@@ -171,14 +171,37 @@ class ModbusLabels:
     setup_client = mobus_manager.setup_client
     mappings_value, mappings_uint16, mappings_uint32 = config_data.setup_mapping()
     
+    def read_all_modbus_values(self, mappings):
+        results = {}
+        for address, info in mappings.items():
+            result = self.read_modbus_value(address)
+            results[info["description"]] = result
+        return results
+    
+    modbus_results = read_all_modbus_values(mappings_value)
+    for description, value in modbus_results.items():
+        print(f"{description}: {value}")
+
+
     def read_modbus_value(self, address):
         response = self.setup_client.read_holding_registers(address, count=1)
         if response.isError():
-            print("Error reading Modbus address", address)
+            print("Error reading VALUE", address)
             return None
         else:
             value = response.registers[0]
             return self.mappings_value[address]["values"].get(value, "Unknown Value")
+        
+    def read_uint32(self, address):
+        response = self.setup_client.read_holding_registers(address, count=2)
+        if response.isError():
+            print("Error reading UINT32", address)
+            return None
+        else:
+            high_register = response.registers[0]
+            low_register = response.registers[1]
+            value = (low_register << 16) + high_register 
+            return value
         
 
 class Evaluation:

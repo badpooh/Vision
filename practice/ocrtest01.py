@@ -93,6 +93,20 @@ modbus_mappings = {
 6051: {"description": "Sliding reference voltage type", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
 }
 
+mappings_value = {
+        6001: {"description": "Wiring", "values": {0: "3P4W", 1: "3P3W"}},
+        6009: {"description": "Reference voltage mode", "values": {0:"Line-to-Line", 1:"Line-to-Neutral"}},
+        6040: {"description": "Rotating sequence", "values": {0:"Auto", 1:"Positive", 2:"Negative"}},
+        6051: {"description": "Sliding reference voltage type", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
+        }
+
+def read_all_modbus_values(client, mappings):
+    results = {}
+    for address, info in mappings.items():
+        result = read_modbus_value(client, address)
+        results[info["description"]] = result
+    return results
+
 
 def read_modbus_value(client, address):
     """주어진 주소에서 Modbus 값을 읽고, 매핑된 문자열로 변환합니다."""
@@ -129,8 +143,9 @@ def read_uint32(client, address):
 
 client.connect()
 
-vt_primary_voltage = read_uint32(client, 6003)  # 32비트 값 읽기 예
-print("VT Primary Voltage:", vt_primary_voltage)
+modbus_results = read_all_modbus_values(client, mappings_value)
+for description, value in modbus_results.items():
+    print(f"{description}: {value}")
 
 client.close()
 

@@ -77,19 +77,19 @@ class ConfigSetup:
         #### 아래의 address는 0-based
         mappings_value = {
         6001: {"description": "Wiring", "values": {0: "3P4W", 1: "3P3W"}},
-        6009: {"description": "Reference voltage mode", "values": {0:"Line-to-Line", 1:"Line-to-Neutral"}},
-        6040: {"description": "Rotating sequence", "values": {0:"Auto", 1:"Positive", 2:"Negative"}},
-        6051: {"description": "Sliding reference voltage type", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
+        6009: {"description": "Reference voltage mode", "values": {0:"Line-to-Line", 1:"Line-to-Neutral"}}, #명칭 예외처리
+        6040: {"description": "Rotating Sequence", "values": {0:"Auto", 1:"Positive", 2:"Negative"}},
+        6051: {"description": "Sliding Reference Voltage", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
         }
 
         mappings_uint16 = {
-        6007: {"description": "PT Secondary Voltage", "type": "uint16"},
-        6008: {"description": "Minimum measured secondary voltage", "type": "uint16"},
+        6007: {"description": "VT Secondary L-L Voltage[V]", "type": "uint16"},
+        6008: {"description": "Min. Measured Secondary Voltage", "type": "uint16"},
         }
         
         mappings_uint32 = {
-        6003: {"description": "Reference voltage", "type": "uint32"},
-        6005: {"description": "PT Primary Voltage", "type": "uint32"},
+        6003: {"description": "Primary Reference Voltage[V]", "type": "uint32"},
+        6005: {"description": "VT Primary L-L Voltage [V]", "type": "uint32"},
         }
         
         return mappings_value, mappings_uint16, mappings_uint32
