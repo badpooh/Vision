@@ -55,8 +55,8 @@ class ConfigSetup:
         side_menu_2 = [80, 180]
         side_menu_3 = [80, 225]
         side_menu_4 = [80, 270]
-        side_menu_5 = []
-        side_menu_6 = []
+        side_menu_5 = [80, 315]
+        side_menu_6 = [80, 360]
         side_menu_7 = []
         side_menu_8 = []
         data_view_1 = [320, 210]
@@ -67,9 +67,30 @@ class ConfigSetup:
         data_view_6 = [620, 360]
         data_view_7 = [320, 430]
         data_view_8 = [620, 430]
-        
-        
-        return main_menu_1, side_menu_1, data_view_1, # main_menu_2, main_menu_3, main_menu_4, main_menu_5,  side_menu_2, side_menu_3, side_menu_4, side_menu_5, side_menu_6, side_menu_7, side_menu_8,  data_view_2, data_view_3, data_view_4, data_view_5, data_view_6, data_view_7, data_view_8
+        btn_apply = [620, 150]
+        btn_cancel = [720, 150]
+        btn_popup_1 = [400, 110]
+        btn_popup_2 = [400, 160]
+        btn_popup_3 = [400, 215]
+        btn_popup_4 = [400, 265]
+        btn_popup_5 = [400, 315]
+        btn_popup_enter = [340, 430]
+        btn_popup_cancel = [450, 430]
+        btn_number_1 = [310, 200]
+        btn_number_2 = [370, 200]
+        btn_number_3 = [430, 200]
+        btn_number_4 = [310, 255]
+        btn_number_5 = [370, 255]
+        btn_number_6 = [430, 255]
+        btn_number_7 = [310, 310]
+        btn_number_8 = [370, 310]
+        btn_number_9 = [430, 310]
+        btn_number_0 = [310, 370]
+        btn_number_dot = [370, 370]
+        btn_number_back = [490, 225]
+        btn_number_clear = [485, 340]
+
+        return main_menu_1, side_menu_1, data_view_1, btn_apply, btn_popup_2,# main_menu_2, main_menu_3, main_menu_4, main_menu_5,  side_menu_2, side_menu_3, side_menu_4, side_menu_5, side_menu_6, side_menu_7, side_menu_8,  data_view_2, data_view_3, data_view_4, data_view_5, data_view_6, data_view_7, data_view_8, 
     
     def setup_mapping(self):
         
@@ -79,7 +100,7 @@ class ConfigSetup:
         6001: {"description": "Wiring", "values": {0: "3P4W", 1: "3P3W"}},
         6009: {"description": "Reference voltage mode", "values": {0:"Line-to-Line", 1:"Line-to-Neutral"}}, #명칭 예외처리
         6040: {"description": "Rotating Sequence", "values": {0:"Auto", 1:"Positive", 2:"Negative"}},
-        6051: {"description": "Sliding Reference Voltage", "values": {0: "Reference voltage", 1: "Sliding reference voltage"}},
+        6051: {"description": "Sliding Reference Voltage", "values": {0: "Disable", 1: "Enable"}},
         }
 
         mappings_uint16 = {

@@ -562,8 +562,8 @@ QPushButton:checked{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>60</width>
-                     <height>480</height>
+                     <width>98</width>
+                     <height>28</height>
                     </rect>
                    </property>
                   </widget>
@@ -637,6 +637,19 @@ QPushButton:checked{
            </property>
            <property name="text">
             <string>Disconnect</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_setup_read">
+           <property name="geometry">
+            <rect>
+             <x>770</x>
+             <y>330</y>
+             <width>75</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>READ</string>
            </property>
           </widget>
          </widget>

@@ -37,6 +37,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_connect.clicked.connect(self.setup_connect)
         self.btn_disconnect.clicked.connect(self.setup_disconnect)
         self.btn_setup_test_start.clicked.connect(self.setup_start)
+        self.btn_setup_read.clicked.connect(self.setup_read)
         
         self.pushButton_2.clicked.connect(self.ocr_start)
         
@@ -62,6 +63,11 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def setup_start(self):
         self.meter_setup_process.setup_test001()
+
+    def setup_read(self):
+        self.meter_setup_process.read_setup_mapping()
+
+    
     
     def callback_ocr_list(self, tc_box_index, checkBox_contents):
         print(f"Box {checkBox_contents} index: {tc_box_index}")

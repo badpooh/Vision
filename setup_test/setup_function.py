@@ -61,7 +61,7 @@ class TouchManager:
     
     mobus_manager = ModbusManager()
     measurement, mea_voltage = config_data.color_detection_data()
-    main_menu_1, side_menu_1, data_view_1 = config_data.touch_data()
+    main_menu_1, side_menu_1, data_view_1, btn_apply, btn_popup_2, btn_popup_enter = config_data.touch_data()
     ui_test_mode, screen_capture, pos_x, pos_y, touch_mode = config_data.touch_address_data()
     hex_value = int("A5A5", 16)
     
@@ -73,7 +73,7 @@ class TouchManager:
         time.sleep(delay)
     
     def data_view_touch(self):
-        ############ Wiring에서 3P4W -> 3P3W로 변경완료 ###############
+        ############ Wiring에서 3P4W -> 3P3W로 변경완료 ############
         if self.client_check:
             self.touch_write(self.ui_test_mode, 1)
             for _ in range(2):
@@ -86,20 +86,20 @@ class TouchManager:
             self.touch_write(self.pos_y, self.data_view_1[1])
             self.touch_write(self.touch_mode, 1)
             self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.pos_x, 400)
-            self.touch_write(self.pos_y, 160)
+            self.touch_write(self.pos_x, self.btn_popup_2[0])
+            self.touch_write(self.pos_y, self.btn_popup_2[1])
             self.touch_write(self.touch_mode, 1)
             self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.pos_x, 340)
-            self.touch_write(self.pos_y, 430)
+            self.touch_write(self.pos_x, self.btn_popup_enter[0])
+            self.touch_write(self.pos_y, self.btn_popup_enter[1])
             self.touch_write(self.touch_mode, 1)
             self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.pos_x, 620)
-            self.touch_write(self.pos_y, 150)
+            self.touch_write(self.pos_x, self.btn_apply[0])
+            self.touch_write(self.pos_y, self.btn_apply[1])
             self.touch_write(self.touch_mode, 1)
             self.touch_write(self.touch_mode, 0)
             self.touch_write(self.screen_capture, self.hex_value)
-            ########### 완료 후 스크린샷 까지 ###################
+        ########### 완료 후 스크린샷 까지 ############
         else:
             print("client Error")
 
@@ -171,17 +171,18 @@ class ModbusLabels:
     setup_client = mobus_manager.setup_client
     mappings_value, mappings_uint16, mappings_uint32 = config_data.setup_mapping()
     
-    def read_all_modbus_values(self, mappings):
+    def read_all_modbus_values(self):
         results = {}
-        for address, info in mappings.items():
+        for address, info in self.mappings_value.items():
             result = self.read_modbus_value(address)
             results[info["description"]] = result
+        for address, info in self.mappings_uint16.items():
+            result = self.read_uint16(address)
+            results[info["description"]] = result
+        for address, info in self.mappings_uint32.items():
+            result = self.read_uint32(address)
+            results[info["description"]] = result
         return results
-    
-    modbus_results = read_all_modbus_values(mappings_value)
-    for description, value in modbus_results.items():
-        print(f"{description}: {value}")
-
 
     def read_modbus_value(self, address):
         response = self.setup_client.read_holding_registers(address, count=1)
@@ -191,6 +192,15 @@ class ModbusLabels:
         else:
             value = response.registers[0]
             return self.mappings_value[address]["values"].get(value, "Unknown Value")
+        
+    def read_uint16(self, address):
+        response = self.setup_client.read_holding_registers(address, count=1)
+        if response.isError():
+            print("Error reading UINT16", address)
+            return None
+        else:
+            value = response.registers[0]
+            return value
         
     def read_uint32(self, address):
         response = self.setup_client.read_holding_registers(address, count=2)
@@ -203,7 +213,6 @@ class ModbusLabels:
             value = (low_register << 16) + high_register 
             return value
         
-
 class Evaluation:
 
     answer_voltage, answer_current = config_data.match_labels()

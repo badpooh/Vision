@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'dashboard.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.2
+## Created by: Qt User Interface Compiler version 6.6.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QMainWindow, QPushButton, QScrollArea, QSizePolicy,
     QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
-from resources_rc import*
+from resources_rc import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -313,7 +313,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 60, 480))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 98, 28))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.gridLayout_2.addWidget(self.scrollArea, 0, 0, 1, 1)
@@ -342,6 +342,9 @@ class Ui_MainWindow(object):
         self.btn_disconnect = QPushButton(self.setup_test_page)
         self.btn_disconnect.setObjectName(u"btn_disconnect")
         self.btn_disconnect.setGeometry(QRect(880, 70, 75, 24))
+        self.btn_setup_read = QPushButton(self.setup_test_page)
+        self.btn_setup_read.setObjectName(u"btn_setup_read")
+        self.btn_setup_read.setGeometry(QRect(770, 330, 75, 24))
         self.stackedWidget.addWidget(self.setup_test_page)
         self.page_4 = QWidget()
         self.page_4.setObjectName(u"page_4")
@@ -405,5 +408,6 @@ class Ui_MainWindow(object):
         self.btn_setup_test_stop.setText(QCoreApplication.translate("MainWindow", u"STOP", None))
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
+        self.btn_setup_read.setText(QCoreApplication.translate("MainWindow", u"READ", None))
     # retranslateUi
 

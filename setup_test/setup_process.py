@@ -4,7 +4,7 @@ import os, glob
 from datetime import datetime
 import time
 
-from setup_test.setup_function import TouchManager, ModbusManager, OCRImageManager, Evaluation
+from setup_test.setup_function import TouchManager, ModbusManager, OCRImageManager, Evaluation, ModbusLabels
 
 
 image_directory = r"\\10.10.20.30\screenshot"
@@ -16,6 +16,7 @@ class SetupProcess:
     modbus_manager = ModbusManager()
     edit_image = OCRImageManager()
     image_uitest = Evaluation()
+    modbus_label = ModbusLabels()
     measurement = touch_manager.measurement
     mea_voltage = touch_manager.mea_voltage
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
@@ -71,6 +72,11 @@ class SetupProcess:
             target_color = np.array([R, G, B])
             color_difference = np.linalg.norm(average_color - target_color)
             return color_difference
+    
+    def read_setup_mapping(self):
+        modbus_results = self.modbus_label.read_all_modbus_values()
+        for description, value in modbus_results.items():
+            print(f"{description}: {value}")
 
     # def wiring_test(self):
     #     self.image_path = self.load_image_file()
