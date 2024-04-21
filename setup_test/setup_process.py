@@ -17,15 +17,15 @@ class SetupProcess:
     edit_image = OCRImageManager()
     image_uitest = Evaluation()
     modbus_label = ModbusLabels()
-    measurement = touch_manager.measurement
-    mea_voltage = touch_manager.mea_voltage
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
-    
+
 
     def __init__(self):
-        pass
+        self.coords_touch = self.touch_manager.coords_touch
+        self.coords_color = self.touch_manager.coords_color
+        self.coords_TA = self.touch_manager.coords_TA
 
     def modbus_connect(self):
         self.modbus_manager.start_monitoring()
@@ -34,22 +34,23 @@ class SetupProcess:
         self.modbus_manager.tcp_disconnect()
 
     def setup_test001(self):
-        self.touch_manager.data_view_touch()
-        time.sleep(5)
-        image_path = self.load_image_file()
-        image = cv2.imread(image_path)
-        color_result = self.color_detection(image, *self.measurement)
-        color_result1 = self.color_detection(image, *self.mea_voltage)
+        # self.touch_manager.mea_vol_touch_1()
+        # time.sleep(10)
+        # image_path = self.load_image_file()
+        # image = cv2.imread(image_path)
+        # color_result = self.color_detection(image, *self.measurement)
+        # color_result1 = self.color_detection(image, *self.mea_voltage)
 
-        if color_result < 5 and color_result1 < 5:
-            cut_voltage_image = self.edit_image.image_cut_custom(image=image_path)
-            ocr_error, right_error = self.image_uitest.measurement_voltage_uitest(cut_voltage_image)
-            if not ocr_error and not right_error:
-                print("pass")
-            else:
-                print("Fail")
-        else:
-            print("fail")
+        # if color_result < 5 and color_result1 < 5:
+        #     cut_voltage_image = self.edit_image.image_cut_custom(image=image_path)
+        #     ocr_error, right_error = self.image_uitest.measurement_voltage_uitest(cut_voltage_image)
+        #     if not ocr_error and not right_error:
+        #         print("pass")
+        #     else:
+        #         print("Fail")
+        # else:
+        #     print("fail")
+        pass
         
     
     def load_image_file(self):

@@ -60,19 +60,76 @@ class ModbusManager:
 class TouchManager:
     
     mobus_manager = ModbusManager()
-    measurement, mea_voltage = config_data.color_detection_data()
-    main_menu_1, side_menu_1, data_view_1, btn_apply, btn_popup_2, btn_popup_enter = config_data.touch_data()
-    ui_test_mode, screen_capture, pos_x, pos_y, touch_mode = config_data.touch_address_data()
     hex_value = int("A5A5", 16)
     
     def __init__(self):
         self.client_check = self.mobus_manager.touch_client
+        self.coords_touch = config_data.touch_data()
+        self.coords_color = config_data.color_detection_data()
+        self.coords_TA = config_data.touch_address_data()
         
     def touch_write(self, address, value, delay=0.6):
         self.client_check.write_register(address, value)
         time.sleep(delay)
-    
-    def data_view_touch(self):
+        
+    def uitest_mode_start(self):
+        if self.client_check:
+            self.touch_write(self.coords_TA["ui_test_mode"], 1)
+        else:
+            print("client Error")
+            
+    def screenshot(self):
+        if self.client_check:
+            self.touch_write(self.coords_TA["screen_capture"], self.hex_value)
+        else:
+            print("client Error")
+
+    def menu_touch(self, data_view_x, data_view_y):
+        if self.client_check:
+            self.touch_write(self.coords_TA["pos_x"], data_view_x)
+            self.touch_write(self.coords_TA["pos_y"], data_view_y)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+        else:
+            print("Menu Touch Error")
+            
+    def btn_popup_touch(self, btn_x, btn_y):
+        if self.client_check:
+            self.touch_write(self.coords_TA["pos_x"], btn_x)
+            self.touch_write(self.coords_TA["pos_y"], btn_y)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+        else:
+            print("Button Popup Touch Error")
+            
+    def number_touch(self, number_x, number_y):
+        if self.client_check:
+            self.touch_write(self.coords_TA["pos_x"], number_x)
+            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+        else:
+            print("Number Touch Error")
+            
+    def btn_apply_touch(self):
+        if self.client_check:
+            self.touch_write(self.coords_TA["pos_x"], self.coords_touch["btn_apply"][0])
+            self.touch_write(self.coords_TA["pos_y"], self.coords_touch["btn_apply"][1])
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+        else:
+            print("Button Apply Touch Error")
+        
+            
+    def sample_touch(self):
         ############ Wiring에서 3P4W -> 3P3W로 변경완료 ############
         if self.client_check:
             self.touch_write(self.ui_test_mode, 1)
@@ -102,23 +159,6 @@ class TouchManager:
         ########### 완료 후 스크린샷 까지 ############
         else:
             print("client Error")
-
-
-
-
-        pass
-
-    def event_touch(self):
-        pass
-
-    def network_touch(self):
-        pass
-    
-    def control_touch(self):
-        pass
-        
-    def system_touch(self):
-        pass
     
 class OCRImageManager:
     

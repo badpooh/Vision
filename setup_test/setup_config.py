@@ -1,4 +1,7 @@
 
+from types import coroutine
+
+
 class ConfigSetup:
 
     def roi_params(self):
@@ -36,61 +39,64 @@ class ConfigSetup:
     
     def color_detection_data(self):
         
-        measurement = [5, 70, 10, 10, 47, 180, 139]
-        mea_voltage = [110, 130, 10, 10, 255, 255, 255]
-        mea_current = [110, 170, 10, 10, 255, 255, 255]
-        mea_demand = [110, 220, 10, 10, 255, 255, 255]
-        mea_power = [110, 270, 10, 10, 255, 255, 255]
+        coordinates = {
+        "measurement": [5, 70, 10, 10, 47, 180, 139],
+        "mea_voltage": [110, 130, 10, 10, 255, 255, 255],
+        "mea_current": [110, 170, 10, 10, 255, 255, 255],
+        "mea_demand": [110, 220, 10, 10, 255, 255, 255],
+        "mea_power": [110, 270, 10, 10, 255, 255, 255]
+        }
         
-        return measurement, mea_voltage, #mea_current,mea_demand, mea_power
+        return coordinates
     
     def touch_data(self):
-        
-        main_menu_1 = [100, 85]
-        main_menu_2 = [260, 85]
-        main_menu_3 = [390, 85]
-        main_menu_4 = [560, 85]
-        main_menu_5 = [720, 85]
-        side_menu_1 = [80, 135]
-        side_menu_2 = [80, 180]
-        side_menu_3 = [80, 225]
-        side_menu_4 = [80, 270]
-        side_menu_5 = [80, 315]
-        side_menu_6 = [80, 360]
-        side_menu_7 = []
-        side_menu_8 = []
-        data_view_1 = [320, 210]
-        data_view_2 = [620, 210]
-        data_view_3 = [320, 280]
-        data_view_4 = [620, 280]
-        data_view_5 = [320, 360]
-        data_view_6 = [620, 360]
-        data_view_7 = [320, 430]
-        data_view_8 = [620, 430]
-        btn_apply = [620, 150]
-        btn_cancel = [720, 150]
-        btn_popup_1 = [400, 110]
-        btn_popup_2 = [400, 160]
-        btn_popup_3 = [400, 215]
-        btn_popup_4 = [400, 265]
-        btn_popup_5 = [400, 315]
-        btn_popup_enter = [340, 430]
-        btn_popup_cancel = [450, 430]
-        btn_number_1 = [310, 200]
-        btn_number_2 = [370, 200]
-        btn_number_3 = [430, 200]
-        btn_number_4 = [310, 255]
-        btn_number_5 = [370, 255]
-        btn_number_6 = [430, 255]
-        btn_number_7 = [310, 310]
-        btn_number_8 = [370, 310]
-        btn_number_9 = [430, 310]
-        btn_number_0 = [310, 370]
-        btn_number_dot = [370, 370]
-        btn_number_back = [490, 225]
-        btn_number_clear = [485, 340]
+        coordinates = {
+        "main_menu_1": [100, 85],
+        "main_menu_2": [260, 85],
+        "main_menu_3": [390, 85],
+        "main_menu_4": [560, 85],
+        "main_menu_5": [720, 85],
+        "side_menu_1": [80, 135],
+        "side_menu_2": [80, 180],
+        "side_menu_3": [80, 225],
+        "side_menu_4": [80, 270],
+        "side_menu_5": [80, 315],
+        "side_menu_6": [80, 360],
+        "side_menu_7": [],
+        "side_menu_8": [],
+        "data_view_1": [320, 210],
+        "data_view_2": [620, 210],
+        "data_view_3": [320, 280],
+        "data_view_4": [620, 280],
+        "data_view_5": [320, 360],
+        "data_view_6": [620, 360],
+        "data_view_7": [320, 430],
+        "data_view_8": [620, 430],
+        "btn_apply": [620, 150],
+        "btn_cancel": [720, 150],
+        "btn_popup_1": [400, 110],
+        "btn_popup_2": [400, 160],
+        "btn_popup_3": [400, 215],
+        "btn_popup_4": [400, 265],
+        "btn_popup_5": [400, 315],
+        "btn_popup_enter": [340, 430],
+        "btn_popup_cancel": [450, 430],
+        "btn_number_1": [310, 200],
+        "btn_number_2": [370, 200],
+        "btn_number_3": [430, 200],
+        "btn_number_4": [310, 255],
+        "btn_number_5": [370, 255],
+        "btn_number_6": [430, 255],
+        "btn_number_7": [310, 310],
+        "btn_number_8": [370, 310],
+        "btn_number_9": [430, 310],
+        "btn_number_0": [310, 370],
+        "btn_number_dot": [370, 370],
+        "btn_number_back": [490, 225],
+        "btn_number_clear": [485, 340]
+    }
+        return coordinates
 
-        return main_menu_1, side_menu_1, data_view_1, btn_apply, btn_popup_2,# main_menu_2, main_menu_3, main_menu_4, main_menu_5,  side_menu_2, side_menu_3, side_menu_4, side_menu_5, side_menu_6, side_menu_7, side_menu_8,  data_view_2, data_view_3, data_view_4, data_view_5, data_view_6, data_view_7, data_view_8, 
     
     def setup_mapping(self):
         
@@ -119,10 +125,12 @@ class ConfigSetup:
     
     def touch_address_data(self):
         
-        ui_test_mode = 57100
-        screen_capture = 57101
-        pos_x = 57110
-        pos_y = 57111
-        touch_mode = 57112
+        coordinates = {
+        "ui_test_mode": 57100,
+        "screen_capture": 57101,
+        "pos_x": 57110,
+        "pos_y": 57111,
+        "touch_mode": 57112
+        }
         
-        return ui_test_mode, screen_capture, pos_x, pos_y, touch_mode
+        return coordinates
