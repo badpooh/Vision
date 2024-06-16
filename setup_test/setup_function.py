@@ -69,8 +69,18 @@ class TouchManager:
         self.coords_TA = config_data.touch_address_data()
         
     def touch_write(self, address, value, delay=0.6):
-        self.client_check.write_register(address, value)
-        time.sleep(delay)
+        attempt = 0
+        while attempt < 2:
+            self.client_check.write_register(address, value)
+            read_value = self.client_check.read_holding_registers(address)
+            time.sleep(delay)
+            
+            if read_value == value:
+                return
+            else:
+                attempt += 1
+        print(f"Failed to write value {value} to address {address}. Read back {read_value} instead.")
+        
         
     def uitest_mode_start(self):
         if self.client_check:
@@ -84,8 +94,9 @@ class TouchManager:
         else:
             print("client Error")
 
-    def menu_touch(self, data_view_x, data_view_y):
+    def menu_touch(self, menu_key):
         if self.client_check:
+            data_view_x, data_view_y = self.coords_touch[menu_key]
             self.touch_write(self.coords_TA["pos_x"], data_view_x)
             self.touch_write(self.coords_TA["pos_y"], data_view_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
@@ -93,8 +104,9 @@ class TouchManager:
         else:
             print("Menu Touch Error")
             
-    def btn_popup_touch(self, btn_x, btn_y):
+    def btn_popup_touch(self, btn_popup_key):
         if self.client_check:
+            btn_x, btn_y = self.coords_touch[btn_popup_key]
             self.touch_write(self.coords_TA["pos_x"], btn_x)
             self.touch_write(self.coords_TA["pos_y"], btn_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
@@ -106,10 +118,54 @@ class TouchManager:
         else:
             print("Button Popup Touch Error")
             
-    def number_touch(self, number_x, number_y):
+    def number_1_touch(self, number_key):
         if self.client_check:
+            number_x, number_y = self.coords_touch[number_key]
             self.touch_write(self.coords_TA["pos_x"], number_x)
             self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+        else:
+            print("Number Touch Error")
+            
+    def number_2_touch(self, number_key1, number_key2):
+        if self.client_check:
+            number_x, number_y = self.coords_touch[number_key1]
+            self.touch_write(self.coords_TA["pos_x"], number_x)
+            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+            number_a, number_b = self.coords_touch[number_key2]
+            self.touch_write(self.coords_TA["pos_x"], number_a)
+            self.touch_write(self.coords_TA["pos_y"], number_b)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+        else:
+            print("Number Touch Error")
+            
+    def number_3_touch(self, number_key1, number_key2, number_key3):
+        if self.client_check:
+            number_x, number_y = self.coords_touch[number_key1]
+            self.touch_write(self.coords_TA["pos_x"], number_x)
+            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+            number_a, number_b = self.coords_touch[number_key2]
+            self.touch_write(self.coords_TA["pos_x"], number_a)
+            self.touch_write(self.coords_TA["pos_y"], number_b)
+            self.touch_write(self.coords_TA["touch_mode"], 1)
+            self.touch_write(self.coords_TA["touch_mode"], 0)
+            number_c, number_d = self.coords_touch[number_key3]
+            self.touch_write(self.coords_TA["pos_x"], number_c)
+            self.touch_write(self.coords_TA["pos_y"], number_d)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             self.touch_write(self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
@@ -128,37 +184,6 @@ class TouchManager:
         else:
             print("Button Apply Touch Error")
         
-            
-    def sample_touch(self):
-        ############ Wiring에서 3P4W -> 3P3W로 변경완료 ############
-        if self.client_check:
-            self.touch_write(self.ui_test_mode, 1)
-            for _ in range(2):
-                self.touch_write(self.pos_x, self.main_menu_1[0])
-                self.touch_write(self.pos_y, self.main_menu_1[1])
-                self.touch_write(self.touch_mode, 1)
-                self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.screen_capture, self.hex_value)
-            self.touch_write(self.pos_x, self.data_view_1[0])
-            self.touch_write(self.pos_y, self.data_view_1[1])
-            self.touch_write(self.touch_mode, 1)
-            self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.pos_x, self.btn_popup_2[0])
-            self.touch_write(self.pos_y, self.btn_popup_2[1])
-            self.touch_write(self.touch_mode, 1)
-            self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.pos_x, self.btn_popup_enter[0])
-            self.touch_write(self.pos_y, self.btn_popup_enter[1])
-            self.touch_write(self.touch_mode, 1)
-            self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.pos_x, self.btn_apply[0])
-            self.touch_write(self.pos_y, self.btn_apply[1])
-            self.touch_write(self.touch_mode, 1)
-            self.touch_write(self.touch_mode, 0)
-            self.touch_write(self.screen_capture, self.hex_value)
-        ########### 완료 후 스크린샷 까지 ############
-        else:
-            print("client Error")
     
 class OCRImageManager:
     
@@ -176,6 +201,14 @@ class OCRImageManager:
         sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
         return sharpened_image
     ####################################################
+    
+    def color_detection(self, image, x, y, w, h, R, G, B):
+            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            selected_area = image_rgb[y:y+h, x:x+w]
+            average_color = np.mean(selected_area, axis=(0, 1))
+            target_color = np.array([R, G, B])
+            color_difference = np.linalg.norm(average_color - target_color)
+            return color_difference
     
     def image_cut_custom(self, image):
         image = cv2.imread(image)
@@ -195,7 +228,10 @@ class OCRImageManager:
             text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
 
             # 추출된 텍스트 합치기
-            extracted_texts = ' '.join([text[1] for text in text_results])
+            # extracted_texts = ' '.join([text[1] for text in text_results])
+            
+            # 추출된 텍스트 합치기 and 대체
+            extracted_texts = ' '.join([text[1].replace(':', '.') for text in text_results])
 
             ocr_results[roi_key] = extracted_texts
 
@@ -209,20 +245,31 @@ class ModbusLabels:
     
     mobus_manager = ModbusManager()
     setup_client = mobus_manager.setup_client
-    mappings_value, mappings_uint16, mappings_uint32 = config_data.setup_mapping()
+    meter_m_vol_mappings_value, meter_m_vol_mappings_uint16, meter_m_vol_mappings_uint32 = config_data.meter_m_vol_mapping()
+    meter_m_cur_mappings_value, meter_m_cur_mappings_uint16, meter_m_cur_mappings_uint32 = config_data.meter_m_cur_mapping()
     
     def read_all_modbus_values(self):
-        results = {}
-        for address, info in self.mappings_value.items():
+        self.read_results = {}
+        for address, info in self.meter_m_vol_mappings_value.items():
             result = self.read_modbus_value(address)
-            results[info["description"]] = result
-        for address, info in self.mappings_uint16.items():
+            ### self.results를 self.read_results로 바꿀껀데 검증 필요함
+            self.read_results[info["description"]] = result
+        for address, info in self.meter_m_vol_mappings_uint16.items():
             result = self.read_uint16(address)
-            results[info["description"]] = result
-        for address, info in self.mappings_uint32.items():
+            self.read_results[info["description"]] = result
+        for address, info in self.meter_m_vol_mappings_uint32.items():
             result = self.read_uint32(address)
-            results[info["description"]] = result
-        return results
+            self.read_results[info["description"]] = result
+        for address, info in self.meter_m_cur_mappings_value.items():
+            result = self.read_modbus_value(address)
+            self.read_results[info["description"]] = result
+        for address, info in self.meter_m_cur_mappings_uint16.items():
+            result = self.read_uint16(address)
+            self.read_results[info["description"]] = result
+        for address, info in self.meter_m_cur_mappings_uint32.items():
+            result = self.read_uint32(address)
+            self.read_results[info["description"]] = result
+        return self.read_results
 
     def read_modbus_value(self, address):
         response = self.setup_client.read_holding_registers(address, count=1)
@@ -231,7 +278,7 @@ class ModbusLabels:
             return None
         else:
             value = response.registers[0]
-            return self.mappings_value[address]["values"].get(value, "Unknown Value")
+            return self.meter_m_vol_mappings_value[address]["values"].get(value, "Unknown Value")
         
     def read_uint16(self, address):
         response = self.setup_client.read_holding_registers(address, count=1)
@@ -252,6 +299,29 @@ class ModbusLabels:
             low_register = response.registers[1]
             value = (low_register << 16) + high_register 
             return value
+        
+    def check_for_changes(self, initial_values):
+        if self.read_results:
+            current_values = self.read_results
+            changes = {}
+            for description, current_value in current_values.items():
+                initial_value = initial_values.get(description)
+                if initial_value != current_value:
+                    changes[description] = (initial_value, current_value)
+            return changes
+        else:
+            print("read_results is empty")
+
+    def display_changes(self, initial_values):
+        changes = self.check_for_changes(initial_values)
+        change_count = len(changes)
+        if changes:
+            print("Changes detected:")
+            for description, (initial, current) in changes.items():
+                print(f"Address {description}: Initial Value = {initial}, Current Value = {current}")
+        else:
+            print("No changes detected.")
+        return change_count
         
 class Evaluation:
 

@@ -33,24 +33,40 @@ class SetupProcess:
     def modbus_discon(self):
         self.modbus_manager.tcp_disconnect()
 
-    def setup_test001(self):
-        # self.touch_manager.mea_vol_touch_1()
-        # time.sleep(10)
-        # image_path = self.load_image_file()
-        # image = cv2.imread(image_path)
-        # color_result = self.color_detection(image, *self.measurement)
-        # color_result1 = self.color_detection(image, *self.mea_voltage)
+        #### 3P4W일때 Wiring 제외하고 모든 설정 ####
+    def test_m_m_v(self):
+        initial_values = self.modbus_label.read_all_modbus_values()
+        time.sleep(1)
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("data_view_2")
+        time.sleep(0.6)
+        #### 최소치 1 ####
+        self.touch_manager.number_1_touch("btn_number_1")
+        time.sleep(0.6)
+        change_count = self.modbus_label.display_changes(initial_values)
+        if change_count >= 2:
+            print("check other address value")
+        else:
+            self.touch_manager.screenshot()
+            time.sleep(0.6)
+            image_path = self.load_image_file()
+            image = cv2.imread(image_path)
+            color_result = self.edit_image.color_detection(image, *self.coords_color["measurement"])
+            color_result1 = self.edit_image.color_detection(image, *self.coords_color["mea_voltage"])
 
-        # if color_result < 5 and color_result1 < 5:
-        #     cut_voltage_image = self.edit_image.image_cut_custom(image=image_path)
-        #     ocr_error, right_error = self.image_uitest.measurement_voltage_uitest(cut_voltage_image)
-        #     if not ocr_error and not right_error:
-        #         print("pass")
-        #     else:
-        #         print("Fail")
-        # else:
-        #     print("fail")
-        pass
+            if color_result < 5 and color_result1 < 5:
+                cut_voltage_image = self.edit_image.image_cut_custom(image=image_path)
+                ocr_error, right_error = self.image_uitest.measurement_voltage_uitest(cut_voltage_image)
+                if not ocr_error and not right_error:
+                    print("pass")
+                else:
+                    print("Fail")
+            else:
+                print("fail")
+            pass
         
     
     def load_image_file(self):
@@ -65,14 +81,7 @@ class SetupProcess:
         print("가장 가까운 시간에 생성된 파일:", normalized_path)
 
         return normalized_path
-    
-    def color_detection(self, image, x, y, w, h, R, G, B):
-            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            selected_area = image_rgb[y:y+h, x:x+w]
-            average_color = np.mean(selected_area, axis=(0, 1))
-            target_color = np.array([R, G, B])
-            color_difference = np.linalg.norm(average_color - target_color)
-            return color_difference
+
     
     def read_setup_mapping(self):
         modbus_results = self.modbus_label.read_all_modbus_values()
