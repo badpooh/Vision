@@ -1,5 +1,6 @@
 <RCC>
   <qresource>
+    <file>images/videocam.png</file>
     <file>images/rule_settings.png</file>
     <file>images/close.png</file>
     <file>images/logout.png</file>

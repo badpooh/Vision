@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'dashboard.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,15 +16,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
-    QMainWindow, QPushButton, QScrollArea, QSizePolicy,
-    QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
-from resources_rc import *
+    QLineEdit, QMainWindow, QPushButton, QScrollArea,
+    QSizePolicy, QSpacerItem, QStackedWidget, QVBoxLayout,
+    QWidget)
+import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(1414, 731)
         MainWindow.setMinimumSize(QSize(1280, 720))
         MainWindow.setStyleSheet(u"background-color: rgb(245, 250, 254);")
         self.centralwidget = QWidget(MainWindow)
@@ -123,15 +124,15 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.btn_setup_test_1)
 
-        self.pushButton_5 = QPushButton(self.icon_only_widget)
-        self.pushButton_5.setObjectName(u"pushButton_5")
+        self.btn_frame_test_1 = QPushButton(self.icon_only_widget)
+        self.btn_frame_test_1.setObjectName(u"btn_frame_test_1")
         icon4 = QIcon()
-        icon4.addFile(u":/images/close.png", QSize(), QIcon.Normal, QIcon.Off)
-        self.pushButton_5.setIcon(icon4)
-        self.pushButton_5.setCheckable(True)
-        self.pushButton_5.setAutoExclusive(True)
+        icon4.addFile(u":/images/videocam.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_frame_test_1.setIcon(icon4)
+        self.btn_frame_test_1.setCheckable(True)
+        self.btn_frame_test_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.pushButton_5)
+        self.verticalLayout.addWidget(self.btn_frame_test_1)
 
 
         self.verticalLayout_3.addLayout(self.verticalLayout)
@@ -239,12 +240,13 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.btn_setup_test_2)
 
-        self.pushButton_9 = QPushButton(self.icon_name_widget)
-        self.pushButton_9.setObjectName(u"pushButton_9")
-        self.pushButton_9.setCheckable(True)
-        self.pushButton_9.setAutoExclusive(True)
+        self.btn_frame_test_2 = QPushButton(self.icon_name_widget)
+        self.btn_frame_test_2.setObjectName(u"btn_frame_test_2")
+        self.btn_frame_test_2.setIcon(icon4)
+        self.btn_frame_test_2.setCheckable(True)
+        self.btn_frame_test_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.pushButton_9)
+        self.verticalLayout_2.addWidget(self.btn_frame_test_2)
 
 
         self.verticalLayout_4.addLayout(self.verticalLayout_2)
@@ -313,7 +315,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 98, 28))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 60, 480))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.gridLayout_2.addWidget(self.scrollArea, 0, 0, 1, 1)
@@ -346,9 +348,34 @@ class Ui_MainWindow(object):
         self.btn_setup_read.setObjectName(u"btn_setup_read")
         self.btn_setup_read.setGeometry(QRect(770, 330, 75, 24))
         self.stackedWidget.addWidget(self.setup_test_page)
-        self.page_4 = QWidget()
-        self.page_4.setObjectName(u"page_4")
-        self.stackedWidget.addWidget(self.page_4)
+        self.frame_test_page = QWidget()
+        self.frame_test_page.setObjectName(u"frame_test_page")
+        self.btn_select_webcam = QPushButton(self.frame_test_page)
+        self.btn_select_webcam.setObjectName(u"btn_select_webcam")
+        self.btn_select_webcam.setGeometry(QRect(20, 30, 101, 31))
+        self.btn_select_webcam.setStyleSheet(u"QPushButton {\n"
+"    background-color: white;\n"
+"    color: black;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: black;\n"
+"    color: white;\n"
+"    border: 1px solid black;\n"
+"}")
+        self.btn_select_webcam.setCheckable(True)
+        self.btn_start_webcam = QPushButton(self.frame_test_page)
+        self.btn_start_webcam.setObjectName(u"btn_start_webcam")
+        self.btn_start_webcam.setGeometry(QRect(30, 90, 75, 24))
+        self.btn_stop_webcam = QPushButton(self.frame_test_page)
+        self.btn_stop_webcam.setObjectName(u"btn_stop_webcam")
+        self.btn_stop_webcam.setGeometry(QRect(120, 90, 75, 24))
+        self.label_5 = QLabel(self.frame_test_page)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setGeometry(QRect(40, 140, 71, 16))
+        self.lineEdit = QLineEdit(self.frame_test_page)
+        self.lineEdit.setObjectName(u"lineEdit")
+        self.lineEdit.setGeometry(QRect(40, 170, 113, 31))
+        self.stackedWidget.addWidget(self.frame_test_page)
         self.page_5 = QWidget()
         self.page_5.setObjectName(u"page_5")
         self.stackedWidget.addWidget(self.page_5)
@@ -361,14 +388,14 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.pushButton_5.toggled.connect(self.pushButton_9.setChecked)
+        self.btn_frame_test_1.toggled.connect(self.btn_frame_test_2.setChecked)
         self.btn_setup_test_1.toggled.connect(self.btn_setup_test_2.setChecked)
         self.btn_ui_test_1.toggled.connect(self.btn_ui_test_2.setChecked)
         self.btn_home_1.toggled.connect(self.btn_home_2.setChecked)
         self.btn_home_2.toggled.connect(self.btn_home_1.setChecked)
         self.btn_ui_test_2.toggled.connect(self.btn_ui_test_1.setChecked)
         self.btn_setup_test_2.toggled.connect(self.btn_setup_test_1.setChecked)
-        self.pushButton_9.toggled.connect(self.pushButton_5.setChecked)
+        self.btn_frame_test_2.toggled.connect(self.btn_frame_test_1.setChecked)
         self.pushButton_6.toggled.connect(MainWindow.close)
         self.pushButton_7.toggled.connect(MainWindow.close)
         self.pushButton_12.toggled.connect(self.pushButton_3.setChecked)
@@ -378,7 +405,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked["bool"].connect(self.icon_only_widget.setHidden)
         self.pushButton_3.clicked["bool"].connect(self.icon_name_widget.setVisible)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -391,7 +418,7 @@ class Ui_MainWindow(object):
         self.btn_home_1.setText("")
         self.btn_ui_test_1.setText("")
         self.btn_setup_test_1.setText("")
-        self.pushButton_5.setText("")
+        self.btn_frame_test_1.setText("")
         self.pushButton_6.setText("")
         self.label_2.setText("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"ROOTECH", None))
@@ -399,7 +426,7 @@ class Ui_MainWindow(object):
         self.btn_home_2.setText(QCoreApplication.translate("MainWindow", u"HOME", None))
         self.btn_ui_test_2.setText(QCoreApplication.translate("MainWindow", u"UI TEST", None))
         self.btn_setup_test_2.setText(QCoreApplication.translate("MainWindow", u"SETUP TEST", None))
-        self.pushButton_9.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.btn_frame_test_2.setText(QCoreApplication.translate("MainWindow", u"FRAME TEST", None))
         self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"Sign Out", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"home", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
@@ -409,5 +436,9 @@ class Ui_MainWindow(object):
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.btn_setup_read.setText(QCoreApplication.translate("MainWindow", u"READ", None))
+        self.btn_select_webcam.setText(QCoreApplication.translate("MainWindow", u"Select WebCam", None))
+        self.btn_start_webcam.setText(QCoreApplication.translate("MainWindow", u"Start", None))
+        self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"focus_value", None))
     # retranslateUi
 

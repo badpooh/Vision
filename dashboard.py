@@ -7,6 +7,7 @@ from ui_dashboard import Ui_MainWindow
 from modules.ocr_setting import OcrSetting
 from modules.ocr_process import ImgOCR
 from setup_test.setup_process import SetupProcess
+from frame_test.webcam_function import WebCam
 
 
 
@@ -34,10 +35,16 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_ui_test_2.clicked.connect(self.switch_to_uiTestPage)
         self.btn_setup_test_1.clicked.connect(self.switch_to_setupTestPage)
         self.btn_setup_test_2.clicked.connect(self.switch_to_setupTestPage)
+        self.btn_frame_test_1.clicked.connect(self.switch_to_frameTestPage)
+        self.btn_frame_test_2.clicked.connect(self.switch_to_frameTestPage)
         self.btn_connect.clicked.connect(self.setup_connect)
         self.btn_disconnect.clicked.connect(self.setup_disconnect)
         self.btn_setup_test_start.clicked.connect(self.setup_start)
         self.btn_setup_read.clicked.connect(self.setup_read)
+        self.btn_select_webcam.clicked.connect(self.select_webcam)
+        self.btn_start_webcam.clicked.connect(self.start_webcam)
+        self.btn_stop_webcam.clicked.connect(self.stop_webcam)
+        self.lineEdit.returnPressed.connect(self.set_focus)
         
         self.pushButton_2.clicked.connect(self.ocr_start)
         
@@ -53,7 +60,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(1)
         
     def switch_to_setupTestPage(self):
-        self.stackedWidget.setCurrentIndex(2)   
+        self.stackedWidget.setCurrentIndex(2)
+    
+    def switch_to_frameTestPage(self):
+        self.stackedWidget.setCurrentIndex(3)
         
     def setup_connect(self):
         self.meter_setup_process.modbus_connect()
@@ -66,8 +76,26 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def setup_read(self):
         self.meter_setup_process.read_setup_mapping()
+        
+    def select_webcam(self):
+        self.webcam = WebCam()
+        
+    def start_webcam(self):
+        self.webcam.start_streaming()
+        
+    def stop_webcam(self):
+        self.webcam.stop_streaming()
 
-    
+    def set_focus(self):
+        try:
+            focus_value = int(self.lineEdit.text())
+            self.webcam.focus_value = focus_value
+            self.webcam.adjust_focus()
+        except ValueError:
+            print("유효한 숫자를 입력하세요.")
+        self.lineEdit.clear()
+        self.webcam.adjust_focus()
+        self.lineEdit.clear()
     
     def callback_ocr_list(self, tc_box_index, checkBox_contents):
         print(f"Box {checkBox_contents} index: {tc_box_index}")
