@@ -45,6 +45,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_start_webcam.clicked.connect(self.start_webcam)
         self.btn_stop_webcam.clicked.connect(self.stop_webcam)
         self.lineEdit.returnPressed.connect(self.set_focus)
+        self.btn_FT_measurement.clicked.connect(self.fixed_text_measurement)
         
         self.pushButton_2.clicked.connect(self.ocr_start)
         
@@ -85,6 +86,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         
     def stop_webcam(self):
         self.webcam.stop_streaming()
+        
+    def fixed_text_measurement(self):
+        self.meter_setup_process.fixed_text_measurement()
 
     def set_focus(self):
         try:

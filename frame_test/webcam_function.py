@@ -179,8 +179,24 @@ class WebCam:
         mask = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
         _, mask = cv2.threshold(mask, threshold, 255, cv2.THRESH_BINARY_INV)
         return mask
-
     
+    def find_highest_color_ratio_area(self, image, color=(47, 180, 139), grid_size=(50, 50)):
+        height, width, _ = image.shape
+        max_ratio = 0
+        best_rect = None
+
+        for y in range(0, height - grid_size[1], grid_size[1]):
+            for x in range(0, width - grid_size[0], grid_size[0]):
+                grid = image[y:y + grid_size[1], x:x + grid_size[0]]
+                mask = cv2.inRange(grid, color, color)
+                ratio = cv2.countNonZero(mask) / (grid_size[0] * grid_size[1])
+
+                if ratio > max_ratio:
+                    max_ratio = ratio
+                    best_rect = (x, y, grid_size[0], grid_size[1])
+
+        return best_rect, max_ratio
+
     def stream_video(self):
         last_ocr_update = time.time()
         last_focus_time = time.time()
@@ -193,14 +209,13 @@ class WebCam:
             self.display_frame = frame
             current_time = time.time()
             
-            # self.display_frame = self.preprocess_image(self.display_frame)
-            
-            #템플릿 매칭을 통한 팝업 감지
+            # 템플릿 매칭을 통한 팝업 감지
             res = cv2.matchTemplate(frame, self.template, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
             threshold = 0.6  # 매칭 임계값 설정
             template_matched = False
-            
+            highest_color_ratio_rect = None
+
             if max_val >= threshold:
                 top_left = max_loc
                 h, w = self.template.shape[:2]
@@ -208,14 +223,22 @@ class WebCam:
                 cv2.rectangle(self.display_frame, top_left, bottom_right, (0, 255, 0), 2)
                 self.middle_box_detected = True
                 template_matched = True
+
+                # 템플릿 매칭된 영역 내에서 가장 높은 색 비율 영역 찾기
+                template_area = frame[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+                highest_color_ratio_rect, _ = self.find_highest_color_ratio_area(template_area, color=(47, 180, 139))
+                
+                if highest_color_ratio_rect:
+                    x, y, w, h = highest_color_ratio_rect
+                    x1, y1 = top_left[0] + x, top_left[1] + y
+                    x2, y2 = x1 + w, y1 + h
+                    cv2.rectangle(self.display_frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
             else:
                 self.middle_box_detected = False
             
             if current_time - last_ocr_update >= 1:
-                if template_matched:
-                    # 템플릿 매칭된 부분 OCR 수행
-                    x1, y1 = top_left
-                    x2, y2 = bottom_right
+                if template_matched and highest_color_ratio_rect:
+                    # 템플릿 매칭된 부분 내에서 가장 높은 색 비율 영역 OCR 수행
                     cropped_image = frame[y1:y2, x1:x2]
                     self.ocr_results = self.reader.readtext(cropped_image)
                 elif self.selected_area is not None:
@@ -225,10 +248,10 @@ class WebCam:
                         cropped_image = frame[y1:y2, x1:x2]
                         if cropped_image.size != 0:  # cropped_image가 비어있지 않은지 확인
                             self.ocr_results = self.reader.readtext(cropped_image)
-            
+                
                 last_ocr_update = current_time
-            self.display_frame = self.draw_ocr_results(self.display_frame)
             
+            self.display_frame = self.draw_ocr_results(self.display_frame)
 
             if current_time - last_focus_time >= 3:
                 self.adjust_focus()

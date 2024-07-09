@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
-    QLineEdit, QMainWindow, QPushButton, QScrollArea,
-    QSizePolicy, QSpacerItem, QStackedWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+    QLabel, QLineEdit, QMainWindow, QPushButton,
+    QScrollArea, QSizePolicy, QSpacerItem, QStackedWidget,
+    QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
@@ -334,19 +334,36 @@ class Ui_MainWindow(object):
         self.widget.setGeometry(QRect(20, 20, 671, 661))
         self.btn_setup_test_start = QPushButton(self.setup_test_page)
         self.btn_setup_test_start.setObjectName(u"btn_setup_test_start")
-        self.btn_setup_test_start.setGeometry(QRect(770, 230, 75, 24))
+        self.btn_setup_test_start.setGeometry(QRect(710, 70, 75, 24))
         self.btn_setup_test_stop = QPushButton(self.setup_test_page)
         self.btn_setup_test_stop.setObjectName(u"btn_setup_test_stop")
-        self.btn_setup_test_stop.setGeometry(QRect(880, 230, 75, 24))
+        self.btn_setup_test_stop.setGeometry(QRect(800, 70, 75, 24))
         self.btn_connect = QPushButton(self.setup_test_page)
         self.btn_connect.setObjectName(u"btn_connect")
-        self.btn_connect.setGeometry(QRect(770, 70, 75, 24))
+        self.btn_connect.setGeometry(QRect(710, 20, 75, 24))
         self.btn_disconnect = QPushButton(self.setup_test_page)
         self.btn_disconnect.setObjectName(u"btn_disconnect")
-        self.btn_disconnect.setGeometry(QRect(880, 70, 75, 24))
+        self.btn_disconnect.setGeometry(QRect(800, 20, 75, 24))
         self.btn_setup_read = QPushButton(self.setup_test_page)
         self.btn_setup_read.setObjectName(u"btn_setup_read")
-        self.btn_setup_read.setGeometry(QRect(770, 330, 75, 24))
+        self.btn_setup_read.setGeometry(QRect(710, 110, 75, 24))
+        self.btn_FT_measurement = QPushButton(self.setup_test_page)
+        self.btn_FT_measurement.setObjectName(u"btn_FT_measurement")
+        self.btn_FT_measurement.setGeometry(QRect(720, 310, 121, 24))
+        self.btn_FT_event = QPushButton(self.setup_test_page)
+        self.btn_FT_event.setObjectName(u"btn_FT_event")
+        self.btn_FT_event.setGeometry(QRect(720, 350, 121, 24))
+        self.line = QFrame(self.setup_test_page)
+        self.line.setObjectName(u"line")
+        self.line.setGeometry(QRect(710, 280, 441, 16))
+        font1 = QFont()
+        font1.setBold(False)
+        self.line.setFont(font1)
+        self.line.setFrameShape(QFrame.HLine)
+        self.line.setFrameShadow(QFrame.Sunken)
+        self.btn_FT_network = QPushButton(self.setup_test_page)
+        self.btn_FT_network.setObjectName(u"btn_FT_network")
+        self.btn_FT_network.setGeometry(QRect(720, 390, 121, 24))
         self.stackedWidget.addWidget(self.setup_test_page)
         self.frame_test_page = QWidget()
         self.frame_test_page.setObjectName(u"frame_test_page")
@@ -405,7 +422,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked["bool"].connect(self.icon_only_widget.setHidden)
         self.pushButton_3.clicked["bool"].connect(self.icon_name_widget.setVisible)
 
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -436,6 +453,9 @@ class Ui_MainWindow(object):
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.btn_setup_read.setText(QCoreApplication.translate("MainWindow", u"READ", None))
+        self.btn_FT_measurement.setText(QCoreApplication.translate("MainWindow", u"F.T Measurement", None))
+        self.btn_FT_event.setText(QCoreApplication.translate("MainWindow", u"F.T Event", None))
+        self.btn_FT_network.setText(QCoreApplication.translate("MainWindow", u"F.T Network", None))
         self.btn_select_webcam.setText(QCoreApplication.translate("MainWindow", u"Select WebCam", None))
         self.btn_start_webcam.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))

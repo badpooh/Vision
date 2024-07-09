@@ -466,7 +466,7 @@ QPushButton:checked{
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="home_page">
           <widget class="QLabel" name="label_4">
@@ -594,8 +594,8 @@ QPushButton:checked{
           <widget class="QPushButton" name="btn_setup_test_start">
            <property name="geometry">
             <rect>
-             <x>770</x>
-             <y>230</y>
+             <x>710</x>
+             <y>70</y>
              <width>75</width>
              <height>24</height>
             </rect>
@@ -607,8 +607,8 @@ QPushButton:checked{
           <widget class="QPushButton" name="btn_setup_test_stop">
            <property name="geometry">
             <rect>
-             <x>880</x>
-             <y>230</y>
+             <x>800</x>
+             <y>70</y>
              <width>75</width>
              <height>24</height>
             </rect>
@@ -620,8 +620,8 @@ QPushButton:checked{
           <widget class="QPushButton" name="btn_connect">
            <property name="geometry">
             <rect>
-             <x>770</x>
-             <y>70</y>
+             <x>710</x>
+             <y>20</y>
              <width>75</width>
              <height>24</height>
             </rect>
@@ -633,8 +633,8 @@ QPushButton:checked{
           <widget class="QPushButton" name="btn_disconnect">
            <property name="geometry">
             <rect>
-             <x>880</x>
-             <y>70</y>
+             <x>800</x>
+             <y>20</y>
              <width>75</width>
              <height>24</height>
             </rect>
@@ -646,14 +646,71 @@ QPushButton:checked{
           <widget class="QPushButton" name="btn_setup_read">
            <property name="geometry">
             <rect>
-             <x>770</x>
-             <y>330</y>
+             <x>710</x>
+             <y>110</y>
              <width>75</width>
              <height>24</height>
             </rect>
            </property>
            <property name="text">
             <string>READ</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_FT_measurement">
+           <property name="geometry">
+            <rect>
+             <x>720</x>
+             <y>310</y>
+             <width>121</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>F.T Measurement</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_FT_event">
+           <property name="geometry">
+            <rect>
+             <x>720</x>
+             <y>350</y>
+             <width>121</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>F.T Event</string>
+           </property>
+          </widget>
+          <widget class="Line" name="line">
+           <property name="geometry">
+            <rect>
+             <x>710</x>
+             <y>280</y>
+             <width>441</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_FT_network">
+           <property name="geometry">
+            <rect>
+             <x>720</x>
+             <y>390</y>
+             <width>121</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>F.T Network</string>
            </property>
           </widget>
          </widget>

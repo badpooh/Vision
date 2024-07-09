@@ -2,7 +2,7 @@ from os import error
 import threading
 import time
 import numpy as np
-import os, glob
+import re
 from itertools import chain
 import cv2
 import easyocr
@@ -10,6 +10,7 @@ from datetime import datetime
 import time
 from pymodbus.client import ModbusTcpClient as ModbusClient
 import threading
+import torch
 
 from setup_test.setup_config import ConfigSetup
 
@@ -189,6 +190,10 @@ class OCRImageManager:
     
     rois = config_data.roi_params()
     
+    def __init__(self):
+        self.use_gpu = torch.cuda.is_available()
+    
+    
     ########################## 이미지 커팅 기본 method ##########################
     def image_cut(self, image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
         height, width = image.shape[:2]
@@ -210,36 +215,37 @@ class OCRImageManager:
             color_difference = np.linalg.norm(average_color - target_color)
             return color_difference
     
-    def image_cut_custom(self, image):
+    def image_cut_custom(self, image, roi_keys):
         image = cv2.imread(image)
         resized_image = cv2.resize(image, None, None, 3, 3, cv2.INTER_CUBIC)
         blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
         sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
-
-        reader = easyocr.Reader(['en'])
+        reader = easyocr.Reader(['en'], gpu=self.use_gpu)
 
         # 각 ROI에 대해 OCR 처리 및 결과 수집
         ocr_results = {}
-        for roi_key, (x, y, w, h) in self.rois.items():
-            roi_image = sharpened_image[y:y+h, x:x+w]
-            cv2.imshow('Image with Size Info', roi_image)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-            text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
-
-            # 추출된 텍스트 합치기
-            # extracted_texts = ' '.join([text[1] for text in text_results])
-            
-            # 추출된 텍스트 합치기 and 대체
-            extracted_texts = ' '.join([text[1].replace(':', '.') for text in text_results])
-
-            ocr_results[roi_key] = extracted_texts
+        for roi_key in roi_keys:
+            if roi_key in self.rois:
+                x, y, w, h = self.rois[roi_key]
+                roi_image = sharpened_image[y:y+h, x:x+w]
+                cv2.imshow('Image with Size Info', roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+                text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
+                # 추출된 텍스트 합치기
+                # extracted_texts = ' '.join([text[1] for text in text_results])
+                
+                # 추출된 텍스트 합치기 and 대체
+                extracted_texts = ' '.join([text[1].replace(':', '.') for text in text_results])
+                ocr_results[roi_key] = extracted_texts
 
         # OCR 결과 출력
         for roi_key, text in ocr_results.items():
             print(f'ROI {roi_key}: {text}')
 
-        return extracted_texts
+        ocr_results_list = [text for text in ocr_results.values() if text]
+        # print(f"OCR Results: {ocr_results_list}")
+        return ocr_results_list 
 
 class ModbusLabels:
     
@@ -325,34 +331,25 @@ class ModbusLabels:
         
 class Evaluation:
 
-    answer_voltage, answer_current = config_data.match_labels()
+    label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced = config_data.match_labels()
 
     def measurement_voltage_uitest(self, ocr_results_1):
 
-            ocr_right_1 = self.answer_voltage
+            ocr_right_1 = self.label_voltage
 
-            right_set_1 = set(text.strip() for text in ocr_right_1)
-
-            ocr_set_1 = set(result.strip() for result in ocr_results_1)
-
-
-            leave_ocr_all = [
-            (ocr_set_1 - right_set_1),
-            ]
-            leave_right_all = [
-                (right_set_1 - ocr_set_1),
-            ]
+            right_list_1 = [text.strip() for text in ocr_right_1]
+            ocr_list_1 = [result.strip() for result in ocr_results_1]
             
-            ocr_error = list(chain(*leave_ocr_all))
-            right_error = list(chain(*leave_right_all))
+            leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
+            leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
+            
+            ocr_error = leave_ocr_all
+            right_error = leave_right_all
 
+            
             # OCR 결과와 매칭되지 않아 남은 단어
             print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
             print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
-            
-            # cv2.imshow('Image with Size Info', image)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
             
             return ocr_error, right_error    
     

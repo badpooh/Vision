@@ -87,6 +87,23 @@ class SetupProcess:
         modbus_results = self.modbus_label.read_all_modbus_values()
         for description, value in modbus_results.items():
             print(f"{description}: {value}")
+    
+    def fixed_text_measurement(self):       
+        test_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\mea_voltage.png"
+        image = cv2.imread(test_image_path)
+        color_result = self.edit_image.color_detection(image, *self.coords_color["measurement"])
+        color_result1 = self.edit_image.color_detection(image, *self.coords_color["mea_voltage"])
+
+        if color_result < 5 and color_result1 < 5:
+            roi_keys = ["1", "2", "5", "6", "9", "10", "13", "14"]
+            cut_voltage_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+            ocr_error, right_error = self.image_uitest.measurement_voltage_uitest(cut_voltage_image)
+            if not ocr_error and not right_error:
+                print("PASS")
+            else:
+                print("FAIL: different text")
+        else:
+            print("FAIL: different menu")
 
     # def wiring_test(self):
     #     self.image_path = self.load_image_file()

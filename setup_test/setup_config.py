@@ -28,13 +28,23 @@ class ConfigSetup:
     
     def match_labels(self):
 
-        label_voltage = ["Wiring", "Min. Measured Secondary Voltage [V]", "VT Primary L-L Voltage [V]", 
+        label_voltage = ["Wiring", "Min. Meas. Secondary L-N Volt. [V]", "VT Primary L-L Voltage [V]", 
                             "VT Secondary L-L Voltage [V]", "Primary Reference Voltage [V]", "Sliding Reference Voltage",
-                            "Rotating Sequence"
-                            ]
+                            "Rotating Sequence"]
         label_current = ["CT Primary Current [A]", "CT Secondary Current [A]", "Reference Current [A]", "Min. Measured Current [mA]", "TDD Reference Selection", "TDD Nominal Current [A]"]
+        label_demand = ["Sub-Interval Time [min]", "Number of Sub-Intervals", "Power Type", "Sync Mode" 
+                         "Thermal Response Index [%]"]
+        label_power = ["Phase Power Calculation", "Total Power Calculation", "PF Sign", "PF Value at No Load" 
+                        "Reactive Power Sign"]
+        label_dip = ["Dip", "Threshold [%]", "Hysteresis [%]", "3-Phase Dip"]
+        label_swell = ["Swell", "Threshold [%]", "Hysteresis [%]"]
+        label_pqcurve = ["SEMI F47-0706", "IEC 61000-4-11/34 Class 3", "ITIC"]
+        label_Ethernet = ["IP Address", "Subnet Mask", "Gateway", "MAC Address", "DHCP", "USB IP Address"]
+        label_RS485 = ["Device Address", "Bit Rate", "Parity", "Stop Bit"]
+        label_Advanced = ["Modbus TCP Timeout [sec]", "RSTP", "Storm Control", "Remote Control Lock Mode"]
         
-        return label_voltage, label_current
+        
+        return label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced
     
     
     def color_detection_data(self):
