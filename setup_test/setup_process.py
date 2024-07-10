@@ -53,21 +53,26 @@ class SetupProcess:
             self.touch_manager.screenshot()
             time.sleep(0.6)
             image_path = self.load_image_file()
-            image = cv2.imread(image_path)
-            color_result = self.edit_image.color_detection(image, *self.coords_color["measurement"])
-            color_result1 = self.edit_image.color_detection(image, *self.coords_color["mea_voltage"])
-
-            if color_result < 5 and color_result1 < 5:
-                cut_voltage_image = self.edit_image.image_cut_custom(image=image_path)
-                ocr_error, right_error = self.image_uitest.measurement_voltage_uitest(cut_voltage_image)
-                if not ocr_error and not right_error:
-                    print("pass")
-                else:
-                    print("Fail")
-            else:
-                print("fail")
-            pass
-        
+            self.fixed_text_measurement(image_path)
+    
+    def FT_measurement(self):
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.screenshot()
+        time.sleep(0.6)
+        image_path = self.load_image_file()
+        time.sleep(0.1)
+        self.fixed_text_measurement(image_path, "measurement", "mea_voltage")
+        time.sleep(0.6)
+        # self.touch_manager.menu_touch("main_menu_1")
+        # time.sleep(0.6)
+        # self.touch_manager.menu_touch("side_menu_2")
+        # time.sleep(0.6)
+        # self.touch_manager.screenshot()
+        # time.sleep(0.6)
+        # image_path = self.load_image_file()
     
     def load_image_file(self):
         for file_path in glob.glob(self.search_pattern, recursive=True):
@@ -88,16 +93,16 @@ class SetupProcess:
         for description, value in modbus_results.items():
             print(f"{description}: {value}")
     
-    def fixed_text_measurement(self):       
-        test_image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\mea_voltage.png"
+    def fixed_text_measurement(self, image_path, color1, color2):       
+        test_image_path = image_path
         image = cv2.imread(test_image_path)
-        color_result = self.edit_image.color_detection(image, *self.coords_color["measurement"])
-        color_result1 = self.edit_image.color_detection(image, *self.coords_color["mea_voltage"])
+        color_result = self.edit_image.color_detection(image, *self.coords_color[color1])
+        color_result1 = self.edit_image.color_detection(image, *self.coords_color[color2])
 
         if color_result < 5 and color_result1 < 5:
             roi_keys = ["1", "2", "5", "6", "9", "10", "13", "14"]
-            cut_voltage_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
-            ocr_error, right_error = self.image_uitest.measurement_voltage_uitest(cut_voltage_image)
+            cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+            ocr_error, right_error = self.image_uitest.measurement_uitest(cutted_image, self.image_uitest.label_voltage)
             if not ocr_error and not right_error:
                 print("PASS")
             else:

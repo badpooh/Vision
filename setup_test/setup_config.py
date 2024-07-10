@@ -134,7 +134,7 @@ class ConfigSetup:
     def meter_m_cur_mapping(self):
         
         meter_m_cur_mappings_value = {
-        6023: {"description": "TDD Reference Selection", "values": {0: "Peak Demand Current", 1: "Nominal Current"}}
+        6023: {"description": "TDD Reference Selection", "values": {0: "Nominal Current", 1: "Peak Demand Current"}}
         }
         
         meter_m_cur_mappings_uint16 = {

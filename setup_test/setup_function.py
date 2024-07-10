@@ -228,9 +228,9 @@ class OCRImageManager:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
-                cv2.imshow('Image with Size Info', roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                # cv2.imshow('Image with Size Info', roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
                 # 추출된 텍스트 합치기
                 # extracted_texts = ' '.join([text[1] for text in text_results])
@@ -257,7 +257,7 @@ class ModbusLabels:
     def read_all_modbus_values(self):
         self.read_results = {}
         for address, info in self.meter_m_vol_mappings_value.items():
-            result = self.read_modbus_value(address)
+            result = self.read_modbus_value(address, self.meter_m_vol_mappings_value)
             ### self.results를 self.read_results로 바꿀껀데 검증 필요함
             self.read_results[info["description"]] = result
         for address, info in self.meter_m_vol_mappings_uint16.items():
@@ -267,7 +267,7 @@ class ModbusLabels:
             result = self.read_uint32(address)
             self.read_results[info["description"]] = result
         for address, info in self.meter_m_cur_mappings_value.items():
-            result = self.read_modbus_value(address)
+            result = self.read_modbus_value(address, self.meter_m_cur_mappings_value)
             self.read_results[info["description"]] = result
         for address, info in self.meter_m_cur_mappings_uint16.items():
             result = self.read_uint16(address)
@@ -277,14 +277,14 @@ class ModbusLabels:
             self.read_results[info["description"]] = result
         return self.read_results
 
-    def read_modbus_value(self, address):
+    def read_modbus_value(self, address, mapping):
         response = self.setup_client.read_holding_registers(address, count=1)
         if response.isError():
             print("Error reading VALUE", address)
             return None
         else:
             value = response.registers[0]
-            return self.meter_m_vol_mappings_value[address]["values"].get(value, "Unknown Value")
+            return mapping[address]["values"].get(value, "Unknown Value")
         
     def read_uint16(self, address):
         response = self.setup_client.read_holding_registers(address, count=1)
@@ -333,9 +333,9 @@ class Evaluation:
 
     label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced = config_data.match_labels()
 
-    def measurement_voltage_uitest(self, ocr_results_1):
+    def measurement_uitest(self, ocr_results_1, right_list):
 
-            ocr_right_1 = self.label_voltage
+            ocr_right_1 = right_list
 
             right_list_1 = [text.strip() for text in ocr_right_1]
             ocr_list_1 = [result.strip() for result in ocr_results_1]
