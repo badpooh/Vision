@@ -333,7 +333,7 @@ class Evaluation:
 
     label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced = config_data.match_labels()
 
-    def measurement_uitest(self, ocr_results_1, right_list):
+    def evaluation_ocr(self, ocr_results_1, right_list):
 
             ocr_right_1 = right_list
 

@@ -21,7 +21,6 @@ class SetupProcess:
     now = datetime.now()
     file_time_diff = {}
 
-
     def __init__(self):
         self.coords_touch = self.touch_manager.coords_touch
         self.coords_color = self.touch_manager.coords_color
@@ -33,6 +32,79 @@ class SetupProcess:
     def modbus_discon(self):
         self.modbus_manager.tcp_disconnect()
 
+    def FT_measurement(self):
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.screenshot()
+        time.sleep(0.6)
+        image_path = self.load_image_file()
+        time.sleep(0.1)
+        self.fixed_text_measurement(image_path, "measurement", "mea_voltage", self.image_uitest.label_voltage)
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_2")
+        time.sleep(0.6)
+        self.touch_manager.screenshot()
+        time.sleep(0.6)
+        image_path = self.load_image_file()
+        self.fixed_text_measurement(image_path, "measurement", "mea_current", self.image_uitest.label_current)
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_3")
+        time.sleep(0.6)
+        self.touch_manager.screenshot()
+        time.sleep(0.6)
+        image_path = self.load_image_file()
+        self.fixed_text_measurement(image_path, "measurement", "mea_demand", self.image_uitest.label_demand)
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_3")
+        time.sleep(0.6)
+        self.touch_manager.screenshot()
+        time.sleep(0.6)
+        image_path = self.load_image_file()
+        self.fixed_text_measurement(image_path, "measurement", "mea_power", self.image_uitest.label_power)
+    
+    def load_image_file(self):
+        for file_path in glob.glob(self.search_pattern, recursive=True):
+            creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
+            time_diff = abs((self.now - creation_time).total_seconds())
+            self.file_time_diff[file_path] = time_diff
+
+        closest_file = min(self.file_time_diff, key=self.file_time_diff.get, default=None)
+        normalized_path = os.path.normpath(closest_file)
+
+        print("가장 가까운 시간에 생성된 파일:", normalized_path)
+
+        return normalized_path
+
+    def read_setup_mapping(self):
+        modbus_results = self.modbus_label.read_all_modbus_values()
+        for description, value in modbus_results.items():
+            print(f"{description}: {value}")
+    
+    def fixed_text_measurement(self, image_path, color1, color2, select_ocr):       
+        test_image_path = image_path
+        image = cv2.imread(test_image_path)
+        color_result = self.edit_image.color_detection(image, *self.coords_color[color1])
+        color_result1 = self.edit_image.color_detection(image, *self.coords_color[color2])
+
+        if color_result < 5 and color_result1 < 5:
+            roi_keys = ["1", "2", "5", "6", "9", "10", "13", "14"]
+            cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+            ocr_error, right_error = self.image_uitest.evaluation_ocr(cutted_image, select_ocr)
+            if not ocr_error and not right_error:
+                print("PASS")
+            else:
+                print("FAIL: different text")
+        else:
+            print("FAIL: different menu")
+             
         #### 3P4W일때 Wiring 제외하고 모든 설정 ####
     def test_m_m_v(self):
         initial_values = self.modbus_label.read_all_modbus_values()
@@ -54,135 +126,3 @@ class SetupProcess:
             time.sleep(0.6)
             image_path = self.load_image_file()
             self.fixed_text_measurement(image_path)
-    
-    def FT_measurement(self):
-        self.touch_manager.menu_touch("main_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.screenshot()
-        time.sleep(0.6)
-        image_path = self.load_image_file()
-        time.sleep(0.1)
-        self.fixed_text_measurement(image_path, "measurement", "mea_voltage")
-        time.sleep(0.6)
-        # self.touch_manager.menu_touch("main_menu_1")
-        # time.sleep(0.6)
-        # self.touch_manager.menu_touch("side_menu_2")
-        # time.sleep(0.6)
-        # self.touch_manager.screenshot()
-        # time.sleep(0.6)
-        # image_path = self.load_image_file()
-    
-    def load_image_file(self):
-        for file_path in glob.glob(self.search_pattern, recursive=True):
-            creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
-            time_diff = abs((self.now - creation_time).total_seconds())
-            self.file_time_diff[file_path] = time_diff
-
-        closest_file = min(self.file_time_diff, key=self.file_time_diff.get, default=None)
-        normalized_path = os.path.normpath(closest_file)
-
-        print("가장 가까운 시간에 생성된 파일:", normalized_path)
-
-        return normalized_path
-
-    
-    def read_setup_mapping(self):
-        modbus_results = self.modbus_label.read_all_modbus_values()
-        for description, value in modbus_results.items():
-            print(f"{description}: {value}")
-    
-    def fixed_text_measurement(self, image_path, color1, color2):       
-        test_image_path = image_path
-        image = cv2.imread(test_image_path)
-        color_result = self.edit_image.color_detection(image, *self.coords_color[color1])
-        color_result1 = self.edit_image.color_detection(image, *self.coords_color[color2])
-
-        if color_result < 5 and color_result1 < 5:
-            roi_keys = ["1", "2", "5", "6", "9", "10", "13", "14"]
-            cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
-            ocr_error, right_error = self.image_uitest.measurement_uitest(cutted_image, self.image_uitest.label_voltage)
-            if not ocr_error and not right_error:
-                print("PASS")
-            else:
-                print("FAIL: different text")
-        else:
-            print("FAIL: different menu")
-
-    # def wiring_test(self):
-    #     self.image_path = self.load_image_file()
-    #     color_result = self.color_detection(self.image_path, *self.measurement)
-    #     color_result1 = self.color_detection(self.image_path, *self.mea_voltage)
-        
-    #     if color_result < 5 and color_result1 < 5:
-    #         cut_voltage_image = self.cut_image(self.image_path, 0.25, 1, 0.2, 1)
-    #         ocr_error, right_error = self.measurement_voltage_uitest(cut_voltage_image)
-    #         if not ocr_error and not right_error:
-    #             print("pass")
-    #         else:
-    #             print("Fail")
-    #     else:
-    #         print("fail")
-    
-
-    
-    
-#     # 색 감 비교 코드
-#     # def meas_vol_test(self, path123):
-#     #     image = cv2.imread(path123)
-
-#     #     def color_detection(a, b, c, d, R, G, B):
-#     #         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-#     #         x, y, w, h = a, b, c, d 
-#     #         selected_area = image_rgb[y:y+h, x:x+w]
-#     #         average_color = np.mean(selected_area, axis=(0, 1))
-#     #         target_color = np.array([R, G, B])
-#     #         color_difference = np.linalg.norm(average_color - target_color)
-#     #         return color_difference
-
-#     #     color_result1 = color_detection(*measurement)
-#     #     color_result2 = color_detection(*mea_voltage)
-        
-#     #     print(color_result1)
-#     #     print(color_result2)
-
-#         # if color_result1 < 5 and color_result2 < 5:
-#         #     cut_voltage_image = self.cut_image(image, 0.25, 1, 0.2, 1)
-#         #     ocr_error, right_error = self.measurement_voltage_uitest(cut_voltage_image)
-#         #     if not ocr_error and not right_error:
-#         #         print("pass")
-#         #     else:
-#         #         print("Fail")
-#         # else:
-#         #     print("fail")
-            
-#     def meas_cur_test(self):
-#         #숫자 0 인식이 안됨 개선 필요
-#         image = cv2.imread(path123)
-
-#         def color_detection(a, b, c, d, R, G, B):
-#             image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-#             x, y, w, h = a, b, c, d 
-#             selected_area = image_rgb[y:y+h, x:x+w]
-#             average_color = np.mean(selected_area, axis=(0, 1))
-#             target_color = np.array([R, G, B])
-#             color_difference = np.linalg.norm(average_color - target_color)
-#             return color_difference
-
-#         color_result1 = color_detection(5, 70, 10, 10, 47, 180, 139)
-#         color_result2 = color_detection(110, 170, 10, 10, 255, 255, 255)
-
-#         if color_result1 < 5 and color_result2 < 5:
-#             cut_current_image = self.cut_image(image, 0.25, 1, 0.2, 1)
-#             ocr_error, right_error = self.measurement_currnet_uitest(cut_current_image)
-#             if not ocr_error and not right_error:
-#                 print("pass")
-#             else:
-#                 print("Fail")
-#         else:
-#             print("fail")
-            
-            
-# test002 = SetupProcess()
-# tt = test002.meas_vol_test(path123)
