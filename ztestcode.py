@@ -25,20 +25,10 @@ class SetupTesting:
         else:
             error()
 
-    def setup_all_test(self):
-        self.address = 57100
-        self.address1 = 57101
-        self.value = 1
-        self.value1 = 23130
-        if self.client:
-            self.response = self.client.write_register(self.address, self.value)
-            self.answer = self.client.read_holding_registers(self.address, 1)
-            self.response1 = self.client.write_register(self.address1, self.value1)
-            print(self.answer)
-        else:
-            print(self.response.isError())
+
+
 
 test = SetupTesting()
-# test.tcp_connect()
-# test.setup_all_test()
+test.tcp_connect()
+test.setup_all_test()
 test.tcp_disconnect()

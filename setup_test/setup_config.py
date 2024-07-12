@@ -32,9 +32,9 @@ class ConfigSetup:
                             "VT Secondary L-L Voltage [V]", "Primary Reference Voltage [V]", "Sliding Reference Voltage",
                             "Rotating Sequence"]
         label_current = ["CT Primary Current [A]", "CT Secondary Current [A]", "Reference Current [A]", "Min. Measured Current [mA]", "TDD Reference Selection", "TDD Nominal Current [A]"]
-        label_demand = ["Sub-Interval Time [min]", "Number of Sub-Intervals", "Power Type", "Sync Mode" 
+        label_demand = ["Sub-Interval Time [min]", "Number of Sub-Intervals", "Power Type", "Sync Mode", 
                          "Thermal Response Index [%]"]
-        label_power = ["Phase Power Calculation", "Total Power Calculation", "PF Sign", "PF Value at No Load" 
+        label_power = ["Phase Power Calculation", "Total Power Calculation", "PF Sign", "PF Value at No Load", 
                         "Reactive Power Sign"]
         label_dip = ["Dip", "Threshold [%]", "Hysteresis [%]", "3-Phase Dip"]
         label_swell = ["Swell", "Threshold [%]", "Hysteresis [%]"]
