@@ -332,8 +332,10 @@ class ModbusLabels:
 class Evaluation:
 
     label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced = config_data.match_labels()
+    
+    label_wiring = config_data.match_pop_labels()
 
-    def evaluation_ocr(self, ocr_results_1, right_list):
+    def eval_static_text(self, ocr_results_1, right_list):
 
             ocr_right_1 = right_list
 
@@ -352,6 +354,26 @@ class Evaluation:
             print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
             
             return ocr_error, right_error    
+    
+    def eval_variable_text(self, ocr_results_1, right_list):
+    
+            ocr_right_1 = right_list
+
+            right_list_1 = [text.strip() for text in ocr_right_1]
+            ocr_list_1 = [result.strip() for result in ocr_results_1]
+            
+            leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
+            leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
+            
+            ocr_error = leave_ocr_all
+            right_error = leave_right_all
+
+            
+            # OCR 결과와 매칭되지 않아 남은 단어
+            print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
+            print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
+            
+            return ocr_error, right_error  
     
 # class SetupTesting:
     

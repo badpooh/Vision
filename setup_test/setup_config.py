@@ -23,6 +23,10 @@ class ConfigSetup:
             "14": [n*x for x in [477, 397, 298, 35]],
             "15": [n*x for x in [176, 431, 298, 35]],
             "16": [n*x for x in [477, 431, 298, 35]],
+            #popup title ~ popup button(enter, cancel)
+            "17": [n*x for x in [250, 20, 300, 55]],
+            "18": [n*x for x in [262, 88, 273, 44]],
+            "19": [n*x for x in [250, 138, 273, 44]],
         }
         return params
     
@@ -43,8 +47,13 @@ class ConfigSetup:
         label_RS485 = ["Device Address", "Bit Rate", "Parity", "Stop Bit"]
         label_Advanced = ["Modbus TCP Timeout [sec]", "RSTP", "Storm Control", "Remote Control Lock Mode"]
         
-        
         return label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced
+    
+    def match_pop_labels(self):
+        
+        label_wiring = ["Wiring", "3P4W", "3P3W"]
+        
+        return label_wiring
     
     
     def color_detection_data(self):
@@ -54,7 +63,7 @@ class ConfigSetup:
         "mea_voltage": [110, 130, 10, 10, 255, 255, 255],
         "mea_current": [110, 170, 10, 10, 255, 255, 255],
         "mea_demand": [110, 220, 10, 10, 255, 255, 255],
-        "mea_power": [110, 270, 10, 10, 255, 255, 255]
+        "mea_power": [110, 270, 10, 10, 255, 255, 255],
         }
         
         return coordinates
