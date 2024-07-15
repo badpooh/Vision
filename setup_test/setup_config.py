@@ -129,7 +129,8 @@ class ConfigSetup:
         "btn_number_0": [310, 370],
         "btn_number_dot": [370, 370],
         "btn_number_back": [490, 225],
-        "btn_number_clear": [485, 340]
+        "btn_number_clear": [485, 340],
+        "btn_front_setup" : []
     }
         return coordinates
 
@@ -185,7 +186,9 @@ class ConfigSetup:
         "screen_capture": 57101,
         "pos_x": 57110,
         "pos_y": 57111,
-        "touch_mode": 57112
+        "touch_mode": 57112,
+        "setup_button_bit": 57120,
+        "setup_button": 57121,
         }
         
         return coordinates

@@ -68,23 +68,21 @@ class SetupProcess:
         self.static_text_measurement(image_path3, "measurement", "mea_power", self.image_uitest.label_power)
 
     def PT_measurement(self):
-        # self.touch_manager.menu_touch("main_menu_1")
-        # time.sleep(0.6)
-        # self.touch_manager.menu_touch("side_menu_1")
-        # time.sleep(0.6)
-        # self.touch_manager.menu_touch("data_view_2")
-        # time.sleep(0.6)
-        # self.touch_manager.screenshot()
-        # time.sleep(0.6)
-        # self.touch_manager.menu_touch("btn_cancel")
-        # time.sleep(0.6)
-        # image_path = self.load_image_file()
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_M_S_ME_Voltage_2024-04-11_17_08_30.png"
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("data_view_2")
+        time.sleep(0.6)
+        self.touch_manager.screenshot()
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("btn_cancel")
+        time.sleep(0.6)
+        image_path = self.load_image_file()
         roi_keys = ["20", "21"]
-        select_ocr = "1"
+        select_ocr = "2"
         self.static_popup_text(image_path, select_ocr, roi_keys)
 
-    
     def load_image_file(self):
         self.now = datetime.now()
         self.file_time_diff = {}
@@ -144,27 +142,15 @@ class SetupProcess:
         else:
             print("FAIL: different text")
              
-        #### 3P4W일때 Wiring 제외하고 모든 설정 ####
-    def test_m_m_v(self):
-        initial_values = self.modbus_label.read_all_modbus_values()
-        time.sleep(1)
-        self.touch_manager.menu_touch("main_menu_1")
+    def mea_demo_mode(self):
+        self.touch_manager.btn_front_setup()
         time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_1")
+        self.touch_manager.menu_touch("main_menu_4")
         time.sleep(0.6)
-        self.touch_manager.menu_touch("data_view_2")
+        self.touch_manager.menu_touch("side_menu_3")
         time.sleep(0.6)
-        #### 최소치 1 ####
-        self.touch_manager.number_1_touch("btn_number_1")
-        time.sleep(0.6)
-        change_count = self.modbus_label.display_changes(initial_values)
-        if change_count >= 2:
-            print("check other address value")
-        else:
-            self.touch_manager.screenshot()
-            time.sleep(0.6)
-            image_path = self.load_image_file()
-            self.static_text_measurement(image_path)
+        pass
+
             
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_M_S_ME_Voltage_2024-04-11_17_08_30.png"

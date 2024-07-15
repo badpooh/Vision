@@ -184,6 +184,13 @@ class TouchManager:
             self.touch_write(self.coords_TA["touch_mode"], 0)
         else:
             print("Button Apply Touch Error")
+
+    def btn_front_setup(self):
+        if self.client_check:
+            self.touch_write(self.coords_TA["setup_button"], 1)
+            self.touch_write(self.coords_TA["setup_button_bit"], 1)
+        else:
+            print("Button Apply Touch Error")
         
     
 class OCRImageManager:
@@ -327,8 +334,7 @@ class ModbusLabels:
         
 class Evaluation:
 
-    label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced = config_data.match_labels()
-    
+    labels = config_data.match_labels()
     pop_params = config_data.match_pop_labels()
 
     def eval_static_text(self, ocr_results_1, right_key):
