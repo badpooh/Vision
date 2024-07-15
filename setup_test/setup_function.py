@@ -232,10 +232,6 @@ class OCRImageManager:
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
                 text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
-                # 추출된 텍스트 합치기
-                # extracted_texts = ' '.join([text[1] for text in text_results])
-                
-                # 추출된 텍스트 합치기 and 대체
                 extracted_texts = ' '.join([text[1].replace(':', '.') for text in text_results])
                 ocr_results[roi_key] = extracted_texts
 
@@ -333,27 +329,28 @@ class Evaluation:
 
     label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced = config_data.match_labels()
     
-    label_wiring, label_min_meas_second_V, label_vt_primary, label_vt_secondary, label_pri_ref_v, label_sliding_ref_v, label_rotating_seq = config_data.match_pop_labels()
+    pop_params = config_data.match_pop_labels()
 
-    def eval_static_text(self, ocr_results_1, right_list):
+    def eval_static_text(self, ocr_results_1, right_key):
+        
+        right_list = self.pop_params[right_key]
+        ocr_right_1 = right_list
 
-            ocr_right_1 = right_list
+        right_list_1 = [text.strip() for text in ocr_right_1]
+        ocr_list_1 = [result.strip() for result in ocr_results_1]
+        
+        leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
+        leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
+        
+        ocr_error = leave_ocr_all
+        right_error = leave_right_all
 
-            right_list_1 = [text.strip() for text in ocr_right_1]
-            ocr_list_1 = [result.strip() for result in ocr_results_1]
-            
-            leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
-            leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
-            
-            ocr_error = leave_ocr_all
-            right_error = leave_right_all
-
-            
-            # OCR 결과와 매칭되지 않아 남은 단어
-            print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
-            print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
-            
-            return ocr_error, right_error    
+        
+        # OCR 결과와 매칭되지 않아 남은 단어
+        print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
+        print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
+        
+        return ocr_error, right_error    
     
     def eval_variable_text(self, ocr_results_1, right_list):
     

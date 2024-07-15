@@ -68,19 +68,21 @@ class SetupProcess:
         self.static_text_measurement(image_path3, "measurement", "mea_power", self.image_uitest.label_power)
 
     def PT_measurement(self):
-        self.touch_manager.menu_touch("main_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("data_view_2")
-        time.sleep(0.6)
-        self.touch_manager.screenshot()
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("btn_cancel")
-        time.sleep(0.6)
-        image_path = self.load_image_file()
+        # self.touch_manager.menu_touch("main_menu_1")
+        # time.sleep(0.6)
+        # self.touch_manager.menu_touch("side_menu_1")
+        # time.sleep(0.6)
+        # self.touch_manager.menu_touch("data_view_2")
+        # time.sleep(0.6)
+        # self.touch_manager.screenshot()
+        # time.sleep(0.6)
+        # self.touch_manager.menu_touch("btn_cancel")
+        # time.sleep(0.6)
+        # image_path = self.load_image_file()
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_M_S_ME_Voltage_2024-04-11_17_08_30.png"
         roi_keys = ["20", "21"]
-        self.popup_text(image_path, self.image_uitest.label_min_meas_second_V, roi_keys)
+        select_ocr = "1"
+        self.static_popup_text(image_path, select_ocr, roi_keys)
 
     
     def load_image_file(self):
@@ -104,7 +106,7 @@ class SetupProcess:
         for description, value in modbus_results.items():
             print(f"{description}: {value}")
     
-    def static_text_measurement(self, image_path, color1, color2, select_ocr):       
+    def static_text_measurement(self, image_path, color1, color2, select_ocr, roi_keys):       
         test_image_path = image_path
         image = cv2.imread(test_image_path)
         color_result = self.edit_image.color_detection(image, *self.coords_color[color1])
@@ -113,6 +115,7 @@ class SetupProcess:
         if color_result < 5 and color_result1 < 5:
             roi_keys = ["1", "2", "5", "6", "9", "10", "13", "14"]
             cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+            select_ocr = ["1"]
             ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
             if not ocr_error and not right_error:
                 print("PASS")
@@ -121,19 +124,19 @@ class SetupProcess:
         else:
             print("FAIL: different menu")
             
-    def variable_text(self, image_path, select_ocr):       
+    def static_popup_text(self, image_path, select_ocr, roi_keys):       
         test_image_path = image_path
-        # image = cv2.imread(test_image_path)
-        roi_keys = ["17", "18", "19",]
         cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
         ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
         if not ocr_error and not right_error:
             print("PASS")
         else:
             print("FAIL: different text")
-
-    def popup_text(self, image_path, select_ocr, roi_keys=None):       
+            
+    def variable_text(self, image_path, select_ocr):       
         test_image_path = image_path
+        # image = cv2.imread(test_image_path)
+        roi_keys = ["17", "18", "19",]
         cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
         ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
         if not ocr_error and not right_error:
@@ -166,6 +169,6 @@ class SetupProcess:
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_M_S_ME_Voltage_2024-04-11_17_08_30.png"
         time.sleep(1)
-        self.variable_text(image_path, self.image_uitest.label_wiring)
+        self.variable_text(image_path, self.image_uitest.pop_params)
         time.sleep(0.6)
         ## popup 화면 설정값 범위 및 고정 텍스트 읽는거 추가

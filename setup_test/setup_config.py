@@ -34,34 +34,41 @@ class ConfigSetup:
         return params
     
     def match_labels(self):
-
-        label_voltage = ["Wiring", "Min. Meas. Secondary L-N Volt. [V]", "VT Primary L-L Voltage [V]", 
-                            "VT Secondary L-L Voltage [V]", "Primary Reference Voltage [V]", "Sliding Reference Voltage",
-                            "Rotating Sequence"]
-        label_current = ["CT Primary Current [A]", "CT Secondary Current [A]", "Reference Current [A]", "Min. Measured Current [mA]", "TDD Reference Selection", "TDD Nominal Current [A]"]
-        label_demand = ["Sub-Interval Time [min]", "Number of Sub-Intervals", "Power Type", "Sync Mode", 
-                         "Thermal Response Index [%]"]
-        label_power = ["Phase Power Calculation", "Total Power Calculation", "PF Sign", "PF Value at No Load", 
-                        "Reactive Power Sign"]
-        label_dip = ["Dip", "Threshold [%]", "Hysteresis [%]", "3-Phase Dip"]
-        label_swell = ["Swell", "Threshold [%]", "Hysteresis [%]"]
-        label_pqcurve = ["SEMI F47-0706", "IEC 61000-4-11/34 Class 3", "ITIC"]
-        label_Ethernet = ["IP Address", "Subnet Mask", "Gateway", "MAC Address", "DHCP", "USB IP Address"]
-        label_RS485 = ["Device Address", "Bit Rate", "Parity", "Stop Bit"]
-        label_Advanced = ["Modbus TCP Timeout [sec]", "RSTP", "Storm Control", "Remote Control Lock Mode"]
-        
-        return label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced
+        labels = {
+        #voltage 
+        "1" : ["Wiring", "Min. Meas. Secondary L-N Volt. [V]", "VT Primary L-L Voltage [V]", "VT Secondary L-L Voltage [V]", 
+               "Primary Reference Voltage [V]", "Sliding Reference Voltage", "Rotating Sequence"],
+        #current 
+        "2" : ["CT Primary Current [A]", "CT Secondary Current [A]", "Reference Current [A]", "Min. Measured Current [mA]", "TDD Reference Selection", "TDD Nominal Current [A]"],
+        #demand 
+        "3" : ["Sub-Interval Time [min]", "Number of Sub-Intervals", "Power Type", "Sync Mode", "Thermal Response Index [%]"],
+        #power 
+        "4" : ["Phase Power Calculation", "Total Power Calculation", "PF Sign", "PF Value at No Load", "Reactive Power Sign"],
+        #dip 
+        "5" : ["Dip", "Threshold [%]", "Hysteresis [%]", "3-Phase Dip"],
+        #swell 
+        "6" : ["Swell", "Threshold [%]", "Hysteresis [%]"],
+        #pqcurve 
+        "7" : ["SEMI F47-0706", "IEC 61000-4-11/34 Class 3", "ITIC"],
+        #Ethernet 
+        "8" : ["IP Address", "Subnet Mask", "Gateway", "MAC Address", "DHCP", "USB IP Address"],
+        #RS485 
+        "9" : ["Device Address", "Bit Rate", "Parity", "Stop Bit"],
+        #Advanced 
+        "10" : ["Modbus TCP Timeout [sec]", "RSTP", "Storm Control", "Remote Control Lock Mode"],
+        }
+        return labels
     
     def match_pop_labels(self):
 
         pop_params = {
             "1" : ["Wiring", "3P4W", "3P3W"], #wiring
             "2" : ["Min. Meas. Secondary L-N Volt. [V]", "Range 1 - 10"], #Min. Meas. Secondary L-N Volt. [V]
-            "label_vt_primary" : ["VT Primary L-L Voltage", "Range 50.0 - 999999.0"], #VT Primary L-L Voltage
-            "label_vt_secondary" : ["VT Secondary L-L Voltage [V]", "Range 50.0 - 220.0"], #VT Secondary L-L Voltage [V]
-            "label_pri_ref_v" : ["Primary Reference Voltage [V]", "Line-to-Line", "Line-to-Neutral", "Range 50.0 - 999999.0"],
-            "label_sliding_ref_v" : ["Sliding Reference Voltage", "Disable", "Enable"],
-            "label_rotating_seq" : ["Rotating Sequence", "Positive", "Negative"]
+            "3" : ["VT Primary L-L Voltage", "Range 50.0 - 999999.0"], #VT Primary L-L Voltage
+            "4" : ["VT Secondary L-L Voltage [V]", "Range 50.0 - 220.0"], #VT Secondary L-L Voltage [V]
+            "5" : ["Primary Reference Voltage [V]", "Line-to-Line", "Line-to-Neutral", "Range 50.0 - 999999.0"], #Primary Reference Voltage [V]
+            "6" : ["Sliding Reference Voltage", "Disable", "Enable"], #Sliding Reference Voltage
+            "7" : ["Rotating Sequence", "Positive", "Negative"], #Rotating Sequence
         }
         
         return pop_params
