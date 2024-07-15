@@ -27,6 +27,9 @@ class ConfigSetup:
             "17": [n*x for x in [250, 20, 300, 55]],
             "18": [n*x for x in [262, 88, 273, 44]],
             "19": [n*x for x in [250, 138, 273, 44]],
+            #popup_number title ~ popup button(enter, cancel)
+            "20": [n*x for x in [280, 30, 240, 40]],
+            "21": [n*x for x in [280, 75, 240, 40]],
         }
         return params
     
@@ -50,11 +53,18 @@ class ConfigSetup:
         return label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced
     
     def match_pop_labels(self):
+
+        pop_params = {
+            "1" : ["Wiring", "3P4W", "3P3W"], #wiring
+            "2" : ["Min. Meas. Secondary L-N Volt. [V]", "Range 1 - 10"], #Min. Meas. Secondary L-N Volt. [V]
+            "label_vt_primary" : ["VT Primary L-L Voltage", "Range 50.0 - 999999.0"], #VT Primary L-L Voltage
+            "label_vt_secondary" : ["VT Secondary L-L Voltage [V]", "Range 50.0 - 220.0"], #VT Secondary L-L Voltage [V]
+            "label_pri_ref_v" : ["Primary Reference Voltage [V]", "Line-to-Line", "Line-to-Neutral", "Range 50.0 - 999999.0"],
+            "label_sliding_ref_v" : ["Sliding Reference Voltage", "Disable", "Enable"],
+            "label_rotating_seq" : ["Rotating Sequence", "Positive", "Negative"]
+        }
         
-        label_wiring = ["Wiring", "3P4W", "3P3W"]
-        
-        return label_wiring
-    
+        return pop_params
     
     def color_detection_data(self):
         

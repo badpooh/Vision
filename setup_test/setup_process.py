@@ -32,7 +32,7 @@ class SetupProcess:
     def modbus_discon(self):
         self.modbus_manager.tcp_disconnect()
 
-    def FT_measurement(self):
+    def ST_measurement(self):
         self.touch_manager.menu_touch("main_menu_1")
         time.sleep(0.6)
         self.touch_manager.menu_touch("side_menu_1")
@@ -66,6 +66,22 @@ class SetupProcess:
         image_path3 = self.load_image_file()
         time.sleep(1)
         self.static_text_measurement(image_path3, "measurement", "mea_power", self.image_uitest.label_power)
+
+    def PT_measurement(self):
+        self.touch_manager.menu_touch("main_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("side_menu_1")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("data_view_2")
+        time.sleep(0.6)
+        self.touch_manager.screenshot()
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("btn_cancel")
+        time.sleep(0.6)
+        image_path = self.load_image_file()
+        roi_keys = ["20", "21"]
+        self.popup_text(image_path, self.image_uitest.label_min_meas_second_V, roi_keys)
+
     
     def load_image_file(self):
         self.now = datetime.now()
@@ -109,6 +125,15 @@ class SetupProcess:
         test_image_path = image_path
         # image = cv2.imread(test_image_path)
         roi_keys = ["17", "18", "19",]
+        cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+        ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
+        if not ocr_error and not right_error:
+            print("PASS")
+        else:
+            print("FAIL: different text")
+
+    def popup_text(self, image_path, select_ocr, roi_keys=None):       
+        test_image_path = image_path
         cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
         ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
         if not ocr_error and not right_error:

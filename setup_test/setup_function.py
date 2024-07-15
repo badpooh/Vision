@@ -333,7 +333,7 @@ class Evaluation:
 
     label_voltage, label_current, label_demand, label_power, label_dip, label_swell, label_pqcurve, label_Ethernet, label_RS485, label_Advanced = config_data.match_labels()
     
-    label_wiring = config_data.match_pop_labels()
+    label_wiring, label_min_meas_second_V, label_vt_primary, label_vt_secondary, label_pri_ref_v, label_sliding_ref_v, label_rotating_seq = config_data.match_pop_labels()
 
     def eval_static_text(self, ocr_results_1, right_list):
 
