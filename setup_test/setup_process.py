@@ -143,11 +143,15 @@ class SetupProcess:
             print("FAIL: different text")
              
     def mea_demo_mode(self):
+        self.touch_manager.btn_front_meter()
+        time.sleep(0.6)
         self.touch_manager.btn_front_setup()
         time.sleep(0.6)
         self.touch_manager.menu_touch("main_menu_4")
         time.sleep(0.6)
         self.touch_manager.menu_touch("side_menu_3")
+        time.sleep(0.6)
+        self.touch_manager.menu_touch("data_view_1")
         time.sleep(0.6)
         pass
 
