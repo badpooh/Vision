@@ -130,6 +130,7 @@ class SetupProcess:
             print("PASS")
         else:
             print("FAIL: different text")
+        return 
             
     def variable_text(self, image_path, select_ocr):       
         test_image_path = image_path
@@ -144,16 +145,22 @@ class SetupProcess:
              
     def mea_demo_mode(self):
         self.touch_manager.btn_front_meter()
-        time.sleep(0.6)
         self.touch_manager.btn_front_setup()
-        time.sleep(0.6)
         self.touch_manager.menu_touch("main_menu_4")
-        time.sleep(0.6)
         self.touch_manager.menu_touch("side_menu_3")
-        time.sleep(0.6)
         self.touch_manager.menu_touch("data_view_1")
-        time.sleep(0.6)
-        pass
+        self.touch_manager.screenshot()
+        image_path = self.load_image_file()
+        roi_keys = ["999"]
+        cutted_image = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_keys)
+        if "Password" in cutted_image:
+            for _ in range(4): 
+                self.touch_manager.menu_touch("btn_num_pw_0")
+            self.touch_manager.menu_touch("btn_num_pw_enter")
+            self.touch_manager.menu_touch("btn_testmode_2")
+            self.touch_manager.menu_touch("btn_popup_enter")
+        else:
+            print("error")
 
             
     def testcode01(self):

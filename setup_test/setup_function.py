@@ -188,7 +188,7 @@ class TouchManager:
     def btn_front_setup(self):
         if self.client_check:
             self.touch_write(self.coords_TA["setup_button"], 1)
-            self.touch_write(self.coords_TA["setup_button_bit"], 1)
+            self.touch_write(self.coords_TA["setup_button_bit"], 2)
         else:
             print("Button Apply Touch Error")
     

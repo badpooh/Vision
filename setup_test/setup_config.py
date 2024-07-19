@@ -30,6 +30,8 @@ class ConfigSetup:
             #popup_number title ~ popup button(enter, cancel)
             "20": [n*x for x in [280, 30, 240, 40]],
             "21": [n*x for x in [280, 75, 240, 40]],
+            #test mode confirm
+            "999" : [n*x for x in [220, 105, 350, 40]],
         }
         return params
     
@@ -56,6 +58,8 @@ class ConfigSetup:
         "9" : ["Device Address", "Bit Rate", "Parity", "Stop Bit"],
         #Advanced 
         "10" : ["Modbus TCP Timeout [sec]", "RSTP", "Storm Control", "Remote Control Lock Mode"],
+        #test mode"
+        "999" : ["Password"]
         }
         return labels
     
@@ -130,7 +134,20 @@ class ConfigSetup:
         "btn_number_dot": [370, 370],
         "btn_number_back": [490, 225],
         "btn_number_clear": [485, 340],
-        "btn_front_setup" : []
+        "btn_num_pw_1" : [255, 230],
+        "btn_num_pw_2" : [315, 230],
+        "btn_num_pw_3" : [370, 230],
+        "btn_num_pw_4" : [430, 230],
+        "btn_num_pw_5" : [485, 230],
+        "btn_num_pw_6" : [255, 290],
+        "btn_num_pw_7" : [315, 290],
+        "btn_num_pw_8" : [370, 290],
+        "btn_num_pw_9" : [430, 290],
+        "btn_num_pw_0" : [485, 290],
+        "btn_num_pw_enter" : [340, 345],
+        "btn_testmode_1" : [270, 100],
+        "btn_testmode_2" : [270, 160],
+
     }
         return coordinates
 
@@ -176,8 +193,6 @@ class ConfigSetup:
         }
         
         return meter_m_cur_mappings_value, meter_m_cur_mappings_uint16, meter_m_cur_mappings_uint32
-    
-
     
     def touch_address_data(self):
         
