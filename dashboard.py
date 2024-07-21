@@ -88,7 +88,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.webcam.stop_streaming()
         
     def fixed_text_measurement(self):
-        self.meter_setup_process.mea_demo_mode()
+        self.meter_setup_process.testcode01()
 
     def set_focus(self):
         try:

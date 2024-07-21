@@ -30,13 +30,33 @@ class ConfigSetup:
             #popup_number title ~ popup button(enter, cancel)
             "20": [n*x for x in [280, 30, 240, 40]],
             "21": [n*x for x in [280, 75, 240, 40]],
+            #measurement ocr
+            "main_view_1": [n*x for x in [160, 120, 625, 48]],
+            "main_view_2": [n*x for x in [160, 180, 140, 290]],
+            "main_view_3": [n*x for x in [510, 180, 190, 290]],
+            "main_view_4": [n*x for x in [700, 180, 75, 290]],
+            "main_view_5": [n*x for x in [340, 215, 160, 30]],
+            "main_view_6": [n*x for x in [340, 290, 160, 30]],
+            "main_view_7": [n*x for x in [340, 365, 160, 30]],
+            "main_view_8": [n*x for x in [340, 440, 94, 30]],
+            "main_view_9": [n*x for x in [434, 440, 66, 30]],
             #test mode confirm
             "999" : [n*x for x in [220, 105, 350, 40]],
         }
         return params
     
-    def match_labels(self):
-        labels = {
+    def match_m_setup_labels(self):
+        m_home = {
+        "RMS" : ["RMS Voltage", "L-L", "L-N", "Min", "Max"],
+        "L-L" : ["AB", "BC", "CA", "Average"],
+        "L-N" : ["A", "B", "C", "Average"],
+        "L_Min" : ["AB", "BC", "CA", "Average", ],
+        "L_Max" : ["AB", "BC", "CA", "Average", ],
+        "N_Min" : ["A", "B", "C", "Average"],
+        "N_Max" : ["A", "B", "C", "Average"],   
+        }
+        
+        m_setup = {
         #voltage 
         "1" : ["Wiring", "Min. Meas. Secondary L-N Volt. [V]", "VT Primary L-L Voltage [V]", "VT Secondary L-L Voltage [V]", 
                "Primary Reference Voltage [V]", "Sliding Reference Voltage", "Rotating Sequence"],
@@ -61,7 +81,7 @@ class ConfigSetup:
         #test mode"
         "999" : ["Password"]
         }
-        return labels
+        return m_home, m_setup
     
     def match_pop_labels(self):
 

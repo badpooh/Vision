@@ -135,9 +135,9 @@ class SetupProcess:
     def variable_text(self, image_path, select_ocr):       
         test_image_path = image_path
         # image = cv2.imread(test_image_path)
-        roi_keys = ["17", "18", "19",]
+        roi_keys = ["main_view_1", "main_view_2", "main_view_3", "main_view_4", "main_view_5", "main_view_6", "main_view_7", "main_view_8", "main_view_9"]
         cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
-        ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
+        ocr_error, right_error = self.image_uitest.eval_variable_text(cutted_image, select_ocr)
         if not ocr_error and not right_error:
             print("PASS")
         else:
@@ -164,7 +164,7 @@ class SetupProcess:
 
             
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_M_S_ME_Voltage_2024-04-11_17_08_30.png"
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_max.png"
         time.sleep(1)
         self.variable_text(image_path, self.image_uitest.pop_params)
         time.sleep(0.6)

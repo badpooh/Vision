@@ -11,6 +11,7 @@ import time
 from pymodbus.client import ModbusTcpClient as ModbusClient
 import threading
 import torch
+from paddleocr import PaddleOCR
 
 from setup_test.setup_config import ConfigSetup
 
@@ -229,24 +230,75 @@ class OCRImageManager:
             color_difference = np.linalg.norm(average_color - target_color)
             return color_difference
     
+    # def image_cut_custom(self, image, roi_keys):
+    #     image = cv2.imread(image)
+    #     ### 기존 이미지 필터 ###
+    #     # resized_image = cv2.resize(image, None, None, 3, 3, cv2.INTER_CUBIC)
+    #     # blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 5)
+    #     # sharpened_image = cv2.addWeighted(resized_image, 2.0, blurred_image, -1.0, 0)
+    #     resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+    #     gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+    #     _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
+    #     # 컨트라스트 조정
+    #     alpha = 3.0 # Contrast control
+    #     beta = -100 # Brightness control
+    #     adjusted_image = cv2.convertScaleAbs(binary_image, alpha=alpha, beta=beta)
+    #     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
+    #     morph_image = cv2.morphologyEx(adjusted_image, cv2.MORPH_CLOSE, kernel)
+    #     # 노이즈 제거
+    #     # denoised_image = cv2.fastNlMeansDenoising(morph_image, None, 30, 7, 21)
+        
+    #     reader = easyocr.Reader(['en'], gpu=self.use_gpu)
+
+    #     # 각 ROI에 대해 OCR 처리 및 결과 수집
+    #     ocr_results = {}
+    #     for roi_key in roi_keys:
+    #         if roi_key in self.rois:
+    #             x, y, w, h = self.rois[roi_key]
+    #             roi_image = morph_image[y:y+h, x:x+w]
+    #             cv2.imshow('Image with Size Info', roi_image)
+    #             cv2.waitKey(0)
+    #             cv2.destroyAllWindows()
+    #             text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
+    #             extracted_texts = ' '.join([text[1].replace(':', '.') for text in text_results])
+    #             ocr_results[roi_key] = extracted_texts
+
+    #     # OCR 결과 출력
+    #     for roi_key, text in ocr_results.items():
+    #         print(f'ROI {roi_key}: {text}')
+
+    #     ocr_results_list = [text for text in ocr_results.values() if text]
+    #     # print(f"OCR Results: {ocr_results_list}")
+    #     return ocr_results_list 
+    
     def image_cut_custom(self, image, roi_keys):
         image = cv2.imread(image)
-        resized_image = cv2.resize(image, None, None, 3, 3, cv2.INTER_CUBIC)
-        blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
-        sharpened_image = cv2.addWeighted(resized_image, 1.5, blurred_image, -0.5, 0)
-        reader = easyocr.Reader(['en'], gpu=self.use_gpu)
+        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+        _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
+        # 컨트라스트 조정
+        alpha = 10.0 # Contrast control
+        beta = -100 # Brightness control
+        adjusted_image = cv2.convertScaleAbs(binary_image, alpha=alpha, beta=beta)
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
+        morph_image = cv2.morphologyEx(adjusted_image, cv2.MORPH_CLOSE, kernel)
+        # 노이즈 제거
+        denoised_image = cv2.fastNlMeansDenoising(morph_image, None, 30, 7, 21)
+
+        # PaddleOCR 초기화
+        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
 
         # 각 ROI에 대해 OCR 처리 및 결과 수집
         ocr_results = {}
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = sharpened_image[y:y+h, x:x+w]
-                # cv2.imshow('Image with Size Info', roi_image)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
-                text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
-                extracted_texts = ' '.join([text[1].replace(':', '.') for text in text_results])
+                roi_image = denoised_image[y:y+h, x:x+w]
+                cv2.imshow('Image with Size Info', roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+                text_results = ocr.ocr(roi_image, cls=False)  # 해당 ROI에 대해 OCR 수행
+                extracted_texts = ' '.join([text[1][0].replace(':', '.') for line in text_results for text in line])
                 ocr_results[roi_key] = extracted_texts
 
         # OCR 결과 출력
@@ -254,8 +306,7 @@ class OCRImageManager:
             print(f'ROI {roi_key}: {text}')
 
         ocr_results_list = [text for text in ocr_results.values() if text]
-        # print(f"OCR Results: {ocr_results_list}")
-        return ocr_results_list 
+        return ocr_results_list
 
 class ModbusLabels:
     
@@ -341,7 +392,7 @@ class ModbusLabels:
         
 class Evaluation:
 
-    labels = config_data.match_labels()
+    labels = config_data.match_m_setup_labels()
     pop_params = config_data.match_pop_labels()
 
     def eval_static_text(self, ocr_results_1, right_key):
