@@ -159,12 +159,13 @@ class SetupProcess:
             self.touch_manager.menu_touch("btn_num_pw_enter")
             self.touch_manager.menu_touch("btn_testmode_2")
             self.touch_manager.menu_touch("btn_popup_enter")
+            self.touch_manager.menu_touch("btn_apply")
         else:
             print("error")
 
             
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_max.png"
+        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\vol_max2.png"
         time.sleep(1)
         self.variable_text(image_path, self.image_uitest.pop_params)
         time.sleep(0.6)

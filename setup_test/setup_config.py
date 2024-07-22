@@ -31,15 +31,23 @@ class ConfigSetup:
             "20": [n*x for x in [280, 30, 240, 40]],
             "21": [n*x for x in [280, 75, 240, 40]],
             #measurement ocr
-            "main_view_1": [n*x for x in [160, 120, 625, 48]],
-            "main_view_2": [n*x for x in [160, 180, 140, 290]],
-            "main_view_3": [n*x for x in [510, 180, 190, 290]],
-            "main_view_4": [n*x for x in [700, 180, 75, 290]],
-            "main_view_5": [n*x for x in [340, 215, 160, 30]],
-            "main_view_6": [n*x for x in [340, 290, 160, 30]],
-            "main_view_7": [n*x for x in [340, 365, 160, 30]],
-            "main_view_8": [n*x for x in [340, 440, 94, 30]],
-            "main_view_9": [n*x for x in [434, 440, 66, 30]],
+            "main_view_1": [n*x for x in [160, 120, 625, 48]], #rms voltage l-l l-m min max
+            "main_view_2": [n*x for x in [165, 185, 120, 55]], # AB
+            "main_view_3": [n*x for x in [320, 215, 190, 30]], # time stamp
+            "main_view_4": [n*x for x in [540, 190, 160, 55]], # 190.0
+            "main_view_5": [n*x for x in [720, 200, 35, 40]], # V
+            "main_view_2": [n*x for x in [165, 270, 120, 40]], # BC
+            "main_view_3": [n*x for x in [320, 290, 190, 30]], # time stamp
+            "main_view_4": [n*x for x in [540, 260, 160, 60]], # 190.0
+            "main_view_5": [n*x for x in [720, 270, 35, 40]], # V
+            "main_view_2": [n*x for x in [165, 340, 120, 40]], # CA
+            "main_view_3": [n*x for x in [320, 360, 190, 35]], # time stamp
+            "main_view_4": [n*x for x in [540, 340, 160, 50]], # 190.0
+            "main_view_5": [n*x for x in [720, 350, 35, 40]], # V
+            "main_view_2": [n*x for x in [165, 415, 120, 40]], # Average
+            "main_view_3": [n*x for x in [320, 430, 190, 35]], # time stamp
+            "main_view_4": [n*x for x in [540, 410, 160, 60]], # 190.0
+            "main_view_5": [n*x for x in [720, 420, 35, 40]], # V
             #test mode confirm
             "999" : [n*x for x in [220, 105, 350, 40]],
         }
