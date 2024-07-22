@@ -36,18 +36,18 @@ class ConfigSetup:
             "main_view_3": [n*x for x in [320, 215, 190, 30]], # time stamp
             "main_view_4": [n*x for x in [540, 190, 160, 55]], # 190.0
             "main_view_5": [n*x for x in [720, 200, 35, 40]], # V
-            "main_view_2": [n*x for x in [165, 270, 120, 40]], # BC
-            "main_view_3": [n*x for x in [320, 290, 190, 30]], # time stamp
-            "main_view_4": [n*x for x in [540, 260, 160, 60]], # 190.0
-            "main_view_5": [n*x for x in [720, 270, 35, 40]], # V
-            "main_view_2": [n*x for x in [165, 340, 120, 40]], # CA
-            "main_view_3": [n*x for x in [320, 360, 190, 35]], # time stamp
-            "main_view_4": [n*x for x in [540, 340, 160, 50]], # 190.0
-            "main_view_5": [n*x for x in [720, 350, 35, 40]], # V
-            "main_view_2": [n*x for x in [165, 415, 120, 40]], # Average
-            "main_view_3": [n*x for x in [320, 430, 190, 35]], # time stamp
-            "main_view_4": [n*x for x in [540, 410, 160, 60]], # 190.0
-            "main_view_5": [n*x for x in [720, 420, 35, 40]], # V
+            "main_view_6": [n*x for x in [165, 270, 120, 40]], # BC
+            "main_view_7": [n*x for x in [320, 290, 190, 30]], # time stamp
+            "main_view_8": [n*x for x in [540, 260, 160, 60]], # 190.0
+            "main_view_9": [n*x for x in [720, 270, 35, 40]], # V
+            "main_view_10": [n*x for x in [165, 340, 120, 40]], # CA
+            "main_view_11": [n*x for x in [320, 360, 190, 35]], # time stamp
+            "main_view_12": [n*x for x in [540, 340, 160, 50]], # 190.0
+            "main_view_13": [n*x for x in [720, 350, 35, 40]], # V
+            "main_view_14": [n*x for x in [165, 415, 120, 40]], # Average
+            "main_view_15": [n*x for x in [320, 430, 190, 35]], # time stamp
+            "main_view_16": [n*x for x in [540, 410, 160, 60]], # 190.0
+            "main_view_17": [n*x for x in [720, 420, 35, 40]], # V
             #test mode confirm
             "999" : [n*x for x in [220, 105, 350, 40]],
         }

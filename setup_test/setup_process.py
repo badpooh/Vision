@@ -132,12 +132,19 @@ class SetupProcess:
             print("FAIL: different text")
         return 
             
-    def variable_text(self, image_path, select_ocr):       
+    def variable_text(self, image_path, select_ocr, roi_keys):       
         test_image_path = image_path
-        # image = cv2.imread(test_image_path)
-        roi_keys = ["main_view_1", "main_view_2", "main_view_3", "main_view_4", "main_view_5", "main_view_6", "main_view_7", "main_view_8", "main_view_9"]
-        cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
-        ocr_error, right_error = self.image_uitest.eval_variable_text(cutted_image, select_ocr)
+        
+        # 첫 번째 이미지 처리
+        cutted_images = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+        
+        # 두 번째 이미지 처리
+        roi_key = ["main_view_4"]
+        ocr_calcul_results = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_key)
+        
+        # OCR 결과 비교
+        ocr_error, right_error = self.image_uitest.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        
         if not ocr_error and not right_error:
             print("PASS")
         else:
@@ -165,8 +172,10 @@ class SetupProcess:
 
             
     def testcode01(self):
-        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\vol_max2.png"
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_max2.png"
         time.sleep(1)
-        self.variable_text(image_path, self.image_uitest.pop_params)
+        roi_keys = ["main_view_1", "main_view_2", "main_view_4", "main_view_5"]
+        select_ocr = "RMS"
+        self.variable_text(image_path, select_ocr, roi_keys)
         time.sleep(0.6)
         ## popup 화면 설정값 범위 및 고정 텍스트 읽는거 추가

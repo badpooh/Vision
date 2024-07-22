@@ -294,9 +294,9 @@ class OCRImageManager:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = denoised_image[y:y+h, x:x+w]
-                # cv2.imshow('Image with Size Info', roi_image)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
+                cv2.imshow('Image with Size Info', roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
                 text_results = ocr.ocr(roi_image, cls=False)  # 해당 ROI에 대해 OCR 수행
                 extracted_texts = ' '.join([text[1][0].replace(':', '.') for line in text_results for text in line])
                 ocr_results[roi_key] = extracted_texts
@@ -394,6 +394,7 @@ class Evaluation:
 
     labels = config_data.match_m_setup_labels()
     pop_params = config_data.match_pop_labels()
+    m_home, m_setup = config_data.match_m_setup_labels()
 
     def eval_static_text(self, ocr_results_1, right_key):
         
@@ -438,7 +439,7 @@ class Evaluation:
     
     def eval_demo_test(self, ocr_results, right_key, ocr_calcul_results):
 
-        right_list = self.pop_params[right_key]
+        right_list = self.m_home[right_key]
         ocr_right_1 = right_list
 
         right_list_1 = [text.strip() for text in ocr_right_1]
@@ -450,25 +451,20 @@ class Evaluation:
         ocr_error = leave_ocr_all
         right_error = leave_right_all
 
-        A, B, C, Aver = ocr_calcul_results
+        values = ['A', 'B', 'C', 'Aver']
+        results = {name: float(value) for name, value in zip(values, ocr_calcul_results)}
 
-        if 0.998*A < A < 1.002*A:
-            print("A = PASS")
-        else:
-            print(f"{A}")
-        
-        if 0.998*B < B < 1.002*B:
-            print("A = PASS")
-        else:
-            print(f"{B}")
+        for name, value in results.items():
+            if 0.998 * value < value < 1.002 * value:
+                print(f"{name} = PASS")
+            else:
+                print(f"{name} = {value}")
 
-        
         # OCR 결과와 매칭되지 않아 남은 단어
         print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
         print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
         
         return ocr_error, right_error 
-        pass
     
 # class SetupTesting:
     
