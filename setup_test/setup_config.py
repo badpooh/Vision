@@ -31,7 +31,7 @@ class ConfigSetup:
             "20": [n*x for x in [280, 30, 240, 40]],
             "21": [n*x for x in [280, 75, 240, 40]],
             #measurement ocr
-            "main_view_1": [n*x for x in [160, 120, 625, 48]], #rms voltage l-l l-m min max
+            "main_view_1": [n*x for x in [160, 120, 620, 53]], #rms voltage l-l l-m min max
             "main_view_2": [n*x for x in [165, 185, 120, 55]], # AB
             "main_view_3": [n*x for x in [320, 215, 190, 30]], # time stamp
             "main_view_4": [n*x for x in [540, 190, 160, 55]], # 190.0
@@ -147,7 +147,7 @@ class ConfigSetup:
         "btn_popup_3": [400, 215],
         "btn_popup_4": [400, 265],
         "btn_popup_5": [400, 315],
-        "btn_popup_enter": [340, 430],
+        "btn_popup_enter": [340, 415],
         "btn_popup_cancel": [450, 430],
         "btn_number_1": [310, 200],
         "btn_number_2": [370, 200],
@@ -175,6 +175,7 @@ class ConfigSetup:
         "btn_num_pw_enter" : [340, 345],
         "btn_testmode_1" : [270, 100],
         "btn_testmode_2" : [270, 160],
+        "infinite" : [490, 125],
 
     }
         return coordinates

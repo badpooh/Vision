@@ -139,7 +139,7 @@ class SetupProcess:
         cutted_images = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
         
         # 두 번째 이미지 처리
-        roi_key = ["main_view_4"]
+        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
         ocr_calcul_results = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_key)
         
         # OCR 결과 비교
@@ -155,7 +155,7 @@ class SetupProcess:
         self.touch_manager.btn_front_setup()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_3")
-        self.touch_manager.menu_touch("data_view_1")
+        self.touch_manager.menu_touch("data_view_2")
         self.touch_manager.screenshot()
         image_path = self.load_image_file()
         roi_keys = ["999"]
@@ -164,17 +164,23 @@ class SetupProcess:
             for _ in range(4): 
                 self.touch_manager.menu_touch("btn_num_pw_0")
             self.touch_manager.menu_touch("btn_num_pw_enter")
-            self.touch_manager.menu_touch("btn_testmode_2")
+            self.touch_manager.menu_touch("infinite")
             self.touch_manager.menu_touch("btn_popup_enter")
             self.touch_manager.menu_touch("btn_apply")
         else:
             print("error")
+            self.touch_manager.menu_touch("btn_popup_cencel")
+        self.touch_manager.menu_touch("data_view_1")
+        self.touch_manager.menu_touch("btn_testmode_2")
+        self.touch_manager.menu_touch("btn_popup_enter")
+        self.touch_manager.menu_touch("btn_apply")
+        print("Demo Mode Start")
 
             
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_max2.png"
+        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\vol_max2.png"
         time.sleep(1)
-        roi_keys = ["main_view_1", "main_view_2", "main_view_4", "main_view_5"]
+        roi_keys = ["main_view_1", "main_view_2", "main_view_3", "main_view_5"]
         select_ocr = "RMS"
         self.variable_text(image_path, select_ocr, roi_keys)
         time.sleep(0.6)
