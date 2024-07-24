@@ -315,7 +315,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 60, 480))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 98, 28))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.gridLayout_2.addWidget(self.scrollArea, 0, 0, 1, 1)
@@ -364,6 +364,9 @@ class Ui_MainWindow(object):
         self.btn_FT_network = QPushButton(self.setup_test_page)
         self.btn_FT_network.setObjectName(u"btn_FT_network")
         self.btn_FT_network.setGeometry(QRect(720, 390, 121, 24))
+        self.btn_demo_mode_ui_test = QPushButton(self.setup_test_page)
+        self.btn_demo_mode_ui_test.setObjectName(u"btn_demo_mode_ui_test")
+        self.btn_demo_mode_ui_test.setGeometry(QRect(860, 310, 121, 41))
         self.stackedWidget.addWidget(self.setup_test_page)
         self.frame_test_page = QWidget()
         self.frame_test_page.setObjectName(u"frame_test_page")
@@ -456,6 +459,8 @@ class Ui_MainWindow(object):
         self.btn_FT_measurement.setText(QCoreApplication.translate("MainWindow", u"F.T Measurement", None))
         self.btn_FT_event.setText(QCoreApplication.translate("MainWindow", u"F.T Event", None))
         self.btn_FT_network.setText(QCoreApplication.translate("MainWindow", u"F.T Network", None))
+        self.btn_demo_mode_ui_test.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
+"UI TEST ", None))
         self.btn_select_webcam.setText(QCoreApplication.translate("MainWindow", u"Select WebCam", None))
         self.btn_start_webcam.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))

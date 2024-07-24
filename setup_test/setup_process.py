@@ -178,7 +178,7 @@ class SetupProcess:
 
             
     def testcode01(self):
-        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\vol_max2.png"
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_max2.png"
         time.sleep(1)
         roi_keys = ["main_view_1", "main_view_2", "main_view_3", "main_view_5"]
         select_ocr = "RMS"

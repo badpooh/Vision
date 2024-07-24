@@ -55,7 +55,7 @@ class ConfigSetup:
     
     def match_m_setup_labels(self):
         m_home = {
-        "RMS" : ["RMS Voltage", "L-L", "L-N", "Min", "Max"],
+        "RMS" : ["RMS Voltage L-L L-N Min Max"],
         "L-L" : ["AB", "BC", "CA", "Average"],
         "L-N" : ["A", "B", "C", "Average"],
         "L_Min" : ["AB", "BC", "CA", "Average", ],

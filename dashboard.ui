@@ -566,8 +566,8 @@ QPushButton:checked{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>60</width>
-                     <height>480</height>
+                     <width>98</width>
+                     <height>28</height>
                     </rect>
                    </property>
                   </widget>
@@ -711,6 +711,20 @@ QPushButton:checked{
            </property>
            <property name="text">
             <string>F.T Network</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_demo_mode_ui_test">
+           <property name="geometry">
+            <rect>
+             <x>860</x>
+             <y>310</y>
+             <width>121</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Demo Mode 
+UI TEST </string>
            </property>
           </widget>
          </widget>
