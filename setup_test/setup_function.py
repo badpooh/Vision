@@ -294,11 +294,12 @@ class OCRImageManager:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = denoised_image[y:y+h, x:x+w]
-                cv2.imshow('Image with Size Info', roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                # cv2.imshow('Image with Size Info', roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 text_results = ocr.ocr(roi_image, cls=False)  # 해당 ROI에 대해 OCR 수행
-                extracted_texts = ' '.join([text[1][0].replace(':', '.') for line in text_results for text in line])
+                # extracted_texts = ' '.join([text[1][0].replace(':', '.') for line in text_results for text in line])
+                extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
                 ocr_results[roi_key] = extracted_texts
 
         # OCR 결과 출력
@@ -439,11 +440,14 @@ class Evaluation:
     
     def eval_demo_test(self, ocr_results, right_key, ocr_calcul_results):
 
+        # processed_ocr_results = [re.sub(r'(\d)\.(\d)\.(\d)', r'\1:\2:\3', result) for result in ocr_results]
+
         right_list = self.m_home[right_key]
         ocr_right_1 = right_list
 
         right_list_1 = [text.strip() for text in ocr_right_1]
         ocr_list_1 = [result.strip() for result in ocr_results]
+
         
         leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
         leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
