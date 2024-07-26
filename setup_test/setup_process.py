@@ -132,14 +132,13 @@ class SetupProcess:
             print("FAIL: different text")
         return 
             
-    def variable_text(self, image_path, select_ocr, roi_keys):       
+    def variable_text(self, image_path, select_ocr, roi_keys, roi_key):       
         test_image_path = image_path
         
         # 첫 번째 이미지 처리
         cutted_images = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
         
         # 두 번째 이미지 처리
-        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
         ocr_calcul_results = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_key)
         
         # OCR 결과 비교
@@ -149,15 +148,28 @@ class SetupProcess:
             print("PASS")
         else:
             print("FAIL: different text")
-             
+
+class DemoTest:
+
+    touch_manager = TouchManager()
+    modbus_manager = ModbusManager()
+    edit_image = OCRImageManager()
+    image_uitest = Evaluation()
+    modbus_label = ModbusLabels()
+    setupprocess = SetupProcess()
+    search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
+    now = datetime.now()
+    file_time_diff = {}
+
     def mea_demo_mode(self):
+        ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_setup()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_3")
         self.touch_manager.menu_touch("data_view_2")
         self.touch_manager.screenshot()
-        image_path = self.load_image_file()
+        image_path = self.setupprocess.load_image_file()
         roi_keys = ["999"]
         cutted_image = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_keys)
         if "Password" in cutted_image:
@@ -176,12 +188,66 @@ class SetupProcess:
         self.touch_manager.menu_touch("btn_apply")
         print("Demo Mode Start")
 
+    def reset_max_min(self):
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_setup()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_1")
+        self.touch_manager.menu_touch("data_view_3")
+        self.touch_manager.menu_touch("cauiton_confirm")
+        self.touch_manager.menu_touch("btn_apply")
+        self.MM_clear_time = datetime.now
+        print(self.MM_clear_time)
+
+    def demo_mea_voltage(self):
+        ### L-L 만 검사 ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch("side_menu_1")
+        self.touch_manager.menu_touch("meas_L-L")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        cutted_images = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_key)
+        select_ocr = "RMS_L-L"
+        ocr_error, right_error = self.image_uitest.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        if not ocr_error and not right_error:
+            print("PASS")
+        else:
+            print("FAIL: different text")
+        ### L-L min 검사 ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        cutted_images = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_key)
+        time_images = self.edit_image.image_cut_custom(image=image_path, roi_keys=time_keys)
+        select_ocr = "RMS_L-L"
+        ocr_error, right_error = self.image_uitest.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        if not ocr_error and not right_error:
+            print("PASS")
+        else:
+            print("FAIL: different text")
+        self.image_uitest.check_time_diff(time_images)
+
+
             
     def testcode01(self):
         image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\vol_max2.png"
         time.sleep(1)
         roi_keys = ["main_view_1", "main_view_2", "main_view_3", "main_view_5"]
         select_ocr = "RMS"
-        self.variable_text(image_path, select_ocr, roi_keys)
+        self.setupprocess.variable_text(image_path, select_ocr, roi_keys)
         time.sleep(0.6)
         ## popup 화면 설정값 범위 및 고정 텍스트 읽는거 추가
+    
+    def testcode02(self):
+        self.mea_demo_mode()
+        self.reset_max_min()
+        self.demo_mea_voltage()

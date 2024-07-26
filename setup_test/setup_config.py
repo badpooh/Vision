@@ -55,8 +55,7 @@ class ConfigSetup:
     
     def match_m_setup_labels(self):
         m_home = {
-        "RMS" : ["RMS Voltage L-L L-N Min Max"],
-        "L-L" : ["AB", "BC", "CA", "Average"],
+        "RMS_L-L" : ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average", "v", "v", "v", "v"],
         "L-N" : ["A", "B", "C", "Average"],
         "L_Min" : ["AB", "BC", "CA", "Average", ],
         "L_Max" : ["AB", "BC", "CA", "Average", ],
@@ -176,6 +175,12 @@ class ConfigSetup:
         "btn_testmode_1" : [270, 100],
         "btn_testmode_2" : [270, 160],
         "infinite" : [490, 125],
+        "cauiton_confirm" : [340, 330],
+        "cauiton_cancel" : [450, 330],
+        "meas_L-L" : [410, 150],
+        "meas_L-N" : [510, 150],
+        "Min" : [620, 150],
+        "Max" : [720, 150],
 
     }
         return coordinates

@@ -199,6 +199,14 @@ class TouchManager:
             self.touch_write(self.coords_TA["setup_button_bit"], 32)
         else:
             print("Button Apply Touch Error")
+
+    def btn_front_home(self):
+        if self.client_check:
+            self.touch_write(self.coords_TA["setup_button"], 1)
+            self.touch_write(self.coords_TA["setup_button_bit"], 1)
+        else:
+            print("Button Apply Touch Error")
+
         
     
 class OCRImageManager:
@@ -392,11 +400,17 @@ class ModbusLabels:
         return change_count
         
 class Evaluation:
+    
+    MM_clear_time = None
 
-    labels = config_data.match_m_setup_labels()
-    pop_params = config_data.match_pop_labels()
-    m_home, m_setup = config_data.match_m_setup_labels()
+    def __init__(self):
+        self.labels = config_data.match_m_setup_labels()
+        self.pop_params = config_data.match_pop_labels()
+        self.m_home, self.m_setup = config_data.match_m_setup_labels()
 
+        pass
+
+    
     def eval_static_text(self, ocr_results_1, right_key):
         
         right_list = self.pop_params[right_key]
@@ -440,8 +454,6 @@ class Evaluation:
     
     def eval_demo_test(self, ocr_results, right_key, ocr_calcul_results):
 
-        # processed_ocr_results = [re.sub(r'(\d)\.(\d)\.(\d)', r'\1:\2:\3', result) for result in ocr_results]
-
         right_list = self.m_home[right_key]
         ocr_right_1 = right_list
 
@@ -468,4 +480,23 @@ class Evaluation:
         print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
         print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
         
-        return ocr_error, right_error 
+        return ocr_error, right_error
+    
+    def check_time_diff(self, time_images):
+        # self.MM_clear_time이 설정되지 않았다면 현재 시간으로 초기화
+        if not self.MM_clear_time:
+            self.MM_clear_time = datetime.now()
+
+        time_format = "%Y-%m-%d %H:%M:%S"  # 날짜와 시간 형식 정의
+        for time_str in time_images:
+            try:
+                image_time = datetime.strptime(time_str, time_format)
+                time_diff = abs((image_time - self.MM_clear_time).total_seconds())
+
+                # 5분 이내인지 확인
+                if time_diff <= 5 * 60:
+                    print(f"{time_str} = PASS")
+                else:
+                    print(f"{time_str} = {time_diff} seconds = FAIL")
+            except ValueError as e:
+                print(f"Time format error for {time_str}: {e}")
