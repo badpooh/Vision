@@ -206,10 +206,8 @@ class TouchManager:
             self.touch_write(self.coords_TA["setup_button_bit"], 1)
         else:
             print("Button Apply Touch Error")
-
-        
-    
-class OCRImageManager:
+   
+class OCRManager:
     
     rois = config_data.roi_params()
     
@@ -223,6 +221,16 @@ class OCRImageManager:
         cropped_image = image[int(height*height_ratio_start):int(height*height_ratio_end),
                             int(width*width_ratio_start):int(width*width_ratio_end)]
         resized_image = cv2.resize(cropped_image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+        
+        ### 이미지 필터 ###
+        # gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+        # _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
+        # alpha = 10.0 # Contrast control
+        # beta = -100 # Brightness control
+        # adjusted_image = cv2.convertScaleAbs(binary_image, alpha=alpha, beta=beta)
+        # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
+        # morph_image = cv2.morphologyEx(adjusted_image, cv2.MORPH_CLOSE, kernel)
+        # denoised_image = cv2.fastNlMeansDenoising(morph_image, None, 30, 7, 21)
         
         # 이미지 블러 처리 및 선명하게 만들기
         blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
@@ -238,65 +246,13 @@ class OCRImageManager:
             color_difference = np.linalg.norm(average_color - target_color)
             return color_difference
     
-    # def image_cut_custom(self, image, roi_keys):
-    #     image = cv2.imread(image)
-    #     ### 기존 이미지 필터 ###
-    #     # resized_image = cv2.resize(image, None, None, 3, 3, cv2.INTER_CUBIC)
-    #     # blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 5)
-    #     # sharpened_image = cv2.addWeighted(resized_image, 2.0, blurred_image, -1.0, 0)
-    #     resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
-    #     gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-    #     _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
-    #     # 컨트라스트 조정
-    #     alpha = 3.0 # Contrast control
-    #     beta = -100 # Brightness control
-    #     adjusted_image = cv2.convertScaleAbs(binary_image, alpha=alpha, beta=beta)
-    #     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
-    #     morph_image = cv2.morphologyEx(adjusted_image, cv2.MORPH_CLOSE, kernel)
-    #     # 노이즈 제거
-    #     # denoised_image = cv2.fastNlMeansDenoising(morph_image, None, 30, 7, 21)
-        
-    #     reader = easyocr.Reader(['en'], gpu=self.use_gpu)
-
-    #     # 각 ROI에 대해 OCR 처리 및 결과 수집
-    #     ocr_results = {}
-    #     for roi_key in roi_keys:
-    #         if roi_key in self.rois:
-    #             x, y, w, h = self.rois[roi_key]
-    #             roi_image = morph_image[y:y+h, x:x+w]
-    #             cv2.imshow('Image with Size Info', roi_image)
-    #             cv2.waitKey(0)
-    #             cv2.destroyAllWindows()
-    #             text_results = reader.readtext(roi_image, paragraph=False)  # 해당 ROI에 대해 OCR 수행
-    #             extracted_texts = ' '.join([text[1].replace(':', '.') for text in text_results])
-    #             ocr_results[roi_key] = extracted_texts
-
-    #     # OCR 결과 출력
-    #     for roi_key, text in ocr_results.items():
-    #         print(f'ROI {roi_key}: {text}')
-
-    #     ocr_results_list = [text for text in ocr_results.values() if text]
-    #     # print(f"OCR Results: {ocr_results_list}")
-    #     return ocr_results_list 
-    
-    def image_cut_custom(self, image, roi_keys):
+    def ocr_basic(self, image, roi_keys):
         image = cv2.imread(image)
         resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
-        gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
-        # 컨트라스트 조정
-        alpha = 10.0 # Contrast control
-        beta = -100 # Brightness control
-        adjusted_image = cv2.convertScaleAbs(binary_image, alpha=alpha, beta=beta)
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
-        morph_image = cv2.morphologyEx(adjusted_image, cv2.MORPH_CLOSE, kernel)
-        # 노이즈 제거
-        denoised_image = cv2.fastNlMeansDenoising(morph_image, None, 30, 7, 21)
+        denoised_image = cv2.fastNlMeansDenoising(resized_image, None, 30, 7, 21)
 
-        # PaddleOCR 초기화
         ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False,)  
 
-        # 각 ROI에 대해 OCR 처리 및 결과 수집
         ocr_results = {}
         for roi_key in roi_keys:
             if roi_key in self.rois:
@@ -305,8 +261,7 @@ class OCRImageManager:
                 # cv2.imshow('Image with Size Info', roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
-                text_results = ocr.ocr(roi_image, cls=False)  # 해당 ROI에 대해 OCR 수행
-                # extracted_texts = ' '.join([text[1][0].replace(':', '.') for line in text_results for text in line])
+                text_results = ocr.ocr(roi_image, cls=False)
                 extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
                 ocr_results[roi_key] = extracted_texts
 
@@ -319,8 +274,9 @@ class OCRImageManager:
 
 class ModbusLabels:
     
-    mobus_manager = ModbusManager()
-    setup_client = mobus_manager.setup_client
+    modbus_manager = ModbusManager()
+    touch_manager = TouchManager()
+    setup_client = modbus_manager.setup_client
     meter_m_vol_mappings_value, meter_m_vol_mappings_uint16, meter_m_vol_mappings_uint32 = config_data.meter_m_vol_mapping()
     meter_m_cur_mappings_value, meter_m_cur_mappings_uint16, meter_m_cur_mappings_uint32 = config_data.meter_m_cur_mapping()
     
@@ -398,6 +354,26 @@ class ModbusLabels:
         else:
             print("No changes detected.")
         return change_count
+    
+    def demo_test_setting(self):
+        self.touch_manager.uitest_mode_start()
+        addr_setup_lock = 2900
+        value = [2300, 0, 700, 1]
+        if self.modbus_manager.setup_client:
+            self.response = self.modbus_manager.setup_client.write_registers(addr_setup_lock, value)
+            self.response = self.modbus_manager.setup_client.write_register(6001, 0)
+            self.response = self.modbus_manager.setup_client.write_register(6003, 1900)
+            self.response = self.modbus_manager.setup_client.write_register(6005, 1900)
+            self.response = self.modbus_manager.setup_client.write_register(6007, 1900)
+            self.response = self.modbus_manager.setup_client.write_register(6009, 0)
+            self.response = self.modbus_manager.setup_client.write_register(6000, 1)
+            time.sleep(0.6)
+            self.response = self.modbus_manager.setup_client.write_register(4002, 1440)
+            self.response = self.modbus_manager.setup_client.write_register(4000, 1)
+            self.response = self.modbus_manager.setup_client.write_register(4001, 1)
+            print("good")
+        else:
+            print(self.response.isError())
         
 class Evaluation:
     
@@ -452,23 +428,18 @@ class Evaluation:
             
             return ocr_error, right_error  
     
-    def eval_demo_test(self, ocr_results, right_key, ocr_calcul_results):
+    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas):
 
-        right_list = self.m_home[right_key]
-        ocr_right_1 = right_list
+        ocr_right = self.m_home[right_key]
 
-        right_list_1 = [text.strip() for text in ocr_right_1]
-        ocr_list_1 = [result.strip() for result in ocr_results]
-
+        right_list = [text.strip() for text in ocr_right]
+        ocr_rt_list = [result.strip() for result in ocr_res]
         
-        leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
-        leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
-        
-        ocr_error = leave_ocr_all
-        right_error = leave_right_all
+        ocr_error = [result for result in ocr_rt_list if result not in right_list]
+        right_error = [text for text in right_list if text not in ocr_rt_list]
 
         values = ['A', 'B', 'C', 'Aver']
-        results = {name: float(value) for name, value in zip(values, ocr_calcul_results)}
+        results = {name: float(value) for name, value in zip(values, ocr_res_meas)}
 
         for name, value in results.items():
             if 189.62 < value < 190.38:
@@ -476,27 +447,28 @@ class Evaluation:
             else:
                 print(f"{name} = {value}")
 
-        # OCR 결과와 매칭되지 않아 남은 단어
-        print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
-        print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
+        print(f"OCR - 정답: {ocr_error}")
+        print(f"정답 - OCR: {right_error}")
         
         return ocr_error, right_error
     
     def check_time_diff(self, time_images):
-        # self.MM_clear_time이 설정되지 않았다면 현재 시간으로 초기화
         if not self.MM_clear_time:
             self.MM_clear_time = datetime.now()
 
-        time_format = "%Y-%m-%d %H:%M:%S"  # 날짜와 시간 형식 정의
+        time_format = "%Y-%m-%d %H:%M:%S"
+        failed_times = []
         for time_str in time_images:
             try:
                 image_time = datetime.strptime(time_str, time_format)
                 time_diff = abs((image_time - self.MM_clear_time).total_seconds())
-
-                # 5분 이내인지 확인
                 if time_diff <= 5 * 60:
                     print(f"{time_str} = PASS")
                 else:
                     print(f"{time_str} = {time_diff} seconds = FAIL")
+                    failed_times.append(time_str)
             except ValueError as e:
                 print(f"Time format error for {time_str}: {e}")
+        if failed_times:
+            return failed_times
+        return None

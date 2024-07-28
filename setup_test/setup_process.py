@@ -3,8 +3,9 @@ import numpy as np
 import os, glob
 from datetime import datetime
 import time
+import pandas as pd
 
-from setup_test.setup_function import TouchManager, ModbusManager, OCRImageManager, Evaluation, ModbusLabels
+from setup_test.setup_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
 
 
 image_directory = r"\\10.10.20.30\screenshot"
@@ -14,8 +15,8 @@ class SetupProcess:
     
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
-    edit_image = OCRImageManager()
-    image_uitest = Evaluation()
+    ocr_func = OCRManager()
+    evaluation = Evaluation()
     modbus_label = ModbusLabels()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
@@ -41,7 +42,7 @@ class SetupProcess:
         time.sleep(0.6)
         image_path = self.load_image_file()
         time.sleep(1)
-        self.static_text_measurement(image_path, "measurement", "mea_voltage", self.image_uitest.label_voltage)
+        self.static_text_measurement(image_path, "measurement", "mea_voltage", self.evaluation.label_voltage)
         time.sleep(0.6)
         self.touch_manager.menu_touch("side_menu_2")
         time.sleep(0.6)
@@ -49,7 +50,7 @@ class SetupProcess:
         time.sleep(0.6)
         image_path1 = self.load_image_file()
         time.sleep(1)
-        self.static_text_measurement(image_path1, "measurement", "mea_current", self.image_uitest.label_current)
+        self.static_text_measurement(image_path1, "measurement", "mea_current", self.evaluation.label_current)
         time.sleep(0.6)
         self.touch_manager.menu_touch("side_menu_3")
         time.sleep(0.6)
@@ -57,7 +58,7 @@ class SetupProcess:
         time.sleep(0.6)
         image_path2 = self.load_image_file()
         time.sleep(1)
-        self.static_text_measurement(image_path2, "measurement", "mea_demand", self.image_uitest.label_demand)
+        self.static_text_measurement(image_path2, "measurement", "mea_demand", self.evaluation.label_demand)
         time.sleep(0.6)
         self.touch_manager.menu_touch("side_menu_4")
         time.sleep(0.6)
@@ -65,7 +66,7 @@ class SetupProcess:
         time.sleep(0.6)
         image_path3 = self.load_image_file()
         time.sleep(1)
-        self.static_text_measurement(image_path3, "measurement", "mea_power", self.image_uitest.label_power)
+        self.static_text_measurement(image_path3, "measurement", "mea_power", self.evaluation.label_power)
 
     def PT_measurement(self):
         self.touch_manager.menu_touch("main_menu_1")
@@ -107,14 +108,14 @@ class SetupProcess:
     def static_text_measurement(self, image_path, color1, color2, select_ocr, roi_keys):       
         test_image_path = image_path
         image = cv2.imread(test_image_path)
-        color_result = self.edit_image.color_detection(image, *self.coords_color[color1])
-        color_result1 = self.edit_image.color_detection(image, *self.coords_color[color2])
+        color_result = self.ocr_func.color_detection(image, *self.coords_color[color1])
+        color_result1 = self.ocr_func.color_detection(image, *self.coords_color[color2])
 
         if color_result < 5 and color_result1 < 5:
             roi_keys = ["1", "2", "5", "6", "9", "10", "13", "14"]
-            cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+            cutted_image = self.ocr_func.ocr_basic(image=test_image_path, roi_keys=roi_keys)
             select_ocr = ["1"]
-            ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
+            ocr_error, right_error = self.evaluation.eval_static_text(cutted_image, select_ocr)
             if not ocr_error and not right_error:
                 print("PASS")
             else:
@@ -124,8 +125,8 @@ class SetupProcess:
             
     def static_popup_text(self, image_path, select_ocr, roi_keys):       
         test_image_path = image_path
-        cutted_image = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
-        ocr_error, right_error = self.image_uitest.eval_static_text(cutted_image, select_ocr)
+        cutted_image = self.ocr_func.ocr_basic(image=test_image_path, roi_keys=roi_keys)
+        ocr_error, right_error = self.evaluation.eval_static_text(cutted_image, select_ocr)
         if not ocr_error and not right_error:
             print("PASS")
         else:
@@ -136,13 +137,13 @@ class SetupProcess:
         test_image_path = image_path
         
         # 첫 번째 이미지 처리
-        cutted_images = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_keys)
+        cutted_images = self.ocr_func.ocr_basic(image=test_image_path, roi_keys=roi_keys)
         
         # 두 번째 이미지 처리
-        ocr_calcul_results = self.edit_image.image_cut_custom(image=test_image_path, roi_keys=roi_key)
+        ocr_calcul_results = self.ocr_func.ocr_basic(image=test_image_path, roi_keys=roi_key)
         
         # OCR 결과 비교
-        ocr_error, right_error = self.image_uitest.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
         
         if not ocr_error and not right_error:
             print("PASS")
@@ -153,8 +154,8 @@ class DemoTest:
 
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
-    edit_image = OCRImageManager()
-    image_uitest = Evaluation()
+    ocr_func = OCRManager()
+    evaluation = Evaluation()
     modbus_label = ModbusLabels()
     setupprocess = SetupProcess()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
@@ -171,7 +172,7 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["999"]
-        cutted_image = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_keys)
+        cutted_image = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         if "Password" in cutted_image:
             for _ in range(4): 
                 self.touch_manager.menu_touch("btn_num_pw_0")
@@ -199,7 +200,7 @@ class DemoTest:
         self.MM_clear_time = datetime.now
         print(self.MM_clear_time)
 
-    def demo_mea_voltage(self):
+    def demo_mea_vol_rms(self):
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -210,10 +211,10 @@ class DemoTest:
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
         roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_key)
+        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
         select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.image_uitest.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
         if not ocr_error and not right_error:
             print("PASS")
         else:
@@ -225,29 +226,114 @@ class DemoTest:
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
         time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
         roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.edit_image.image_cut_custom(image=image_path, roi_keys=roi_key)
-        time_images = self.edit_image.image_cut_custom(image=image_path, roi_keys=time_keys)
+        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
+        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
         select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.image_uitest.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
         if not ocr_error and not right_error:
             print("PASS")
         else:
             print("FAIL: different text")
-        self.image_uitest.check_time_diff(time_images)
+        self.evaluation.check_time_diff(time_images)
+        ### L-L max 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
+        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "RMS_L-L"
+        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        if not ocr_error and not right_error:
+            print("PASS")
+        else:
+            print("FAIL: different text")
+        self.evaluation.check_time_diff(time_images)
+        ### L-N 만 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.menu_touch("meas_L-N")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
+        select_ocr = "RMS_L-L"
+        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        if not ocr_error and not right_error:
+            print("PASS")
+        else:
+            print("FAIL: different text")
+         ### L-N min 검사 ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
+        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "RMS_L-L"
+        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        if not ocr_error and not right_error:
+            print("PASS")
+        else:
+            print("FAIL: different text")
+        self.evaluation.check_time_diff(time_images)
+        ### L-N max 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
+        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "RMS_L-L"
+        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
+        if not ocr_error and not right_error:
+            print("PASS")
+        else:
+            print("FAIL: different text")
+        self.evaluation.check_time_diff(time_images)
 
 
             
     def testcode01(self):
-        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\vol_max2.png"
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_max2.png"
         time.sleep(1)
-        roi_keys = ["main_view_1", "main_view_2", "main_view_3", "main_view_5"]
-        select_ocr = "RMS"
-        self.setupprocess.variable_text(image_path, select_ocr, roi_keys)
-        time.sleep(0.6)
-        ## popup 화면 설정값 범위 및 고정 텍스트 읽는거 추가
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_keys_time = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_time)
+        select_ocr = "RMS_L-L"
+        ocr_error, right_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        
+        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time))
+    
+        csv_results = {
+            "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
+            "Measurement Accuracy": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
+            "OCR-Right": [ocr_error] * num_entries,
+            "Right-OCR": [right_error] * num_entries,
+            "Time Stemp Error": time_error + [None] * (num_entries - len(time_error)),
+        }
+    
+        
+        df = pd.DataFrame(csv_results)
+        save_path = os.path.expanduser(f"./csvtest/ocr_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+        df.to_csv(save_path, index=False)
     
     def testcode02(self):
-        self.mea_demo_mode()
+        self.modbus_label.demo_test_setting()
         self.reset_max_min()
-        self.demo_mea_voltage()
+        self.demo_mea_vol_rms()
