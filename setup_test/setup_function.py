@@ -358,20 +358,30 @@ class ModbusLabels:
     def demo_test_setting(self):
         self.touch_manager.uitest_mode_start()
         addr_setup_lock = 2900
-        value = [2300, 0, 700, 1]
+        addr_control_lock = 2901
+        values = [2300, 0, 700, 1]
+        values_control = [2300, 0, 1600, 1]
         if self.modbus_manager.setup_client:
-            self.response = self.modbus_manager.setup_client.write_registers(addr_setup_lock, value)
+            for value in values:
+                self.response = self.modbus_manager.setup_client.write_register(addr_setup_lock, value)
+                time.sleep(0.6)
+            value_32bit = 1900
+            high_word = (value_32bit >> 16) & 0xFFFF  # 상위 16비트
+            low_word = value_32bit & 0xFFFF  
             self.response = self.modbus_manager.setup_client.write_register(6001, 0)
-            self.response = self.modbus_manager.setup_client.write_register(6003, 1900)
-            self.response = self.modbus_manager.setup_client.write_register(6005, 1900)
-            self.response = self.modbus_manager.setup_client.write_register(6007, 1900)
+            self.response = self.modbus_manager.setup_client.write_registers(6003, [high_word, low_word])
+            self.response = self.modbus_manager.setup_client.write_registers(6005, [high_word, low_word])
+            self.response = self.modbus_manager.setup_client.write_registers(6007, 1900)
             self.response = self.modbus_manager.setup_client.write_register(6009, 0)
             self.response = self.modbus_manager.setup_client.write_register(6000, 1)
             time.sleep(0.6)
-            self.response = self.modbus_manager.setup_client.write_register(4002, 1440)
+            for value_control in values_control:
+                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                time.sleep(0.6)
+            self.response = self.modbus_manager.setup_client.write_register(4002, 0)
             self.response = self.modbus_manager.setup_client.write_register(4000, 1)
             self.response = self.modbus_manager.setup_client.write_register(4001, 1)
-            print("good")
+            print("Done")
         else:
             print(self.response.isError())
         

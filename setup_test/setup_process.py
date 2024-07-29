@@ -195,6 +195,20 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.menu_touch("data_view_3")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["999"]
+        cutted_image = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        if "Password" in cutted_image:
+            for _ in range(4): 
+                self.touch_manager.menu_touch("btn_num_pw_0")
+            self.touch_manager.menu_touch("btn_num_pw_enter")
+            self.touch_manager.menu_touch("infinite")
+            self.touch_manager.menu_touch("btn_popup_enter")
+            self.touch_manager.menu_touch("btn_apply")
+        else:
+            print("error")
+            self.touch_manager.menu_touch("btn_popup_cencel")
         self.touch_manager.menu_touch("cauiton_confirm")
         self.touch_manager.menu_touch("btn_apply")
         self.MM_clear_time = datetime.now
