@@ -203,14 +203,11 @@ class DemoTest:
             for _ in range(4): 
                 self.touch_manager.menu_touch("btn_num_pw_0")
             self.touch_manager.menu_touch("btn_num_pw_enter")
-            self.touch_manager.menu_touch("infinite")
-            self.touch_manager.menu_touch("btn_popup_enter")
+            self.touch_manager.menu_touch("cauiton_confirm")
             self.touch_manager.menu_touch("btn_apply")
         else:
             print("error")
             self.touch_manager.menu_touch("btn_popup_cencel")
-        self.touch_manager.menu_touch("cauiton_confirm")
-        self.touch_manager.menu_touch("btn_apply")
         self.MM_clear_time = datetime.now
         print(self.MM_clear_time)
 
@@ -316,6 +313,7 @@ class DemoTest:
         else:
             print("FAIL: different text")
         self.evaluation.check_time_diff(time_images)
+        print("done")
 
 
             
