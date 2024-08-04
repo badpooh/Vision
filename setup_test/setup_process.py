@@ -3,7 +3,6 @@ import numpy as np
 import os, glob
 from datetime import datetime
 import time
-import pandas as pd
 
 from setup_test.setup_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
 
@@ -221,129 +220,230 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "rms_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        
         ### L-L min 검사 ###
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
         time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
-        self.evaluation.check_time_diff(time_images)
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "rms_vol_L-L"
+        ocr_error, right_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        
         ### L-L max 검사 ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
         time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
-        self.evaluation.check_time_diff(time_images)
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "rms_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        
         ### L-N 만 검사 ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.menu_touch("meas_L-N")
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "rms_vol_L-N"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas,)
+        
          ### L-N min 검사 ###
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
         time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
-        self.evaluation.check_time_diff(time_images)
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "rms_vol_L-N"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        
         ### L-N max 검사 ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
         roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
         time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        roi_key = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        cutted_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_calcul_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        time_images = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "RMS_L-L"
-        ocr_error, right_error = self.evaluation.eval_demo_test(cutted_images, select_ocr, ocr_calcul_results)
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
-        self.evaluation.check_time_diff(time_images)
-        print("done")
-
-
-            
-    def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_max2.png"
-        time.sleep(1)
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_time = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
         roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_time)
-        select_ocr = "RMS_L-L"
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "rms_vol_L-N"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+
+    def demo_mea_vol_fund(self):
+        ### L-L 만 검사 ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch("side_menu_2")
+        self.touch_manager.menu_touch("meas_L-L")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "fund_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        
+        ### L-L min 검사 ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "fund_vol_L-L"
         ocr_error, right_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
         time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
         
-        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time))
-    
-        csv_results = {
-            "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
-            "Measurement Accuracy": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
-            "OCR-Right": [ocr_error] * num_entries,
-            "Right-OCR": [right_error] * num_entries,
-            "Time Stemp Error": time_error + [None] * (num_entries - len(time_error)),
-        }
-    
+        ### L-L max 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "fund_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
         
-        df = pd.DataFrame(csv_results)
-        save_path = os.path.expanduser(f"./csvtest/ocr_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
-        df.to_csv(save_path, index=False)
+        ### L-N 만 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.menu_touch("meas_L-N")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "fund_vol_L-N"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas,)
+        
+         ### L-N min 검사 ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "fund_vol_L-N"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        
+        ### L-N max 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "fund_vol_L-N"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+    
+    def demo_mea_vol_thd(self): #L-L, L-N, Max만 있음 좌표 다시
+        ### L-L 만 검사 ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch("side_menu_3")
+        self.touch_manager.menu_touch("meas_L-L")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "thd_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        
+        ### L-L max 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "thd_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        
+        ### L-N 만 검사 ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.menu_touch("meas_L-L")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "thd_vol_L-N"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        
+    def testcode01(self):
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\phasor1.png"
+        time.sleep(1)
+        # roi_key = [175, 175, 340, 295]
+        # self.evaluation.img_match(image_path, roi_key)
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "rms_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
     
     def testcode02(self):
         self.modbus_label.demo_test_setting()

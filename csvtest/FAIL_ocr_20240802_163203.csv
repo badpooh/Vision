@@ -1,0 +1,10 @@
+Main View,Measurement Accuracy,OCR-Right,Right-OCR,Time Stemp Error
+L-L L-N Min Max RMS Voltage,0.000,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+AB,0.000,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+V,0.000,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+BC,0.000,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+V,,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+CA,,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+V,,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+Average,,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",
+V,,"['L-L L-N Min Max RMS Voltage', 'V', 'V', 'V', 'V']","['RMS Voltage L-L L-N Min Max', 'v', 'v', 'v', 'v']",

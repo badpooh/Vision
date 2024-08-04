@@ -1,16 +1,16 @@
 from os import error
+from re import template
 import threading
 import time
 import numpy as np
-import re
-from itertools import chain
 import cv2
-import easyocr
 from datetime import datetime
 import time
 from pymodbus.client import ModbusTcpClient as ModbusClient
 import threading
 import torch
+import os
+import pandas as pd
 from paddleocr import PaddleOCR
 
 from setup_test.setup_config import ConfigSetup
@@ -439,28 +439,41 @@ class Evaluation:
             return ocr_error, right_error  
     
     def eval_demo_test(self, ocr_res, right_key, ocr_res_meas):
+        
+        meas_error = False
 
         ocr_right = self.m_home[right_key]
 
         right_list = [text.strip() for text in ocr_right]
         ocr_rt_list = [result.strip() for result in ocr_res]
         
-        ocr_error = [result for result in ocr_rt_list if result not in right_list]
+        self.ocr_error = [result for result in ocr_rt_list if result not in right_list]
         right_error = [text for text in right_list if text not in ocr_rt_list]
 
-        values = ['A', 'B', 'C', 'Aver']
-        results = {name: float(value) for name, value in zip(values, ocr_res_meas)}
+        if self.ocr_error and "RMS" in self.ocr_error[0]:
+            values = ['A', 'B', 'C', 'Aver']
+            results = {name: float(value) for name, value in zip(values, ocr_res_meas)}
+            for name, value in results.items():
+                if 189.62 < value < 190.38:
+                    print(f"{name} = PASS")
+                else:
+                    print(f"{name} = {value}")
+                    meas_error = True
+        
+        if self.ocr_error and "Total" in self.ocr_error[0]:
+            values = ['A', 'B', 'C']
+            results = {name: float(value) for name, value in zip(values, ocr_res_meas)}
+            for name, value in results.items():
+                if -1.0 < value < 1.0:
+                    print(f"{name} = PASS")
+                else:
+                    print(f"{name} = {value}")
+                    meas_error = True
 
-        for name, value in results.items():
-            if 189.62 < value < 190.38:
-                print(f"{name} = PASS")
-            else:
-                print(f"{name} = {value}")
-
-        print(f"OCR - 정답: {ocr_error}")
+        print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
         
-        return ocr_error, right_error
+        return self.ocr_error, right_error, meas_error
     
     def check_time_diff(self, time_images):
         if not self.MM_clear_time:
@@ -482,3 +495,42 @@ class Evaluation:
         if failed_times:
             return failed_times
         return None
+    
+    def img_match(self, image, roi_key):
+        if self.ocr_error and "Phasor" in self.ocr_error[0]:
+            template_image_path= r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\A3700N_phaser_demo_1.png"
+        elif self.ocr_error and "Harmonics" in self.ocr_error[0]:
+            template_image_path= r"C:"
+        elif self.ocr_error and "Waveform" in self.ocr_error[0]:
+            template_image_path= r"C:"
+        image = cv2.imread(image)
+        template_image = cv2.imread(template_image_path)
+        x, y, w, h = roi_key
+        cut_img = image[y:y+h, x:x+w]
+        resized_cut_img = cv2.resize(cut_img, (template_image.shape[1], template_image.shape[0]))
+        res = cv2.matchTemplate(resized_cut_img, template_image, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+        
+        print(max_val)
+    
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_error=None):
+        ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
+        ocr_img_time = ocr_img_time if ocr_img_time is not None else []
+        time_error = time_error if time_error is not None else []
+        
+        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time))
+    
+        csv_results = {
+            "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
+            "Measurement Accuracy": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
+            "OCR-Right": [ocr_error] * num_entries,
+            "Right-OCR": [right_error] * num_entries,
+            "Time Stemp Error": time_error + [None] * (num_entries - len(time_error)),
+        }
+        
+        df = pd.DataFrame(csv_results)
+        if not ocr_error and not right_error and not time_error and not meas_error:
+            save_path = os.path.expanduser(f"./csvtest/PASS_ocr_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+        else:
+            save_path = os.path.expanduser(f"./csvtest/FAIL_ocr_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+        df.to_csv(save_path, index=False)

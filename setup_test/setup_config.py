@@ -55,12 +55,18 @@ class ConfigSetup:
     
     def match_m_setup_labels(self):
         m_home = {
-        "RMS_L-L" : ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average", "v", "v", "v", "v"],
+        "rms_vol_L-L" : ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average", "v", "v", "v", "v"],
+        "rms_vol_L-N" : ["RMS Voltage L-L L-N Min Max", "A", "B", "C", "Average", "v", "v", "v", "v"],
+        "fund_vol_L-L" : ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average", "v", "v", "v", "v"],
+        "fund_vol_L-N" : ["Fund. Volt. L-L L-N Min Max", "A", "B", "C", "Average", "v", "v", "v", "v"],
+        "thd_vol_L-L" : ["Total Harmonic L-L L-N Max", "AB", "BC", "CA", "%", "%", "%"],
+        "thd_vol_L-N" : ["Total Harmonic L-L L-N Max", "A", "B", "C", "%", "%", "%"],
         "L-N" : ["A", "B", "C", "Average"],
-        "L_Min" : ["AB", "BC", "CA", "Average", ],
-        "L_Max" : ["AB", "BC", "CA", "Average", ],
+        "L_Min" : ["AB", "BC", "CA", "Average"],
+        "L_Max" : ["AB", "BC", "CA", "Average"],
         "N_Min" : ["A", "B", "C", "Average"],
-        "N_Max" : ["A", "B", "C", "Average"],   
+        "N_Max" : ["A", "B", "C", "Average"],
+        "phasor": ["Phasor", ""]  
         }
         
         m_setup = {
