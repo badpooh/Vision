@@ -238,7 +238,7 @@ class DemoTest:
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
         select_ocr = "rms_vol_L-L"
-        ocr_error, right_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
         time_error = self.evaluation.check_time_diff(ocr_img_time)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
         
@@ -389,6 +389,8 @@ class DemoTest:
         ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
         time_error = self.evaluation.check_time_diff(ocr_img_time)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+
+        print("Voltage_RMS_Done")
     
     def demo_mea_vol_thd(self): #L-L, L-N, Max만 있음 좌표 다시
         ### L-L 만 검사 ###
@@ -431,6 +433,14 @@ class DemoTest:
         select_ocr = "thd_vol_L-N"
         ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+
+    def demo_mea_anal_phasor(self):
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_1")
+        self.touch_manager.menu_touch("meas_L-L")
+
         
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\phasor1.png"
