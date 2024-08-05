@@ -439,7 +439,6 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_1")
-        self.touch_manager.menu_touch("meas_L-L")
 
         
     def testcode01(self):

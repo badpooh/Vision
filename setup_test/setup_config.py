@@ -48,10 +48,44 @@ class ConfigSetup:
             "main_view_15": [n*x for x in [320, 430, 190, 35]], # time stamp
             "main_view_16": [n*x for x in [540, 410, 160, 60]], # 190.0
             "main_view_17": [n*x for x in [720, 420, 35, 40]], # V
+            
             #test mode confirm
             "999" : [n*x for x in [220, 105, 350, 40]],
         }
-        return params
+        phasor_params = {
+            "phasor_view_1" : [n*x for x in [160, 120, 210, 50]], #Phasor
+            "phasor_view_2" : [n*x for x in [480, 120, 310, 50]], #[V]Voltage, [V]Current
+            "phasor_view_3" : [n*x for x in [570, 190, 210, 39]], #VLL VLN
+            "phasor_view_4" : [n*x for x in [465, 235, 80, 27]], #Voltage
+            "phasor_view_5" : [n*x for x in [550, 234, 55, 76]], #AB,BC,CA or A,B,C
+            "phasor_view_6" : [n*x for x in [610, 236, 65, 23]], #A-전압수치
+            "phasor_view_7" : [n*x for x in [675, 236, 32, 23]], #A-V
+            "phasor_view_8" : [n*x for x in [675, 236, 88, 23]], #A-각도수치
+            "phasor_view_9" : [n*x for x in [763, 236, 14, 23]], #A-각도기호
+            "phasor_view_10" : [n*x for x in [610, 260, 65, 23]], #B-전압수치
+            "phasor_view_11" : [n*x for x in [675, 260, 32, 23]], #B-V
+            "phasor_view_12" : [n*x for x in [675, 260, 88, 23]], #B-각도수치
+            "phasor_view_13" : [n*x for x in [763, 260, 14, 23]], #B-각도기호
+            "phasor_view_14" : [n*x for x in [610, 284, 65, 23]], #C-전압수치
+            "phasor_view_15" : [n*x for x in [675, 284, 32, 23]], #C-V
+            "phasor_view_16" : [n*x for x in [675, 284, 88, 23]], #C-각도수치
+            "phasor_view_17" : [n*x for x in [763, 284, 14, 23]], #C-각도기호
+            "phasor_view_18" : [n*x for x in [465, 345, 80, 24]], #Current
+            "phasor_view_19" : [n*x for x in [550, 345, 55, 76]], #A,B,C
+            "phasor_view_20" : [n*x for x in [610, 346, 65, 23]], #A-전압수치
+            "phasor_view_21" : [n*x for x in [675, 346, 32, 23]], #A-V
+            "phasor_view_22" : [n*x for x in [675, 346, 88, 23]], #A-각도수치
+            "phasor_view_23" : [n*x for x in [763, 346, 14, 23]], #A-각도기호
+            "phasor_view_24" : [n*x for x in [610, 370, 65, 23]], #B-전압수치
+            "phasor_view_25" : [n*x for x in [675, 370, 32, 23]], #B-V
+            "phasor_view_26" : [n*x for x in [675, 370, 88, 23]], #B-각도수치
+            "phasor_view_27" : [n*x for x in [763, 370, 14, 23]], #B-각도기호
+            "phasor_view_28" : [n*x for x in [610, 394, 65, 23]], #C-전압수치
+            "phasor_view_29" : [n*x for x in [675, 394, 32, 23]], #C-V
+            "phasor_view_30" : [n*x for x in [675, 394, 88, 23]], #C-각도수치
+            "phasor_view_31" : [n*x for x in [763, 394, 14, 23]], #C-각도기호
+        }
+        return params, phasor_params
     
     def match_m_setup_labels(self):
         m_home = {

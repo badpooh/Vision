@@ -209,7 +209,7 @@ class TouchManager:
    
 class OCRManager:
     
-    rois = config_data.roi_params()
+    rois, phasor_rois = config_data.roi_params()
     
     def __init__(self):
         self.use_gpu = torch.cuda.is_available()
@@ -264,6 +264,28 @@ class OCRManager:
                 text_results = ocr.ocr(roi_image, cls=False)
                 extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
                 ocr_results[roi_key] = extracted_texts
+
+        # OCR 결과 출력
+        for roi_key, text in ocr_results.items():
+            print(f'ROI {roi_key}: {text}')
+
+        ocr_results_list = [text for text in ocr_results.values() if text]
+        return ocr_results_list
+    
+    def ocr_basic_all(self, image, rois):##수정필요
+        image = cv2.imread(image)
+        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        denoised_image = cv2.fastNlMeansDenoising(resized_image, None, 30, 7, 21)
+
+        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
+
+        ocr_results = {}
+        for roi_key, coords in rois.items():
+            x, y, w, h = coords
+            roi_image = denoised_image[y:y+h, x:x+w]
+            text_results = ocr.ocr(roi_image, cls=False)
+            extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
+            ocr_results[roi_key] = extracted_texts
 
         # OCR 결과 출력
         for roi_key, text in ocr_results.items():
