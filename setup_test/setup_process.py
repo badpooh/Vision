@@ -442,16 +442,16 @@ class DemoTest:
 
         
     def testcode01(self):
-        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\10.10.26.156_2024-08-05_16_52_39_M_H_AN_Phasor.png"
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.156_2024-08-06_17_43_25_M_H_VO_Fundamental.png"
         time.sleep(1)
         # roi_key = [175, 175, 340, 295]
         # self.evaluation.img_match(image_path, roi_key)
-        roi_keys = ["phasor_view_1", "phasor_view_2", "phasor_view_3", "phasor_view_4", "phasor_view_5", "phasor_view_7", "phasor_view_9"]
-        roi_keys_meas = ["phasor_view_6", "phasor_view_10", "phasor_view_14"]
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        select_ocr = "rms_vol_L-L"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas, image_path)
+        select_ocr = "fund_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
     
     def testcode02(self):

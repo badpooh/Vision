@@ -250,7 +250,6 @@ class OCRManager:
         image = cv2.imread(image)
         resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
         denoised_image = cv2.fastNlMeansDenoising(resized_image, None, 30, 7, 21)
-        gray_image = cv2.cvtColor(denoised_image, cv2.COLOR_BGR2GRAY)
 
         ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False,)  
 
@@ -258,14 +257,13 @@ class OCRManager:
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = gray_image[y:y+h, x:x+w]
-                cv2.imshow('Image with Size Info', roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                roi_image = denoised_image[y:y+h, x:x+w]
+                # cv2.imshow('Image with Size Info', roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 text_results = ocr.ocr(roi_image, cls=False)
                 extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
                 ocr_results[roi_key] = extracted_texts
-
 
         # OCR 결과 출력
         for roi_key, text in ocr_results.items():
@@ -274,7 +272,7 @@ class OCRManager:
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
     
-    # def ocr_basic_all(self, image):##수정필요
+    # def ocr_basic_all(self, image, rois):##수정필요
     #     image = cv2.imread(image)
     #     resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
     #     denoised_image = cv2.fastNlMeansDenoising(resized_image, None, 30, 7, 21)
@@ -282,7 +280,7 @@ class OCRManager:
     #     ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
 
     #     ocr_results = {}
-    #     for roi_key, coords in self.phasor_rois.items():
+    #     for roi_key, coords in rois.items():
     #         x, y, w, h = coords
     #         roi_image = denoised_image[y:y+h, x:x+w]
     #         text_results = ocr.ocr(roi_image, cls=False)
@@ -411,13 +409,14 @@ class ModbusLabels:
         
 class Evaluation:
     
-    ocr_manager = OCRManager()
     MM_clear_time = None
 
     def __init__(self):
         self.labels = config_data.match_m_setup_labels()
         self.pop_params = config_data.match_pop_labels()
         self.m_home, self.m_setup = config_data.match_m_setup_labels()
+
+        pass
 
     
     def eval_static_text(self, ocr_results_1, right_key):
@@ -443,35 +442,38 @@ class Evaluation:
     
     def eval_variable_text(self, ocr_results_1, right_list):
     
-        ocr_right_1 = right_list
+            ocr_right_1 = right_list
 
-        right_list_1 = [text.strip() for text in ocr_right_1]
-        ocr_list_1 = [result.strip() for result in ocr_results_1]
-        
-        leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
-        leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
-        
-        ocr_error = leave_ocr_all
-        right_error = leave_right_all
+            right_list_1 = [text.strip() for text in ocr_right_1]
+            ocr_list_1 = [result.strip() for result in ocr_results_1]
+            
+            leave_ocr_all = [result for result in ocr_list_1 if result not in right_list_1]
+            leave_right_all = [text for text in right_list_1 if text not in ocr_list_1]
+            
+            ocr_error = leave_ocr_all
+            right_error = leave_right_all
 
-        
-        # OCR 결과와 매칭되지 않아 남은 단어
-        print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
-        print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
-        
-        return ocr_error, right_error  
+            
+            # OCR 결과와 매칭되지 않아 남은 단어
+            print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
+            print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
+            
+            return ocr_error, right_error  
     
-    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas, image_path=None):
+    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas):
         
         meas_error = False
 
         ocr_right = self.m_home[right_key]
 
-        right_list = [text.strip() for text in ocr_right]
-        ocr_rt_list = [result.strip() for result in ocr_res]
+        right_list = ' '.join(text.strip() for text in ocr_right).split()
+        ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
         
-        self.ocr_error = [result for result in ocr_rt_list if result not in right_list]
-        right_error = [text for text in right_list if text not in ocr_rt_list]
+        right_set = set(right_list)
+        ocr_rt_set = set(ocr_rt_list)
+        
+        self.ocr_error = list(ocr_rt_set - right_set)
+        right_error = list(right_set - ocr_rt_set)
 
         if self.ocr_error and "RMS" in self.ocr_error[0]:
             values = ['A', 'B', 'C', 'Aver']
@@ -490,25 +492,6 @@ class Evaluation:
                 if -1.0 < value < 1.0:
                     print(f"{name} = PASS")
                 else:
-                    print(f"{name} = {value}")
-                    meas_error = True
-
-        
-        if self.ocr_error and "Phasor" in self.ocr_error[0]:
-            image = cv2.imread(image_path)
-            if self.ocr_manager.color_detection(image, 650, 200, 10, 10, 67, 136, 255) <= 10:
-                values = ['A', 'B', 'C']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
-                    if 180 < float(value) < 190:
-                        print(f"{name} = PASS")
-                    else:
-                        print(f"{name} = {value}")
-                        meas_error = True
-            else:
-                values = ['A', 'B', 'C']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
                     print(f"{name} = {value}")
                     meas_error = True
 
