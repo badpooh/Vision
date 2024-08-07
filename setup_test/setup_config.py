@@ -95,6 +95,8 @@ class ConfigSetup:
         "fund_vol_L-N" : ["Fund. Volt. L-L L-N Min Max", "A", "B", "C", "Average", "v", "v", "v", "v"],
         "thd_vol_L-L" : ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA", "%", "%", "%"],
         "thd_vol_L-N" : ["Total Harmonic Distortion L-L L-N Max", "A", "B", "C", "%", "%", "%"],
+        "freq" : ["Frequency Min Max", "Frequency", "Hz"],
+        "rms_curr" : ["RMS Current Min Max", "A", "B", "C", "Average", "A", "A", "A", "A"],
         "L-N" : ["A", "B", "C", "Average"],
         "L_Min" : ["AB", "BC", "CA", "Average"],
         "L_Max" : ["AB", "BC", "CA", "Average"],

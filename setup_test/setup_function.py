@@ -417,9 +417,6 @@ class Evaluation:
         self.pop_params = config_data.match_pop_labels()
         self.m_home, self.m_setup = config_data.match_m_setup_labels()
 
-        pass
-
-    
     def eval_static_text(self, ocr_results_1, right_key):
         
         right_list = self.pop_params[right_key]
@@ -491,6 +488,16 @@ class Evaluation:
             results = {name: value for name, value in zip(values, ocr_res_meas)}
             for name, value in results.items():
                 if 2.5 < float(value) < 3.5:
+                    print(f"{name} = PASS")
+                else:
+                    print(f"{name} = {value}")
+                    meas_error = True
+        
+        if self.ocr_error and "Frequency" in self.ocr_error[0]:
+            values = ['Freq']
+            results = {name: value for name, value in zip(values, ocr_res_meas)}
+            for name, value in results.items():
+                if 59 < float(value) < 61:
                     print(f"{name} = PASS")
                 else:
                     print(f"{name} = {value}")

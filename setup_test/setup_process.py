@@ -451,6 +451,69 @@ class DemoTest:
         ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
         time_error = self.evaluation.check_time_diff(ocr_img_time)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        
+    def demo_mea_vol_freq(self):
+        ### 기본주파수 검사 ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch("side_menu_4")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5"]
+        roi_keys_meas = ["main_view_4"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "freq"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        
+        ### 주파수 Min ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5"]
+        time_keys = ["main_view_3"]
+        roi_keys_meas = ["main_view_4"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "freq"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        
+        ### 주파수 Max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5"]
+        time_keys = ["main_view_3"]
+        roi_keys_meas = ["main_view_4"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        select_ocr = "freq"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        time_error = self.evaluation.check_time_diff(ocr_img_time)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        
+    def demo_mea_curr_rms(self):
+        ### 기본 검사 ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch("side_menu_1")
+        self.touch_manager.screenshot()
+        image_path = self.setupprocess.load_image_file()
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        select_ocr = "thd_vol_L-L"
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        
 
     def demo_mea_anal_phasor(self):
         self.touch_manager.btn_front_meter()
