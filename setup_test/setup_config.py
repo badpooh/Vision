@@ -93,8 +93,8 @@ class ConfigSetup:
         "rms_vol_L-N" : ["RMS Voltage L-L L-N Min Max", "A", "B", "C", "Average", "v", "v", "v", "v"],
         "fund_vol_L-L" : ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average", "v", "v", "v", "v"],
         "fund_vol_L-N" : ["Fund. Volt. L-L L-N Min Max", "A", "B", "C", "Average", "v", "v", "v", "v"],
-        "thd_vol_L-L" : ["Total Harmonic L-L L-N Max", "AB", "BC", "CA", "%", "%", "%"],
-        "thd_vol_L-N" : ["Total Harmonic L-L L-N Max", "A", "B", "C", "%", "%", "%"],
+        "thd_vol_L-L" : ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA", "%", "%", "%"],
+        "thd_vol_L-N" : ["Total Harmonic Distortion L-L L-N Max", "A", "B", "C", "%", "%", "%"],
         "L-N" : ["A", "B", "C", "Average"],
         "L_Min" : ["AB", "BC", "CA", "Average"],
         "L_Max" : ["AB", "BC", "CA", "Average"],
@@ -221,6 +221,8 @@ class ConfigSetup:
         "meas_L-N" : [510, 150],
         "Min" : [620, 150],
         "Max" : [720, 150],
+        "thd_L-L" : [520, 150],
+        "thd_L-N" : [620, 150],
 
     }
         return coordinates

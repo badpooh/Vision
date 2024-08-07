@@ -1,8 +1,0 @@
-Main View,Measurement Accuracy,OCR-Right,Right-OCR,Time Stemp Error
-Phasor,188.2,"['Phasor', 'Voltage Current', 'VLL VLN', 'Voltage', 'AB BC CA', '0']","['RMS Voltage L-L L-N Min Max', 'AB', 'BC', 'CA', 'Average']",
-Voltage Current,v 30.1,"['Phasor', 'Voltage Current', 'VLL VLN', 'Voltage', 'AB BC CA', '0']","['RMS Voltage L-L L-N Min Max', 'AB', 'BC', 'CA', 'Average']",
-VLL VLN,,"['Phasor', 'Voltage Current', 'VLL VLN', 'Voltage', 'AB BC CA', '0']","['RMS Voltage L-L L-N Min Max', 'AB', 'BC', 'CA', 'Average']",
-Voltage,,"['Phasor', 'Voltage Current', 'VLL VLN', 'Voltage', 'AB BC CA', '0']","['RMS Voltage L-L L-N Min Max', 'AB', 'BC', 'CA', 'Average']",
-AB BC CA,,"['Phasor', 'Voltage Current', 'VLL VLN', 'Voltage', 'AB BC CA', '0']","['RMS Voltage L-L L-N Min Max', 'AB', 'BC', 'CA', 'Average']",
-v,,"['Phasor', 'Voltage Current', 'VLL VLN', 'Voltage', 'AB BC CA', '0']","['RMS Voltage L-L L-N Min Max', 'AB', 'BC', 'CA', 'Average']",
-0,,"['Phasor', 'Voltage Current', 'VLL VLN', 'Voltage', 'AB BC CA', '0']","['RMS Voltage L-L L-N Min Max', 'AB', 'BC', 'CA', 'Average']",

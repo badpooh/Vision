@@ -410,6 +410,7 @@ class ModbusLabels:
 class Evaluation:
     
     MM_clear_time = None
+    ocr_manager = OCRManager()
 
     def __init__(self):
         self.labels = config_data.match_m_setup_labels()
@@ -460,7 +461,7 @@ class Evaluation:
             
             return ocr_error, right_error  
     
-    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas):
+    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas, image=None):
         
         meas_error = False
 
@@ -475,11 +476,11 @@ class Evaluation:
         self.ocr_error = list(ocr_rt_set - right_set)
         right_error = list(right_set - ocr_rt_set)
 
-        if self.ocr_error and "RMS" in self.ocr_error[0]:
+        if self.ocr_error and ("RMS" in self.ocr_error[0] or "Fund." in self.ocr_error[0]):
             values = ['A', 'B', 'C', 'Aver']
-            results = {name: float(value) for name, value in zip(values, ocr_res_meas)}
+            results = {name: value for name, value in zip(values, ocr_res_meas)}
             for name, value in results.items():
-                if 189.62 < value < 190.38:
+                if 189.62 < float(value) < 190.38:
                     print(f"{name} = PASS")
                 else:
                     print(f"{name} = {value}")
@@ -487,11 +488,28 @@ class Evaluation:
         
         if self.ocr_error and "Total" in self.ocr_error[0]:
             values = ['A', 'B', 'C']
-            results = {name: float(value) for name, value in zip(values, ocr_res_meas)}
+            results = {name: value for name, value in zip(values, ocr_res_meas)}
             for name, value in results.items():
-                if -1.0 < value < 1.0:
+                if 2.5 < float(value) < 3.5:
                     print(f"{name} = PASS")
                 else:
+                    print(f"{name} = {value}")
+                    meas_error = True
+
+        if self.ocr_error and "Phasor" in self.ocr_error[0]:
+            if self.ocr_manager.color_detection(image, 650, 200, 10, 10, 67, 136, 255) <= 10:
+                values = ['A', 'B', 'C']
+                results = {name: value for name, value in zip(values, ocr_res_meas)}
+                for name, value in results.items():
+                    if 180 < float(value) < 190:
+                        print(f"{name} = PASS")
+                    else:
+                        print(f"{name} = {value}")
+                        meas_error = True
+            else:
+                values = ['A', 'B', 'C']
+                results = {name: value for name, value in zip(values, ocr_res_meas)}
+                for name, value in results.items():
                     print(f"{name} = {value}")
                     meas_error = True
 
