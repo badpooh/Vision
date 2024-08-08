@@ -506,8 +506,8 @@ class DemoTest:
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.screenshot()
         image_path = self.setupprocess.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         select_ocr = "thd_vol_L-L"

@@ -49,6 +49,12 @@ class ConfigSetup:
             "main_view_16": [n*x for x in [540, 410, 160, 60]], # 190.0
             "main_view_17": [n*x for x in [720, 420, 35, 40]], # V
             
+            #current % meas 수치 해야됨
+            "cur_percent_1": [n*x for x in [720, 420, 35, 40]],
+            "cur_percent_2": [n*x for x in [720, 420, 35, 40]],
+            "cur_percent_3": [n*x for x in [720, 420, 35, 40]],
+            "cur_percent_4": [n*x for x in [720, 420, 35, 40]],
+            
             #test mode confirm
             "999" : [n*x for x in [220, 105, 350, 40]],
 
