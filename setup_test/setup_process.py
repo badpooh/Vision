@@ -538,9 +538,9 @@ class DemoTest:
     def testcode02(self):
         # self.modbus_label.demo_test_setting()
         # self.reset_max_min()
-        # self.demo_mea_vol_rms()
+        self.demo_mea_vol_rms()
         # self.demo_mea_vol_fund()
-        self.demo_mea_vol_thd()
+        # self.demo_mea_vol_thd()
 
     def testcode03(self):
         self.touch_manager.btn_front_meter()

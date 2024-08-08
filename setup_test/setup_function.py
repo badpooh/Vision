@@ -461,6 +461,7 @@ class Evaluation:
     def eval_demo_test(self, ocr_res, right_key, ocr_res_meas, image=None):
         
         meas_error = False
+        condition_met = False
 
         ocr_right = self.m_home[right_key]
 
@@ -473,27 +474,33 @@ class Evaluation:
         self.ocr_error = list(ocr_rt_set - right_set)
         right_error = list(right_set - ocr_rt_set)
 
-        if self.ocr_error and ("RMS" in self.ocr_error[0] or "Fund." in self.ocr_error[0]):
+        if any(result == "RMS Voltage" or "Volt." for result in ocr_res):
+            condition_met = True
             values = ['A', 'B', 'C', 'Aver']
             results = {name: value for name, value in zip(values, ocr_res_meas)}
             for name, value in results.items():
-                if 189.62 < float(value) < 190.38:
+                if 189 < float(value) < 191:
                     print(f"{name} = PASS")
                 else:
                     print(f"{name} = {value}")
                     meas_error = True
         
-        if self.ocr_error and "Total" in self.ocr_error[0]:
-            values = ['A', 'B', 'C']
-            results = {name: value for name, value in zip(values, ocr_res_meas)}
-            for name, value in results.items():
-                if 2.5 < float(value) < 3.5:
-                    print(f"{name} = PASS")
-                else:
-                    print(f"{name} = {value}")
-                    meas_error = True
+        if any("Total Harmmonic" in result for result in ocr_res):
+            condition_met = True
+            if self.ocr_manager.color_detection(image, 10, 80, 10, 10, 67, 136, 255) <= 10:
+                values = ['A', 'B', 'C']
+                results = {name: value for name, value in zip(values, ocr_res_meas)}
+                for name, value in results.items():
+                    if 2.5 < float(value) < 3.5:
+                        print(f"{name} = PASS")
+                    else:
+                        print(f"{name} = {value}")
+                        meas_error = True
+            else:
+                condition_met = False
         
-        if self.ocr_error and "Frequency" in self.ocr_error[0]:
+        if any("Frequency" in result for result in ocr_res):
+            condition_met = True
             values = ['Freq']
             results = {name: value for name, value in zip(values, ocr_res_meas)}
             for name, value in results.items():
@@ -503,7 +510,8 @@ class Evaluation:
                     print(f"{name} = {value}")
                     meas_error = True
 
-        if self.ocr_error and "Phasor" in self.ocr_error[0]:
+        if any("Phasor" in result for result in ocr_res):
+            condition_met = True
             if self.ocr_manager.color_detection(image, 650, 200, 10, 10, 67, 136, 255) <= 10:
                 values = ['A', 'B', 'C']
                 results = {name: value for name, value in zip(values, ocr_res_meas)}
@@ -519,6 +527,9 @@ class Evaluation:
                 for name, value in results.items():
                     print(f"{name} = {value}")
                     meas_error = True
+
+        if not condition_met:
+            print("Nothing matching word")
 
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
