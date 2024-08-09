@@ -1,8 +1,0 @@
-Main View,Measurement Accuracy,OCR-Right,Right-OCR,Time Stemp Error
-L-L L-N Max Total Harmonic Distortion,3.1,"['CA', 'BC', 'AB']","['B', 'C', 'A']",
-AB,3.1,"['CA', 'BC', 'AB']","['B', 'C', 'A']",
-%,3.1,"['CA', 'BC', 'AB']","['B', 'C', 'A']",
-BC,,"['CA', 'BC', 'AB']","['B', 'C', 'A']",
-%,,"['CA', 'BC', 'AB']","['B', 'C', 'A']",
-CA,,"['CA', 'BC', 'AB']","['B', 'C', 'A']",
-%,,"['CA', 'BC', 'AB']","['B', 'C', 'A']",

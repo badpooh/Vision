@@ -33,27 +33,27 @@ class ConfigSetup:
             #measurement ocr
             "main_view_1": [n*x for x in [160, 120, 620, 53]], #rms voltage l-l l-m min max
             "main_view_2": [n*x for x in [165, 185, 120, 55]], # AB
-            "main_view_3": [n*x for x in [320, 215, 190, 30]], # time stamp
+            "main_view_3": [n*x for x in [320, 220, 190, 25]], # time stamp
             "main_view_4": [n*x for x in [540, 190, 160, 55]], # 190.0
             "main_view_5": [n*x for x in [720, 200, 35, 40]], # V
             "main_view_6": [n*x for x in [165, 270, 120, 40]], # BC
-            "main_view_7": [n*x for x in [320, 290, 190, 30]], # time stamp
+            "main_view_7": [n*x for x in [320, 295, 190, 25]], # time stamp
             "main_view_8": [n*x for x in [540, 260, 160, 60]], # 190.0
             "main_view_9": [n*x for x in [720, 270, 35, 40]], # V
             "main_view_10": [n*x for x in [165, 340, 120, 40]], # CA
-            "main_view_11": [n*x for x in [320, 360, 190, 35]], # time stamp
+            "main_view_11": [n*x for x in [320, 365, 190, 25]], # time stamp
             "main_view_12": [n*x for x in [540, 340, 160, 50]], # 190.0
             "main_view_13": [n*x for x in [720, 350, 35, 40]], # V
             "main_view_14": [n*x for x in [165, 415, 120, 40]], # Average
-            "main_view_15": [n*x for x in [320, 430, 190, 35]], # time stamp
+            "main_view_15": [n*x for x in [320, 435, 190, 25]], # time stamp
             "main_view_16": [n*x for x in [540, 410, 160, 60]], # 190.0
             "main_view_17": [n*x for x in [720, 420, 35, 40]], # V
             
             #current % meas 수치 해야됨
-            "cur_percent_1": [n*x for x in [720, 420, 35, 40]],
-            "cur_percent_2": [n*x for x in [720, 420, 35, 40]],
-            "cur_percent_3": [n*x for x in [720, 420, 35, 40]],
-            "cur_percent_4": [n*x for x in [720, 420, 35, 40]],
+            "cur_percent_1": [n*x for x in [360, 190, 110, 30]],
+            "cur_percent_2": [n*x for x in [360, 265, 110, 30]],
+            "cur_percent_3": [n*x for x in [360, 335, 110, 30]],
+            "cur_percent_4": [n*x for x in [360, 405, 110, 30]],
             
             #test mode confirm
             "999" : [n*x for x in [220, 105, 350, 40]],
@@ -155,6 +155,10 @@ class ConfigSetup:
     def color_detection_data(self):
         
         coordinates = {
+        "rms_voltage_L-L" : [380, 140, 10, 10, 67, 136, 255],
+        "rms_voltage_L-N" : [480, 140, 10, 10, 67, 136, 255],
+        "vol_thd_L_L" :[480, 140, 10, 10, 67, 136, 255],
+        "vol_thd_L_N" :[580, 140, 10, 10, 67, 136, 255],
         "measurement": [5, 70, 10, 10, 47, 180, 139],
         "mea_voltage": [110, 130, 10, 10, 255, 255, 255],
         "mea_current": [110, 170, 10, 10, 255, 255, 255],

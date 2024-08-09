@@ -1,5 +1,5 @@
 from os import error
-from re import template
+import re
 import threading
 import time
 import numpy as np
@@ -238,7 +238,9 @@ class OCRManager:
         return sharpened_image
     ####################################################
     
-    def color_detection(self, image, x, y, w, h, R, G, B):
+    
+    def color_detection(self, image, color_data):
+            x, y, w, h, R, G, B = color_data
             image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             selected_area = image_rgb[y:y+h, x:x+w]
             average_color = np.mean(selected_area, axis=(0, 1))
@@ -474,32 +476,61 @@ class Evaluation:
         self.ocr_error = list(ocr_rt_set - right_set)
         right_error = list(right_set - ocr_rt_set)
 
-        if any(result == "RMS Voltage" or "Volt." for result in ocr_res):
-            condition_met = True
-            values = ['A', 'B', 'C', 'Aver']
-            results = {name: value for name, value in zip(values, ocr_res_meas)}
-            for name, value in results.items():
-                if 189 < float(value) < 191:
-                    print(f"{name} = PASS")
-                else:
-                    print(f"{name} = {value}")
-                    meas_error = True
-        
-        if any("Total Harmmonic" in result for result in ocr_res):
-            condition_met = True
-            if self.ocr_manager.color_detection(image, 10, 80, 10, 10, 67, 136, 255) <= 10:
-                values = ['A', 'B', 'C']
+        if "RMS Voltage" in ocr_res[0] or "Fund. Volt."in ocr_res[0]:
+            color_data = config_data.color_detection_data()
+            image = cv2.imread(image)
+            if self.ocr_manager.color_detection(image, color_data["rms_voltage_L-L"]) <= 10:
+                condition_met = True
+                values = ['AB', 'BC', 'CA', 'Aver']
                 results = {name: value for name, value in zip(values, ocr_res_meas)}
                 for name, value in results.items():
-                    if 2.5 < float(value) < 3.5:
+                    if 180 < float(value) < 200:
+                        print(f"{name} = PASS")
+                    else:
+                        print(f"{name} = {value}")
+                        meas_error = True
+            elif self.ocr_manager.color_detection(image, color_data["rms_voltage_L-N"]) <= 10:
+                condition_met = True
+                values = ['A', 'B', 'C', 'Aver']
+                results = {name: value for name, value in zip(values, ocr_res_meas)}
+                for name, value in results.items():
+                    if 100 < float(value) < 120:
                         print(f"{name} = PASS")
                     else:
                         print(f"{name} = {value}")
                         meas_error = True
             else:
                 condition_met = False
+                print("Evaluation Error")
         
-        if any("Frequency" in result for result in ocr_res):
+        if "Total Harmmonic" in ocr_res[0]:
+            color_data = config_data.color_detection_data()
+            image = cv2.imread(image)
+            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
+                condition_met = True
+                values = ['AB', 'BC', 'CA']
+                results = {name: value for name, value in zip(values, ocr_res_meas)}
+                for name, value in results.items():
+                    if 2.0 < float(value) < 4.0:
+                        print(f"{name} = PASS")
+                    else:
+                        print(f"{name} = {value}")
+                        meas_error = True
+            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
+                condition_met = True
+                values = ['A', 'B', 'C']
+                results = {name: value for name, value in zip(values, ocr_res_meas)}
+                for name, value in results.items():
+                    if 3.0 < float(value) < 4.0:
+                        print(f"{name} = PASS")
+                    else:
+                        print(f"{name} = {value}")
+                        meas_error = True
+            else:
+                condition_met = False
+                print("Evaluation Error")
+        
+        if "Frequency" in ocr_res[0]:
             condition_met = True
             values = ['Freq']
             results = {name: value for name, value in zip(values, ocr_res_meas)}
@@ -510,8 +541,37 @@ class Evaluation:
                     print(f"{name} = {value}")
                     meas_error = True
 
-        if any("Phasor" in result for result in ocr_res):
+        if "RMS Current" in ocr_res[0] or "Fundamental Current" in ocr_res[0]:
             condition_met = True
+            values = ['A', 'B', 'C', 'Aver']
+            results = {name: value for name, value in zip(values, ocr_res_meas)}
+
+            for i, (name, value) in enumerate(results.items()):
+                if i < 4:
+                    if "OVER" in value:
+                        # "OVER %" 또는 "OVER"와 같은 경우 처리
+                        print(f"{name} = {value}")
+                        meas_error = True
+                    else:
+                        # 숫자 부분만 추출하여 처리
+                        numeric_value = float(re.findall(r'\d+\.?\d*', value)[0])  
+                        if 45 < numeric_value < 55:
+                            print(f"{name} = PASS")
+                        else:
+                            print(f"{name} = {value}")
+                            meas_error = True
+            for name, value in results.items():
+                if i >= 4 and i < 8:
+                
+                    if 2 < float(value) < 3:
+                        print(f"{name} = PASS")
+                    else:
+                        print(f"{name} = {value}")
+                        meas_error = True
+
+        if "Phasor" in ocr_res[0]:
+            condition_met = True
+            self.confi
             if self.ocr_manager.color_detection(image, 650, 200, 10, 10, 67, 136, 255) <= 10:
                 values = ['A', 'B', 'C']
                 results = {name: value for name, value in zip(values, ocr_res_meas)}
