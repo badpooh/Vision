@@ -264,7 +264,10 @@ class OCRManager:
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
                 text_results = ocr.ocr(roi_image, cls=False)
-                extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
+                if text_results:
+                    extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
+                else:
+                    extracted_texts = ""
                 ocr_results[roi_key] = extracted_texts
 
         # OCR 결과 출력
@@ -273,28 +276,6 @@ class OCRManager:
 
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
-    
-    # def ocr_basic_all(self, image, rois):##수정필요
-    #     image = cv2.imread(image)
-    #     resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
-    #     denoised_image = cv2.fastNlMeansDenoising(resized_image, None, 30, 7, 21)
-
-    #     ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
-
-    #     ocr_results = {}
-    #     for roi_key, coords in rois.items():
-    #         x, y, w, h = coords
-    #         roi_image = denoised_image[y:y+h, x:x+w]
-    #         text_results = ocr.ocr(roi_image, cls=False)
-    #         extracted_texts = ' '.join([text[1][0] for line in text_results for text in line])
-    #         ocr_results[roi_key] = extracted_texts
-
-    #     # OCR 결과 출력
-    #     for roi_key, text in ocr_results.items():
-    #         print(f'ROI {roi_key}: {text}')
-
-    #     ocr_results_list = [text for text in ocr_results.values() if text]
-    #     return ocr_results_list
 
 class ModbusLabels:
     
@@ -460,10 +441,11 @@ class Evaluation:
             
             return ocr_error, right_error  
     
-    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas, image=None):
-        
-        meas_error = False
-        condition_met = False
+    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas, image_path=None):
+        self.meas_error = False
+        self.condition_met = False
+        color_data = config_data.color_detection_data()
+        image = cv2.imread(image_path)
 
         ocr_right = self.m_home[right_key]
 
@@ -475,102 +457,77 @@ class Evaluation:
         
         self.ocr_error = list(ocr_rt_set - right_set)
         right_error = list(right_set - ocr_rt_set)
-
-        if "RMS Voltage" in ocr_res[0] or "Fund. Volt."in ocr_res[0]:
-            color_data = config_data.color_detection_data()
-            image = cv2.imread(image)
-            if self.ocr_manager.color_detection(image, color_data["rms_voltage_L-L"]) <= 10:
-                condition_met = True
-                values = ['AB', 'BC', 'CA', 'Aver']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
-                    if 180 < float(value) < 200:
-                        print(f"{name} = PASS")
-                    else:
-                        print(f"{name} = {value}")
-                        meas_error = True
-            elif self.ocr_manager.color_detection(image, color_data["rms_voltage_L-N"]) <= 10:
-                condition_met = True
-                values = ['A', 'B', 'C', 'Aver']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
-                    if 100 < float(value) < 120:
-                        print(f"{name} = PASS")
-                    else:
-                        print(f"{name} = {value}")
-                        meas_error = True
-            else:
-                condition_met = False
-                print("Evaluation Error")
         
-        if "Total Harmmonic" in ocr_res[0]:
-            color_data = config_data.color_detection_data()
-            image = cv2.imread(image)
-            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
-                condition_met = True
-                values = ['AB', 'BC', 'CA']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
-                    if 2.0 < float(value) < 4.0:
-                        print(f"{name} = PASS")
-                    else:
-                        print(f"{name} = {value}")
-                        meas_error = True
-            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
-                condition_met = True
-                values = ['A', 'B', 'C']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
-                    if 3.0 < float(value) < 4.0:
-                        print(f"{name} = PASS")
-                    else:
-                        print(f"{name} = {value}")
-                        meas_error = True
-            else:
-                condition_met = False
-                print("Evaluation Error")
-        
-        if "Frequency" in ocr_res[0]:
-            condition_met = True
-            values = ['Freq']
-            results = {name: value for name, value in zip(values, ocr_res_meas)}
+        def check_results(values, limits, ocr_meas_subset):
+            self.condition_met = True
+            results = {name: value for name, value in zip(values, ocr_meas_subset)}
             for name, value in results.items():
-                if 59 < float(value) < 61:
-                    print(f"{name} = PASS")
-                else:
+                if "OVER" in value:
                     print(f"{name} = {value}")
-                    meas_error = True
-
-        if "RMS Current" in ocr_res[0] or "Fundamental Current" in ocr_res[0]:
-            condition_met = True
-            values = ['A', 'B', 'C', 'Aver']
-            results = {name: value for name, value in zip(values, ocr_res_meas)}
-
-            for i, (name, value) in enumerate(results.items()):
-                if i < 4:
-                    if "OVER" in value:
-                        # "OVER %" 또는 "OVER"와 같은 경우 처리
-                        print(f"{name} = {value}")
-                        meas_error = True
+                    self.meas_error = True
+                else:
+                    match = re.match(r"(\d+\.?\d*)\s*(\D*)", value)
+                    if match:
+                        numeric_value = float(match.group(1))  # 숫자 부분
+                        unit = match.group(2)  # 단위 부분 (예: V)
+                        
+                        if len(limits) == 3:
+                            if limits[0] < numeric_value < limits[1] and limits[2] == unit:
+                                print(f"{name} = PASS ({numeric_value}{unit})")
+                            else:
+                                print(f"{name} = {value}")
+                                self.meas_error = True
+                        else: 
+                            if limits[0] < numeric_value < limits[1]:
+                                print(f"{name} = PASS ({numeric_value}{unit})")
+                            else:
+                                print(f"{name} = {value}")
+                                self.meas_error = True
                     else:
-                        # 숫자 부분만 추출하여 처리
-                        numeric_value = float(re.findall(r'\d+\.?\d*', value)[0])  
-                        if 45 < numeric_value < 55:
-                            print(f"{name} = PASS")
-                        else:
-                            print(f"{name} = {value}")
-                            meas_error = True
-            for name, value in results.items():
-                if i >= 4 and i < 8:
-                
-                    if 2 < float(value) < 3:
-                        print(f"{name} = PASS")
-                    else:
-                        print(f"{name} = {value}")
-                        meas_error = True
+                        print(f"Error parsing value: {value}")
+                        self.meas_error = True
+                        
+        if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, color_data["rms_voltage_L_L"]) <= 10:
+                check_results(['AB', 'BC', 'CA', 'Aver'], (180, 200, "V"), ocr_res_meas[:5])
+            elif self.ocr_manager.color_detection(image, color_data["rms_voltage_L_N"]) <= 10:
+                check_results(['A', 'B', 'C', 'Aver'], (100, 120, "V"), ocr_res_meas[:5])
+            else:
+                print("demo test evaluation error")
 
-        if "Phasor" in ocr_res[0]:
-            condition_met = True
+        
+        if self.ocr_manager.color_detection(image, color_data["mea_voltage"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
+                check_results(['AB', 'BC', 'CA'], (2.0, 4.0, "%"), ocr_res_meas[:4])
+            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
+                check_results(['A', 'B', 'C'], (3.0, 4.0, "%"), ocr_res_meas[:4])
+            else:
+                print("demo test evaluation error")
+            
+        if "Frequency" in ''.join(ocr_res[0]):
+            check_results(['Freq'], (59, 61), ocr_res_meas[:1])
+
+        if "Residual Voltage" in ''.join(ocr_res[0]):
+            check_results(["RMS", "Fund."], (0, 10), ocr_res_meas[:2])
+
+        if "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
+            check_results(['A%', 'B%', 'C%', 'Aver%'], (45, 55, "%"), ocr_res_meas[:4])
+            check_results(['A', 'B', 'C', 'Aver'], (2, 3, "A"), ocr_res_meas[4:])
+
+        if self.ocr_manager.color_detection(image, color_data["mea_current"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
+            check_results(["A", "B", "C"], (0, 2.0, "%"))
+            
+        if "Total Demand" in ''.join(ocr_res[0]):
+            check_results(["A", "B", "C"], (1.4, 1.5))
+            
+        if "Crest Factor" in ''.join(ocr_res[0]):
+            check_results(["A", "B", "C"], (1.3, 1.6))
+            
+        if "K-Factor" in ''.join(ocr_res[0]):
+            check_results(["A", "B", "C"], (1.0, 1.3))
+        
+        if "Phasor" in ''.join(ocr_res[0]):
+            self.condition_met = True
             self.confi
             if self.ocr_manager.color_detection(image, 650, 200, 10, 10, 67, 136, 255) <= 10:
                 values = ['A', 'B', 'C']
@@ -580,21 +537,21 @@ class Evaluation:
                         print(f"{name} = PASS")
                     else:
                         print(f"{name} = {value}")
-                        meas_error = True
+                        self.meas_error = True
             else:
                 values = ['A', 'B', 'C']
                 results = {name: value for name, value in zip(values, ocr_res_meas)}
                 for name, value in results.items():
                     print(f"{name} = {value}")
-                    meas_error = True
+                    self.meas_error = True
 
-        if not condition_met:
+        if not self.condition_met:
             print("Nothing matching word")
 
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
         
-        return self.ocr_error, right_error, meas_error
+        return self.ocr_error, right_error, self.meas_error
     
     def check_time_diff(self, time_images):
         if not self.MM_clear_time:

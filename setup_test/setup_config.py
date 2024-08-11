@@ -30,23 +30,26 @@ class ConfigSetup:
             #popup_number title ~ popup button(enter, cancel)
             "20": [n*x for x in [280, 30, 240, 40]],
             "21": [n*x for x in [280, 75, 240, 40]],
-            #measurement ocr
-            "main_view_1": [n*x for x in [160, 120, 620, 53]], #rms voltage l-l l-m min max
-            "main_view_2": [n*x for x in [165, 185, 120, 55]], # AB
-            "main_view_3": [n*x for x in [320, 220, 190, 25]], # time stamp
-            "main_view_4": [n*x for x in [540, 190, 160, 55]], # 190.0
+            
+            #OCR 결과를 위한 좌표
+            "title_view": [n*x for x in [160, 120, 620, 53]], #rms voltage l-l l-m min max
+            "a_ab": [n*x for x in [165, 185, 120, 55]], # AB
+            "a_time_stamp": [n*x for x in [320, 220, 190, 25]], # time stamp
+            "a_meas": [n*x for x in [540, 190, 230, 55]], # 190.0 V
+            "b_bc": [n*x for x in [165, 270, 120, 40]], # BC
+            "b_time_stamp": [n*x for x in [320, 295, 190, 25]], # time stamp
+            "b_meas": [n*x for x in [540, 260, 230, 60]], # 190.0 V
+            "c_ca": [n*x for x in [165, 340, 120, 40]], # CA
+            "c_time_stamp": [n*x for x in [320, 365, 190, 25]], # time stamp
+            "c_meas": [n*x for x in [540, 340, 230, 50]], # 190.0 V
+            "aver": [n*x for x in [165, 415, 120, 40]], # Average
+            "aver_time_stamp": [n*x for x in [320, 435, 190, 25]], # time stamp
+            "aver_mes": [n*x for x in [540, 410, 230, 60]], # 190.0
+            
+            ### 확인 후 제거 ###
             "main_view_5": [n*x for x in [720, 200, 35, 40]], # V
-            "main_view_6": [n*x for x in [165, 270, 120, 40]], # BC
-            "main_view_7": [n*x for x in [320, 295, 190, 25]], # time stamp
-            "main_view_8": [n*x for x in [540, 260, 160, 60]], # 190.0
             "main_view_9": [n*x for x in [720, 270, 35, 40]], # V
-            "main_view_10": [n*x for x in [165, 340, 120, 40]], # CA
-            "main_view_11": [n*x for x in [320, 365, 190, 25]], # time stamp
-            "main_view_12": [n*x for x in [540, 340, 160, 50]], # 190.0
             "main_view_13": [n*x for x in [720, 350, 35, 40]], # V
-            "main_view_14": [n*x for x in [165, 415, 120, 40]], # Average
-            "main_view_15": [n*x for x in [320, 435, 190, 25]], # time stamp
-            "main_view_16": [n*x for x in [540, 410, 160, 60]], # 190.0
             "main_view_17": [n*x for x in [720, 420, 35, 40]], # V
             
             #current % meas 수치 해야됨
@@ -95,14 +98,19 @@ class ConfigSetup:
     
     def match_m_setup_labels(self):
         m_home = {
-        "rms_vol_L-L" : ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average", "v", "v", "v", "v"],
-        "rms_vol_L-N" : ["RMS Voltage L-L L-N Min Max", "A", "B", "C", "Average", "v", "v", "v", "v"],
-        "fund_vol_L-L" : ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average", "v", "v", "v", "v"],
-        "fund_vol_L-N" : ["Fund. Volt. L-L L-N Min Max", "A", "B", "C", "Average", "v", "v", "v", "v"],
-        "thd_vol_L-L" : ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA", "%", "%", "%"],
-        "thd_vol_L-N" : ["Total Harmonic Distortion L-L L-N Max", "A", "B", "C", "%", "%", "%"],
+        "rms_vol_L_L" : ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"],
+        "rms_vol_L_N" : ["RMS Voltage L-L L-N Min Max", "A", "B", "C", "Average"],
+        "fund_vol_L_L" : ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"],
+        "fund_vol_L_N" : ["Fund. Volt. L-L L-N Min Max", "A", "B", "C", "Average"],
+        "thd_vol_L_L" : ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA"],
+        "thd_vol_L_N" : ["Total Harmonic Distortion L-L L-N Max", "A", "B", "C"],
         "freq" : ["Frequency Min Max", "Frequency", "Hz"],
-        "rms_curr" : ["RMS Current Min Max", "A", "B", "C", "Average", "A", "A", "A", "A"],
+        "vol_residual" : ["Residual Voltage Min Max", "RMS", "Fund."],
+        "rms_curr" : ["RMS Current Min Max", "A", "B", "C", "Average"],
+        "curr_thd" : ["Total Harmonic Distortion Max", "A", "B", "C"],
+        "curr_tdd" : ["Total Demand Distortion Max", "A", "B", "C"],
+        "curr_cf" : ["Crest Factor Max", "A", "B", "C"],
+        "curr_kf" : ["K-Factor Max", "A", "B", "C"],
         "L-N" : ["A", "B", "C", "Average"],
         "L_Min" : ["AB", "BC", "CA", "Average"],
         "L_Max" : ["AB", "BC", "CA", "Average"],
@@ -155,13 +163,13 @@ class ConfigSetup:
     def color_detection_data(self):
         
         coordinates = {
-        "rms_voltage_L-L" : [380, 140, 10, 10, 67, 136, 255],
-        "rms_voltage_L-N" : [480, 140, 10, 10, 67, 136, 255],
+        "rms_voltage_L_L" : [380, 140, 10, 10, 67, 136, 255],
+        "rms_voltage_L_N" : [480, 140, 10, 10, 67, 136, 255],
         "vol_thd_L_L" :[480, 140, 10, 10, 67, 136, 255],
         "vol_thd_L_N" :[580, 140, 10, 10, 67, 136, 255],
         "measurement": [5, 70, 10, 10, 47, 180, 139],
         "mea_voltage": [110, 130, 10, 10, 255, 255, 255],
-        "mea_current": [110, 170, 10, 10, 255, 255, 255],
+        "mea_current": [170, 70, 10, 10, 67, 136, 255],
         "mea_demand": [110, 220, 10, 10, 255, 255, 255],
         "mea_power": [110, 270, 10, 10, 255, 255, 255],
         }
