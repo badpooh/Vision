@@ -111,12 +111,13 @@ class ConfigSetup:
         "curr_tdd" : ["Total Demand Distortion Max", "A", "B", "C"],
         "curr_cf" : ["Crest Factor Max", "A", "B", "C"],
         "curr_kf" : ["K-Factor Max", "A", "B", "C"],
+        "curr_residual" : ["Residual Current Min Max", "RMS", "Fund."],
         "L-N" : ["A", "B", "C", "Average"],
         "L_Min" : ["AB", "BC", "CA", "Average"],
         "L_Max" : ["AB", "BC", "CA", "Average"],
         "N_Min" : ["A", "B", "C", "Average"],
         "N_Max" : ["A", "B", "C", "Average"],
-        "phasor": ["Phasor", ""]  
+        "phasor": ["Phasor", ""]
         }
         
         m_setup = {

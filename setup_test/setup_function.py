@@ -525,6 +525,9 @@ class Evaluation:
             
         if "K-Factor" in ''.join(ocr_res[0]):
             check_results(["A", "B", "C"], (1.0, 1.3))
+            
+        if "Residual Current" in ''.join(ocr_res[0]):
+            check_results(["RMS", "Fund"], (0, 0.1))
         
         if "Phasor" in ''.join(ocr_res[0]):
             self.condition_met = True

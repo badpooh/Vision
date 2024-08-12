@@ -211,6 +211,20 @@ class SetupProcess:
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
         
+    def ocr_curr_4phase_time(self, image_path, ref): ### A,B,C,Aver ###
+        """
+        Args:
+            ref (str): The OCR type to be selected for evaluation.
+        Returns:
+            None
+        """
+        # image_path = self.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca", "aver"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4", "a_meas", "b_meas", "c_meas", "aver_meas"]
+        time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp", "aver_time_stamp"]
+        ocr_ref = ref
+        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
+        
     def ocr_3phase(self, ref): ### A,B,C ###
         """
         Args:
@@ -477,32 +491,12 @@ class DemoTest:
         ### Current Min ###
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4","main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "rms_curr"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        self.sp.ocr_curr_4phase_time("rms_curr")
         
         ### Current Max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4","main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "rms_curr"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        self.sp.ocr_curr_4phase_time("rms_curr")
         
     def demo_mea_curr_fund(self):
         ### Current ###
@@ -511,44 +505,17 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_2")
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4","main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        select_ocr = "rms_curr"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        self.sp.ocr_curr_4phase("rms_curr")
 
         ### Current Min ###
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4","main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "rms_curr"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        self.sp.ocr_curr_4phase_time("rms_curr")
         
         ### Current Max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4","main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11", "main_view_15"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "rms_curr"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        self.sp.ocr_curr_4phase_time("rms_curr")
         
     def demo_mea_curr_thd(self):
         ### Current thd ###
@@ -557,29 +524,12 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_2")
         self.touch_manager.menu_touch("side_menu_4")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        select_ocr = "curr_thd"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        self.sp.ocr_3phase("curr_thd")
 
         ### Current thd Max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "curr_thd"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        self.sp.ocr_3phase_time("curr_thd")
         
     def demo_mea_curr_tdd(self):
         ### Current tdd ###
@@ -588,29 +538,12 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_2")
         self.touch_manager.menu_touch("side_menu_5")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        select_ocr = "curr_tdd"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+        self.sp.ocr_3phase("curr_tdd")
 
         ### Current tdd Max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "curr_tdd"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        self.sp.ocr_3phase_time("curr_tdd")
         
     def demo_mea_curr_cf(self):
         ### Current crest factor ###
@@ -619,29 +552,12 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_2")
         self.touch_manager.menu_touch("side_menu_6")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        select_ocr = "curr_cf"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
-
+        self.sp.ocr_3phase("curr_cf")
+        
         ### Current crest factor Max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "curr_cf"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        self.sp.ocr_3phase_time("curr_cf")
         
     def demo_mea_curr_kf(self):
         ### Current k-factor ###
@@ -650,26 +566,35 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_2")
         self.touch_manager.menu_touch("side_menu_7")
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
-        roi_keys_meas = ["a_meas", "b_meas", "c_meas"]
-        ocr_ref = "curr_kf"
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+        self.sp.ocr_3phase("curr_kf")
 
         ### Current k-factor Max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
+        self.sp.ocr_3phase_time("curr_kf")
+        
+    def demo_mea_curr_residual(self):
+        ### Current residual ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch("side_menu_8")
+        self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        time_keys = ["main_view_3", "main_view_7", "main_view_11"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-        select_ocr = "curr_kf"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        time_error = self.evaluation.check_time_diff(ocr_img_time)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+        roi_keys = ["title_view", "a_ab", "b_bc"]
+        roi_keys_meas = ["a_meas", "b_meas"]
+        ocr_ref = ["curr_residual"]
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+        
+        ### Current residual Min###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc"]
+        roi_keys_meas = ["a_meas"]
+        ocr_ref = ["curr_residual"]
+        time_keys = ["a_time_stamp", "b_time_stamp"]
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
     
     def demo_mea_anal_phasor(self):
         self.touch_manager.btn_front_meter()
