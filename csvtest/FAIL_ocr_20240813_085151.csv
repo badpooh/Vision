@@ -1,5 +1,0 @@
-Main View,Measurement Accuracy,OCR-Right,Right-OCR,Time Stemp Error
-RMS Voltage L-L L-N Min Max,109.8 V,"['Min', 'RMS', 'A', 'B', 'Voltage', 'c']","['Distortion', 'Harmonic', 'BC', 'CA', 'Total', 'AB']",
-A,109.5 V,"['Min', 'RMS', 'A', 'B', 'Voltage', 'c']","['Distortion', 'Harmonic', 'BC', 'CA', 'Total', 'AB']",
-B,109.6 V,"['Min', 'RMS', 'A', 'B', 'Voltage', 'c']","['Distortion', 'Harmonic', 'BC', 'CA', 'Total', 'AB']",
-c,,"['Min', 'RMS', 'A', 'B', 'Voltage', 'c']","['Distortion', 'Harmonic', 'BC', 'CA', 'Total', 'AB']",

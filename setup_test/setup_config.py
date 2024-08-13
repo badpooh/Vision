@@ -62,13 +62,12 @@ class ConfigSetup:
             "999" : [n*x for x in [220, 105, 350, 40]],
 
             #Phasor
-            "phasor_view_1" : [n*x for x in [160, 120, 210, 50]], #Phasor
+            "phasor_title" : [n*x for x in [160, 120, 630, 53]], #Phasor, [V]Voltage, [V]Current
             "phasor_view_2" : [n*x for x in [480, 120, 310, 53]], #[V]Voltage, [V]Current
-            "phasor_view_3" : [n*x for x in [570, 190, 210, 39]], #VLL VLN
-            "phasor_view_4" : [n*x for x in [465, 235, 80, 27]], #Voltage
-            "phasor_view_5" : [n*x for x in [550, 234, 55, 76]], #AB,BC,CA or A,B,C
-            "phasor_view_6" : [n*x for x in [610, 236, 65, 23]], #A-전압수치
-            "phasor_view_7" : [n*x for x in [675, 236, 32, 23]], #A-V
+            "phasor_vl_vn" : [n*x for x in [570, 190, 210, 39]], #VLL VLN
+            "phasor_voltage" : [n*x for x in [465, 235, 80, 27]], #Voltage
+            "phasor_a_c" : [n*x for x in [550, 234, 55, 76]], #AB,BC,CA or A,B,C
+            "phasor_a_meas" : [n*x for x in [610, 236, 97, 23]], #A-전압수치
             "phasor_view_8" : [n*x for x in [708, 236, 55, 23]], #A-각도수치
             "phasor_view_9" : [n*x for x in [763, 236, 14, 23]], #A-각도기호
             "phasor_view_10" : [n*x for x in [610, 260, 65, 23]], #B-전압수치
@@ -191,8 +190,8 @@ class ConfigSetup:
         "side_menu_4": [80, 270],
         "side_menu_5": [80, 315],
         "side_menu_6": [80, 360],
-        "side_menu_7": [],
-        "side_menu_8": [],
+        "side_menu_7": [80, 405],
+        "side_menu_8": [80, 450],
         "data_view_1": [320, 210],
         "data_view_2": [620, 210],
         "data_view_3": [320, 280],

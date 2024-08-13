@@ -583,7 +583,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc"]
         roi_keys_meas = ["a_meas", "b_meas"]
-        ocr_ref = ["curr_residual"]
+        ocr_ref = "curr_residual"
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
         
         ### Current residual Min###
@@ -591,8 +591,18 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc"]
-        roi_keys_meas = ["a_meas"]
-        ocr_ref = ["curr_residual"]
+        roi_keys_meas = ["a_meas", "b_meas"]
+        ocr_ref = "curr_residual"
+        time_keys = ["a_time_stamp", "b_time_stamp"]
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
+
+        ### Current residual Max###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc"]
+        roi_keys_meas = ["a_meas", "b_meas"]
+        ocr_ref = "curr_residual"
         time_keys = ["a_time_stamp", "b_time_stamp"]
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
     
@@ -615,9 +625,13 @@ class DemoTest:
         # self.demo_mea_vol_fund()
         # self.demo_mea_vol_thd()
         # self.demo_mea_curr_rms()
-        self.demo_mea_curr_fund()
-        self.demo_mea_curr_thd()
-        pass
+        # self.demo_mea_curr_fund()
+        # self.demo_mea_curr_thd()
+        # self.demo_mea_curr_tdd()
+        # self.demo_mea_curr_cf()
+        # self.demo_mea_curr_kf()
+        self.demo_mea_curr_residual()
+        print("Done")
 
     def testcode03(self):
         self.touch_manager.btn_front_meter()
