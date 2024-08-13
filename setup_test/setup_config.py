@@ -107,6 +107,7 @@ class ConfigSetup:
         "freq" : ["Frequency Min Max", "Frequency", "Hz"],
         "vol_residual" : ["Residual Voltage Min Max", "RMS", "Fund."],
         "rms_curr" : ["RMS Current Min Max", "A", "B", "C", "Average"],
+        "fund_curr" : ["Fundamental Current Min Max", "A", "B", "C", "Average"],
         "curr_thd" : ["Total Harmonic Distortion Max", "A", "B", "C"],
         "curr_tdd" : ["Total Demand Distortion Max", "A", "B", "C"],
         "curr_cf" : ["Crest Factor Max", "A", "B", "C"],
@@ -169,7 +170,7 @@ class ConfigSetup:
         "vol_thd_L_L" :[480, 140, 10, 10, 67, 136, 255],
         "vol_thd_L_N" :[580, 140, 10, 10, 67, 136, 255],
         "measurement": [5, 70, 10, 10, 47, 180, 139],
-        "mea_voltage": [110, 130, 10, 10, 255, 255, 255],
+        "mea_voltage": [10, 70, 10, 10, 67, 136, 255],
         "mea_current": [170, 70, 10, 10, 67, 136, 255],
         "mea_demand": [110, 220, 10, 10, 255, 255, 255],
         "mea_power": [110, 270, 10, 10, 255, 255, 255],
@@ -242,8 +243,8 @@ class ConfigSetup:
         "meas_L-N" : [510, 150],
         "Min" : [620, 150],
         "Max" : [720, 150],
-        "thd_L-L" : [520, 150],
-        "thd_L-N" : [620, 150],
+        "thd_L_L" : [520, 150],
+        "thd_L_N" : [620, 150],
 
     }
         return coordinates

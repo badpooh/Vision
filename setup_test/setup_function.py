@@ -19,7 +19,7 @@ config_data = ConfigSetup()
 
 class ModbusManager:
     
-    SERVER_IP = '10.10.26.156'  # 장치 IP 주소
+    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
     TOUCH_PORT = 5100  #내부터치
     SETUP_PORT = 502  #설정
     
@@ -475,13 +475,13 @@ class Evaluation:
                             if limits[0] < numeric_value < limits[1] and limits[2] == unit:
                                 print(f"{name} = PASS ({numeric_value}{unit})")
                             else:
-                                print(f"{name} = {value}")
+                                print(f"{name} = FAIL {value}")
                                 self.meas_error = True
                         else: 
                             if limits[0] < numeric_value < limits[1]:
                                 print(f"{name} = PASS ({numeric_value}{unit})")
                             else:
-                                print(f"{name} = {value}")
+                                print(f"{name} = FAIL {value}")
                                 self.meas_error = True
                     else:
                         print(f"Error parsing value: {value}")
@@ -515,19 +515,19 @@ class Evaluation:
             check_results(['A', 'B', 'C', 'Aver'], (2, 3, "A"), ocr_res_meas[4:])
 
         if self.ocr_manager.color_detection(image, color_data["mea_current"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (0, 2.0, "%"))
+            check_results(["A", "B", "C"], (0, 2.0, "%"), ocr_res_meas[:3])
             
         if "Total Demand" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.4, 1.5))
+            check_results(["A", "B", "C"], (1.4, 1.5), ocr_res_meas[:3])
             
         if "Crest Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.3, 1.6))
+            check_results(["A", "B", "C"], (1.3, 1.6), ocr_res_meas[:3])
             
         if "K-Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.0, 1.3))
+            check_results(["A", "B", "C"], (1.0, 1.3), ocr_res_meas[:3])
             
         if "Residual Current" in ''.join(ocr_res[0]):
-            check_results(["RMS", "Fund"], (0, 0.1))
+            check_results(["RMS", "Fund"], (0, 0.1), ocr_res_meas[:2])
         
         if "Phasor" in ''.join(ocr_res[0]):
             self.condition_met = True

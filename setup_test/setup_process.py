@@ -17,7 +17,7 @@ class SetupProcess:
     ocr_func = OCRManager()
     evaluation = Evaluation()
     modbus_label = ModbusLabels()
-    search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
+    search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
     now = datetime.now()
     file_time_diff = {}
 
@@ -184,14 +184,14 @@ class SetupProcess:
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
     
-    def ocr_curr_4phase(self, image_path, ref): ### A,B,C,Aver ###
+    def ocr_curr_4phase(self, ref): ### A,B,C,Aver ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
         Returns:
             None
         """
-        # image_path = self.load_image_file()
+        image_path = self.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc", "c_ca", "aver"]
         roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4", "a_meas", "b_meas", "c_meas", "aver_meas"]
         ocr_ref = ref
@@ -211,14 +211,14 @@ class SetupProcess:
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
         
-    def ocr_curr_4phase_time(self, image_path, ref): ### A,B,C,Aver ###
+    def ocr_curr_4phase_time(self, ref): ### A,B,C,Aver ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
         Returns:
             None
         """
-        # image_path = self.load_image_file()
+        image_path = self.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc", "c_ca", "aver"]
         roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "cur_percent_4", "a_meas", "b_meas", "c_meas", "aver_meas"]
         time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp", "aver_time_stamp"]
@@ -337,7 +337,7 @@ class DemoTest:
         self.touch_manager.menu_touch("Max")
         self.touch_manager.menu_touch("meas_L-N")
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time("rms_vol_L_N")
+        self.sp.ocr_4phase("rms_vol_L_N")
         
          ### L-N min 검사 ###
         self.touch_manager.menu_touch("Min")
@@ -393,7 +393,7 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_1")
         self.touch_manager.menu_touch("side_menu_3")
-        self.touch_manager.menu_touch("thd_L-L")
+        self.touch_manager.menu_touch("thd_L_L")
         self.touch_manager.screenshot()
         self.sp.ocr_3phase("thd_vol_L_L")
         
@@ -404,7 +404,7 @@ class DemoTest:
         
         ### L-N 만 검사 ###
         self.touch_manager.menu_touch("Max")
-        self.touch_manager.menu_touch("thd_L-N")
+        self.touch_manager.menu_touch("thd_L_N")
         self.touch_manager.screenshot()
         self.sp.ocr_3phase("thd_vol_L_N")
 
@@ -505,17 +505,17 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_2")
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase("rms_curr")
+        self.sp.ocr_curr_4phase("fund_curr")
 
         ### Current Min ###
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time("rms_curr")
+        self.sp.ocr_curr_4phase_time("fund_curr")
         
         ### Current Max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time("rms_curr")
+        self.sp.ocr_curr_4phase_time("fund_curr")
         
     def demo_mea_curr_thd(self):
         ### Current thd ###
@@ -611,10 +611,12 @@ class DemoTest:
     def testcode02(self):
         # self.modbus_label.demo_test_setting()
         # self.reset_max_min()
-        self.demo_mea_vol_rms()
+        # self.demo_mea_vol_rms()
         # self.demo_mea_vol_fund()
         # self.demo_mea_vol_thd()
         # self.demo_mea_curr_rms()
+        self.demo_mea_curr_fund()
+        self.demo_mea_curr_thd()
         pass
 
     def testcode03(self):
