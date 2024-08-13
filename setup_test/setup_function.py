@@ -529,24 +529,15 @@ class Evaluation:
         if "Residual Current" in ''.join(ocr_res[0]):
             check_results(["RMS", "Fund"], (0, 0.1), ocr_res_meas[:2])
         
-        if "Phasor" in ''.join(ocr_res[0]):
-            self.condition_met = True
-            self.confi
-            if self.ocr_manager.color_detection(image, 650, 200, 10, 10, 67, 136, 255) <= 10:
-                values = ['A', 'B', 'C']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
-                    if 180 < float(value) < 190:
-                        print(f"{name} = PASS")
-                    else:
-                        print(f"{name} = {value}")
-                        self.meas_error = True
-            else:
-                values = ['A', 'B', 'C']
-                results = {name: value for name, value in zip(values, ocr_res_meas)}
-                for name, value in results.items():
-                    print(f"{name} = {value}")
-                    self.meas_error = True
+        if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10 and "Phasor" in ''.join(ocr_res[0]):
+            check_results(["AB", "BC", "CA"], (180, 200, "V"), ocr_res_meas[:3])
+            check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
+            check_results(["AB_angle"], (25, 35, "0"), ocr_res_meas[6:7])
+            check_results(["BC_angle"], (-125, -115, "0"), ocr_res_meas[7:8])
+            check_results(["CA_angle"], (115, 125, "0"), ocr_res_meas[8:9])
+            check_results(["A_angle_cur"], (25, 35, "0"), ocr_res_meas[9:10])
+            check_results(["B_angle_cur"], (-125, -115, "0"), ocr_res_meas[10:11])
+            check_results(["C_angle_cur"], (115, 125, "0"), ocr_res_meas[11:12])
 
         if not self.condition_met:
             print("Nothing matching word")

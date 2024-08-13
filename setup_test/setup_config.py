@@ -67,31 +67,20 @@ class ConfigSetup:
             "phasor_vl_vn" : [n*x for x in [570, 190, 210, 39]], #VLL VLN
             "phasor_voltage" : [n*x for x in [465, 235, 80, 27]], #Voltage
             "phasor_a_c" : [n*x for x in [550, 234, 55, 76]], #AB,BC,CA or A,B,C
-            "phasor_a_meas" : [n*x for x in [610, 236, 97, 23]], #A-전압수치
-            "phasor_view_8" : [n*x for x in [708, 236, 55, 23]], #A-각도수치
-            "phasor_view_9" : [n*x for x in [763, 236, 14, 23]], #A-각도기호
-            "phasor_view_10" : [n*x for x in [610, 260, 65, 23]], #B-전압수치
-            "phasor_view_11" : [n*x for x in [675, 260, 32, 23]], #B-V
-            "phasor_view_12" : [n*x for x in [675, 260, 88, 23]], #B-각도수치
-            "phasor_view_13" : [n*x for x in [763, 260, 14, 23]], #B-각도기호
-            "phasor_view_14" : [n*x for x in [610, 284, 65, 23]], #C-전압수치
-            "phasor_view_15" : [n*x for x in [675, 284, 32, 23]], #C-V
-            "phasor_view_16" : [n*x for x in [675, 284, 88, 23]], #C-각도수치
-            "phasor_view_17" : [n*x for x in [763, 284, 14, 23]], #C-각도기호
-            "phasor_view_18" : [n*x for x in [465, 345, 80, 24]], #Current
-            "phasor_view_19" : [n*x for x in [550, 345, 55, 76]], #A,B,C
-            "phasor_view_20" : [n*x for x in [610, 346, 65, 23]], #A-전압수치
-            "phasor_view_21" : [n*x for x in [675, 346, 32, 23]], #A-V
-            "phasor_view_22" : [n*x for x in [675, 346, 88, 23]], #A-각도수치
-            "phasor_view_23" : [n*x for x in [763, 346, 14, 23]], #A-각도기호
-            "phasor_view_24" : [n*x for x in [610, 370, 65, 23]], #B-전압수치
-            "phasor_view_25" : [n*x for x in [675, 370, 32, 23]], #B-V
-            "phasor_view_26" : [n*x for x in [675, 370, 88, 23]], #B-각도수치
-            "phasor_view_27" : [n*x for x in [763, 370, 14, 23]], #B-각도기호
-            "phasor_view_28" : [n*x for x in [610, 394, 65, 23]], #C-전압수치
-            "phasor_view_29" : [n*x for x in [675, 394, 32, 23]], #C-V
-            "phasor_view_30" : [n*x for x in [675, 394, 88, 23]], #C-각도수치
-            "phasor_view_31" : [n*x for x in [763, 394, 14, 23]], #C-각도기호
+            "phasor_a_meas" : [n*x for x in [610, 236, 95, 23]], #A-전압수치
+            "phasor_a_angle" : [n*x for x in [705, 236, 75, 23]], #A-각도수치
+            "phasor_b_meas" : [n*x for x in [610, 260, 95, 23]], #B-전압수치
+            "phasor_b_angle" : [n*x for x in [705, 260, 75, 23]], #B-각도수치
+            "phasor_c_meas" : [n*x for x in [610, 284, 95, 23]], #C-전압수치
+            "phasor_c_angle" : [n*x for x in [705, 284, 75, 23]], #C-각도수치
+            "phasor_current" : [n*x for x in [465, 345, 80, 24]], #Current
+            "phasor_a_c" : [n*x for x in [550, 345, 55, 76]], #A,B,C
+            "phasor_a_meas_cur" : [n*x for x in [610, 346, 95, 23]], #A-전압수치
+            "phasor_a_angle_cur" : [n*x for x in [705, 346, 75, 23]], #A-각도수치
+            "phasor_b_meas_cur" : [n*x for x in [610, 370, 95, 23]], #B-전압수치
+            "phasor_b_angle_cur" : [n*x for x in [705, 370, 75, 23]], #B-각도수치
+            "phasor_c_meas_cur" : [n*x for x in [610, 394, 95, 23]], #C-전압수치
+            "phasor_c_angle_cur" : [n*x for x in [705, 394, 75, 23]], #C-각도수치
         }
         return params
     
@@ -117,7 +106,8 @@ class ConfigSetup:
         "L_Max" : ["AB", "BC", "CA", "Average"],
         "N_Min" : ["A", "B", "C", "Average"],
         "N_Max" : ["A", "B", "C", "Average"],
-        "phasor": ["Phasor", ""]
+        "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
+        "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"]
         }
         
         m_setup = {
@@ -168,6 +158,7 @@ class ConfigSetup:
         "rms_voltage_L_N" : [480, 140, 10, 10, 67, 136, 255],
         "vol_thd_L_L" :[480, 140, 10, 10, 67, 136, 255],
         "vol_thd_L_N" :[580, 140, 10, 10, 67, 136, 255],
+        "phasor_VLL" : [580, 200, 10, 10, 67, 136, 255],
         "measurement": [5, 70, 10, 10, 47, 180, 139],
         "mea_voltage": [10, 70, 10, 10, 67, 136, 255],
         "mea_current": [170, 70, 10, 10, 67, 136, 255],

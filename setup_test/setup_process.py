@@ -612,6 +612,11 @@ class DemoTest:
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage", "phasor_a_c", "phasor_current", "phasor_a_c"]
+        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur", "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
+        ocr_ref = "phasor_L_L"
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
         
     def testcode01(self):
