@@ -62,11 +62,12 @@ class ConfigSetup:
             "999" : [n*x for x in [220, 105, 350, 40]],
 
             #Phasor
+            "phasor_img_cut" : [176, 179, 425, 295],
             "phasor_title" : [n*x for x in [160, 120, 630, 53]], #Phasor, [V]Voltage, [V]Current
             "phasor_view_2" : [n*x for x in [480, 120, 310, 53]], #[V]Voltage, [V]Current
             "phasor_vl_vn" : [n*x for x in [570, 190, 210, 39]], #VLL VLN
             "phasor_voltage" : [n*x for x in [465, 235, 80, 27]], #Voltage
-            "phasor_a_c" : [n*x for x in [550, 234, 55, 76]], #AB,BC,CA or A,B,C
+            "phasor_a_c_vol" : [n*x for x in [550, 234, 55, 76]], #AB,BC,CA or A,B,C
             "phasor_a_meas" : [n*x for x in [610, 236, 95, 23]], #A-전압수치
             "phasor_a_angle" : [n*x for x in [705, 236, 75, 23]], #A-각도수치
             "phasor_b_meas" : [n*x for x in [610, 260, 95, 23]], #B-전압수치
@@ -74,7 +75,7 @@ class ConfigSetup:
             "phasor_c_meas" : [n*x for x in [610, 284, 95, 23]], #C-전압수치
             "phasor_c_angle" : [n*x for x in [705, 284, 75, 23]], #C-각도수치
             "phasor_current" : [n*x for x in [465, 345, 80, 24]], #Current
-            "phasor_a_c" : [n*x for x in [550, 345, 55, 76]], #A,B,C
+            "phasor_a_c_cur" : [n*x for x in [550, 345, 55, 76]], #A,B,C
             "phasor_a_meas_cur" : [n*x for x in [610, 346, 95, 23]], #A-전압수치
             "phasor_a_angle_cur" : [n*x for x in [705, 346, 75, 23]], #A-각도수치
             "phasor_b_meas_cur" : [n*x for x in [610, 370, 95, 23]], #B-전압수치

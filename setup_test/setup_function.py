@@ -259,7 +259,7 @@ class OCRManager:
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = denoised_image[y:y+h, x:x+w]
+                roi_image = resized_image[y:y+h, x:x+w]
                 # cv2.imshow('Image with Size Info', roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
@@ -394,6 +394,7 @@ class Evaluation:
     
     MM_clear_time = None
     ocr_manager = OCRManager()
+    rois = config_data.roi_params()
 
     def __init__(self):
         self.labels = config_data.match_m_setup_labels()
@@ -530,14 +531,14 @@ class Evaluation:
             check_results(["RMS", "Fund"], (0, 0.1), ocr_res_meas[:2])
         
         if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10 and "Phasor" in ''.join(ocr_res[0]):
-            check_results(["AB", "BC", "CA"], (180, 200, "V"), ocr_res_meas[:3])
+            check_results(["AB", "BC", "CA"], (180, 200, "V" or "v"), ocr_res_meas[:3])
             check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
             check_results(["AB_angle"], (25, 35, "0"), ocr_res_meas[6:7])
-            check_results(["BC_angle"], (-125, -115, "0"), ocr_res_meas[7:8])
-            check_results(["CA_angle"], (115, 125, "0"), ocr_res_meas[8:9])
-            check_results(["A_angle_cur"], (25, 35, "0"), ocr_res_meas[9:10])
-            check_results(["B_angle_cur"], (-125, -115, "0"), ocr_res_meas[10:11])
-            check_results(["C_angle_cur"], (115, 125, "0"), ocr_res_meas[11:12])
+            check_results(["BC_angle"], (-95, -85, "0"), ocr_res_meas[7:8])
+            check_results(["CA_angle"], (145, 155, "0"), ocr_res_meas[8:9])
+            check_results(["A_angle_cur"], (-35, -25, "0"), ocr_res_meas[9:10])
+            check_results(["B_angle_cur"], (-155, -145, "0"), ocr_res_meas[10:11])
+            check_results(["C_angle_cur"], (85, 95, "0"), ocr_res_meas[11:12])
 
         if not self.condition_met:
             print("Nothing matching word")
@@ -545,7 +546,7 @@ class Evaluation:
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
         
-        return self.ocr_error, right_error, self.meas_error
+        return self.ocr_error, right_error, self.meas_error, ocr_res
     
     def check_time_diff(self, time_images):
         if not self.MM_clear_time:
@@ -568,19 +569,21 @@ class Evaluation:
             return failed_times
         return None
     
-    def img_match(self, image, roi_key):
-        if self.ocr_error and "Phasor" in self.ocr_error[0]:
-            template_image_path= r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\A3700N_phaser_demo_1.png"
+    def img_match(self, image, roi_key, ocr_res):
+        if "Phasor" in ''.join(ocr_res[0]):
+            template_image_path= r"C:\PNT\09.AutoProgram\AutoProgram\setup_test\image_ref\Phasor_ref_vll.png"
         elif self.ocr_error and "Harmonics" in self.ocr_error[0]:
             template_image_path= r"C:"
         elif self.ocr_error and "Waveform" in self.ocr_error[0]:
             template_image_path= r"C:"
         image = cv2.imread(image)
         template_image = cv2.imread(template_image_path)
-        x, y, w, h = roi_key
+        x, y, w, h = self.rois[roi_key]
         cut_img = image[y:y+h, x:x+w]
-        resized_cut_img = cv2.resize(cut_img, (template_image.shape[1], template_image.shape[0]))
-        res = cv2.matchTemplate(resized_cut_img, template_image, cv2.TM_CCOEFF_NORMED)
+        cut_template = template_image[y:y+h, x:x+w]
+        
+        resized_cut_img = cv2.resize(cut_img, (cut_template.shape[1], cut_template.shape[0]))
+        res = cv2.matchTemplate(resized_cut_img, cut_template, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         
         print(max_val)

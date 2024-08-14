@@ -1,0 +1,13 @@
+Main View,Measurement Accuracy,OCR-Right,Right-OCR,Time Stemp Error
+Phasor Voltage V  Current,188.6 v,['V'],"['AB', 'BC', 'CA', 'B']",
+VLL VLN,189.1 v,['V'],"['AB', 'BC', 'CA', 'B']",
+Voltage,190.0 v,['V'],"['AB', 'BC', 'CA', 'B']",
+A C,49.50 kA,['V'],"['AB', 'BC', 'CA', 'B']",
+Current,49.88 kA,['V'],"['AB', 'BC', 'CA', 'B']",
+,49.78 kA,['V'],"['AB', 'BC', 'CA', 'B']",
+,30.0 0,['V'],"['AB', 'BC', 'CA', 'B']",
+,-89.6 0,['V'],"['AB', 'BC', 'CA', 'B']",
+,150.1 0,['V'],"['AB', 'BC', 'CA', 'B']",
+,-30.1 0,['V'],"['AB', 'BC', 'CA', 'B']",
+,-150.4 0,['V'],"['AB', 'BC', 'CA', 'B']",
+,90.0 0,['V'],"['AB', 'BC', 'CA', 'B']",
