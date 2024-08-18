@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 import time
 import sys
-import easyocr
-import torch
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtWidgets import *
+from paddleocr import PaddleOCR
+
 
 class WebCam:
     def __init__(self, main_window=None):
@@ -22,8 +22,9 @@ class WebCam:
         self.last_boundary_update = time.time()
         self.last_ocr_update = time.time()
         self.boundary_box = None
-        self.use_gpu = torch.cuda.is_available()
-        self.reader = easyocr.Reader(['en'], gpu=self.use_gpu)
+        # self.use_gpu = torch.cuda.is_available()
+        self.reader = PaddleOCR(use_angle_cls=False, lang='en',
+                                use_space_char=True, show_log=False,)
         self.ocr_results = []  # OCR 결과 저장
         self.ocr_display_end_time = 0  # OCR 결과 표시 종료 시간
         self.ocr_display_time = 3
@@ -34,7 +35,8 @@ class WebCam:
         self.green_printed = False
         self.initial_selected_area = None
         self.middle_box_detected = False
-        self.template = cv2.imread(r"image_test\a3700nwiring.png", cv2.IMREAD_COLOR)
+        self.template = cv2.imread(
+            r"image_test\a3700nwiring.png", cv2.IMREAD_COLOR)
 
     def find_available_camera(self):
         max_tested = 10
@@ -43,7 +45,7 @@ class WebCam:
             if cap.isOpened():
                 print(f"Camera found at index {i}")
                 cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
-                cap.set(cv2.CAP_PROP_FOCUS, 120) #수동 포커스
+                cap.set(cv2.CAP_PROP_FOCUS, 120)  # 수동 포커스
                 cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # 자동 노출 비활성화
                 cap.set(cv2.CAP_PROP_EXPOSURE, -5)  # 수동 노출 설정 (값은 조정 필요)
                 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # 최대 해상도 설정
@@ -87,7 +89,7 @@ class WebCam:
             print("Error:", e)
         finally:
             self.streaming = False
-    
+
     def start_selected_streaming(self):
         if not self.capture:
             print("카메라를 사용할 수 없습니다.")
@@ -106,21 +108,20 @@ class WebCam:
         finally:
             self.selected_area_window_created = False
         self.selected_area = None
-    
+
     def adjust_focus(self):
         if self.capture:
             self.capture.set(cv2.CAP_PROP_AUTOFOCUS, 0)
             self.capture.set(cv2.CAP_PROP_FOCUS, self.focus_value)
-    
+
     def preprocess_image(self, image):
-    
+
         kernel = np.ones((2, 3), np.uint8)
         eroded = cv2.erode(image, kernel, iterations=1)
-        
+
         blurred_image = cv2.GaussianBlur(eroded, (1, 1), 0)
         removed_blur_image = cv2.addWeighted(image, 2, blurred_image, -1, 1)
         return blurred_image
-        
 
     def template_matching(self, image, template, threshold=0.8):
         result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
@@ -128,7 +129,6 @@ class WebCam:
         if len(loc[0]) > 0:
             return True
         return False
-
 
     def draw_boundary_box(self, image):
         if self.boundary_box is not None:
@@ -159,15 +159,16 @@ class WebCam:
                 # 박스 그리기
                 cv2.rectangle(image, tl, br, (0, 0, 255), 2)
                 # 텍스트 그리기
-                cv2.putText(image, text, (tl[0], tl[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                cv2.putText(
+                    image, text, (tl[0], tl[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         if self.selected_area:
             x1, y1, x2, y2 = self.selected_area
             relative_mouse_x = self.mouse_x - x1
             relative_mouse_y = self.mouse_y - y1
-            cv2.putText(image, f"({relative_mouse_x}, {relative_mouse_y})", (self.mouse_x + 10, self.mouse_y - 10), 
+            cv2.putText(image, f"({relative_mouse_x}, {relative_mouse_y})", (self.mouse_x + 10, self.mouse_y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
         return image
-    
+
     def color_distance(self, color1, color2):
         return np.sqrt(np.sum((color1 - color2) ** 2))
 
@@ -179,7 +180,7 @@ class WebCam:
         mask = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
         _, mask = cv2.threshold(mask, threshold, 255, cv2.THRESH_BINARY_INV)
         return mask
-    
+
     def find_highest_color_ratio_area(self, image, color=(47, 180, 139), grid_size=(50, 50)):
         height, width, _ = image.shape
         max_ratio = 0
@@ -208,7 +209,7 @@ class WebCam:
 
             self.display_frame = frame
             current_time = time.time()
-            
+
             # 템플릿 매칭을 통한 팝업 감지
             res = cv2.matchTemplate(frame, self.template, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
@@ -220,22 +221,26 @@ class WebCam:
                 top_left = max_loc
                 h, w = self.template.shape[:2]
                 bottom_right = (top_left[0] + w, top_left[1] + h)
-                cv2.rectangle(self.display_frame, top_left, bottom_right, (0, 255, 0), 2)
+                cv2.rectangle(self.display_frame, top_left,
+                              bottom_right, (0, 255, 0), 2)
                 self.middle_box_detected = True
                 template_matched = True
 
                 # 템플릿 매칭된 영역 내에서 가장 높은 색 비율 영역 찾기
-                template_area = frame[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
-                highest_color_ratio_rect, _ = self.find_highest_color_ratio_area(template_area, color=(47, 180, 139))
-                
+                template_area = frame[top_left[1]
+                    :bottom_right[1], top_left[0]:bottom_right[0]]
+                highest_color_ratio_rect, _ = self.find_highest_color_ratio_area(
+                    template_area, color=(47, 180, 139))
+
                 if highest_color_ratio_rect:
                     x, y, w, h = highest_color_ratio_rect
                     x1, y1 = top_left[0] + x, top_left[1] + y
                     x2, y2 = x1 + w, y1 + h
-                    cv2.rectangle(self.display_frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                    cv2.rectangle(self.display_frame, (x1, y1),
+                                  (x2, y2), (255, 0, 0), 2)
             else:
                 self.middle_box_detected = False
-            
+
             if current_time - last_ocr_update >= 1:
                 if template_matched and highest_color_ratio_rect:
                     # 템플릿 매칭된 부분 내에서 가장 높은 색 비율 영역 OCR 수행
@@ -247,10 +252,11 @@ class WebCam:
                     if x1 < x2 and y1 < y2:  # 선택된 영역이 유효한지 확인
                         cropped_image = frame[y1:y2, x1:x2]
                         if cropped_image.size != 0:  # cropped_image가 비어있지 않은지 확인
-                            self.ocr_results = self.reader.readtext(cropped_image)
-                
+                            self.ocr_results = self.reader.readtext(
+                                cropped_image)
+
                 last_ocr_update = current_time
-            
+
             self.display_frame = self.draw_ocr_results(self.display_frame)
 
             if current_time - last_focus_time >= 3:
@@ -258,10 +264,12 @@ class WebCam:
                 last_focus_time = current_time
 
             focus_value = self.capture.get(cv2.CAP_PROP_FOCUS)
-            cv2.putText(self.display_frame, f"Focus: {focus_value}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(self.display_frame, f"Focus: {
+                        focus_value}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
             if self.dragging:
-                cv2.rectangle(self.display_frame, (self.x1, self.y1), (self.x2, self.y2), (0, 255, 0), 2)
+                cv2.rectangle(self.display_frame, (self.x1, self.y1),
+                              (self.x2, self.y2), (0, 255, 0), 2)
 
             # 경계 박스 그리기
             self.display_frame = self.draw_boundary_box(self.display_frame)
