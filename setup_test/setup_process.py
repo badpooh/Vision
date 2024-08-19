@@ -660,19 +660,8 @@ class DemoTest:
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
         self.evaluation.img_match(image_path, "phasor_img_cut", ocr_res)
-        self.evaluation.img_match(image_path, "phasor_a_c_angle_vol", ocr_res)
-        self.evaluation.img_match(image_path, "phasor_a_c_angle_cur", ocr_res)
 
-    def demo_mea_anal_har(self):
-        self.touch_manager.menu_touch("main_menu_4")
-        self.touch_manager.menu_touch("side_menu_1")
-        self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["harmonics_sub_t"]
-        roi_keys_meas = ["harmonics_sub_t"]
-        ocr_ref = "phasor_L_L"
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
-
+        
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_51_M_H_AN_Harmonics.png"
         roi_keys = ["harmonics_sub_t",

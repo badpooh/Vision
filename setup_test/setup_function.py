@@ -278,7 +278,7 @@ class OCRManager:
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = gray_image[y:y+h, x:x+w]
+                roi_image = resized_image[y:y+h, x:x+w]
                 # cv2.imshow('Image with Size Info', roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
@@ -575,17 +575,14 @@ class Evaluation:
             check_results(["RMS", "Fund"], (0, 0.1), ocr_res_meas[:2])
 
         if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10 and "Phasor" in ''.join(ocr_res[0]):
-            check_results(["AB", "BC", "CA"], (180, 200,
-                          "V" or "v"), ocr_res_meas[:3])
-            check_results(["A_Curr", "B_Curr", "C_Curr"],
-                          (2, 3, "A"), ocr_res_meas[3:6])
-            check_results(["AB_angle"], (25, 35), ocr_res_meas[6:7])
-            check_results(["BC_angle"], (-95, -85), ocr_res_meas[7:8])
-            check_results(["CA_angle"], (145, 155), ocr_res_meas[8:9])
-            check_results(["A_angle_cur"], (-35, -25), ocr_res_meas[9:10])
-            check_results(["B_angle_cur"], (-155, -145),
-                          ocr_res_meas[10:11])
-            check_results(["C_angle_cur"], (85, 95), ocr_res_meas[11:12])
+            check_results(["AB", "BC", "CA"], (180, 200, "V" or "v"), ocr_res_meas[:3])
+            check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
+            check_results(["AB_angle"], (25, 35, "0"), ocr_res_meas[6:7])
+            check_results(["BC_angle"], (-95, -85, "0"), ocr_res_meas[7:8])
+            check_results(["CA_angle"], (145, 155, "0"), ocr_res_meas[8:9])
+            check_results(["A_angle_cur"], (-35, -25, "0"), ocr_res_meas[9:10])
+            check_results(["B_angle_cur"], (-155, -145, "0"), ocr_res_meas[10:11])
+            check_results(["C_angle_cur"], (85, 95, "0"), ocr_res_meas[11:12])
 
         if not self.condition_met:
             print("Nothing matching word")
@@ -619,7 +616,7 @@ class Evaluation:
 
     def img_match(self, image, roi_key, ocr_res):
         if "Phasor" in ''.join(ocr_res[0]):
-            template_image_path = r".\image_ref\Phasor_ref_vll.png"
+            template_image_path= r"C:\PNT\09.AutoProgram\AutoProgram\setup_test\image_ref\Phasor_ref_vll.png"
         elif self.ocr_error and "Harmonics" in self.ocr_error[0]:
             template_image_path = r"C:"
         elif self.ocr_error and "Waveform" in self.ocr_error[0]:
