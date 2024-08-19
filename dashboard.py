@@ -93,7 +93,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.meter_setup_process.static_text_measurement()
 
     def demo_ui_test(self):
-        self.meter_demo_test.testcode01()
+        self.meter_demo_test.testcode02()
 
     def set_focus(self):
         try:
