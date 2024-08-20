@@ -646,6 +646,7 @@ class DemoTest:
                             roi_keys_meas, ocr_ref, time_keys)
 
     def demo_mea_anal_phasor(self):
+        ### VLL ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_4")
@@ -663,15 +664,48 @@ class DemoTest:
         self.evaluation.img_match(image_path, "phasor_a_c_angle_vol", ocr_res)
         self.evaluation.img_match(image_path, "phasor_a_c_angle_cur", ocr_res)
 
-    def demo_mea_anal_har(self):
-        self.touch_manager.menu_touch("main_menu_4")
-        self.touch_manager.menu_touch("side_menu_1")
+        ### VLN ###
+        self.touch_manager.menu_touch("phasor_LN")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["harmonics_sub_t"]
-        roi_keys_meas = ["harmonics_sub_t"]
-        ocr_ref = "phasor_L_L"
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
+                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
+        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
+                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
+        ocr_ref = "phasor_L_N"
+        ocr_res = self.sp.ocr_process(
+            image_path, roi_keys, roi_keys_meas, ocr_ref)
+        self.evaluation.img_match(image_path, "phasor_img_cut", ocr_res)
+        self.evaluation.img_match(image_path, "phasor_a_c_angle_vol", ocr_res)
+        self.evaluation.img_match(image_path, "phasor_a_c_angle_cur", ocr_res)
+
+    def demo_mea_anal_har(self):
+        ### voltage ###
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_2")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["harmonics_title", "harmonics_sub_title_1", "harmonics_sub_title_2",
+                    "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
+        roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
+                         "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
+        ocr_ref = "harmonics_3P4W"
+        ocr_res = self.sp.ocr_process(
+            image_path, roi_keys, roi_keys_meas, ocr_ref)
+        self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
+
+        ### current ###
+        self.touch_manager.menu_touch("phas_har_cur")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["harmonics_title", "harmonics_sub_title_1", "harmonics_sub_title_2",
+                    "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
+        roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
+                         "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
+        ocr_ref = "harmonics_3P4W"
+        ocr_res = self.sp.ocr_process(
+            image_path, roi_keys, roi_keys_meas, ocr_ref)
+        self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
 
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_51_M_H_AN_Harmonics.png"
