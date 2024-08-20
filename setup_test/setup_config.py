@@ -134,7 +134,7 @@ class ConfigSetup:
             "N_Max": ["A", "B", "C", "Average"],
             "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
             "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
-            "harmonics_3P4W": ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
+            "harmonics_3p4w": ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
         }
 
         m_setup = {

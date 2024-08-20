@@ -689,7 +689,7 @@ class DemoTest:
                     "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
         roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
                          "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
-        ocr_ref = "harmonics_3P4W"
+        ocr_ref = "harmonics_3p4w"
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
         self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
@@ -702,7 +702,7 @@ class DemoTest:
                     "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
         roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
                          "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
-        ocr_ref = "harmonics_3P4W"
+        ocr_ref = "harmonics_3p4w"
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
         self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
@@ -715,19 +715,33 @@ class DemoTest:
         ocr_ref = "phasor_L_L"
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
-    def testcode02(self):
-        # self.modbus_label.demo_test_setting()
-        # self.reset_max_min()
-        # self.demo_mea_vol_rms()
-        # self.demo_mea_vol_fund()
-        # self.demo_mea_vol_thd()
-        # self.demo_mea_curr_rms()
-        # self.demo_mea_curr_fund()
-        # self.demo_mea_curr_thd()
-        # self.demo_mea_curr_tdd()
-        # self.demo_mea_curr_cf()
-        # self.demo_mea_curr_kf()
-        # self.demo_mea_curr_residual()
+    def demo_test_start(self):
+        self.modbus_label.demo_test_setting()
+        self.reset_max_min()
+        print("Done")
+        
+    def demo_test_voltage(self):
+        self.demo_mea_vol_rms()
+        self.demo_mea_vol_fund()
+        self.demo_mea_vol_thd()
+        self.demo_mea_vol_freq()
+        self.demo_mea_vol_residual()
+        print("Done")
+        
+    def demo_test_current(self):
+        self.demo_mea_curr_rms()
+        self.demo_mea_curr_fund()
+        self.demo_mea_curr_thd()
+        self.demo_mea_curr_tdd()
+        self.demo_mea_curr_cf()
+        self.demo_mea_curr_kf()
+        self.demo_mea_curr_residual()
+        print("Done")
+        
+    def demo_test_power(self):
+        print("Done")
+        
+    def demo_test_analysis(self):
         self.demo_mea_anal_har()
         print("Done")
 
@@ -739,15 +753,10 @@ class DemoTest:
         self.touch_manager.menu_touch("meas_L-N")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6",
-                    "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_meas = ["main_view_4", "main_view_8",
-                         "main_view_12", "main_view_16"]
+        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
+        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(
-            image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         select_ocr = "rms_vol_L-N"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(
-            ocr_img, select_ocr, ocr_img_meas)
-        self.evaluation.save_csv(
-            ocr_img, ocr_error, right_error, meas_error, ocr_img_meas,)
+        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas,)

@@ -29,32 +29,52 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.ocr_settings = {}
         self.label_load_text = "OCR NO"
         self.label_judge_text = ""
+        self.checkbox_states = {
+            "voltage": False,
+            "current": False,
+            "power": False,
+            "analysis": False,}
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
         self.btn_ui_test_1.clicked.connect(self.switch_to_uiTestPage)
         self.btn_ui_test_2.clicked.connect(self.switch_to_uiTestPage)
         self.btn_setup_test_1.clicked.connect(self.switch_to_setupTestPage)
-        self.btn_setup_test_2.clicked.connect(self.switch_to_setupTestPage)
+        self.btn_demo_test.clicked.connect(self.switch_to_setupTestPage)
         self.btn_frame_test_1.clicked.connect(self.switch_to_frameTestPage)
         self.btn_frame_test_2.clicked.connect(self.switch_to_frameTestPage)
         self.btn_connect.clicked.connect(self.setup_connect)
         self.btn_disconnect.clicked.connect(self.setup_disconnect)
-        self.btn_setup_test_start.clicked.connect(self.setup_start)
-        self.btn_setup_read.clicked.connect(self.setup_read)
         self.btn_select_webcam.clicked.connect(self.select_webcam)
         self.btn_start_webcam.clicked.connect(self.start_webcam)
         self.btn_stop_webcam.clicked.connect(self.stop_webcam)
         self.lineEdit.returnPressed.connect(self.set_focus)
-        self.btn_FT_measurement.clicked.connect(self.fixed_text_measurement)
         self.btn_demo_mode_ui_test.clicked.connect(self.demo_ui_test)
-
         self.pushButton_2.clicked.connect(self.ocr_start)
+
+        self.checkBox_voltage.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
+        self.checkBox_current.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "current"))
+        self.checkBox_power.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "power"))
+        self.checkBox_analysis.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "analysis"))
 
         self.scrollAreaLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.scrollAreaWidgetContents.setLayout(self.scrollAreaLayout)
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
+
+    def on_checkbox_changed(self, state, key):
+        self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
+        print(f"{key.capitalize()} checkbox {'checked' if state == 2 else 'unchecked'}")
+
+    def on_current_checkbox_changed(self, state):
+        if state == 2:
+            self.current_checked = True
+            print("Voltage checkbox checked")
+        elif state == 0:
+            self.current_checked = False
+            print("Voltage checkbox unchecked")
+        else:
+            print(f"Unknown state: {state}")
 
     def switch_to_homePage(self):
         self.stackedWidget.setCurrentIndex(0)
@@ -93,7 +113,15 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.meter_setup_process.static_text_measurement()
 
     def demo_ui_test(self):
-        self.meter_demo_test.testcode02()
+        self.meter_demo_test.demo_test_start()
+        if self.checkbox_states["voltage"]:
+            self.meter_demo_test.demo_test_voltage()
+        if self.checkbox_states["current"]:
+            self.meter_demo_test.demo_test_current()
+        if self.checkbox_states["power"]:
+            self.meter_demo_test.demo_test_power()
+        if self.checkbox_states["analysis"]:
+            self.meter_demo_test.demo_test_analysis()
 
     def set_focus(self):
         try:
