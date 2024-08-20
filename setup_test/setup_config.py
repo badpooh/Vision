@@ -269,9 +269,9 @@ class ConfigSetup:
             "Max": [720, 150],
             "thd_L_L": [520, 150],
             "thd_L_N": [620, 150],
-            "phasor_LN": [720, 210],
             "phas_har_vol": [590, 150],
             "phas_har_cur": [720, 150],
+
         }
         return coordinates
 

@@ -728,7 +728,7 @@ class DemoTest:
         # self.demo_mea_curr_cf()
         # self.demo_mea_curr_kf()
         # self.demo_mea_curr_residual()
-        self.demo_mea_anal_phasor()
+        self.demo_mea_anal_har()
         print("Done")
 
     def testcode03(self):
