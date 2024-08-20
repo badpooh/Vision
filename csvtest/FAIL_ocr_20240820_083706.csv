@@ -1,0 +1,4 @@
+Main View,Measurement Accuracy,OCR-Right,Right-OCR,Time Stemp Error
+Voltage Harmonics Current,A 3.4 % B 3.5 % c 3.5 % 109.6 v 109.3 v 109.8 v,"['Fund.', '[v]', 'THD']",['[V]'],
+[v] Graph THD Fund.,,"['Fund.', '[v]', 'THD']",['[V]'],
+Fund A B C,,"['Fund.', '[v]', 'THD']",['[V]'],

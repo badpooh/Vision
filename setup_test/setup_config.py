@@ -92,9 +92,19 @@ class ConfigSetup:
             "phasor_a_c_angle_cur": [763, 394, 14, 21],
 
             # harmonics
+            "harmonics_img_cut": [170 ,260, 600, 213],
             "harmonics_title": [n*x for x in [160, 120, 630, 53]],
-            "harmonics_sub_title_1": [n*x for x in [160, 180, 270, 80]],
-            "harmonics_sub_title_2": [n*x for x in [440, 180, 350, 40]],
+            "harmonics_sub_title_1": [n*x for x in [160, 180, 270, 80]], #dropdown 버튼 + THD Fund.
+            "harmonics_sub_title_2": [n*x for x in [440, 180, 350, 40]], #Fund. ~ C
+            "harmonics_text_A": [n*x for x in [435, 220, 15, 21]],
+            "harmonics_text_B": [n*x for x in [555, 220, 15, 21]],
+            "harmonics_text_C": [n*x for x in [675, 220, 15, 21]],
+            "harmonics_THD_A": [n*x for x in [465, 220, 70, 21]],
+            "harmonics_THD_B": [n*x for x in [585, 220, 70, 21]],
+            "harmonics_THD_C": [n*x for x in [705, 220, 70, 21]],
+            "harmonics_Fund_A": [n*x for x in [465, 241, 70, 23]],
+            "harmonics_Fund_B": [n*x for x in [585, 241, 70, 23]],
+            "harmonics_Fund_C": [n*x for x in [705, 241, 70, 23]],
 
 
         }
@@ -123,7 +133,8 @@ class ConfigSetup:
             "N_Min": ["A", "B", "C", "Average"],
             "N_Max": ["A", "B", "C", "Average"],
             "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
-            "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"]
+            "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
+            "harmonics_3P4W": ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
         }
 
         m_setup = {
@@ -257,6 +268,8 @@ class ConfigSetup:
             "Max": [720, 150],
             "thd_L_L": [520, 150],
             "thd_L_N": [620, 150],
+            "phas_har_vol": [590, 150],
+            "phas_har_cur": [720, 150],
 
         }
         return coordinates

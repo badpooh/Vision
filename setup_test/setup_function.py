@@ -583,6 +583,10 @@ class Evaluation:
             check_results(["A_angle_cur"], (-35, -25), ocr_res_meas[9:10])
             check_results(["B_angle_cur"], (-155, -145), ocr_res_meas[10:11])
             check_results(["C_angle_cur"], (85, 95), ocr_res_meas[11:12])
+        
+        if "Harmonics" in ''.join(ocr_res[0]):
+            check_results(["A_THD", "B_THD", "C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
+            check_results(["A_Fund", "B_Fund", "C_Fund"], (100, 120, "V" or "v"), ocr_res_meas[3:6])
 
         if not self.condition_met:
             print("Nothing matching word")
@@ -615,10 +619,12 @@ class Evaluation:
         return None
 
     def img_match(self, image, roi_key, ocr_res):
+        color_data = config_data.color_detection_data()
         if "Phasor" in ''.join(ocr_res[0]):
             template_image_path= r".\image_ref\Phasor_ref_vll.png"
-        elif self.ocr_error and "Harmonics" in self.ocr_error[0]:
-            template_image_path = r"C:"
+        elif "Harmonics" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
+                template_image_path = r".\image_ref\Harmonics_ref_3P4W_A.png"
         elif self.ocr_error and "Waveform" in self.ocr_error[0]:
             template_image_path = r"C:"
         image = cv2.imread(image)
