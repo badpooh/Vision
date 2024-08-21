@@ -456,7 +456,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab"]
         roi_keys_meas = ["a_meas"]
-        ocr_ref = ["freq"]
+        ocr_ref = "freq"
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
         ### 주파수 Min ###
@@ -465,7 +465,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab"]
         roi_keys_meas = ["a_meas"]
-        ocr_ref = ["freq"]
+        ocr_ref = "freq"
         time_keys = ["a_time_stamp"]
         self.sp.ocr_process(image_path, roi_keys,
                             roi_keys_meas, ocr_ref, time_keys)
@@ -476,7 +476,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab"]
         roi_keys_meas = ["a_meas"]
-        ocr_ref = ["freq"]
+        ocr_ref = "freq"
         time_keys = ["a_time_stamp"]
         self.sp.ocr_process(image_path, roi_keys,
                             roi_keys_meas, ocr_ref, time_keys)
@@ -491,7 +491,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc"]
         roi_keys_meas = ["a_meas", "b_meas"]
-        ocr_ref = ["vol_residual"]
+        ocr_ref = "vol_residual"
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
         ### 잔류전압 Min ###
@@ -500,7 +500,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc"]
         roi_keys_meas = ["a_meas", "b_meas"]
-        ocr_ref = ["vol_residual"]
+        ocr_ref = "vol_residual"
         time_keys = ["a_time_stamp", "b_time_stamp"]
         self.sp.ocr_process(image_path, roi_keys,
                             roi_keys_meas, ocr_ref, time_keys)
@@ -511,7 +511,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc"]
         roi_keys_meas = ["a_meas", "b_meas"]
-        ocr_ref = ["vol_residual"]
+        ocr_ref = "vol_residual"
         time_keys = ["a_time_stamp", "b_time_stamp"]
         self.sp.ocr_process(image_path, roi_keys,
                             roi_keys_meas, ocr_ref, time_keys)
@@ -707,6 +707,20 @@ class DemoTest:
             image_path, roi_keys, roi_keys_meas, ocr_ref)
         self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
 
+    def demo_mea_anal_wave(self):
+        # self.touch_manager.btn_front_meter()
+        # self.touch_manager.btn_front_home()
+        # self.touch_manager.menu_touch("main_menu_4")
+        # self.touch_manager.menu_touch("side_menu_3")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["waveform_title"]
+        roi_keys_meas = ["waveform_title"]
+        ocr_ref = "waveform_3p4w"
+        ocr_res = self.sp.ocr_process(
+            image_path, roi_keys, roi_keys_meas, ocr_ref)
+        self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
+
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_51_M_H_AN_Harmonics.png"
         roi_keys = ["harmonics_sub_t",
@@ -746,17 +760,4 @@ class DemoTest:
         print("Done")
 
     def testcode03(self):
-        self.touch_manager.btn_front_meter()
-        self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_1")
-        self.touch_manager.menu_touch("side_menu_1")
-        self.touch_manager.menu_touch("meas_L-N")
-        self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["main_view_1", "main_view_2", "main_view_5", "main_view_6", "main_view_9", "main_view_10", "main_view_13", "main_view_14", "main_view_17"]
-        roi_keys_meas = ["main_view_4", "main_view_8", "main_view_12", "main_view_16"]
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        select_ocr = "rms_vol_L-N"
-        ocr_error, right_error, meas_error = self.evaluation.eval_demo_test(ocr_img, select_ocr, ocr_img_meas)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas,)
+        self.demo_mea_anal_wave()

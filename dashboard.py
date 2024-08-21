@@ -2,6 +2,7 @@ from PySide6.QtGui import QIcon, QCursor
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy
 from resources_rc import *
+import threading
 
 from ui_dashboard import Ui_MainWindow
 from modules.ocr_setting import OcrSetting
@@ -34,6 +35,8 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             "current": False,
             "power": False,
             "analysis": False,}
+        self.stop_thread = False
+        self.thread = False
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
@@ -49,8 +52,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_start_webcam.clicked.connect(self.start_webcam)
         self.btn_stop_webcam.clicked.connect(self.stop_webcam)
         self.lineEdit.returnPressed.connect(self.set_focus)
-        self.btn_demo_mode_ui_test.clicked.connect(self.demo_ui_test)
+        self.btn_demo_mode_ui_test.clicked.connect(self.demo_ui_test_start)
+        self.btn_demo_mode_ui_test_2.clicked.connect(self.demo_ui_test_stop)
         self.pushButton_2.clicked.connect(self.ocr_start)
+        self.debug_button.clicked.connect(self.debug_test)
 
         self.checkBox_voltage.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
         self.checkBox_current.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "current"))
@@ -112,6 +117,17 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def fixed_text_measurement(self):
         self.meter_setup_process.static_text_measurement()
 
+    def demo_ui_test_start(self):
+        # self.stop_thread = False
+        # self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
+        # self.thread.start()
+        self.demo_ui_test()
+
+    def demo_ui_test_stop(self):
+        self.stop_thread = True
+        if self.thread is not None:
+            self.thread.join()
+
     def demo_ui_test(self):
         self.meter_demo_test.demo_test_start()
         if self.checkbox_states["voltage"]:
@@ -122,6 +138,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             self.meter_demo_test.demo_test_power()
         if self.checkbox_states["analysis"]:
             self.meter_demo_test.demo_test_analysis()
+
+    def debug_test(self):
+        self.meter_demo_test.testcode03()
 
     def set_focus(self):
         try:

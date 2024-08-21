@@ -393,6 +393,19 @@ class Ui_MainWindow(object):
         self.debug_button = QPushButton(self.setup_test_page)
         self.debug_button.setObjectName(u"debug_button")
         self.debug_button.setGeometry(QRect(1000, 630, 141, 51))
+        self.btn_demo_mode_ui_test_2 = QPushButton(self.setup_test_page)
+        self.btn_demo_mode_ui_test_2.setObjectName(u"btn_demo_mode_ui_test_2")
+        self.btn_demo_mode_ui_test_2.setGeometry(QRect(40, 170, 121, 41))
+        self.btn_demo_mode_ui_test_2.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        background-color: #f0f0f0;\n"
+"        padding: 5px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
         self.stackedWidget.addWidget(self.setup_test_page)
         self.frame_test_page = QWidget()
         self.frame_test_page.setObjectName(u"frame_test_page")
@@ -480,12 +493,14 @@ class Ui_MainWindow(object):
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.btn_demo_mode_ui_test.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
-"UI TEST ", None))
+"UI TEST START ", None))
         self.checkBox_voltage.setText(QCoreApplication.translate("MainWindow", u"VOLTAGE", None))
         self.checkBox_current.setText(QCoreApplication.translate("MainWindow", u"CURRENT", None))
         self.checkBox_power.setText(QCoreApplication.translate("MainWindow", u"POWER", None))
         self.checkBox_analysis.setText(QCoreApplication.translate("MainWindow", u"ANALYSIS", None))
         self.debug_button.setText(QCoreApplication.translate("MainWindow", u"Debug Button", None))
+        self.btn_demo_mode_ui_test_2.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
+"UI TEST STOP", None))
         self.btn_select_webcam.setText(QCoreApplication.translate("MainWindow", u"Select WebCam", None))
         self.btn_start_webcam.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))

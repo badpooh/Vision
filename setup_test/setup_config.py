@@ -65,14 +65,11 @@ class ConfigSetup:
 
             # Phasor
             "phasor_img_cut": [176, 179, 425, 295],
-            # Phasor, [V]Voltage, [V]Current
-            "phasor_title": [n*x for x in [160, 120, 630, 53]],
-            # [V]Voltage, [V]Current
-            "phasor_view_2": [n*x for x in [480, 120, 310, 53]],
+            "phasor_title": [n*x for x in [160, 120, 630, 53]], # Phasor, [V]Voltage, [V]Current
+            "phasor_view_2": [n*x for x in [480, 120, 310, 53]], # [V]Voltage, [V]Current
             "phasor_vl_vn": [n*x for x in [570, 190, 210, 39]],  # VLL VLN
             "phasor_voltage": [n*x for x in [465, 235, 80, 27]],  # Voltage
-            # AB,BC,CA or A,B,C
-            "phasor_a_c_vol": [n*x for x in [550, 234, 55, 76]],
+            "phasor_a_c_vol": [n*x for x in [550, 234, 55, 76]], # AB,BC,CA or A,B,C
             "phasor_a_meas": [n*x for x in [610, 236, 95, 23]],  # A-전압수치
             "phasor_a_angle": [n*x for x in [705, 236, 58, 23]],  # A-각도수치
             "phasor_b_meas": [n*x for x in [610, 260, 95, 23]],  # B-전압수치
@@ -88,16 +85,13 @@ class ConfigSetup:
             "phasor_b_angle_cur": [n*x for x in [705, 370, 58, 23]],  # B-각도수치
             "phasor_c_meas_cur": [n*x for x in [610, 394, 95, 23]],  # C-전류수치
             "phasor_c_angle_cur": [n*x for x in [705, 394, 58, 23]],  # C-각도수치
-            # A~C-각도기호
-            "phasor_a_c_angle_cur": [763, 394, 14, 21],
+            "phasor_a_c_angle_cur": [763, 394, 14, 21], # A~C-각도기호
 
             # harmonics
             "harmonics_img_cut": [170, 260, 600, 213],
             "harmonics_title": [n*x for x in [160, 120, 630, 53]],
-            # dropdown 버튼 + THD Fund.
-            "harmonics_sub_title_1": [n*x for x in [160, 180, 270, 80]],
-            # Fund. ~ C
-            "harmonics_sub_title_2": [n*x for x in [440, 180, 350, 40]],
+            "harmonics_sub_title_1": [n*x for x in [160, 180, 270, 80]], # dropdown 버튼 + THD Fund.
+            "harmonics_sub_title_2": [n*x for x in [440, 180, 350, 40]], # Fund. ~ C
             "harmonics_text_A": [n*x for x in [435, 220, 15, 21]],
             "harmonics_text_B": [n*x for x in [555, 220, 15, 21]],
             "harmonics_text_C": [n*x for x in [675, 220, 15, 21]],
@@ -107,6 +101,10 @@ class ConfigSetup:
             "harmonics_Fund_A": [n*x for x in [465, 241, 70, 23]],
             "harmonics_Fund_B": [n*x for x in [585, 241, 70, 23]],
             "harmonics_Fund_C": [n*x for x in [705, 241, 70, 23]],
+
+            #Waveform
+            "waveform_img_cut": [165, 220, 525, 250],
+            "waveform_title": [n*x for x in [160, 120, 630, 53]],
         }
         return params
 
@@ -135,6 +133,7 @@ class ConfigSetup:
             "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
             "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
             "harmonics_3p4w": ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
+            "waveform_3p4w": ["Waveform", "Voltage", "Current"]
         }
 
         m_setup = {

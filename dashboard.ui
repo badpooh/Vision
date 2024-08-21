@@ -678,7 +678,7 @@ QPushButton:pressed {
            </property>
            <property name="text">
             <string>Demo Mode 
-UI TEST </string>
+UI TEST START </string>
            </property>
           </widget>
           <widget class="QCheckBox" name="checkBox_voltage">
@@ -744,6 +744,32 @@ UI TEST </string>
            </property>
            <property name="text">
             <string>Debug Button</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_demo_mode_ui_test_2">
+           <property name="geometry">
+            <rect>
+             <x>40</x>
+             <y>170</y>
+             <width>121</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+        border: 1px solid #8f8f91;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        padding: 5px;
+    }
+
+QPushButton:pressed {
+        background-color: #d0d0d0;
+    }</string>
+           </property>
+           <property name="text">
+            <string>Demo Mode 
+UI TEST STOP</string>
            </property>
           </widget>
          </widget>

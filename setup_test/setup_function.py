@@ -652,8 +652,10 @@ class Evaluation:
         elif "Harmonics" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
                 template_image_path = r".\image_ref\Harmonics_ref_3P4W_A.png"
-        elif self.ocr_error and "Waveform" in self.ocr_error[0]:
-            template_image_path = r"C:"
+        elif "Waveform" in ''.join(ocr_res[0]):
+            template_image_path = r".\image_ref\waveform_ref_3p4w.png"
+        else:
+            print("no image matching ref")
         image = cv2.imread(image)
         template_image = cv2.imread(template_image_path)
         x, y, w, h = self.rois[roi_key]
