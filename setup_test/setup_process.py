@@ -100,10 +100,11 @@ class SetupProcess:
         closest_file = min(self.file_time_diff,
                            key=self.file_time_diff.get, default=None)
         normalized_path = os.path.normpath(closest_file)
+        self.latest_image_path = normalized_path
 
         print("가장 가까운 시간에 생성된 파일:", normalized_path)
 
-        return normalized_path
+        return self.latest_image_path
 
     def read_setup_mapping(self):
         modbus_results = self.modbus_label.read_all_modbus_values()
@@ -185,12 +186,12 @@ class SetupProcess:
             ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(
                 ocr_img, ocr_ref, ocr_img_meas, image_path)
             self.evaluation.save_csv(
-                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error)
+                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error, img_path=image_path)
         else:
             ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(
                 ocr_img, ocr_ref, ocr_img_meas, image_path)
             self.evaluation.save_csv(
-                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas)
+                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path)
 
         return ocr_res
 
@@ -659,7 +660,7 @@ class DemoTest:
                          "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
         ocr_ref = "phasor_L_L"
         ocr_res = self.sp.ocr_process(
-            image_path, roi_keys, roi_keys_meas, ocr_ref)
+            image_path, roi_keys, roi_keys_meas, ocr_ref, )
         self.evaluation.img_match(image_path, "phasor_img_cut", ocr_res)
         self.evaluation.img_match(image_path, "phasor_a_c_angle_vol", ocr_res)
         self.evaluation.img_match(image_path, "phasor_a_c_angle_cur", ocr_res)
@@ -722,10 +723,11 @@ class DemoTest:
         self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
 
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_51_M_H_AN_Harmonics.png"
-        roi_keys = ["harmonics_sub_t",
-                    "harmonics_sub_title_1", "harmonics_sub_title_2"]
-        roi_keys_meas = ["harmonics_sub_t"]
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_29_M_H_AN_Phasor.png"
+        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
+                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
+        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
+                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
         ocr_ref = "phasor_L_L"
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 

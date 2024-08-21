@@ -107,6 +107,15 @@ class ConfigSetup:
             "waveform_title": [n*x for x in [160, 120, 630, 53]],
         }
         return params
+    
+    def template_image_path(self):
+        img_path ={
+            "phasor_vll": [r".\image_ref\phasor_ref_vll.png"],
+            "phasor_vln": [r".\image_ref\phasor_ref_vln.png"],
+            "harmonics_3p4w": [r".\image_ref\harmonics_ref_3p4w.png"],
+            "waveform_3p4w": [r".\image_ref\waveform_ref_3p4w.png"],
+        }
+        return img_path
 
     def match_m_setup_labels(self):
         m_home = {

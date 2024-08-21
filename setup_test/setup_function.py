@@ -8,6 +8,7 @@ from datetime import datetime
 import time
 from pymodbus.client import ModbusTcpClient as ModbusClient
 import threading
+import shutil
 # import torch
 import os
 import pandas as pd
@@ -484,6 +485,8 @@ class Evaluation:
         self.meas_error = False
         self.condition_met = False
         color_data = config_data.color_detection_data()
+        img_match_path = config_data.template_image_path()
+        
         image = cv2.imread(image_path)
 
         ocr_right = self.m_home[right_key]
@@ -499,8 +502,14 @@ class Evaluation:
 
         def check_results(values, limits, ocr_meas_subset):
             self.condition_met = True
-            results = {name: value for name,
-                       value in zip(values, ocr_meas_subset)}
+            if isinstance(ocr_meas_subset, float):
+                results = {values[0]: str(ocr_meas_subset)}
+            elif isinstance(ocr_meas_subset, list):
+                results = {name: str(value) for name, value in zip(values, ocr_meas_subset)}
+            else:
+                print("Unexpected ocr_meas_subset type.")
+                return
+            
             for name, value in results.items():
                 if "OVER" in value:
                     print(f"{name} = {value}")
@@ -527,6 +536,27 @@ class Evaluation:
                         print(f"Error parsing value: {value}")
                         self.meas_error = True
 
+        def img_match(image, roi_key, tpl_img_path):
+            template_image_path = tpl_img_path[0]
+            image = cv2.imread(image)
+            template_image = cv2.imread(template_image_path)
+            x, y, w, h = self.rois[roi_key]
+            # print(f"ROI coordinates: x={x}, y={y}, w={w}, h={h}")
+            # print(f"Original image size: {image.shape}")
+            # print(f"Template image size: {template_image.shape}")
+            cut_img = image[y:y+h, x:x+w]
+            cut_template = template_image[y:y+h, x:x+w]
+
+            resized_cut_img = cv2.resize(
+                cut_img, (cut_template.shape[1], cut_template.shape[0]))
+            res = cv2.matchTemplate(
+                resized_cut_img, cut_template, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            
+            print(max_val)
+            
+            return max_val
+        
         if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["rms_voltage_L_L"]) <= 10:
                 check_results(['AB', 'BC', 'CA', 'Aver'],
@@ -576,37 +606,31 @@ class Evaluation:
 
         if "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                check_results(["AB", "BC", "CA"], (180, 200,
-                              "V" or "v"), ocr_res_meas[:3])
-                check_results(["A_Curr", "B_Curr", "C_Curr"],
-                              (2, 3, "A"), ocr_res_meas[3:6])
+                max_val= img_match(image_path, "phasor_img_cut", img_match_path["phasor_vll"])
+                check_results(["AB", "BC", "CA"], (180, 200, "V" or "v"), ocr_res_meas[:3])
+                check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
                 check_results(["AB_angle"], (25, 35), ocr_res_meas[6:7])
                 check_results(["BC_angle"], (-95, -85), ocr_res_meas[7:8])
                 check_results(["CA_angle"], (145, 155), ocr_res_meas[8:9])
                 check_results(["A_angle_cur"], (-35, -25), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145),
-                              ocr_res_meas[10:11])
+                check_results(["B_angle_cur"], (-155, -145), ocr_res_meas[10:11])
                 check_results(["C_angle_cur"], (85, 95), ocr_res_meas[11:12])
+                check_results(["Phasor_image"], (0.98, 1), max_val)
             elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
-                check_results(["A", "B", "C"], (100, 120,
-                              "V" or "v"), ocr_res_meas[:3])
-                check_results(["A_Curr", "B_Curr", "C_Curr"],
-                              (2, 3, "A"), ocr_res_meas[3:6])
+                check_results(["A", "B", "C"], (100, 120, "V" or "v"), ocr_res_meas[:3])
+                check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
                 check_results(["A_angle"], (0, 5), ocr_res_meas[6:7])
                 check_results(["B_angle"], (-125, -115), ocr_res_meas[7:8])
                 check_results(["C_angle"], (115, 125), ocr_res_meas[8:9])
                 check_results(["A_angle_cur"], (-35, -25), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145),
-                              ocr_res_meas[10:11])
+                check_results(["B_angle_cur"], (-155, -145), ocr_res_meas[10:11])
                 check_results(["C_angle_cur"], (85, 95), ocr_res_meas[11:12])
             else:
                 print("demo test evaluation error")
 
         if "Harmonics" in ''.join(ocr_res[0]):
-            check_results(["A_THD", "B_THD", "C_THD"],
-                          (3.0, 4.0, "%"), ocr_res_meas[:3])
-            check_results(["A_Fund", "B_Fund", "C_Fund"],
-                          (100, 120, "V" or "v"), ocr_res_meas[3:6])
+            check_results(["A_THD", "B_THD", "C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
+            check_results(["A_Fund", "B_Fund", "C_Fund"], (100, 120, "V" or "v"), ocr_res_meas[3:6])
 
         if not self.condition_met:
             print("Nothing matching word")
@@ -638,42 +662,7 @@ class Evaluation:
             return failed_times
         return None
 
-    def img_match(self, image, roi_key, ocr_res):
-        color_data = config_data.color_detection_data()
-        if "Phasor" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                template_image_path = r".\image_ref\Phasor_ref_vll.png"
-            elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
-                template_image_path = r".\image_ref\Phasor_ref_vln.png"
-            else:
-                template_image_path = None
-                print("image matching error")
-
-        elif "Harmonics" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                template_image_path = r".\image_ref\Harmonics_ref_3P4W_A.png"
-        elif "Waveform" in ''.join(ocr_res[0]):
-            template_image_path = r".\image_ref\waveform_ref_3p4w.png"
-        else:
-            print("no image matching ref")
-        image = cv2.imread(image)
-        template_image = cv2.imread(template_image_path)
-        x, y, w, h = self.rois[roi_key]
-        # print(f"ROI coordinates: x={x}, y={y}, w={w}, h={h}")
-        # print(f"Original image size: {image.shape}")
-        # print(f"Template image size: {template_image.shape}")
-        cut_img = image[y:y+h, x:x+w]
-        cut_template = template_image[y:y+h, x:x+w]
-
-        resized_cut_img = cv2.resize(
-            cut_img, (cut_template.shape[1], cut_template.shape[0]))
-        res = cv2.matchTemplate(
-            resized_cut_img, cut_template, cv2.TM_CCOEFF_NORMED)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-
-        print(max_val)
-
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_error=None):
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_error=None, img_path=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_error = time_error if time_error is not None else []
@@ -682,17 +671,28 @@ class Evaluation:
 
         csv_results = {
             "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
-            "Measurement Accuracy": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
+            "Measurement": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
             "OCR-Right": [ocr_error] * num_entries,
             "Right-OCR": [right_error] * num_entries,
             "Time Stemp Error": time_error + [None] * (num_entries - len(time_error)),
         }
 
         df = pd.DataFrame(csv_results)
+        
+        file_name_with_extension = os.path.basename(img_path)
+        ip_to_remove = "10.10.26.159_"
+        if file_name_with_extension.startswith(ip_to_remove):
+            file_name_without_ip = file_name_with_extension[len(ip_to_remove):]
+        else:
+            file_name_without_ip = file_name_with_extension
+
+        image_file_name = os.path.splitext(file_name_without_ip)[0]
+        
         if not ocr_error and not right_error and not time_error and not meas_error:
             save_path = os.path.expanduser(
-                f"./csvtest/PASS_ocr_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+                f"./csvtest/PASS_ocr_{image_file_name}.csv")
         else:
             save_path = os.path.expanduser(
-                f"./csvtest/FAIL_ocr_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+                f"./csvtest/FAIL_ocr_{image_file_name}.csv")
         df.to_csv(save_path, index=False)
+        shutil.copy(img_path, os.path.dirname(save_path))
