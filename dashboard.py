@@ -118,10 +118,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.meter_setup_process.static_text_measurement()
 
     def demo_ui_test_start(self):
-        self.stop_thread = False
-        self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
-        self.thread.start()
-        # self.demo_ui_test()
+        # self.stop_thread = False
+        # self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
+        # self.thread.start()
+        self.demo_ui_test()
 
     def demo_ui_test_stop(self):
         self.stop_thread = True
@@ -129,7 +129,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             self.thread.join()
 
     def demo_ui_test(self):
-        self.meter_demo_test.demo_test_start()
+        # self.meter_demo_test.demo_test_start()
         if self.checkbox_states["voltage"]:
             self.meter_demo_test.demo_test_voltage()
         if self.checkbox_states["current"]:
@@ -138,7 +138,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             self.meter_demo_test.demo_test_power()
         if self.checkbox_states["analysis"]:
             self.meter_demo_test.demo_test_analysis()
-        self.meter_demo_test.testcode01()
+        else:
+            print("Done or Nothing to execute")
+        # self.meter_demo_test.testcode01()
 
     def debug_test(self):
         self.meter_demo_test.testcode01()

@@ -270,7 +270,7 @@ class OCRManager:
             image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
         gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
         denoised_image = cv2.fastNlMeansDenoising(
-            resized_image, None, 30, 7, 21)
+            gray_image, None, 30, 7, 21)
 
         ocr = PaddleOCR(use_angle_cls=False, lang='en',
                         use_space_char=True, show_log=False,)
@@ -279,7 +279,7 @@ class OCRManager:
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = gray_image[y:y+h, x:x+w]
+                roi_image = denoised_image[y:y+h, x:x+w]
                 # cv2.imshow('Image with Size Info', roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
@@ -522,15 +522,15 @@ class Evaluation:
 
                         if len(limits) == 3:
                             if limits[0] < numeric_value < limits[1] and limits[2] == unit:
-                                print(f"{name} = PASS ({numeric_value}{unit})")
+                                print(f"{name} = {numeric_value}{unit} (PASS)")
                             else:
-                                print(f"{name} = FAIL {value}")
+                                print(f"{name} = {value} (FAIL)")
                                 self.meas_error = True
                         else:
                             if limits[0] < numeric_value < limits[1]:
-                                print(f"{name} = PASS ({numeric_value}{unit})")
+                                print(f"{name} = {numeric_value} {unit} (PASS)")
                             else:
-                                print(f"{name} = FAIL {value}")
+                                print(f"{name} = {value} (FAIL)")
                                 self.meas_error = True
                     else:
                         print(f"Error parsing value: {value}")
@@ -578,7 +578,7 @@ class Evaluation:
                 print("demo test evaluation error")
 
         if "Frequency" in ''.join(ocr_res[0]):
-            check_results(['Freq'], (59, 61), ocr_res_meas[:1])
+            check_results(['Freq'], (59, 61, "Hz"), ocr_res_meas[:1])
 
         if "Residual Voltage" in ''.join(ocr_res[0]):
             check_results(["RMS", "Fund."], (0, 10), ocr_res_meas[:2])
@@ -645,36 +645,41 @@ class Evaluation:
             self.MM_clear_time = datetime.now()
 
         time_format = "%Y-%m-%d %H:%M:%S"
-        failed_times = []
+        results = []
         for time_str in time_images:
             try:
                 image_time = datetime.strptime(time_str, time_format)
                 time_diff = abs(
                     (image_time - self.MM_clear_time).total_seconds())
                 if time_diff <= 5 * 60:
-                    print(f"{time_str} = PASS")
+                    print(f"{time_str} (PASS)")
+                    results.append(f"{time_str} (PASS)")
                 else:
-                    print(f"{time_str} = {time_diff} seconds = FAIL")
-                    failed_times.append(time_str)
+                    print(f"{time_str} / {time_diff} seconds (FAIL)")
+                    results.append(f"{time_str} / {time_diff} seconds (FAIL)")
             except ValueError as e:
                 print(f"Time format error for {time_str}: {e}")
-        if failed_times:
-            return failed_times
-        return None
+        return results
 
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_error=None, img_path=None):
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
-        time_error = time_error if time_error is not None else []
+        time_results = time_results if time_results is not None else []
 
         num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time))
+
+        overall_result = "PASS"
+        if ocr_error or right_error or meas_error:
+            overall_result = "FAIL"
+        if any("FAIL" in result for result in time_results):
+            overall_result = "FAIL"
 
         csv_results = {
             "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
             "Measurement": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
-            "OCR-Right": [ocr_error] * num_entries,
-            "Right-OCR": [right_error] * num_entries,
-            "Time Stemp Error": time_error + [None] * (num_entries - len(time_error)),
+            "OCR-Right": [f"{ocr_error} ({overall_result})"] * num_entries,
+            "Right-OCR": [f"{right_error} ({overall_result})"] * num_entries,
+            f"Time Stemp ({self.MM_clear_time})": time_results + [None] * (num_entries - len(time_results)),
         }
 
         df = pd.DataFrame(csv_results)
@@ -688,11 +693,8 @@ class Evaluation:
 
         image_file_name = os.path.splitext(file_name_without_ip)[0]
         
-        if not ocr_error and not right_error and not time_error and not meas_error:
-            save_path = os.path.expanduser(
-                f"./csvtest/PASS_ocr_{image_file_name}.csv")
-        else:
-            save_path = os.path.expanduser(
-                f"./csvtest/FAIL_ocr_{image_file_name}.csv")
+        save_path = os.path.expanduser(f"./csvtest/{overall_result}_ocr_{image_file_name}.csv")
+
         df.to_csv(save_path, index=False)
-        shutil.copy(img_path, os.path.dirname(save_path))
+        dest_image_path = os.path.join(os.path.dirname(save_path), file_name_without_ip)
+        shutil.copy(img_path, dest_image_path)

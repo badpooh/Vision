@@ -34,19 +34,19 @@ class ConfigSetup:
             # OCR 결과를 위한 좌표
             # rms voltage l-l l-m min max
             "title_view": [n*x for x in [160, 120, 620, 53]],
-            "a_ab": [n*x for x in [165, 185, 120, 55]],  # AB
+            "a_ab": [n*x for x in [165, 185, 135, 55]],  # AB
             "a_time_stamp": [n*x for x in [320, 220, 190, 25]],  # time stamp
             "a_meas": [n*x for x in [540, 190, 230, 55]],  # 190.0 V
-            "b_bc": [n*x for x in [165, 270, 120, 40]],  # BC
+            "b_bc": [n*x for x in [165, 270, 135, 40]],  # BC
             "b_time_stamp": [n*x for x in [320, 295, 190, 25]],  # time stamp
             "b_meas": [n*x for x in [540, 260, 230, 60]],  # 190.0 V
-            "c_ca": [n*x for x in [165, 340, 120, 40]],  # CA
+            "c_ca": [n*x for x in [165, 340, 135, 40]],  # CA
             "c_time_stamp": [n*x for x in [320, 365, 190, 25]],  # time stamp
             "c_meas": [n*x for x in [540, 340, 230, 50]],  # 190.0 V
-            "aver": [n*x for x in [165, 415, 120, 40]],  # Average
+            "aver": [n*x for x in [165, 415, 135, 40]],  # Average
             # time stamp
             "aver_time_stamp": [n*x for x in [320, 435, 190, 25]],
-            "aver_mes": [n*x for x in [540, 410, 230, 60]],  # 190.0
+            "aver_meas": [n*x for x in [540, 410, 230, 60]],  # 190.0
 
             ### 확인 후 제거 ###
             "main_view_5": [n*x for x in [720, 200, 35, 40]],  # V
@@ -58,7 +58,7 @@ class ConfigSetup:
             "cur_percent_1": [n*x for x in [360, 190, 110, 30]],
             "cur_percent_2": [n*x for x in [360, 265, 110, 30]],
             "cur_percent_3": [n*x for x in [360, 335, 110, 30]],
-            "cur_percent_4": [n*x for x in [360, 405, 110, 30]],
+            "cur_percent_4": [n*x for x in [360, 405, 110, 35]],
 
             # test mode confirm
             "999": [n*x for x in [220, 105, 350, 40]],
@@ -119,26 +119,27 @@ class ConfigSetup:
 
     def match_m_setup_labels(self):
         m_home = {
+            #임시로 대문자 C를 소문자 C로 변경함
             "rms_vol_L_L": ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"],
-            "rms_vol_L_N": ["RMS Voltage L-L L-N Min Max", "A", "B", "C", "Average"],
+            "rms_vol_L_N": ["RMS Voltage L-L L-N Min Max", "A", "B", "c", "Average"],
             "fund_vol_L_L": ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"],
-            "fund_vol_L_N": ["Fund. Volt. L-L L-N Min Max", "A", "B", "C", "Average"],
+            "fund_vol_L_N": ["Fund. Volt. L-L L-N Min Max", "A", "B", "c", "Average"],
             "thd_vol_L_L": ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA"],
-            "thd_vol_L_N": ["Total Harmonic Distortion L-L L-N Max", "A", "B", "C"],
-            "freq": ["Frequency Min Max", "Frequency", "Hz"],
+            "thd_vol_L_N": ["Total Harmonic Distortion L-L L-N Max", "A", "B", "c"],
+            "freq": ["Frequency Min Max", "Frequency"],
             "vol_residual": ["Residual Voltage Min Max", "RMS", "Fund."],
-            "rms_curr": ["RMS Current Min Max", "A", "B", "C", "Average"],
-            "fund_curr": ["Fundamental Current Min Max", "A", "B", "C", "Average"],
-            "curr_thd": ["Total Harmonic Distortion Max", "A", "B", "C"],
-            "curr_tdd": ["Total Demand Distortion Max", "A", "B", "C"],
-            "curr_cf": ["Crest Factor Max", "A", "B", "C"],
-            "curr_kf": ["K-Factor Max", "A", "B", "C"],
+            "rms_curr": ["RMS Current Min Max", "A", "B", "c", "Average"],
+            "fund_curr": ["Fundamental Current Min Max", "A", "B", "c", "Average"],
+            "curr_thd": ["Total Harmonic Distortion Max", "A", "B", "c"],
+            "curr_tdd": ["Total Demand Distortion Max", "A", "B", "c"],
+            "curr_cf": ["Crest Factor Max", "A", "B", "c"],
+            "curr_kf": ["K-Factor Max", "A", "B", "c"],
             "curr_residual": ["Residual Current Min Max", "RMS", "Fund."],
-            "L-N": ["A", "B", "C", "Average"],
+            "L-N": ["A", "B", "c", "Average"],
             "L_Min": ["AB", "BC", "CA", "Average"],
             "L_Max": ["AB", "BC", "CA", "Average"],
-            "N_Min": ["A", "B", "C", "Average"],
-            "N_Max": ["A", "B", "C", "Average"],
+            "N_Min": ["A", "B", "c", "Average"],
+            "N_Max": ["A", "B", "c", "Average"],
             "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
             "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
             "harmonics_3p4w": ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
@@ -279,6 +280,8 @@ class ConfigSetup:
             "thd_L_N": [620, 150],
             "phas_har_vol": [590, 150],
             "phas_har_cur": [720, 150],
+            "phasor_vll": [620, 210],
+            "pahsor_vln": [720, 210]
 
         }
         return coordinates

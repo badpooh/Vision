@@ -182,11 +182,11 @@ class SetupProcess:
         if time_keys is not None:
             ocr_img_time = self.ocr_func.ocr_basic(
                 image=image_path, roi_keys=time_keys)
-            time_error = self.evaluation.check_time_diff(ocr_img_time)
+            time_results = self.evaluation.check_time_diff(ocr_img_time)
             ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(
                 ocr_img, ocr_ref, ocr_img_meas, image_path)
             self.evaluation.save_csv(
-                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_error, img_path=image_path)
+                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path)
         else:
             ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(
                 ocr_img, ocr_ref, ocr_img_meas, image_path)
@@ -659,14 +659,10 @@ class DemoTest:
         roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
                          "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
         ocr_ref = "phasor_L_L"
-        ocr_res = self.sp.ocr_process(
-            image_path, roi_keys, roi_keys_meas, ocr_ref, )
-        self.evaluation.img_match(image_path, "phasor_img_cut", ocr_res)
-        self.evaluation.img_match(image_path, "phasor_a_c_angle_vol", ocr_res)
-        self.evaluation.img_match(image_path, "phasor_a_c_angle_cur", ocr_res)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, )
 
         ### VLN ###
-        self.touch_manager.menu_touch("phasor_LN")
+        self.touch_manager.menu_touch("pahsor_vln")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
@@ -674,11 +670,7 @@ class DemoTest:
         roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
                          "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
         ocr_ref = "phasor_L_N"
-        ocr_res = self.sp.ocr_process(
-            image_path, roi_keys, roi_keys_meas, ocr_ref)
-        self.evaluation.img_match(image_path, "phasor_img_cut", ocr_res)
-        self.evaluation.img_match(image_path, "phasor_a_c_angle_vol", ocr_res)
-        self.evaluation.img_match(image_path, "phasor_a_c_angle_cur", ocr_res)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
     def demo_mea_anal_har(self):
         ### voltage ###
@@ -693,7 +685,6 @@ class DemoTest:
         ocr_ref = "harmonics_3p4w"
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
-        self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
 
         ### current ###
         self.touch_manager.menu_touch("phas_har_cur")
@@ -706,13 +697,12 @@ class DemoTest:
         ocr_ref = "harmonics_3p4w"
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
-        self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
 
     def demo_mea_anal_wave(self):
-        # self.touch_manager.btn_front_meter()
-        # self.touch_manager.btn_front_home()
-        # self.touch_manager.menu_touch("main_menu_4")
-        # self.touch_manager.menu_touch("side_menu_3")
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_3")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = ["waveform_title"]
@@ -720,7 +710,6 @@ class DemoTest:
         ocr_ref = "waveform_3p4w"
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
-        self.evaluation.img_match(image_path, "harmonics_img_cut", ocr_res)
 
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_29_M_H_AN_Phasor.png"
@@ -732,7 +721,7 @@ class DemoTest:
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
     def demo_test_start(self):
-        self.modbus_label.demo_test_setting()
+        # self.modbus_label.demo_test_setting()
         self.reset_max_min()
         print("Done")
         
@@ -758,7 +747,8 @@ class DemoTest:
         print("Done")
         
     def demo_test_analysis(self):
-        self.demo_mea_anal_har()
+        self.demo_mea_anal_phasor()
+        # self.demo_mea_anal_har()
         print("Done")
 
     def testcode03(self):
