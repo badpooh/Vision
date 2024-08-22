@@ -646,6 +646,82 @@ class DemoTest:
         self.sp.ocr_process(image_path, roi_keys,
                             roi_keys_meas, ocr_ref, time_keys)
 
+    def demo_mea_pow_active(self):
+        ### active power ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch("side_menu_1")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase("active")
+        
+        ### power min ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("active")
+        
+        ### power max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("active")
+        
+    def demo_mea_pow_reactive(self):
+        ### reactive power ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch("side_menu_2")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase("reactive")
+        
+        ### power min ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("reactive")
+        
+        ### power max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("reactive")
+    
+    def demo_mea_pow_apparent(self):
+        ### reactive power ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch("side_menu_3")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase("apparent")
+        
+        ### power min ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("apparent")
+        
+        ### power max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("apparent")
+        
+    def demo_mea_pow_pf(self):
+        ### reactive power ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch("side_menu_4")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase("pf")
+        
+        ### power min ###
+        self.touch_manager.menu_touch("Min")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("pf")
+        
+        ### power max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time("pf")
+    
     def demo_mea_anal_phasor(self):
         ### VLL ###
         self.touch_manager.btn_front_meter()

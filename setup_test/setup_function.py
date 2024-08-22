@@ -511,7 +511,7 @@ class Evaluation:
                 return
             
             for name, value in results.items():
-                if "OVER" in value:
+                if "OVER" in value or "Lead" in value or "Lag" in value:
                     print(f"{name} = {value}")
                     self.meas_error = True
                 else:
@@ -584,10 +584,8 @@ class Evaluation:
             check_results(["RMS", "Fund."], (0, 10), ocr_res_meas[:2])
 
         if "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Aver%'],
-                          (45, 55, "%"), ocr_res_meas[:4])
-            check_results(['A', 'B', 'C', 'Aver'],
-                          (2, 3, "A"), ocr_res_meas[4:])
+            check_results(['A%', 'B%', 'C%', 'Aver%'], (45, 55, "%"), ocr_res_meas[:4])
+            check_results(['A', 'B', 'C', 'Aver'], (2, 3, "A"), ocr_res_meas[4:])
 
         if self.ocr_manager.color_detection(image, color_data["mea_current"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
             check_results(["A", "B", "C"], (0, 2.0, "%"), ocr_res_meas[:3])
@@ -603,6 +601,25 @@ class Evaluation:
 
         if "Residual Current" in ''.join(ocr_res[0]):
             check_results(["RMS", "Fund"], (0, 0.1), ocr_res_meas[:2])
+            
+        if "Active Power" in ''.join(ocr_res[0]):
+            check_results(['A%', 'B%', 'C%', 'Total%'],(40, 50, "%"), ocr_res_meas[:4])
+            check_results(["A", "B", "C"], (230, 240, "W"), ocr_res_meas[4:7])
+            check_results(["Total"], (705, 715, "W"), ocr_res_meas[7:8])
+            
+        if "Reactive Power" in ''.join(ocr_res[0]):
+            check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4])
+            check_results(["A", "B", "C"], (130, 145, "VAR"), ocr_res_meas[4:7])
+            check_results(["Total"], (410, 420, "VAR"), ocr_res_meas[7:8])
+            
+        if "Apparent Power" in ''.join(ocr_res[0]):
+            check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "%"), ocr_res_meas[:4])
+            check_results(["A", "B", "C", "Total"], (0.860, 0.870), ocr_res_meas[4:8])
+            
+        if "Power Factor" in ''.join(ocr_res[0]):
+            check_results(['A', 'B', 'C', 'Total'],(0, 0), ocr_res_meas[:4])
+            check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7])
+            check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8])
 
         if "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
