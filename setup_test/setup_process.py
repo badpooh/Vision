@@ -6,6 +6,7 @@ from datetime import datetime
 import time
 
 from setup_test.setup_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
+from setup_test.setup_config import EnumConfig as ec
 
 
 image_directory = r"\\10.10.20.30\screenshot"
@@ -735,7 +736,7 @@ class DemoTest:
         roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
                          "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
         ocr_ref = "phasor_L_L"
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, )
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
         ### VLN ###
         self.touch_manager.menu_touch("pahsor_vln")
@@ -786,14 +787,97 @@ class DemoTest:
         ocr_ref = "waveform_3p4w"
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
+        
+    def demo_mea_anal_voltsym(self):
+        ### LL ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_4")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
+        ocr_ref = "volt_sym"
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+        
+        ### LL Max###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
+        ocr_ref = "volt_sym"
+        time_keys = ["a_time_stamp", "b_time_stamp"]
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
+        
+        ### LN ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.menu_touch("thd_L_N")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
+        ocr_ref = "volt_sym"
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+        
+        ### LN Max###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
+        ocr_ref = "volt_sym"
+        time_keys = ["a_time_stamp", "b_time_stamp"]
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
+        
+    def demo_mea_anal_voltunbal(self):
+        ### vol unbalance ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_5")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase(ec.unbal_vol)
+        
+        ### vol unbalance max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time(ec.unbal_vol)
+        
+    def demo_mea_anal_cursym(self):
+        ### symm ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_6")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase(ec.symm_curr)
+        
+        ### symm max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time(ec.symm_curr)
+        
+    def demo_mea_anal_currunbal(self):
+        ### symm ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_7")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase(ec.symm_curr)
+        
+        ### symm max ###
+        self.touch_manager.menu_touch("Max")
+        self.touch_manager.screenshot()
+        self.sp.ocr_curr_4phase_time(ec.symm_curr)
 
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_29_M_H_AN_Phasor.png"
-        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
-                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
-        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
-                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
-        ocr_ref = "phasor_L_L"
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_28_37_M_H_AN_Curr_Unbal.png"
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca",]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "a_meas", "b_meas", "c_meas"]
+        ocr_ref = ec.symm_curr
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
 
     def demo_test_start(self):
@@ -820,6 +904,10 @@ class DemoTest:
         print("Done")
         
     def demo_test_power(self):
+        self.demo_mea_pow_active()
+        self.demo_mea_pow_reactive()
+        self.demo_mea_pow_apparent()
+        self.demo_mea_pow_pf()
         print("Done")
         
     def demo_test_analysis(self):

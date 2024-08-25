@@ -15,6 +15,7 @@ import pandas as pd
 from paddleocr import PaddleOCR
 
 from setup_test.setup_config import ConfigSetup
+from setup_test.setup_config import EnumConfig as ec
 
 config_data = ConfigSetup()
 
@@ -265,36 +266,45 @@ class OCRManager:
         return color_difference
 
     def ocr_basic(self, image, roi_keys):
+        # 이미지 읽기 및 전처리
         image = cv2.imread(image)
-        resized_image = cv2.resize(
-            image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        if image is None:
+            print(f"이미지를 읽을 수 없습니다: {image}")
+            return []
+        
+        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
         gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        denoised_image = cv2.fastNlMeansDenoising(
-            gray_image, None, 30, 7, 21)
-
-        ocr = PaddleOCR(use_angle_cls=False, lang='en',
-                        use_space_char=True, show_log=False,)
-
+        denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
+        
+        # OCR 객체 초기화
+        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
+        
         ocr_results = {}
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = denoised_image[y:y+h, x:x+w]
-                # cv2.imshow('Image with Size Info', roi_image)
+                roi_image = gray_image[y:y+h, x:x+w]
+                
+                # ROI 이미지 표시 (디버깅용)
+                # cv2.imshow('ROI Image', roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
+                
+                # OCR 수행
                 text_results = ocr.ocr(roi_image, cls=False)
+                
                 if text_results:
                     extracted_texts = ' '.join(
-                        [text[1][0] for line in text_results for text in line])
+                        ['empty' if line is None else ' '.join([text[1][0] if text is not None else 'empty' for text in line])
+                        for line in text_results])
                 else:
-                    extracted_texts = ""
+                    extracted_texts = "empty"
                 ocr_results[roi_key] = extracted_texts
-
-        # OCR 결과 출력
+   
         for roi_key, text in ocr_results.items():
             print(f'ROI {roi_key}: {text}')
-
+        
+        # 유효한 텍스트만 리스트로 반환
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
 
@@ -502,6 +512,7 @@ class Evaluation:
 
         def check_results(values, limits, ocr_meas_subset):
             self.condition_met = True
+
             if isinstance(ocr_meas_subset, float):
                 results = {values[0]: str(ocr_meas_subset)}
             elif isinstance(ocr_meas_subset, list):
@@ -509,32 +520,30 @@ class Evaluation:
             else:
                 print("Unexpected ocr_meas_subset type.")
                 return
-            
-            for name, value in results.items():
-                if "OVER" in value or "Lead" in value or "Lag" in value:
-                    print(f"{name} = {value}")
-                    self.meas_error = True
-                else:
-                    match = re.match(r"([-+]?\d+\.?\d*)\s*(\D*)", value)
-                    if match:
-                        numeric_value = float(match.group(1))  # 숫자 부분
-                        unit = match.group(2)  # 단위 부분 (예: V)
 
-                        if len(limits) == 3:
-                            if limits[0] < numeric_value < limits[1] and limits[2] == unit:
-                                print(f"{name} = {numeric_value}{unit} (PASS)")
-                            else:
-                                print(f"{name} = {value} (FAIL)")
-                                self.meas_error = True
-                        else:
-                            if limits[0] < numeric_value < limits[1]:
-                                print(f"{name} = {numeric_value} {unit} (PASS)")
-                            else:
-                                print(f"{name} = {value} (FAIL)")
-                                self.meas_error = True
+            for name, value in results.items():
+                match = re.match(r"([-+]?\d+\.?\d*)\s*(\D*)", value)
+                if match:
+                    numeric_value = float(match.group(1))  # 숫자 부분
+                    unit = match.group(2)  # 단위 부분 (예: V)
+                else:
+                    numeric_value = None
+                    unit = value.strip()
+
+                    # 텍스트 정답을 처리하는 로직 추가
+                text_matches = [lim for lim in limits if isinstance(lim, str)]
+                if any(text_match == value for text_match in text_matches):
+                    print(f"{name or 'empty'} = {value} (PASS by text match)")
+                    
+                elif numeric_value is not None and len(limits) >= 3 and isinstance(limits[0], (int, float)):
+                    if limits[0] <= numeric_value < limits[1] and limits[2] == unit:
+                        print(f"{name} = {numeric_value}{unit} (PASS)")
                     else:
-                        print(f"Error parsing value: {value}")
+                        print(f"{name} = {value} (FAIL)")
                         self.meas_error = True
+                else:
+                    print(f"{name} = {value} (FAIL)")
+                    self.meas_error = True
 
         def img_match(image, roi_key, tpl_img_path):
             template_image_path = tpl_img_path[0]
@@ -569,8 +578,7 @@ class Evaluation:
 
         if self.ocr_manager.color_detection(image, color_data["mea_voltage"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
-                check_results(['AB', 'BC', 'CA'],
-                              (2.0, 4.0, "%"), ocr_res_meas[:4])
+                check_results(['AB', 'BC', 'CA'], (2.0, 4.0, "%"), ocr_res_meas[:4])
             elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
                 check_results(['A', 'B', 'C'], (3.0, 4.0, "%"),
                               ocr_res_meas[:4])
@@ -613,17 +621,17 @@ class Evaluation:
             check_results(["Total"], (410, 420, "VAR"), ocr_res_meas[7:8])
             
         if "Apparent Power" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C", "Total"], (0.860, 0.870), ocr_res_meas[4:8])
-            
-        if "Power Factor" in ''.join(ocr_res[0]):
             check_results(['A', 'B', 'C', 'Total'],(0, 0), ocr_res_meas[:4])
             check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7])
             check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8])
+            
+        if "Power Factor" in ''.join(ocr_res[0]):
+            check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "%"), ocr_res_meas[:4])
+            check_results(["A", "B", "C", "Total"], (0.860, 0.870), ocr_res_meas[4:8])
 
         if "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                max_val= img_match(image_path, "phasor_img_cut", img_match_path["phasor_vll"])
+                max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
                 check_results(["AB", "BC", "CA"], (180, 200, "V" or "v"), ocr_res_meas[:3])
                 check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
                 check_results(["AB_angle"], (25, 35), ocr_res_meas[6:7])
@@ -634,6 +642,7 @@ class Evaluation:
                 check_results(["C_angle_cur"], (85, 95), ocr_res_meas[11:12])
                 check_results(["Phasor_image"], (0.98, 1), max_val)
             elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
+                max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
                 check_results(["A", "B", "C"], (100, 120, "V" or "v"), ocr_res_meas[:3])
                 check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
                 check_results(["A_angle"], (0, 5), ocr_res_meas[6:7])
@@ -648,6 +657,35 @@ class Evaluation:
         if "Harmonics" in ''.join(ocr_res[0]):
             check_results(["A_THD", "B_THD", "C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
             check_results(["A_Fund", "B_Fund", "C_Fund"], (100, 120, "V" or "v"), ocr_res_meas[3:6])
+        
+        if "Waveform" in ''.join(ocr_res[0]):
+            pass    
+        
+        if "Volt. Symm. Component" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
+                check_results(['V1', 'V2'], (180, 200, "V" or "v"), ocr_res_meas[2:3])
+                check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
+            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
+                check_results(['V1', 'V2'], (100, 110, "V" or "v"), ocr_res_meas[2:3])
+                check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
+                
+        if "Voltage Unbalance" in ''.join(ocr_res[0]):
+            check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4])
+            check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8])
+            
+        if "Curr. Symm. Component" in ''.join(ocr_res[0]):
+            check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1])
+            check_results(["I1"], (0, 1, "l2"), ocr_res_meas[1:2])
+            check_results(["I1"], (0, 1, "l0"), ocr_res_meas[2:3])
+            check_results(["I1", "I2", "I0"], (2, 3), ocr_res_meas[3:4])
+            check_results(["I1", "I2", "I0"], (0, 0.1), ocr_res_meas[4:5])
+            check_results(["I1", "I2", "I0"], (0, 0.1), ocr_res_meas[5:6])
+            
+        if "Current Unbalance" in ''.join(ocr_res[0]):
+            check_results([""], (0, 1, "empty"), ocr_res_meas[0:1])
+            check_results(["U2"], (0, 1, "U2"), ocr_res_meas[1:2])
+            check_results(["U0"], (0, 1, "U0"), ocr_res_meas[2:3])
+            check_results(["", "U2", "U0"], (0, 1, "%"), ocr_res_meas[3:6])
 
         if not self.condition_met:
             print("Nothing matching word")

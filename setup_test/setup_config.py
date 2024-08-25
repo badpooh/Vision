@@ -1,8 +1,17 @@
 
 from types import coroutine
+from enum import Enum
 
+class EnumConfig(Enum):
+    phasor_vll = "phasor_vll"
+    phasor_vln = "phasor_vln"
+    harmonics_3p4w = "harmonics_3p4w"
+    waveform_3p4w = "waveform_3p4w"
+    unbal_vol = "unbal_vol"
+    symm_curr = "symm_curr"
+    unbal_curr = "unbal_curr"
 
-class ConfigSetup:
+class ConfigSetup():
 
     def roi_params(self):
         n = 3
@@ -34,16 +43,16 @@ class ConfigSetup:
             # OCR 결과를 위한 좌표
             # rms voltage l-l l-m min max
             "title_view": [n*x for x in [160, 120, 620, 53]],
-            "a_ab": [n*x for x in [165, 185, 135, 55]],  # AB
+            "a_ab": [n*x for x in [175, 179, 135, 70]],  # AB
             "a_time_stamp": [n*x for x in [320, 220, 190, 25]],  # time stamp
             "a_meas": [n*x for x in [540, 190, 230, 55]],  # 190.0 V
-            "b_bc": [n*x for x in [165, 270, 135, 40]],  # BC
+            "b_bc": [n*x for x in [165, 253, 135, 69]],  # BC
             "b_time_stamp": [n*x for x in [320, 295, 190, 25]],  # time stamp
             "b_meas": [n*x for x in [540, 260, 230, 60]],  # 190.0 V
-            "c_ca": [n*x for x in [165, 340, 135, 40]],  # CA
+            "c_ca": [n*x for x in [165, 326, 135, 69]],  # CA
             "c_time_stamp": [n*x for x in [320, 365, 190, 25]],  # time stamp
             "c_meas": [n*x for x in [540, 340, 230, 50]],  # 190.0 V
-            "aver": [n*x for x in [165, 415, 135, 40]],  # Average
+            "aver": [n*x for x in [165, 399, 135, 69]],  # Average
             # time stamp
             "aver_time_stamp": [n*x for x in [320, 435, 190, 25]],
             "aver_meas": [n*x for x in [540, 410, 230, 60]],  # 190.0
@@ -110,10 +119,10 @@ class ConfigSetup:
     
     def template_image_path(self):
         img_path ={
-            "phasor_vll": [r".\image_ref\phasor_ref_vll.png"],
-            "phasor_vln": [r".\image_ref\phasor_ref_vln.png"],
-            "harmonics_3p4w": [r".\image_ref\harmonics_ref_3p4w.png"],
-            "waveform_3p4w": [r".\image_ref\waveform_ref_3p4w.png"],
+            EnumConfig.phasor_vll: [r".\image_ref\phasor_ref_vll.png"],
+            EnumConfig.phasor_vln: [r".\image_ref\phasor_ref_vln.png"],
+            EnumConfig.harmonics_3p4w: [r".\image_ref\harmonics_ref_3p4w.png"],
+            EnumConfig.waveform_3p4w: [r".\image_ref\waveform_ref_3p4w.png"],
         }
         return img_path
 
@@ -147,7 +156,11 @@ class ConfigSetup:
             "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
             "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
             "harmonics_3p4w": ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
-            "waveform_3p4w": ["Waveform", "Voltage", "Current"]
+            "waveform_3p4w": ["Waveform", "Voltage", "Current"],
+            "volt_sym": ["Volt. Symm. Component L-L L-N Max", "Positive-Sequence", "Negative-Sequence"],
+            EnumConfig.unbal_vol: ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"],
+            EnumConfig.symm_curr: ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
+            EnumConfig.unbal_curr: ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"],
         }
 
         m_setup = {
