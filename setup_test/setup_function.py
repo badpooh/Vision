@@ -636,18 +636,18 @@ class Evaluation:
 
         if "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
-                check_results(["AB", "BC", "CA"], (180, 200, "V" or "v"), ocr_res_meas[:3])
+                self.max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
+                check_results(["AB", "BC", "CA"], (180, 200, "v"), ocr_res_meas[:3])
                 check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
-                check_results(["AB_angle"], (25, 35), ocr_res_meas[6:7])
-                check_results(["BC_angle"], (-95, -85), ocr_res_meas[7:8])
-                check_results(["CA_angle"], (145, 155), ocr_res_meas[8:9])
-                check_results(["A_angle_cur"], (-35, -25), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145), ocr_res_meas[10:11])
-                check_results(["C_angle_cur"], (85, 95), ocr_res_meas[11:12])
-                check_results(["Phasor_image"], (0.98, 1), max_val)
+                check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7])
+                check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8])
+                check_results(["CA_angle"], (145, 155, ""), ocr_res_meas[8:9])
+                check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
+                check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
+                check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
+                check_results(["Phasor_image"], (0.98, 1, ""), self.max_val)
             elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
-                max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
+                self.max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
                 check_results(["A", "B", "C"], (100, 120, "V" or "v"), ocr_res_meas[:3])
                 check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
                 check_results(["A_angle"], (0, 5), ocr_res_meas[6:7])
@@ -668,9 +668,13 @@ class Evaluation:
         
         if "Volt. Symm. Component" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
+                check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
+                check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
                 check_results(['V1', 'V2'], (180, 200, "V" or "v"), ocr_res_meas[2:3])
                 check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
             elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
+                check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
+                check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
                 check_results(['V1', 'V2'], (100, 110, "V" or "v"), ocr_res_meas[2:3])
                 check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
                 
@@ -698,11 +702,12 @@ class Evaluation:
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
 
-        return self.ocr_error, right_error, self.meas_error, ocr_res
+        return self.ocr_error, right_error, self.meas_error, ocr_res, self.max_val
 
     def check_time_diff(self, time_images, reset_time):
-        if not reset_time:
-            reset_time = datetime.now()
+        self.reset_time = reset_time
+        if not self.reset_time:
+            self.reset_time = datetime.now()
 
         time_format = "%Y-%m-%d %H:%M:%S"
         results = []
@@ -710,7 +715,7 @@ class Evaluation:
             try:
                 image_time = datetime.strptime(time_str, time_format)
                 time_diff = abs(
-                    (image_time - reset_time).total_seconds())
+                    (image_time - self.reset_time).total_seconds())
                 if time_diff <= 5 * 60:
                     print(f"{time_str} (PASS)")
                     results.append(f"{time_str} (PASS)")
@@ -722,12 +727,13 @@ class Evaluation:
                 results.append(f"Time format error for {time_str}: {e}")
         return results
 
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None):
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_results=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_results = time_results if time_results is not None else []
+        img_results = [img_results]
 
-        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time))
+        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time), len(img_results))
 
         overall_result = "PASS"
         if ocr_error or right_error or meas_error:
@@ -738,9 +744,10 @@ class Evaluation:
         csv_results = {
             "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
             "Measurement": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
-            "OCR-Right": [f"{ocr_error} ({overall_result})"] * num_entries,
-            "Right-OCR": [f"{right_error} ({overall_result})"] * num_entries,
+            "OCR-Right": [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-1),
+            "Right-OCR": [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-1),
             f"Time Stemp ({self.reset_time})": time_results + [None] * (num_entries - len(time_results)),
+            "Img Match": img_results + [None] * (num_entries-len(img_results)),
         }
 
         df = pd.DataFrame(csv_results)

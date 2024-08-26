@@ -142,7 +142,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             print("Done or Nothing to execute")
 
     def debug_test(self):
-        self.meter_demo_test.testcode03()
+        self.meter_demo_test.testcode01()
 
     def set_focus(self):
         try:

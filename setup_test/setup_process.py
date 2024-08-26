@@ -175,25 +175,23 @@ class SetupProcess:
             ocr_ref (str): The OCR type to be selected for evaluation.
             time_keys (list): Min, Max time
             reset_time (time): Min, Max reset time
+            img_result (str): image match curculation result
         Returns:
             None
         """
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(
-            image=image_path, roi_keys=roi_keys_meas)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_error, right_error, meas_error, ocr_res, max_val = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+        
         if time_keys is not None:
-            ocr_img_time = self.ocr_func.ocr_basic(
-                image=image_path, roi_keys=time_keys)
+            ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
             time_results = self.evaluation.check_time_diff(ocr_img_time, reset_time)
-            ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(
-                ocr_img, ocr_ref, ocr_img_meas, image_path)
-            self.evaluation.save_csv(
-                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path)
+        if max_val is not None:
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_results=max_val)
+        
         else:
-            ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(
-                ocr_img, ocr_ref, ocr_img_meas, image_path)
-            self.evaluation.save_csv(
-                ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path)
 
         return ocr_res
 
@@ -771,6 +769,7 @@ class DemoTest:
                          "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
         ocr_ref = "phasor_L_L"
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+        self.evaluation.img_match(image_path, "phasor_img_cut", ec.phasor_vll)
 
         ### VLN ###
         self.touch_manager.menu_touch("pahsor_vln")
@@ -908,11 +907,14 @@ class DemoTest:
         self.sp.ocr_curr_4phase_time(ec.symm_curr)
 
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_28_37_M_H_AN_Curr_Unbal.png"
-        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca",]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "a_meas", "b_meas", "c_meas"]
-        ocr_ref = ec.symm_curr
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_29_M_H_AN_Phasor.png"
+        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
+                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
+        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
+                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
+        ocr_ref = "phasor_L_L"
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+
 
     def demo_test_start(self):
         # self.modbus_label.demo_test_setting()
@@ -927,12 +929,12 @@ class DemoTest:
         print("Done")
         
     def demo_test_current(self):
-        # self.demo_mea_curr_rms()
-        # self.demo_mea_curr_fund()
-        # self.demo_mea_curr_thd()
-        # self.demo_mea_curr_tdd()
-        # self.demo_mea_curr_cf()
-        # self.demo_mea_curr_kf()
+        self.demo_mea_curr_rms()
+        self.demo_mea_curr_fund()
+        self.demo_mea_curr_thd()
+        self.demo_mea_curr_tdd()
+        self.demo_mea_curr_cf()
+        self.demo_mea_curr_kf()
         self.demo_mea_curr_residual()
         print("Done")
         
