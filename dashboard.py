@@ -129,7 +129,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             self.thread.join()
 
     def demo_ui_test(self):
-        # self.meter_demo_test.demo_test_start()
+        self.meter_demo_test.demo_test_start()
         if self.checkbox_states["voltage"]:
             self.meter_demo_test.demo_test_voltage()
         if self.checkbox_states["current"]:
@@ -140,10 +140,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             self.meter_demo_test.demo_test_analysis()
         else:
             print("Done or Nothing to execute")
-        # self.meter_demo_test.testcode01()
 
     def debug_test(self):
-        self.meter_demo_test.testcode01()
+        self.meter_demo_test.testcode03()
 
     def set_focus(self):
         try:

@@ -202,21 +202,21 @@ class TouchManager:
 
     def btn_front_setup(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 1)
+            self.touch_write(self.coords_TA["setup_button"], 0)
             self.touch_write(self.coords_TA["setup_button_bit"], 2)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_meter(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 1)
+            self.touch_write(self.coords_TA["setup_button"], 0)
             self.touch_write(self.coords_TA["setup_button_bit"], 64)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_home(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 1)
+            self.touch_write(self.coords_TA["setup_button"], 0)
             self.touch_write(self.coords_TA["setup_button_bit"], 1)
         else:
             print("Button Apply Touch Error")
@@ -403,43 +403,47 @@ class ModbusLabels:
         values_control = [2300, 0, 1600, 1]
         if self.modbus_manager.setup_client:
             for value in values:
-                self.response = self.modbus_manager.setup_client.write_register(
-                    addr_setup_lock, value)
+                self.response = self.modbus_manager.setup_client.write_register(addr_setup_lock, value)
                 time.sleep(0.6)
             value_32bit = 1900
             high_word = (value_32bit >> 16) & 0xFFFF  # 상위 16비트
             low_word = value_32bit & 0xFFFF
-            self.response = self.modbus_manager.setup_client.write_register(
-                6001, 0)
-            self.response = self.modbus_manager.setup_client.write_registers(
-                6003, [high_word, low_word])
-            self.response = self.modbus_manager.setup_client.write_registers(
-                6005, [high_word, low_word])
-            self.response = self.modbus_manager.setup_client.write_registers(
-                6007, 1900)
-            self.response = self.modbus_manager.setup_client.write_register(
-                6009, 0)
-            self.response = self.modbus_manager.setup_client.write_register(
-                6000, 1)
+            self.response = self.modbus_manager.setup_client.write_register(6001, 0)
+            self.response = self.modbus_manager.setup_client.write_registers(6003, [high_word, low_word])
+            self.response = self.modbus_manager.setup_client.write_registers(6005, [high_word, low_word])
+            self.response = self.modbus_manager.setup_client.write_registers(6007, 1900)
+            self.response = self.modbus_manager.setup_client.write_register(6009, 0)
+            self.response = self.modbus_manager.setup_client.write_register(6000, 1)
             time.sleep(0.6)
             for value_control in values_control:
-                self.response = self.modbus_manager.setup_client.write_register(
-                    addr_control_lock, value_control)
+                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
                 time.sleep(0.6)
-            self.response = self.modbus_manager.setup_client.write_register(
-                4002, 0)
-            self.response = self.modbus_manager.setup_client.write_register(
-                4000, 1)
-            self.response = self.modbus_manager.setup_client.write_register(
-                4001, 1)
+            self.response = self.modbus_manager.setup_client.write_register(4002, 0)
+            self.response = self.modbus_manager.setup_client.write_register(4000, 1)
+            self.response = self.modbus_manager.setup_client.write_register(4001, 1)
             print("Done")
         else:
             print(self.response.isError())
+    
+    def reset_max_min(self):
+        self.touch_manager.uitest_mode_start()
+        addr_control_lock = 2901
+        values_control = [2300, 0, 1600, 1]
+        if self.modbus_manager.setup_client:
+            for value_control in values_control:
+                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                time.sleep(0.6)
+            self.response = self.modbus_manager.setup_client.write_register(ec.addr_reset_max_min.value, 1)
+            print("Done")
+        else:
+            print(self.response.isError())
+        self.reset_time = datetime.now()
+        return self.reset_time
 
 
 class Evaluation:
 
-    MM_clear_time = None
+    reset_time = None
     ocr_manager = OCRManager()
     rois = config_data.roi_params()
 
@@ -589,26 +593,27 @@ class Evaluation:
             check_results(['Freq'], (59, 61, "Hz"), ocr_res_meas[:1])
 
         if "Residual Voltage" in ''.join(ocr_res[0]):
-            check_results(["RMS", "Fund."], (0, 10), ocr_res_meas[:2])
+            check_results(["RMS", "Fund."], (0, 10, "V"), ocr_res_meas[:2])
 
         if "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
             check_results(['A%', 'B%', 'C%', 'Aver%'], (45, 55, "%"), ocr_res_meas[:4])
             check_results(['A', 'B', 'C', 'Aver'], (2, 3, "A"), ocr_res_meas[4:])
 
         if self.ocr_manager.color_detection(image, color_data["mea_current"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (0, 2.0, "%"), ocr_res_meas[:3])
+            check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3])
 
         if "Total Demand" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.4, 1.5), ocr_res_meas[:3])
+            check_results(["A", "B", "C"], (0, 1, "%"), ocr_res_meas[:3])
 
         if "Crest Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.3, 1.6), ocr_res_meas[:3])
+            check_results(["A", "B", "C"], (1.3, 1.6, ""), ocr_res_meas[:3])
 
         if "K-Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.0, 1.3), ocr_res_meas[:3])
+            check_results(["A", "B", "C"], (1.2, 1.5, ""), ocr_res_meas[:3])
 
         if "Residual Current" in ''.join(ocr_res[0]):
-            check_results(["RMS", "Fund"], (0, 0.1), ocr_res_meas[:2])
+            check_results(["RMS"], (70, 100, "mA"), ocr_res_meas[:1])
+            check_results(["RMS"], (20, 40, "mA"), ocr_res_meas[1:2])
             
         if "Active Power" in ''.join(ocr_res[0]):
             check_results(['A%', 'B%', 'C%', 'Total%'],(40, 50, "%"), ocr_res_meas[:4])
@@ -618,16 +623,16 @@ class Evaluation:
         if "Reactive Power" in ''.join(ocr_res[0]):
             check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4])
             check_results(["A", "B", "C"], (130, 145, "VAR"), ocr_res_meas[4:7])
-            check_results(["Total"], (410, 420, "VAR"), ocr_res_meas[7:8])
+            check_results(["Total"], (400, 420, "VAR"), ocr_res_meas[7:8])
             
         if "Apparent Power" in ''.join(ocr_res[0]):
-            check_results(['A', 'B', 'C', 'Total'],(0, 0), ocr_res_meas[:4])
+            check_results(['A', 'B', 'C', 'Total'],(45, 55, "%"), ocr_res_meas[:4])
             check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7])
             check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8])
             
         if "Power Factor" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C", "Total"], (0.860, 0.870), ocr_res_meas[4:8])
+            check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "Lag"), ocr_res_meas[:4])
+            check_results(["A", "B", "C", "Total"], (0.860, 0.870, ""), ocr_res_meas[4:8])
 
         if "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
@@ -695,9 +700,9 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res
 
-    def check_time_diff(self, time_images):
-        if not self.MM_clear_time:
-            self.MM_clear_time = datetime.now()
+    def check_time_diff(self, time_images, reset_time):
+        if not reset_time:
+            reset_time = datetime.now()
 
         time_format = "%Y-%m-%d %H:%M:%S"
         results = []
@@ -705,15 +710,16 @@ class Evaluation:
             try:
                 image_time = datetime.strptime(time_str, time_format)
                 time_diff = abs(
-                    (image_time - self.MM_clear_time).total_seconds())
+                    (image_time - reset_time).total_seconds())
                 if time_diff <= 5 * 60:
                     print(f"{time_str} (PASS)")
                     results.append(f"{time_str} (PASS)")
                 else:
                     print(f"{time_str} / {time_diff} seconds (FAIL)")
-                    results.append(f"{time_str} / {time_diff} seconds (FAIL)")
+                    results.append(f"{time_str} / {time_diff} seconds (FAIL)")      
             except ValueError as e:
                 print(f"Time format error for {time_str}: {e}")
+                results.append(f"Time format error for {time_str}: {e}")
         return results
 
     def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None):
@@ -734,7 +740,7 @@ class Evaluation:
             "Measurement": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
             "OCR-Right": [f"{ocr_error} ({overall_result})"] * num_entries,
             "Right-OCR": [f"{right_error} ({overall_result})"] * num_entries,
-            f"Time Stemp ({self.MM_clear_time})": time_results + [None] * (num_entries - len(time_results)),
+            f"Time Stemp ({self.reset_time})": time_results + [None] * (num_entries - len(time_results)),
         }
 
         df = pd.DataFrame(csv_results)

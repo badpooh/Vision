@@ -10,6 +10,7 @@ class EnumConfig(Enum):
     unbal_vol = "unbal_vol"
     symm_curr = "symm_curr"
     unbal_curr = "unbal_curr"
+    addr_reset_max_min = 12002
 
 class ConfigSetup():
 
@@ -356,6 +357,7 @@ class ConfigSetup():
             "touch_mode": 57112,
             "setup_button_bit": 57120,
             "setup_button": 57121,
+            EnumConfig.addr_reset_max_min: 12003
         }
 
         return coordinates

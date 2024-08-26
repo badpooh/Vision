@@ -1,7 +1,0 @@
-Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (None)
-Max Current Unbalance,empty,"['Unbalance', 'NEMA', 'Current'] (FAIL)","['Positive-', 'Symm.', 'Curr.', 'Component'] (FAIL)",
-NEMA,U2,"['Unbalance', 'NEMA', 'Current'] (FAIL)","['Positive-', 'Symm.', 'Curr.', 'Component'] (FAIL)",
-Negative- Sequence,U0,"['Unbalance', 'NEMA', 'Current'] (FAIL)","['Positive-', 'Symm.', 'Curr.', 'Component'] (FAIL)",
-Zero- Sequence,0.3 %,"['Unbalance', 'NEMA', 'Current'] (FAIL)","['Positive-', 'Symm.', 'Curr.', 'Component'] (FAIL)",
-,0.6 %,"['Unbalance', 'NEMA', 'Current'] (FAIL)","['Positive-', 'Symm.', 'Curr.', 'Component'] (FAIL)",
-,0.8 %,"['Unbalance', 'NEMA', 'Current'] (FAIL)","['Positive-', 'Symm.', 'Curr.', 'Component'] (FAIL)",
