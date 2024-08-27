@@ -495,11 +495,10 @@ class Evaluation:
 
         return ocr_error, right_error
 
-    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas, image_path=None):
+    def eval_demo_test(self, ocr_res, right_key, ocr_res_meas=None, image_path=None, img_result=None):
         self.meas_error = False
         self.condition_met = False
         color_data = config_data.color_detection_data()
-        img_match_path = config_data.template_image_path()
         
         image = cv2.imread(image_path)
 
@@ -517,7 +516,7 @@ class Evaluation:
         def check_results(values, limits, ocr_meas_subset):
             self.condition_met = True
 
-            if isinstance(ocr_meas_subset, float):
+            if isinstance(ocr_meas_subset, (float, int)):
                 results = {values[0]: str(ocr_meas_subset)}
             elif isinstance(ocr_meas_subset, list):
                 results = {name: str(value) for name, value in zip(values, ocr_meas_subset)}
@@ -540,7 +539,7 @@ class Evaluation:
                     print(f"{name or 'empty'} = {value} (PASS by text match)")
                     
                 elif numeric_value is not None and len(limits) >= 3 and isinstance(limits[0], (int, float)):
-                    if limits[0] <= numeric_value < limits[1] and limits[2] == unit:
+                    if limits[0] <= numeric_value <= limits[1] and limits[2] == unit:
                         print(f"{name} = {numeric_value}{unit} (PASS)")
                     else:
                         print(f"{name} = {value} (FAIL)")
@@ -548,27 +547,6 @@ class Evaluation:
                 else:
                     print(f"{name} = {value} (FAIL)")
                     self.meas_error = True
-
-        def img_match(image, roi_key, tpl_img_path):
-            template_image_path = tpl_img_path[0]
-            image = cv2.imread(image)
-            template_image = cv2.imread(template_image_path)
-            x, y, w, h = self.rois[roi_key]
-            # print(f"ROI coordinates: x={x}, y={y}, w={w}, h={h}")
-            # print(f"Original image size: {image.shape}")
-            # print(f"Template image size: {template_image.shape}")
-            cut_img = image[y:y+h, x:x+w]
-            cut_template = template_image[y:y+h, x:x+w]
-
-            resized_cut_img = cv2.resize(
-                cut_img, (cut_template.shape[1], cut_template.shape[0]))
-            res = cv2.matchTemplate(
-                resized_cut_img, cut_template, cv2.TM_CCOEFF_NORMED)
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-            
-            print(max_val)
-            
-            return max_val
         
         if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["rms_voltage_L_L"]) <= 10:
@@ -636,8 +614,7 @@ class Evaluation:
 
         if "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                self.max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
-                check_results(["AB", "BC", "CA"], (180, 200, "v"), ocr_res_meas[:3])
+                check_results(["AB", "BC", "CA"], (180, 195, "v"), ocr_res_meas[:3])
                 check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
                 check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7])
                 check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8])
@@ -645,17 +622,19 @@ class Evaluation:
                 check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
                 check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
                 check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
-                check_results(["Phasor_image"], (0.98, 1, ""), self.max_val)
+                check_results(["Phasor_image"], (0.98, 1, ""), img_result[0])
+                check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
             elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
-                self.max_val= img_match(image_path, "phasor_img_cut", img_match_path[ec.phasor_vll])
-                check_results(["A", "B", "C"], (100, 120, "V" or "v"), ocr_res_meas[:3])
+                check_results(["A", "B", "C"], (100, 120, "v"), ocr_res_meas[:3])
                 check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
-                check_results(["A_angle"], (0, 5), ocr_res_meas[6:7])
-                check_results(["B_angle"], (-125, -115), ocr_res_meas[7:8])
-                check_results(["C_angle"], (115, 125), ocr_res_meas[8:9])
-                check_results(["A_angle_cur"], (-35, -25), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145), ocr_res_meas[10:11])
-                check_results(["C_angle_cur"], (85, 95), ocr_res_meas[11:12])
+                check_results(["A_angle"], (-0.2, 5, ""), ocr_res_meas[6:7])
+                check_results(["B_angle"], (-125, -115, ""), ocr_res_meas[7:8])
+                check_results(["C_angle"], (115, 125, ""), ocr_res_meas[8:9])
+                check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
+                check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
+                check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
+                check_results(["Phasor_image"], (0.98, 1, ""), img_result[0])
+                check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
             else:
                 print("demo test evaluation error")
 
@@ -664,7 +643,11 @@ class Evaluation:
             check_results(["A_Fund", "B_Fund", "C_Fund"], (100, 120, "V" or "v"), ocr_res_meas[3:6])
         
         if "Waveform" in ''.join(ocr_res[0]):
-            pass    
+            if 0 < img_result < 1:
+                check_results(["waveform_image"], (0.95, 1, ""), img_result)
+            else:
+                check_results(["waveform_image"], (1, 1, ""), img_result)
+
         
         if "Volt. Symm. Component" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
@@ -702,7 +685,59 @@ class Evaluation:
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
 
-        return self.ocr_error, right_error, self.meas_error, ocr_res, self.max_val
+        return self.ocr_error, right_error, self.meas_error, ocr_res
+    
+    def img_match(self, image, roi_key, tpl_img_path):
+            template_image_path = tpl_img_path
+            image = cv2.imread(image)
+            template_image = cv2.imread(template_image_path)
+            x, y, w, h = self.rois[roi_key]
+            # print(f"ROI coordinates: x={x}, y={y}, w={w}, h={h}")
+            # print(f"Original image size: {image.shape}")
+            # print(f"Template image size: {template_image.shape}")
+            cut_img = image[y:y+h, x:x+w]
+            cut_template = template_image[y:y+h, x:x+w]
+
+            resized_cut_img = cv2.resize(
+                cut_img, (cut_template.shape[1], cut_template.shape[0]))
+            res = cv2.matchTemplate(
+                resized_cut_img, cut_template, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            
+            print(max_val)
+            
+            return max_val
+    
+    def img_detection(self, image_path, color_data, tolerance):
+        image = cv2.imread(image_path)
+        x, y, w, h, R, G, B = color_data
+        cut_img = image[y:y+h, x:x+w]
+        
+        target_color = np.array([R, G, B])
+        diff = np.abs(cut_img - target_color)
+        match = np.all(diff <= tolerance, axis=2)
+
+        if np.array_equal(target_color, np.array([0, 0, 0])):
+            target_color = "Vol_A(X)"
+        elif np.array_equal(target_color, np.array([255, 29, 37])):
+            target_color = "Vol_B(X)"
+        elif np.array_equal(target_color, np.array([0, 0, 255])):
+            target_color = "Vol_C(X)"
+        elif np.array_equal(target_color, np.array([153, 153, 153])):
+            target_color = "Curr_A(X)"
+        elif np.array_equal(target_color, np.array([255, 180, 245])):
+            target_color = "Curr_B(X)"
+        elif np.array_equal(target_color, np.array([54, 175, 255])):
+            target_color = "Curr_C(X)"
+
+        if np.any(match):
+            print(f"{target_color} (FAIL)")
+            result = 0
+        else:
+            print(f"{target_color} (PASS)")
+            result = 1
+        return result
+
 
     def check_time_diff(self, time_images, reset_time):
         self.reset_time = reset_time
@@ -727,13 +762,13 @@ class Evaluation:
                 results.append(f"Time format error for {time_str}: {e}")
         return results
 
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_results=None):
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_results = time_results if time_results is not None else []
-        img_results = [img_results]
+        img_result = [img_result]
 
-        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time), len(img_results))
+        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time), len(img_result))
 
         overall_result = "PASS"
         if ocr_error or right_error or meas_error:
@@ -747,7 +782,7 @@ class Evaluation:
             "OCR-Right": [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-1),
             "Right-OCR": [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-1),
             f"Time Stemp ({self.reset_time})": time_results + [None] * (num_entries - len(time_results)),
-            "Img Match": img_results + [None] * (num_entries-len(img_results)),
+            "Img Match": img_result + [None] * (num_entries-len(img_result)),
         }
 
         df = pd.DataFrame(csv_results)

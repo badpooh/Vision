@@ -2,6 +2,20 @@
 from types import coroutine
 from enum import Enum
 
+class EnumConfigROI(Enum):
+    waveform_title = "waveform_title"
+    waveform_all_img_cut = "waveform_img_cut"
+    waveform_graph_img_cut = "waveform_graph_img_cut"
+
+    ### A상 버튼 눌러서 A상이 안보이는 지 확인 ###
+    color_waveform_vol_a = [313, 253, 411, 203, 0, 0, 0]
+    color_waveform_vol_b = [313, 253, 411, 203, 255, 29, 37]
+    color_waveform_vol_c = [313, 253, 411, 203, 0, 0, 255]
+    color_waveform_curr_a = [313, 253, 411, 203, 153, 153, 153]
+    color_waveform_curr_b = [313, 253, 411, 203, 255, 180, 245]
+    color_waveform_curr_c = [313, 253, 411, 203, 54, 175, 255]
+
+
 class EnumConfig(Enum):
     phasor_vll = "phasor_vll"
     phasor_vln = "phasor_vln"
@@ -11,6 +25,29 @@ class EnumConfig(Enum):
     symm_curr = "symm_curr"
     unbal_curr = "unbal_curr"
     addr_reset_max_min = 12002
+
+class EnumConfigTouch(Enum):
+    touch_wave_vol_a = "touch_wave_vol_a"
+    touch_wave_vol_b = "touch_wave_vol_b"
+    touch_wave_vol_c = "touch_wave_vol_c"
+    touch_wave_curr_a = "touch_wave_curr_a"
+    touch_wave_curr_b = "touch_wave_curr_b"
+    touch_wave_curr_c = "touch_wave_curr_b"
+
+class EnumConfigColor(Enum):
+    color_harmonics_vol_a = [313, 253, 411, 203, 0, 0, 0]
+
+class EnumConfigImageREF(Enum):
+    img_ref_phasor_all_vll = r".\image_ref\phasor_ref_all_vll.png"
+    img_ref_phasor_all_vln = r".\image_ref\phasor_ref_all_vln.png"
+    img_ref_phasor_vol_vll = r".\image_ref\phasor_ref_vol_vll.png"
+    img_ref_phasor_vol_vln = r".\image_ref\phasor_ref_vol_vln.png"
+    img_ref_phasor_curr_vll = r".\image_ref\phasor_ref_curr_vll.png"
+    img_ref_phasor_curr_vln = r".\image_ref\phasor_ref_curr_vln.png"
+    img_ref_phasor_na_vll = r".\image_ref\phasor_ref_na_vll.png"
+    img_ref_phasor_na_vln = r".\image_ref\phasor_ref_na_vln.png"
+    img_ref_harmonics_3p4w = r".\image_ref\harmonics_ref_3p4w.png"
+    img_ref_waveform_all = r".\image_ref\waveform_ref_all.png"
 
 class ConfigSetup():
 
@@ -113,17 +150,16 @@ class ConfigSetup():
             "harmonics_Fund_C": [n*x for x in [705, 241, 70, 23]],
 
             #Waveform
-            "waveform_img_cut": [165, 220, 525, 250],
-            "waveform_title": [n*x for x in [160, 120, 630, 53]],
+            EnumConfigROI.waveform_all_img_cut: [170, 179, 610, 286],
+            EnumConfigROI.waveform_graph_img_cut: [313, 253, 411, 203],
+            EnumConfigROI.waveform_title: [n*x for x in [160, 120, 630, 53]],
         }
         return params
     
     def template_image_path(self):
         img_path ={
-            EnumConfig.phasor_vll: [r".\image_ref\phasor_ref_vll.png"],
-            EnumConfig.phasor_vln: [r".\image_ref\phasor_ref_vln.png"],
-            EnumConfig.harmonics_3p4w: [r".\image_ref\harmonics_ref_3p4w.png"],
-            EnumConfig.waveform_3p4w: [r".\image_ref\waveform_ref_3p4w.png"],
+            
+            
         }
         return img_path
 
@@ -154,10 +190,10 @@ class ConfigSetup():
             "L_Max": ["AB", "BC", "CA", "Average"],
             "N_Min": ["A", "B", "c", "Average"],
             "N_Max": ["A", "B", "c", "Average"],
-            "phasor_L_L": ["Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
+            "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
             "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
             "harmonics_3p4w": ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
-            "waveform_3p4w": ["Waveform", "Voltage", "Current"],
+            EnumConfig.waveform_3p4w: ["Waveform", "Voltage", "Current"],
             "volt_sym": ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence"],
             EnumConfig.unbal_vol: ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"],
             EnumConfig.symm_curr: ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
@@ -297,10 +333,15 @@ class ConfigSetup():
             "thd_L_L": [520, 150],
             "thd_L_N": [620, 150],
             "phas_har_vol": [590, 150],
-            "phas_har_cur": [720, 150],
+            "phas_har_curr": [720, 150],
             "phasor_vll": [620, 210],
-            "pahsor_vln": [720, 210]
-
+            "phasor_vln": [720, 210],
+            EnumConfigTouch.touch_wave_vol_a: [360, 200],
+            EnumConfigTouch.touch_wave_vol_b: [430, 200],
+            EnumConfigTouch.touch_wave_vol_c: [490, 200],
+            EnumConfigTouch.touch_wave_curr_a: [620, 200],
+            EnumConfigTouch.touch_wave_curr_b: [680, 200],
+            EnumConfigTouch.touch_wave_curr_c: [740, 200],
         }
         return coordinates
 
@@ -357,7 +398,7 @@ class ConfigSetup():
             "touch_mode": 57112,
             "setup_button_bit": 57120,
             "setup_button": 57121,
-            EnumConfig.addr_reset_max_min: 12003
+            EnumConfig.addr_reset_max_min: 12002
         }
 
         return coordinates

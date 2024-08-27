@@ -7,7 +7,9 @@ import time
 
 from setup_test.setup_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
 from setup_test.setup_config import EnumConfig as ec
-
+from setup_test.setup_config import EnumConfigImageREF as ecir
+from setup_test.setup_config import EnumConfigROI as ecroi
+from setup_test.setup_config import EnumConfigTouch as ect
 
 image_directory = r"\\10.10.20.30\screenshot"
 
@@ -181,15 +183,12 @@ class SetupProcess:
         """
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_error, right_error, meas_error, ocr_res, max_val = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
         
         if time_keys is not None:
             ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
             time_results = self.evaluation.check_time_diff(ocr_img_time, reset_time)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path)
-        if max_val is not None:
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_results=max_val)
-        
         else:
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path)
 
@@ -281,6 +280,33 @@ class SetupProcess:
         time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp"]
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time)
+
+    def ocr_phaosr_process(self, img_ref, ref, img_cut1, img_cut2, img_cut3):
+        self.touch_manager.screenshot()
+        image_path = self.load_image_file()
+        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
+                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
+        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
+                        "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
+        ocr_ref = ref
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        image_results = []
+        image_results.append(self.evaluation.img_match(image_path, img_cut1, img_ref))
+        image_results.append(self.evaluation.img_match(image_path, img_cut2, img_ref))
+        image_results.append(self.evaluation.img_match(image_path, img_cut3, img_ref))
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results)
+
+    def ocr_waveform_detection(self, value):
+        self.touch_manager.screenshot()
+        image_path = self.load_image_file()
+        roi_keys = [ecroi.waveform_title]
+        ocr_ref = ec.waveform_3p4w
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        image_results = self.evaluation.img_detection(image_path, value, 3)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
 
 
 class DemoTest:
@@ -756,33 +782,46 @@ class DemoTest:
         self.sp.ocr_curr_4phase_time("pf", reset_time)
     
     def demo_mea_anal_phasor(self):
-        ### VLL ###
+        ### voltage+current vll ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_1")
-        self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
-                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
-        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
-                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
-        ocr_ref = "phasor_L_L"
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
-        self.evaluation.img_match(image_path, "phasor_img_cut", ec.phasor_vll)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
 
-        ### VLN ###
-        self.touch_manager.menu_touch("pahsor_vln")
-        self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
-                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
-        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
-                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
-        ocr_ref = "phasor_L_N"
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
+        ## voltage+current vln ###
+        self.touch_manager.menu_touch("phasor_vln")
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vln.value, "phasor_L_N", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
 
-    def demo_mea_anal_har(self):
+        ### voltage vll ###
+        self.touch_manager.menu_touch("phas_har_curr")
+        self.touch_manager.menu_touch("phasor_vll")
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
+        
+        ### voltage vln ###
+        self.touch_manager.menu_touch("phasor_vln")
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vln.value, "phasor_L_N", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
+
+        ### current vll ###
+        self.touch_manager.menu_touch("phas_har_curr")
+        self.touch_manager.menu_touch("phas_har_vol")
+        self.touch_manager.menu_touch("phasor_vll")
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
+        
+        ### current vln ###
+        self.touch_manager.menu_touch("phasor_vln")
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vln.value, "phasor_L_N", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
+ 
+        ### nothing vll ###
+        self.touch_manager.menu_touch("phas_har_curr")
+        self.touch_manager.menu_touch("phasor_vll")
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
+        
+        ### nothing vln ###
+        self.touch_manager.menu_touch("phasor_vln")
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vln.value, "phasor_L_N", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
+ 
+    def demo_mea_anal_harmonics(self):
         ### voltage ###
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_2")
@@ -808,18 +847,51 @@ class DemoTest:
         ocr_res = self.sp.ocr_process(
             image_path, roi_keys, roi_keys_meas, ocr_ref)
 
-    def demo_mea_anal_wave(self):
+    def demo_mea_anal_waveform(self):
+
+        ### waveform basic ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_3")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["waveform_title"]
-        roi_keys_meas = ["waveform_title"]
-        ocr_ref = "waveform_3p4w"
-        ocr_res = self.sp.ocr_process(
-            image_path, roi_keys, roi_keys_meas, ocr_ref)
+        roi_keys = [ecroi.waveform_title]
+        ocr_ref = ec.waveform_3p4w
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all.value,)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
+
+        ### waveform vol_a-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_vol_a)
+        self.sp.ocr_waveform_detection(ecroi.color_waveform_vol_a.value)
+
+        ### waveform vol_b-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_vol_a)
+        self.touch_manager.menu_touch(ect.touch_wave_vol_b)
+        self.sp.ocr_waveform_detection(ecroi.color_waveform_vol_b.value)
+
+        ### waveform vol_c-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_vol_b)
+        self.touch_manager.menu_touch(ect.touch_wave_vol_c)
+        self.sp.ocr_waveform_detection(ecroi.color_waveform_vol_c.value)
+
+        ### waveform curr_a-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_vol_c)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.sp.ocr_waveform_detection(ecroi.color_waveform_curr_a.value)
+
+        ### waveform curr_b-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.sp.ocr_waveform_detection(ecroi.color_waveform_curr_b.value)
+
+        ### waveform curr_c-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.sp.ocr_waveform_detection(ecroi.color_waveform_curr_c.value)
+     
         
     def demo_mea_anal_voltsym(self):
         ### LL ###
@@ -907,14 +979,9 @@ class DemoTest:
         self.sp.ocr_curr_4phase_time(ec.symm_curr)
 
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_27_29_M_H_AN_Phasor.png"
-        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
-                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
-        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
-                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
-        ocr_ref = "phasor_L_L"
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
-
+        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_ref\waveform_ref_vol_bc123.png"
+        self.evaluation.img_detection(image_path, ecroi.color_waveform_vol_a.value, 3)
+        print("Done")
 
     def demo_test_start(self):
         # self.modbus_label.demo_test_setting()
@@ -946,9 +1013,28 @@ class DemoTest:
         print("Done")
         
     def demo_test_analysis(self):
-        self.demo_mea_anal_phasor()
+        # self.demo_mea_anal_phasor()
         # self.demo_mea_anal_har()
+        self.demo_mea_anal_waveform()
         print("Done")
 
     def testcode03(self):
-        self.reset_max_min()
+        # self.modbus_label.demo_test_setting()
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_1")
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
+                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
+        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
+                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
+        ocr_ref = "phasor_L_L"
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        image_result = self.evaluation.img_match(image_path, "phasor_img_cut", ecir.img_ref_phasor_all_vll.value)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_result)
+    
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_result)
+           
