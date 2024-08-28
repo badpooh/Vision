@@ -298,13 +298,13 @@ class SetupProcess:
         ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results)
 
-    def ocr_waveform_detection(self, value):
+    def ocr_graph_detection(self, roi_keys, ocr_ref, value):
         self.touch_manager.screenshot()
         image_path = self.load_image_file()
-        roi_keys = [ecroi.waveform_title]
-        ocr_ref = ec.waveform_3p4w
+        roi_keys = roi_keys
+        ocr_ref = ocr_ref
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        image_results = self.evaluation.img_detection(image_path, value, 3)
+        image_results = self.evaluation.img_detection(image_path, value, 2)
         ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
 
@@ -823,6 +823,8 @@ class DemoTest:
  
     def demo_mea_anal_harmonics(self):
         ### voltage ###
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.screenshot()
@@ -831,21 +833,82 @@ class DemoTest:
                     "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
         roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
                          "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
-        ocr_ref = "harmonics_3p4w"
-        ocr_res = self.sp.ocr_process(
-            image_path, roi_keys, roi_keys_meas, ocr_ref)
+        ocr_ref = ec.harmonics_vol_3p4w
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_vol_3p4w.value,)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
 
         ### current ###
-        self.touch_manager.menu_touch("phas_har_cur")
+        self.touch_manager.menu_touch(ect.touch_analysis_curr)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = ["harmonics_title", "harmonics_sub_title_1", "harmonics_sub_title_2",
                     "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
         roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
                          "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
-        ocr_ref = "harmonics_3p4w"
-        ocr_res = self.sp.ocr_process(
-            image_path, roi_keys, roi_keys_meas, ocr_ref)
+        ocr_ref = ec.harmonics_curr
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_curr.value,)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
+
+        ### vol_a-phase X ###
+        self.touch_manager.menu_touch(ect.touch_analysis_vol)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_a.value)
+
+        ### vol_b-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_b.value)
+
+        ### vol_c-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_c.value)
+
+        ### curr_a-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.touch_manager.menu_touch(ect.touch_analysis_curr)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_a.value)
+
+        ### curr_b-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_b.value)
+
+        ### curr_c-phase X ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_c.value)
+
+        ### fund 버튼 후 vol_a ~ curr_c 반복 ###
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.touch_manager.menu_touch(ect.touch_analysis_vol)
+        self.touch_manager.menu_touch(ect.touch_harmonics_fund)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_a.value)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_b.value)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_c.value)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.touch_manager.menu_touch(ect.touch_analysis_curr)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_a.value)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_a)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_b.value)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_b)
+        self.touch_manager.menu_touch(ect.touch_wave_curr_c)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_c.value)
+
 
     def demo_mea_anal_waveform(self):
 
@@ -865,34 +928,33 @@ class DemoTest:
 
         ### waveform vol_a-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_a)
-        self.sp.ocr_waveform_detection(ecroi.color_waveform_vol_a.value)
+        self.sp.ocr_graph_detection(ecroi.color_waveform_vol_a.value)
 
         ### waveform vol_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_a)
         self.touch_manager.menu_touch(ect.touch_wave_vol_b)
-        self.sp.ocr_waveform_detection(ecroi.color_waveform_vol_b.value)
+        self.sp.ocr_graph_detection(ecroi.color_waveform_vol_b.value)
 
         ### waveform vol_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_b)
         self.touch_manager.menu_touch(ect.touch_wave_vol_c)
-        self.sp.ocr_waveform_detection(ecroi.color_waveform_vol_c.value)
+        self.sp.ocr_graph_detection(ecroi.color_waveform_vol_c.value)
 
         ### waveform curr_a-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_c)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a)
-        self.sp.ocr_waveform_detection(ecroi.color_waveform_curr_a.value)
+        self.sp.ocr_graph_detection(ecroi.color_waveform_curr_a.value)
 
         ### waveform curr_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_a)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b)
-        self.sp.ocr_waveform_detection(ecroi.color_waveform_curr_b.value)
+        self.sp.ocr_graph_detection(ecroi.color_waveform_curr_b.value)
 
         ### waveform curr_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_b)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c)
-        self.sp.ocr_waveform_detection(ecroi.color_waveform_curr_c.value)
+        self.sp.ocr_graph_detection(ecroi.color_waveform_curr_c.value)
      
-        
     def demo_mea_anal_voltsym(self):
         ### LL ###
         self.touch_manager.btn_front_meter()
@@ -1014,8 +1076,8 @@ class DemoTest:
         
     def demo_test_analysis(self):
         # self.demo_mea_anal_phasor()
-        # self.demo_mea_anal_har()
-        self.demo_mea_anal_waveform()
+        self.demo_mea_anal_harmonics()
+        # self.demo_mea_anal_waveform()
         print("Done")
 
     def testcode03(self):

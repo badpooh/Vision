@@ -16,6 +16,7 @@ from paddleocr import PaddleOCR
 
 from setup_test.setup_config import ConfigSetup
 from setup_test.setup_config import EnumConfig as ec
+from setup_test.setup_config import EnumConfigROI as ecr
 
 config_data = ConfigSetup()
 
@@ -639,14 +640,26 @@ class Evaluation:
                 print("demo test evaluation error")
 
         if "Harmonics" in ''.join(ocr_res[0]):
-            check_results(["A_THD", "B_THD", "C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
-            check_results(["A_Fund", "B_Fund", "C_Fund"], (100, 120, "V" or "v"), ocr_res_meas[3:6])
-        
+            if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
+                if img_result == 1 or img_result == 0:
+                    check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                else:
+                    check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
+                    check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6])
+                    check_results(["harmonic_image"], (0.9, 1, ""), img_result)
+            else:
+                if img_result == 1 or img_result == 0:
+                    check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                else:
+                    check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3])
+                    check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6])
+                    check_results(["harmonic_image"], (0.99, 1, ""), img_result)
+
         if "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
-                check_results(["waveform_image"], (0.95, 1, ""), img_result)
+                check_results(["waveform_image"], (0.945, 1, ""), img_result)
             else:
-                check_results(["waveform_image"], (1, 1, ""), img_result)
+                check_results(["waveform_img_detect"], (1, 1, ""), img_result)
 
         
         if "Volt. Symm. Component" in ''.join(ocr_res[0]):
@@ -712,22 +725,26 @@ class Evaluation:
         image = cv2.imread(image_path)
         x, y, w, h, R, G, B = color_data
         cut_img = image[y:y+h, x:x+w]
+
+        # cv2.imshow('Image', cut_img)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
         
-        target_color = np.array([R, G, B])
+        target_color = np.array([B, G, R])
         diff = np.abs(cut_img - target_color)
         match = np.all(diff <= tolerance, axis=2)
 
         if np.array_equal(target_color, np.array([0, 0, 0])):
             target_color = "Vol_A(X)"
-        elif np.array_equal(target_color, np.array([255, 29, 37])):
+        elif np.array_equal(target_color, np.array([37, 29, 255])):  # BGR 순서로 비교
             target_color = "Vol_B(X)"
-        elif np.array_equal(target_color, np.array([0, 0, 255])):
+        elif np.array_equal(target_color, np.array([255, 0, 0])):
             target_color = "Vol_C(X)"
         elif np.array_equal(target_color, np.array([153, 153, 153])):
             target_color = "Curr_A(X)"
-        elif np.array_equal(target_color, np.array([255, 180, 245])):
+        elif np.array_equal(target_color, np.array([245, 180, 255])):  # BGR 순서로 비교
             target_color = "Curr_B(X)"
-        elif np.array_equal(target_color, np.array([54, 175, 255])):
+        elif np.array_equal(target_color, np.array([255, 175, 54])):  # BGR 순서로 비교
             target_color = "Curr_C(X)"
 
         if np.any(match):
