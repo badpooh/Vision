@@ -287,9 +287,9 @@ class OCRManager:
                 roi_image = gray_image[y:y+h, x:x+w]
                 
                 # ROI 이미지 표시 (디버깅용)
-                # cv2.imshow('ROI Image', roi_image)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
+                cv2.imshow('ROI Image', roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
                 
                 # OCR 수행
                 text_results = ocr.ocr(roi_image, cls=False)

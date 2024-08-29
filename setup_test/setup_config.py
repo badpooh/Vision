@@ -45,6 +45,8 @@ class EnumConfigTouch(Enum):
     touch_analysis_vol = "touch_analysis_check_voltage"
     touch_analysis_curr = "touch_analysis_check_current"
     touch_harmonics_fund = "touch_harmonics_fund."
+    touch_harmonics_dropdown_1 = "touch_harmonics_dropdown_unit"
+    touch_harmonics_dropdown_2 = "touch_harmonics_dropdown_shape"
     touch_wave_vol_a = "touch_wave_vol_a"
     touch_wave_vol_b = "touch_wave_vol_b"
     touch_wave_vol_c = "touch_wave_vol_c"
@@ -173,6 +175,8 @@ class ConfigSetup():
             EnumConfigROI.waveform_graph_img_cut: [313, 253, 411, 203],
             EnumConfigROI.waveform_title: [n*x for x in [160, 120, 630, 53]],
             EnumConfigROI.harmonics_graph_img_cut: [313, 283, 455, 173],
+            
+            "test01" : [n*x for x in [170, 250, 80, 200]],
         }
         return params
     
