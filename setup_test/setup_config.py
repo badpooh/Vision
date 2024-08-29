@@ -2,11 +2,15 @@
 from types import coroutine
 from enum import Enum
 
-class EnumConfigROI(Enum):
+class ConfigROI(Enum):
     waveform_title = "waveform_title"
     waveform_all_img_cut = "waveform_img_cut"
     waveform_graph_img_cut = "waveform_graph_img_cut"
     harmonics_graph_img_cut = "harmonics_graph_img_cut"
+    harmonics_chart_img_cut = "harmonics_graph_with_bar_img_cut"
+    harmonics_sub_title_1 = "harmonics_sub_title_1"
+    harmonics_text_title = "harmonics_text_title"
+    harmonics_text_img = "harmonics_text_image"
 
     ### A상 버튼 눌러서 A상이 안보이는 지 확인 / 앞 4자리는 검사할 그래프 영역###
     ### 뒤 3자리는 RGB ###
@@ -29,35 +33,41 @@ class EnumConfigROI(Enum):
     color_harmonics_curr = [660, 140, 10, 10, 67, 136, 255]
 
 
-class EnumConfig(Enum):
+class ConfigTextRef(Enum):
     phasor_vll = "phasor_vll"
     phasor_vln = "phasor_vln"
     harmonics_for_img = "harmonics_for_img_title"
     harmonics_vol_3p4w = "harmonics_voltage_wye"
     harmonics_curr = "harmonics_current"
+    harmonics_per_fund = "harmonics_[%]_fund"
+    harmonics_per_rms = "harmonics_[%]_rms"
+    harmonics_text = "harmonics_text"
     waveform_3p4w = "waveform_3p4w"
     unbal_vol = "unbal_vol"
     symm_curr = "symm_curr"
     unbal_curr = "unbal_curr"
     addr_reset_max_min = 12002
 
-class EnumConfigTouch(Enum):
+class ConfigTouch(Enum):
     touch_analysis_vol = "touch_analysis_check_voltage"
     touch_analysis_curr = "touch_analysis_check_current"
     touch_harmonics_fund = "touch_harmonics_fund."
-    touch_harmonics_dropdown_1 = "touch_harmonics_dropdown_unit"
-    touch_harmonics_dropdown_2 = "touch_harmonics_dropdown_shape"
+    touch_harmonics_submenu_1 = "touch_harmonics_dropdown_unit"
+    touch_harmonics_submenu_2 = "touch_harmonics_dropdown_shape"
     touch_wave_vol_a = "touch_wave_vol_a"
     touch_wave_vol_b = "touch_wave_vol_b"
     touch_wave_vol_c = "touch_wave_vol_c"
     touch_wave_curr_a = "touch_wave_curr_a"
     touch_wave_curr_b = "touch_wave_curr_b"
     touch_wave_curr_c = "touch_wave_curr_c"
+    touch_harmonics_sub_v = "touch_harmonics_submenu_[v]"
+    touch_harmonics_sub_fund = "touch_harmonics_sub_fund"
+    touch_harmonics_sub_rms = "touch_harmonics_sub_rms"
 
-class EnumConfigColor(Enum):
+class ConfigColor(Enum):
     color_harmonics_vol_a = [313, 253, 411, 203, 0, 0, 0]
 
-class EnumConfigImageREF(Enum):
+class ConfigImgRef(Enum):
     img_ref_phasor_all_vll = r".\image_ref\phasor_ref_all_vll.png"
     img_ref_phasor_all_vln = r".\image_ref\phasor_ref_all_vln.png"
     img_ref_phasor_vol_vll = r".\image_ref\phasor_ref_vol_vll.png"
@@ -68,6 +78,10 @@ class EnumConfigImageREF(Enum):
     img_ref_phasor_na_vln = r".\image_ref\phasor_ref_na_vln.png"
     img_ref_harmonics_vol_3p4w = r".\image_ref\Harmonics_ref_vol_3p4w.png"
     img_ref_harmonics_curr = r".\image_ref\Harmonics_ref_curr.png"
+    img_ref_harmonics_vol_fund = r".\image_ref\img_ref_harmonics_vol_fund.png"
+    img_ref_harmonics_vol_rms = r".\image_ref\img_ref_harmonics_vol_rms.png"
+    img_ref_harmonics_curr_fund = r".\image_ref\img_ref_harmonics_curr_fund.png"
+    img_ref_harmonics_curr_rms = r".\image_ref\img_ref_harmonics_curr_rms.png"
     img_ref_waveform_all = r".\image_ref\waveform_ref_all.png"
 
 class ConfigSetup():
@@ -157,9 +171,11 @@ class ConfigSetup():
 
             # harmonics
             "harmonics_img_cut": [170, 260, 600, 213],
+            ConfigROI.harmonics_text_img: [n*x for x in [165, 230, 620, 240]],
             "harmonics_title": [n*x for x in [160, 120, 630, 53]],
-            "harmonics_sub_title_1": [n*x for x in [160, 180, 270, 80]], # dropdown 버튼 + THD Fund.
+            ConfigROI.harmonics_sub_title_1: [n*x for x in [160, 180, 270, 80]], # dropdown 버튼 + THD Fund.
             "harmonics_sub_title_2": [n*x for x in [440, 180, 350, 40]], # Fund. ~ C
+            ConfigROI.harmonics_text_title: [n*x for x in [160, 180, 620, 40]],
             "harmonics_text_A": [n*x for x in [435, 220, 15, 21]],
             "harmonics_text_B": [n*x for x in [555, 220, 15, 21]],
             "harmonics_text_C": [n*x for x in [675, 220, 15, 21]],
@@ -171,12 +187,11 @@ class ConfigSetup():
             "harmonics_Fund_C": [n*x for x in [705, 241, 70, 23]],
 
             #Waveform
-            EnumConfigROI.waveform_all_img_cut: [170, 179, 610, 286],
-            EnumConfigROI.waveform_graph_img_cut: [313, 253, 411, 203],
-            EnumConfigROI.waveform_title: [n*x for x in [160, 120, 630, 53]],
-            EnumConfigROI.harmonics_graph_img_cut: [313, 283, 455, 173],
-            
-            "test01" : [n*x for x in [170, 250, 80, 200]],
+            ConfigROI.waveform_all_img_cut: [170, 179, 610, 286],
+            ConfigROI.waveform_graph_img_cut: [313, 253, 411, 203],
+            ConfigROI.waveform_title: [n*x for x in [160, 120, 630, 53]],
+            ConfigROI.harmonics_graph_img_cut: [313, 283, 455, 173],
+            ConfigROI.harmonics_chart_img_cut: [250, 260, 495, 214],
         }
         return params
     
@@ -216,14 +231,17 @@ class ConfigSetup():
             "N_Max": ["A", "B", "c", "Average"],
             "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
             "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
-            EnumConfig.harmonics_for_img: ["Harmonics", "Voltage", "Current"],
-            EnumConfig.harmonics_vol_3p4w: ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "c"],
-            EnumConfig.harmonics_curr: ["Harmonics", "Voltage", "Current", "[A]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
-            EnumConfig.waveform_3p4w: ["Waveform", "Voltage", "Current"],
+            ConfigTextRef.harmonics_for_img: ["Harmonics", "Voltage", "Current"],
+            ConfigTextRef.harmonics_vol_3p4w: ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "c"],
+            ConfigTextRef.harmonics_curr: ["Harmonics", "Voltage", "Current", "[A]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
+            ConfigTextRef.harmonics_per_fund: ["Harmonics", "Voltage", "Current","[%]Fund", "Graph", "THD", "Fund."],
+            ConfigTextRef.harmonics_per_rms: ["Harmonics", "Voltage", "Current","[%]RMS", "Graph", "THD", "Fund."],
+            ConfigTextRef.harmonics_text: ["Harmonics", "Voltage", "Current", "[v]", "Text"],
+            ConfigTextRef.waveform_3p4w: ["Waveform", "Voltage", "Current"],
             "volt_sym": ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence"],
-            EnumConfig.unbal_vol: ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"],
-            EnumConfig.symm_curr: ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
-            EnumConfig.unbal_curr: ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"],
+            ConfigTextRef.unbal_vol: ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"],
+            ConfigTextRef.symm_curr: ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
+            ConfigTextRef.unbal_curr: ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"],
         }
 
         m_setup = {
@@ -359,17 +377,22 @@ class ConfigSetup():
             "Max": [720, 150],
             "thd_L_L": [520, 150],
             "thd_L_N": [620, 150],
-            EnumConfigTouch.touch_analysis_vol: [590, 150],
-            EnumConfigTouch.touch_analysis_curr: [720, 150],
-            EnumConfigTouch.touch_harmonics_fund: [510, 200],
+            ConfigTouch.touch_analysis_vol: [590, 150],
+            ConfigTouch.touch_analysis_curr: [720, 150],
+            ConfigTouch.touch_harmonics_fund: [510, 200],
+            ConfigTouch.touch_harmonics_submenu_1: [230, 200],
+            ConfigTouch.touch_harmonics_submenu_2: [360, 200],
+            ConfigTouch.touch_harmonics_sub_v: [230, 240],
+            ConfigTouch.touch_harmonics_sub_fund: [230, 285],
+            ConfigTouch.touch_harmonics_sub_rms: [230, 330],
             "phasor_vll": [620, 210],
             "phasor_vln": [720, 210],
-            EnumConfigTouch.touch_wave_vol_a: [360, 200],
-            EnumConfigTouch.touch_wave_vol_b: [430, 200],
-            EnumConfigTouch.touch_wave_vol_c: [490, 200],
-            EnumConfigTouch.touch_wave_curr_a: [620, 200],
-            EnumConfigTouch.touch_wave_curr_b: [680, 200],
-            EnumConfigTouch.touch_wave_curr_c: [740, 200],
+            ConfigTouch.touch_wave_vol_a: [360, 200],
+            ConfigTouch.touch_wave_vol_b: [430, 200],
+            ConfigTouch.touch_wave_vol_c: [490, 200],
+            ConfigTouch.touch_wave_curr_a: [620, 200],
+            ConfigTouch.touch_wave_curr_b: [680, 200],
+            ConfigTouch.touch_wave_curr_c: [740, 200],
         }
         return coordinates
 
@@ -426,7 +449,7 @@ class ConfigSetup():
             "touch_mode": 57112,
             "setup_button_bit": 57120,
             "setup_button": 57121,
-            EnumConfig.addr_reset_max_min: 12002
+            ConfigTextRef.addr_reset_max_min: 12002
         }
 
         return coordinates

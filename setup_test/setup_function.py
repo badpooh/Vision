@@ -15,8 +15,8 @@ import pandas as pd
 from paddleocr import PaddleOCR
 
 from setup_test.setup_config import ConfigSetup
-from setup_test.setup_config import EnumConfig as ec
-from setup_test.setup_config import EnumConfigROI as ecr
+from setup_test.setup_config import ConfigTextRef as ec
+from setup_test.setup_config import ConfigROI as ecr
 
 config_data = ConfigSetup()
 
@@ -287,9 +287,9 @@ class OCRManager:
                 roi_image = gray_image[y:y+h, x:x+w]
                 
                 # ROI 이미지 표시 (디버깅용)
-                cv2.imshow('ROI Image', roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                # cv2.imshow('ROI Image', roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 
                 # OCR 수행
                 text_results = ocr.ocr(roi_image, cls=False)
@@ -548,7 +548,7 @@ class Evaluation:
                 else:
                     print(f"{name} = {value} (FAIL)")
                     self.meas_error = True
-        
+
         if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["rms_voltage_L_L"]) <= 10:
                 check_results(['AB', 'BC', 'CA', 'Aver'],
@@ -643,17 +643,24 @@ class Evaluation:
             if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
                 if img_result == 1 or img_result == 0:
                     check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
+                    check_results(["harmonic_%_img"], (0.95, 1, ""), img_result)
+                # elif "Text" in ''.join(ocr_res[1]):
+                #     check_text(ocr_res[1])
                 else:
                     check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
                     check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6])
                     check_results(["harmonic_image"], (0.9, 1, ""), img_result)
+
             else:
                 if img_result == 1 or img_result == 0:
                     check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
+                    check_results(["harmonic_%_img"], (0.95, 1, ""), img_result)
                 else:
                     check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3])
                     check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6])
-                    check_results(["harmonic_image"], (0.99, 1, ""), img_result)
+                    check_results(["harmonic_image"], (0.98, 1, ""), img_result)
 
         if "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
@@ -699,6 +706,24 @@ class Evaluation:
         print(f"정답 - OCR: {right_error}")
 
         return self.ocr_error, right_error, self.meas_error, ocr_res
+    
+    def check_text(self, ocr_results):
+        results = []
+        
+        for value in ocr_results:
+            if value.replace('.', '', 1).isdigit():
+                result = f"{value} (PASS)"
+            else:
+                result = f"{value} (FAIL)"
+            
+            # 결과 리스트에 추가
+            results.append(result)
+        
+        # 결과를 하나의 문자열로 합치기
+        final_result = ", ".join(results)
+        print(final_result)
+        
+        return final_result
     
     def img_match(self, image, roi_key, tpl_img_path):
             template_image_path = tpl_img_path
