@@ -6,13 +6,12 @@ from datetime import datetime
 import time
 
 from setup_test.setup_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
-from setup_test.setup_config import EnumConfig as ec
-from setup_test.setup_config import EnumConfigImageREF as ecir
-from setup_test.setup_config import EnumConfigROI as ecroi
-from setup_test.setup_config import EnumConfigTouch as ect
+from setup_test.setup_config import ConfigTextRef as ec
+from setup_test.setup_config import ConfigImgRef as ecir
+from setup_test.setup_config import ConfigROI as ecroi
+from setup_test.setup_config import ConfigTouch as ect
 
 image_directory = r"\\10.10.20.30\screenshot"
-
 
 class SetupProcess:
 
@@ -308,7 +307,6 @@ class SetupProcess:
         ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
 
-
 class DemoTest:
 
     touch_manager = TouchManager()
@@ -320,6 +318,9 @@ class DemoTest:
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
+
+    def __init__(self, stop_callback):
+        self.stop_callback = stop_callback
 
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
@@ -384,27 +385,42 @@ class DemoTest:
         self.touch_manager.menu_touch("meas_L-L")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase("rms_vol_L_L")
+        if self.stop_callback():
+            print("Test stopped")
+            return
 
         ### L-L min 검사 ###
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time("rms_vol_L_L", reset_time)
+        if self.stop_callback():
+            print("Test stopped")
+            return
 
         ### L-L max 검사 ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time("rms_vol_L_L", reset_time)
+        if self.stop_callback():
+            print("Test stopped")
+            return
 
         ### L-N 만 검사 ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.menu_touch("meas_L-N")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase("rms_vol_L_N")
+        if self.stop_callback():
+            print("Test stopped")
+            return
 
         ### L-N min 검사 ###
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time("rms_vol_L_N", reset_time)
+        if self.stop_callback():
+            print("Test stopped")
+            return
 
         ### L-N max 검사 ###
         self.touch_manager.menu_touch("Max")
@@ -413,7 +429,7 @@ class DemoTest:
 
         print("Voltage_RMS_Done")
 
-    def demo_mea_vol_fund(self):
+    async def demo_mea_vol_fund(self):
         reset_time = self.modbus_label.reset_max_min()
 
         ### L-L 만 검사 ###
@@ -829,7 +845,7 @@ class DemoTest:
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["harmonics_title", "harmonics_sub_title_1", "harmonics_sub_title_2",
+        roi_keys = ["harmonics_title", ecroi.harmonics_sub_title_1, "harmonics_sub_title_2",
                     "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
         roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
                          "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
@@ -844,7 +860,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_analysis_curr)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["harmonics_title", "harmonics_sub_title_1", "harmonics_sub_title_2",
+        roi_keys = ["harmonics_title", ecroi.harmonics_sub_title_1, "harmonics_sub_title_2",
                     "harmonics_text_A", "harmonics_text_B", "harmonics_text_C"]
         roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
                          "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
@@ -909,6 +925,57 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_wave_curr_c)
         self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_c.value)
 
+        ### [v], fund, rms 그래프 변화 확인 ###
+        ### voltage fund ###
+        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch("side_menu_2")
+        self.touch_manager.menu_touch(ect.touch_harmonics_submenu_1)
+        self.touch_manager.menu_touch(ect.touch_harmonics_sub_fund)
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
+        ocr_ref = ec.harmonics_per_fund
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_fund.value,)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
+
+        ### voltage rms ###
+        self.touch_manager.menu_touch(ect.touch_harmonics_submenu_1)
+        self.touch_manager.menu_touch(ect.touch_harmonics_sub_rms)
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
+        ocr_ref = ec.harmonics_per_rms
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_rms.value,)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
+
+        ### current fund ###
+        self.touch_manager.menu_touch(ect.touch_analysis_curr)
+        self.touch_manager.menu_touch(ect.touch_harmonics_submenu_1)
+        self.touch_manager.menu_touch(ect.touch_harmonics_sub_fund)
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
+        ocr_ref = ec.harmonics_per_fund
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_fund.value,)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
+
+        ### current rms ###
+        self.touch_manager.menu_touch(ect.touch_harmonics_submenu_1)
+        self.touch_manager.menu_touch(ect.touch_harmonics_sub_rms)
+        self.touch_manager.screenshot()
+        image_path = self.sp.load_image_file()
+        roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
+        ocr_ref = ec.harmonics_per_rms
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_rms.value,)
+        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
 
     def demo_mea_anal_waveform(self):
 
@@ -1041,8 +1108,14 @@ class DemoTest:
         self.sp.ocr_curr_4phase_time(ec.symm_curr)
 
     def testcode01(self):
-        image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_ref\waveform_ref_vol_bc123.png"
-        self.evaluation.img_detection(image_path, ecroi.color_waveform_vol_a.value, 3)
+        image_path = r"\\10.10.20.30\screenshot\10.10.26.159_2024-08-29_13_02_34_M_H_AN_Harmonics.png"
+        roi_keys = [ecroi.harmonics_text_img]
+        roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
+                         "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
+        ocr_ref = ec.harmonics_vol_3p4w
+        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        self.evaluation.check_text(ocr_img)
+
         print("Done")
 
     def demo_test_start(self):

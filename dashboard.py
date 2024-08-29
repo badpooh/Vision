@@ -11,12 +11,9 @@ from setup_test.setup_process import SetupProcess
 from setup_test.setup_process import DemoTest
 from frame_test.webcam_function import WebCam
 
-
 class MyDashBoard(QMainWindow, Ui_MainWindow):
 
-    ocr = ImgOCR()
-    meter_setup_process = SetupProcess()
-    meter_demo_test = DemoTest()
+    
 
     def __init__(self):
         super().__init__()
@@ -35,8 +32,11 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             "current": False,
             "power": False,
             "analysis": False,}
-        self.stop_thread = False
         self.thread = False
+        self.stop_thread = False
+        self.ocr = ImgOCR()
+        self.meter_setup_process = SetupProcess()
+        self.meter_demo_test = DemoTest(self.stop_callback)
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
@@ -117,11 +117,13 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def fixed_text_measurement(self):
         self.meter_setup_process.static_text_measurement()
 
+    def stop_callback(self):
+        return self.stop_thread
+
     def demo_ui_test_start(self):
-        # self.stop_thread = False
-        # self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
-        # self.thread.start()
-        self.demo_ui_test()
+        self.stop_thread = False
+        self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
+        self.thread.start()
 
     def demo_ui_test_stop(self):
         self.stop_thread = True
