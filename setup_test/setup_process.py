@@ -1111,6 +1111,8 @@ class DemoTest:
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\csvtest\2024-08-29_10_35_06_M_H_AN_Harmonics.png"
         roi_keys = [ecroi.harmonics_text_title ,ecroi.harmonics_text_img]
+        image_path = r"\\10.10.20.30\screenshot\10.10.26.159_2024-08-29_13_02_34_M_H_AN_Harmonics.png"
+        roi_keys = [ecroi.harmonics_text_img]
         roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
                          "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
         ocr_ref = ec.harmonics_vol_3p4w
