@@ -320,8 +320,8 @@ class DemoTest:
     now = datetime.now()
     file_time_diff = {}
 
-    def __init__(self, stop_callback):
-        self.stop_callback = stop_callback
+    def __init__(self, stop_event):
+        self.stop_event = stop_event
 
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
@@ -386,7 +386,7 @@ class DemoTest:
         self.touch_manager.menu_touch("meas_L-L")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase("rms_vol_L_L")
-        if self.stop_callback():
+        if self.stop_event.is_set():
             print("Test stopped")
             return
 
@@ -394,7 +394,7 @@ class DemoTest:
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time("rms_vol_L_L", reset_time)
-        if self.stop_callback():
+        if self.stop_event.is_set():
             print("Test stopped")
             return
 
@@ -402,7 +402,7 @@ class DemoTest:
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time("rms_vol_L_L", reset_time)
-        if self.stop_callback():
+        if self.stop_event.is_set():
             print("Test stopped")
             return
 
@@ -411,7 +411,7 @@ class DemoTest:
         self.touch_manager.menu_touch("meas_L-N")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase("rms_vol_L_N")
-        if self.stop_callback():
+        if self.stop_event.is_set():
             print("Test stopped")
             return
 
@@ -419,7 +419,7 @@ class DemoTest:
         self.touch_manager.menu_touch("Min")
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time("rms_vol_L_N", reset_time)
-        if self.stop_callback():
+        if self.stop_event.is_set():
             print("Test stopped")
             return
 
@@ -811,7 +811,7 @@ class DemoTest:
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vln.value, "phasor_L_N", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
 
         ### voltage vll ###
-        self.touch_manager.menu_touch("phas_har_curr")
+        self.touch_manager.menu_touch(ect.touch_analysis_vol)
         self.touch_manager.menu_touch("phasor_vll")
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
         
@@ -820,8 +820,8 @@ class DemoTest:
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vln.value, "phasor_L_N", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
 
         ### current vll ###
-        self.touch_manager.menu_touch("phas_har_curr")
-        self.touch_manager.menu_touch("phas_har_vol")
+        self.touch_manager.menu_touch(ect.touch_analysis_curr)
+        self.touch_manager.menu_touch(ect.touch_analysis_vol)
         self.touch_manager.menu_touch("phasor_vll")
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
         
@@ -830,7 +830,7 @@ class DemoTest:
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vln.value, "phasor_L_N", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
  
         ### nothing vll ###
-        self.touch_manager.menu_touch("phas_har_curr")
+        self.touch_manager.menu_touch(ect.touch_analysis_curr)
         self.touch_manager.menu_touch("phasor_vll")
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur")
         
@@ -979,7 +979,6 @@ class DemoTest:
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results)
 
     def demo_mea_anal_waveform(self):
-
         ### waveform basic ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -996,34 +995,35 @@ class DemoTest:
 
         ### waveform vol_a-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_a)
-        self.sp.ocr_graph_detection(ecroi.color_waveform_vol_a.value)
+        self.sp.ocr_graph_detection(roi_keys=[ecroi.waveform_title], ocr_ref=ec.waveform_3p4w, value=ecroi.color_waveform_vol_a.value)
 
         ### waveform vol_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_a)
         self.touch_manager.menu_touch(ect.touch_wave_vol_b)
-        self.sp.ocr_graph_detection(ecroi.color_waveform_vol_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_vol_b.value)
 
         ### waveform vol_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_b)
         self.touch_manager.menu_touch(ect.touch_wave_vol_c)
-        self.sp.ocr_graph_detection(ecroi.color_waveform_vol_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_vol_c.value)
 
         ### waveform curr_a-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_c)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a)
-        self.sp.ocr_graph_detection(ecroi.color_waveform_curr_a.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_curr_a.value)
 
         ### waveform curr_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_a)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b)
-        self.sp.ocr_graph_detection(ecroi.color_waveform_curr_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_curr_b.value)
 
         ### waveform curr_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_b)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c)
-        self.sp.ocr_graph_detection(ecroi.color_waveform_curr_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_curr_c.value)
      
     def demo_mea_anal_voltsym(self):
+        reset_time = self.modbus_label.reset_max_min()
         ### LL ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1044,7 +1044,7 @@ class DemoTest:
         roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
         ocr_ref = "volt_sym"
         time_keys = ["a_time_stamp", "b_time_stamp"]
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time)
         
         ### LN ###
         self.touch_manager.menu_touch("Max")
@@ -1064,9 +1064,10 @@ class DemoTest:
         roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
         ocr_ref = "volt_sym"
         time_keys = ["a_time_stamp", "b_time_stamp"]
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time)
         
     def demo_mea_anal_voltunbal(self):
+        reset_time = self.modbus_label.reset_max_min()
         ### vol unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1078,35 +1079,59 @@ class DemoTest:
         ### vol unbalance max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.unbal_vol)
+        self.sp.ocr_curr_4phase_time(ec.unbal_vol, reset_time)
         
     def demo_mea_anal_cursym(self):
+        reset_time = self.modbus_label.reset_max_min()
         ### symm ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_6")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.symm_curr)
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3",
+                         "a_meas", "b_meas", "c_meas"]
+        ocr_ref = ec.symm_curr
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
         
         ### symm max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.symm_curr)
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3",
+                         "a_meas", "b_meas", "c_meas"]
+        time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp"]
+        ocr_ref = ec.symm_curr
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time)
         
     def demo_mea_anal_currunbal(self):
-        ### symm ###
+        reset_time = self.modbus_label.reset_max_min()
+        ### current unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch("main_menu_4")
         self.touch_manager.menu_touch("side_menu_7")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.symm_curr)
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3",
+                         "a_meas", "b_meas", "c_meas"]
+        ocr_ref = ec.unbal_curr
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref)
         
         ### symm max ###
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.symm_curr)
+        image_path = self.sp.load_image_file()
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3",
+                         "a_meas", "b_meas", "c_meas"]
+        time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp"]
+        ocr_ref = ec.unbal_curr
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time)
 
     def testcode01(self):
         image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\csvtest\2024-08-29_10_35_06_M_H_AN_Harmonics.png"
@@ -1126,39 +1151,99 @@ class DemoTest:
         print("Done")
 
     def demo_test_start(self):
-        # self.modbus_label.demo_test_setting()
+        self.modbus_label.demo_test_setting()
         print("----------------DEMO TEST START----------------")
         
     def demo_test_voltage(self):
         self.demo_mea_vol_rms()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_vol_fund()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_vol_thd()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_vol_freq()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_vol_residual()
-        print("Done")
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         
     def demo_test_current(self):
         self.demo_mea_curr_rms()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_curr_fund()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_curr_thd()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_curr_tdd()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_curr_cf()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_curr_kf()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_curr_residual()
-        print("Done")
         
     def demo_test_power(self):
         self.demo_mea_pow_active()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_pow_reactive()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_pow_apparent()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_pow_pf()
-        print("Done")
         
     def demo_test_analysis(self):
         # self.demo_mea_anal_phasor()
-        self.demo_mea_anal_harmonics()
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_harmonics()
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
         # self.demo_mea_anal_waveform()
-        print("Done")
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_voltsym()
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        self.demo_mea_anal_voltunbal()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_cursym()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_currunbal()
 
     def testcode03(self):
         # self.modbus_label.demo_test_setting()

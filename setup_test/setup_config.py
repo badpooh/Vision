@@ -65,7 +65,7 @@ class ConfigTouch(Enum):
     touch_harmonics_sub_rms = "touch_harmonics_sub_rms"
 
 class ConfigColor(Enum):
-    color_harmonics_vol_a = [313, 253, 411, 203, 0, 0, 0]
+    color_harmonics_vol_a = [313, 253, 411, 203, 0, 0, 0],
 
 class ConfigImgRef(Enum):
     img_ref_phasor_all_vll = r".\image_ref\phasor_ref_all_vll.png"

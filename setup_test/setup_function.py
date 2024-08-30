@@ -406,9 +406,15 @@ class ModbusLabels:
             for value in values:
                 self.response = self.modbus_manager.setup_client.write_register(addr_setup_lock, value)
                 time.sleep(0.6)
-            value_32bit = 1900
-            high_word = (value_32bit >> 16) & 0xFFFF  # 상위 16비트
-            low_word = value_32bit & 0xFFFF
+            vol_value_32bit = 1900
+            high_word = (vol_value_32bit >> 16) & 0xFFFF  # 상위 16비트
+            low_word = vol_value_32bit & 0xFFFF
+            self.response = self.modbus_manager.setup_client.read_holding_registers(6000, 100)
+            self.response = self.modbus_manager.setup_client.read_holding_registers(6100, 100)
+            self.response = self.modbus_manager.setup_client.read_holding_registers(6200, 3)
+            if self.response.isError():
+                print(f"Error reading registers: {self.response}")
+                return
             self.response = self.modbus_manager.setup_client.write_register(6001, 0)
             self.response = self.modbus_manager.setup_client.write_registers(6003, [high_word, low_word])
             self.response = self.modbus_manager.setup_client.write_registers(6005, [high_word, low_word])
@@ -435,7 +441,7 @@ class ModbusLabels:
                 self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
                 time.sleep(0.6)
             self.response = self.modbus_manager.setup_client.write_register(ec.addr_reset_max_min.value, 1)
-            print("Done")
+            print("Max/Min Reset")
         else:
             print(self.response.isError())
         self.reset_time = datetime.now()
@@ -582,7 +588,7 @@ class Evaluation:
             check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3])
 
         if "Total Demand" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (0, 1, "%"), ocr_res_meas[:3])
+            check_results(["A", "B", "C"], (1, 2.5, "%"), ocr_res_meas[:3])
 
         if "Crest Factor" in ''.join(ocr_res[0]):
             check_results(["A", "B", "C"], (1.3, 1.6, ""), ocr_res_meas[:3])
@@ -751,9 +757,9 @@ class Evaluation:
         x, y, w, h, R, G, B = color_data
         cut_img = image[y:y+h, x:x+w]
 
-        # cv2.imshow('Image', cut_img)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
+        cv2.imshow('Image', cut_img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         
         target_color = np.array([B, G, R])
         diff = np.abs(cut_img - target_color)

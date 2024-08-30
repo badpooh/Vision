@@ -36,7 +36,8 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stop_thread = False
         self.ocr = ImgOCR()
         self.meter_setup_process = SetupProcess()
-        self.meter_demo_test = DemoTest(self.stop_callback)
+        self.stop_event = threading.Event()
+        self.meter_demo_test = DemoTest(self.stop_event)
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
@@ -121,12 +122,12 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         return self.stop_thread
 
     def demo_ui_test_start(self):
-        self.stop_thread = False
+        self.stop_event.clear()
         self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
         self.thread.start()
 
     def demo_ui_test_stop(self):
-        self.stop_thread = True
+        self.stop_event.set()
         if self.thread is not None:
             self.thread.join()
 
@@ -134,12 +135,16 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.meter_demo_test.demo_test_start()
         if self.checkbox_states["voltage"]:
             self.meter_demo_test.demo_test_voltage()
+            print("Voltage_DemoTest_Done")
         if self.checkbox_states["current"]:
             self.meter_demo_test.demo_test_current()
+            print("Current_DemoTest_Done")
         if self.checkbox_states["power"]:
             self.meter_demo_test.demo_test_power()
+            print("Power_DemoTest_Done")
         if self.checkbox_states["analysis"]:
             self.meter_demo_test.demo_test_analysis()
+            print("Analysis_DemoTest_Done")
         else:
             print("Done or Nothing to execute")
 
