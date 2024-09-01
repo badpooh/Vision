@@ -1,6 +1,7 @@
 from PySide6.QtGui import QIcon, QCursor
-from PySide6.QtCore import QSize, Qt
-from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy
+from PySide6.QtCore import QSize, Qt, QTimer
+from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy, QMessageBox
 from resources_rc import *
 import threading
 
@@ -9,11 +10,10 @@ from modules.ocr_setting import OcrSetting
 from modules.ocr_process import ImgOCR
 from setup_test.setup_process import SetupProcess
 from setup_test.setup_process import DemoTest
+from setup_test.setup_function import ModbusManager
 from frame_test.webcam_function import WebCam
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
-
-    
 
     def __init__(self):
         super().__init__()
@@ -35,7 +35,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.thread = False
         self.stop_thread = False
         self.ocr = ImgOCR()
+        self.modbus_manager = ModbusManager()
         self.meter_setup_process = SetupProcess()
+        self.alarm = Alarm()
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
 
@@ -57,6 +59,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_demo_mode_ui_test_2.clicked.connect(self.demo_ui_test_stop)
         self.pushButton_2.clicked.connect(self.ocr_start)
         self.debug_button.clicked.connect(self.debug_test)
+        self.input_ip.returnPressed.connect(self.input_ip_return_pressed)
 
         self.checkBox_voltage.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
         self.checkBox_current.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "current"))
@@ -67,6 +70,13 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.scrollAreaWidgetContents.setLayout(self.scrollAreaLayout)
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
+        
+    def input_ip_return_pressed(self):
+        self.device_ip_address = self.input_ip.text()
+        self.modbus_manager.set_server_ip(self.device_ip_address)
+        self.input_ip.setStyleSheet("background-color: lightgray;")
+        QTimer.singleShot(2000, lambda: self.input_ip.setStyleSheet("background-color: white;"))
+            
 
     def on_checkbox_changed(self, state, key):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
@@ -95,10 +105,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(3)
 
     def setup_connect(self):
-        self.meter_setup_process.modbus_connect()
+        self.modbus_manager.start_monitoring()
 
     def setup_disconnect(self):
-        self.meter_setup_process.modbus_discon()
+        self.modbus_manager.tcp_disconnect()
 
     def setup_start(self):
         self.meter_setup_process.setup_test001()
@@ -122,9 +132,13 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         return self.stop_thread
 
     def demo_ui_test_start(self):
-        self.stop_event.clear()
-        self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
-        self.thread.start()
+        if self.modbus_manager.is_connected == True:
+            self.stop_event.clear()
+            self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
+            self.thread.start()
+        else:
+            self.alarm.show_connection_error()
+            
 
     def demo_ui_test_stop(self):
         self.stop_event.set()
@@ -279,3 +293,13 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             tc_box_index, callback=self.callback_ocr_list, load_callback=self.callback_ocr_load)
         ocr_setting.show()
         self.ocr_settings[tc_box_index] = ocr_setting
+        
+class Alarm:
+    
+    def show_connection_error(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setWindowTitle("Connection Error")
+        msg.setText("장치와 미연결 상태")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()

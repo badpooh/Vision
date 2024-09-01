@@ -14,10 +14,11 @@ from setup_test.setup_config import ConfigTouch as ect
 
 image_directory = r"\\10.10.20.30\screenshot"
 
+
 class SetupProcess:
 
     touch_manager = TouchManager()
-    modbus_manager = ModbusManager()
+    modbus_manager = ModbusManager() 
     ocr_func = OCRManager()
     evaluation = Evaluation()
     modbus_label = ModbusLabels()
@@ -29,7 +30,7 @@ class SetupProcess:
         self.coords_touch = self.touch_manager.coords_touch
         self.coords_color = self.touch_manager.coords_color
         self.coords_TA = self.touch_manager.coords_TA
-
+        
     def modbus_connect(self):
         self.modbus_manager.start_monitoring()
 

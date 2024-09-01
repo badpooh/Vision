@@ -584,10 +584,10 @@ QPushButton:checked{
           <widget class="QPushButton" name="btn_connect">
            <property name="geometry">
             <rect>
-             <x>30</x>
-             <y>20</y>
+             <x>190</x>
+             <y>30</y>
              <width>101</width>
-             <height>41</height>
+             <height>31</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -615,10 +615,10 @@ QPushButton:pressed {
           <widget class="QPushButton" name="btn_disconnect">
            <property name="geometry">
             <rect>
-             <x>140</x>
-             <y>20</y>
+             <x>310</x>
+             <y>30</y>
              <width>91</width>
-             <height>41</height>
+             <height>31</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -658,7 +658,7 @@ QPushButton:pressed {
           <widget class="QPushButton" name="btn_demo_mode_ui_test">
            <property name="geometry">
             <rect>
-             <x>40</x>
+             <x>190</x>
              <y>110</y>
              <width>121</width>
              <height>41</height>
@@ -684,7 +684,7 @@ UI TEST START </string>
           <widget class="QCheckBox" name="checkBox_voltage">
            <property name="geometry">
             <rect>
-             <x>220</x>
+             <x>20</x>
              <y>120</y>
              <width>79</width>
              <height>20</height>
@@ -697,7 +697,7 @@ UI TEST START </string>
           <widget class="QCheckBox" name="checkBox_current">
            <property name="geometry">
             <rect>
-             <x>220</x>
+             <x>20</x>
              <y>160</y>
              <width>79</width>
              <height>20</height>
@@ -710,7 +710,7 @@ UI TEST START </string>
           <widget class="QCheckBox" name="checkBox_power">
            <property name="geometry">
             <rect>
-             <x>220</x>
+             <x>20</x>
              <y>200</y>
              <width>79</width>
              <height>20</height>
@@ -723,7 +723,7 @@ UI TEST START </string>
           <widget class="QCheckBox" name="checkBox_analysis">
            <property name="geometry">
             <rect>
-             <x>220</x>
+             <x>20</x>
              <y>240</y>
              <width>79</width>
              <height>20</height>
@@ -749,7 +749,7 @@ UI TEST START </string>
           <widget class="QPushButton" name="btn_demo_mode_ui_test_2">
            <property name="geometry">
             <rect>
-             <x>40</x>
+             <x>190</x>
              <y>170</y>
              <width>121</width>
              <height>41</height>
@@ -770,6 +770,27 @@ QPushButton:pressed {
            <property name="text">
             <string>Demo Mode 
 UI TEST STOP</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="input_ip">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>30</y>
+             <width>151</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="inputMask">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>Enter IP address</string>
            </property>
           </widget>
          </widget>

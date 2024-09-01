@@ -23,14 +23,21 @@ config_data = ConfigSetup()
 
 class ModbusManager:
 
-    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
+    #'10.10.26.159'  # 장치 IP 주소
     TOUCH_PORT = 5100  # 내부터치
     SETUP_PORT = 502  # 설정
 
     def __init__(self):
+        self.SERVER_IP = "10.10.10.10"
         self.is_connected = False
+        self.touch_client = None
+        self.setup_client = None
+        
+    def set_server_ip(self, ip):
+        self.SERVER_IP = ip
         self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
         self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        print(f"Server IP set to {self.SERVER_IP}. Clients reinitialized.")
 
     def tcp_connect(self):
         if self.touch_client.connect() and self.setup_client.connect():
@@ -40,6 +47,8 @@ class ModbusManager:
             print("Failed to connect touch client")
         if not self.setup_client.connect():
             print("Failed to connect setup client")
+        else:
+            print("Tcp connect Error")
 
     def check_connection(self):
         while self.is_connected:
