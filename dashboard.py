@@ -10,7 +10,7 @@ from modules.ocr_setting import OcrSetting
 from modules.ocr_process import ImgOCR
 from setup_test.setup_process import SetupProcess
 from setup_test.setup_process import DemoTest
-from setup_test.setup_function import ModbusManager
+from setup_test.setup_function import ModbusManager, ModbusLabels
 from frame_test.webcam_function import WebCam
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
@@ -36,7 +36,8 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stop_thread = False
         self.ocr = ImgOCR()
         self.modbus_manager = ModbusManager()
-        self.meter_setup_process = SetupProcess()
+        self.modbus_labels = ModbusLabels(self.modbus_manager)
+        self.meter_setup_process = SetupProcess(self.modbus_manager)
         self.alarm = Alarm()
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
@@ -74,6 +75,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def input_ip_return_pressed(self):
         self.device_ip_address = self.input_ip.text()
         self.modbus_manager.set_server_ip(self.device_ip_address)
+        self.modbus_labels.update_clients()
         self.input_ip.setStyleSheet("background-color: lightgray;")
         QTimer.singleShot(2000, lambda: self.input_ip.setStyleSheet("background-color: white;"))
             
@@ -105,7 +107,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(3)
 
     def setup_connect(self):
-        self.modbus_manager.start_monitoring()
+        self.meter_setup_process.modbus_connect()
 
     def setup_disconnect(self):
         self.modbus_manager.tcp_disconnect()

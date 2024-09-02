@@ -17,16 +17,18 @@ image_directory = r"\\10.10.20.30\screenshot"
 
 class SetupProcess:
 
-    touch_manager = TouchManager()
+    # touch_manager = TouchManager()
     modbus_manager = ModbusManager() 
     ocr_func = OCRManager()
     evaluation = Evaluation()
-    modbus_label = ModbusLabels()
+    modbus_label = ModbusLabels(modbus_manager)
     search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
     now = datetime.now()
     file_time_diff = {}
 
-    def __init__(self):
+    def __init__(self, modbus_manager):
+        self.touch_manager = TouchManager()
+        self.modbus_manager = modbus_manager
         self.coords_touch = self.touch_manager.coords_touch
         self.coords_color = self.touch_manager.coords_color
         self.coords_TA = self.touch_manager.coords_TA
@@ -315,8 +317,8 @@ class DemoTest:
     modbus_manager = ModbusManager()
     ocr_func = OCRManager()
     evaluation = Evaluation()
-    modbus_label = ModbusLabels()
-    sp = SetupProcess()
+    modbus_label = ModbusLabels(modbus_manager)
+    sp = SetupProcess(modbus_manager)
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
@@ -431,7 +433,7 @@ class DemoTest:
 
         print("Voltage_RMS_Done")
 
-    async def demo_mea_vol_fund(self):
+    def demo_mea_vol_fund(self):
         reset_time = self.modbus_label.reset_max_min()
 
         ### L-L 만 검사 ###

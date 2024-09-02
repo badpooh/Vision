@@ -23,17 +23,19 @@ config_data = ConfigSetup()
 
 class ModbusManager:
 
-    #'10.10.26.159'  # 장치 IP 주소
+    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
     TOUCH_PORT = 5100  # 내부터치
     SETUP_PORT = 502  # 설정
 
     def __init__(self):
-        self.SERVER_IP = "10.10.10.10"
+        # self.SERVER_IP = "10.10.10.10"
         self.is_connected = False
         self.touch_client = None
         self.setup_client = None
+        # self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
+        # self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
         
-    def set_server_ip(self, ip):
+    def set_server_ip(self, ip=None):
         self.SERVER_IP = ip
         self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
         self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
@@ -43,12 +45,11 @@ class ModbusManager:
         if self.touch_client.connect() and self.setup_client.connect():
             self.is_connected = True
             print("is connected")
-        if not self.touch_client.connect():
-            print("Failed to connect touch client")
-        if not self.setup_client.connect():
-            print("Failed to connect setup client")
         else:
-            print("Tcp connect Error")
+            if not self.touch_client.connect():
+                print("Failed to connect touch client")
+            if not self.setup_client.connect():
+                print("Failed to connect setup client")
 
     def check_connection(self):
         while self.is_connected:
@@ -321,11 +322,19 @@ class OCRManager:
 
 class ModbusLabels:
 
-    modbus_manager = ModbusManager()
     touch_manager = TouchManager()
-    setup_client = modbus_manager.setup_client
+    modbus_manager = ModbusManager()
+    
     meter_m_vol_mappings_value, meter_m_vol_mappings_uint16, meter_m_vol_mappings_uint32 = config_data.meter_m_vol_mapping()
     meter_m_cur_mappings_value, meter_m_cur_mappings_uint16, meter_m_cur_mappings_uint32 = config_data.meter_m_cur_mapping()
+
+    def __init__(self, modbus_manager):
+        self.modbus_manager = modbus_manager
+        self.update_clients()
+
+    def update_clients(self):
+        self.setup_client = self.modbus_manager.setup_client
+
 
     def read_all_modbus_values(self):
         self.read_results = {}
