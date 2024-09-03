@@ -6,19 +6,19 @@ from datetime import datetime
 import time
 import re
 
-from setup_test.setup_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
-from setup_test.setup_config import ConfigTextRef as ec
-from setup_test.setup_config import ConfigImgRef as ecir
-from setup_test.setup_config import ConfigROI as ecroi
-from setup_test.setup_config import ConfigTouch as ect
+from demo_test.demo_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
+from demo_test.demo_config import ConfigTextRef as ec
+from demo_test.demo_config import ConfigImgRef as ecir
+from demo_test.demo_config import ConfigROI as ecroi
+from demo_test.demo_config import ConfigTouch as ect
 
 image_directory = r"\\10.10.20.30\screenshot"
 
 
-class SetupProcess:
+class DemoProcess:
 
     touch_manager = TouchManager()
-    modbus_manager = ModbusManager() 
+    modbus_manager = ModbusManager()
     ocr_func = OCRManager()
     evaluation = Evaluation()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
@@ -35,61 +35,6 @@ class SetupProcess:
 
     def modbus_discon(self):
         self.modbus_manager.tcp_disconnect()
-
-    def ST_measurement(self):
-        self.touch_manager.menu_touch("main_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.screenshot()
-        time.sleep(0.6)
-        image_path = self.load_image_file()
-        time.sleep(1)
-        self.static_text_measurement(
-            image_path, "measurement", "mea_voltage", self.evaluation.label_voltage)
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_2")
-        time.sleep(0.6)
-        self.touch_manager.screenshot()
-        time.sleep(0.6)
-        image_path1 = self.load_image_file()
-        time.sleep(1)
-        self.static_text_measurement(
-            image_path1, "measurement", "mea_current", self.evaluation.label_current)
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_3")
-        time.sleep(0.6)
-        self.touch_manager.screenshot()
-        time.sleep(0.6)
-        image_path2 = self.load_image_file()
-        time.sleep(1)
-        self.static_text_measurement(
-            image_path2, "measurement", "mea_demand", self.evaluation.label_demand)
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_4")
-        time.sleep(0.6)
-        self.touch_manager.screenshot()
-        time.sleep(0.6)
-        image_path3 = self.load_image_file()
-        time.sleep(1)
-        self.static_text_measurement(
-            image_path3, "measurement", "mea_power", self.evaluation.label_power)
-
-    def PT_measurement(self):
-        self.touch_manager.menu_touch("main_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("side_menu_1")
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("data_view_2")
-        time.sleep(0.6)
-        self.touch_manager.screenshot()
-        time.sleep(0.6)
-        self.touch_manager.menu_touch("btn_cancel")
-        time.sleep(0.6)
-        image_path = self.load_image_file()
-        roi_keys = ["20", "21"]
-        select_ocr = "2"
-        self.static_popup_text(image_path, select_ocr, roi_keys)
 
     def load_image_file(self):
         self.now = datetime.now()
@@ -109,66 +54,7 @@ class SetupProcess:
 
         return self.latest_image_path
 
-    def read_setup_mapping(self):
-        modbus_results = self.modbus_label.read_all_modbus_values()
-        for description, value in modbus_results.items():
-            print(f"{description}: {value}")
-
-    def static_text_measurement(self, image_path, color1, color2, select_ocr, roi_keys):
-        test_image_path = image_path
-        image = cv2.imread(test_image_path)
-        color_result = self.ocr_func.color_detection(
-            image, *self.coords_color[color1])
-        color_result1 = self.ocr_func.color_detection(
-            image, *self.coords_color[color2])
-
-        if color_result < 5 and color_result1 < 5:
-            roi_keys = ["1", "2", "5", "6", "9", "10", "13", "14"]
-            cutted_image = self.ocr_func.ocr_basic(
-                image=test_image_path, roi_keys=roi_keys)
-            select_ocr = ["1"]
-            ocr_error, right_error = self.evaluation.eval_static_text(
-                cutted_image, select_ocr)
-            if not ocr_error and not right_error:
-                print("PASS")
-            else:
-                print("FAIL: different text")
-        else:
-            print("FAIL: different menu")
-
-    def static_popup_text(self, image_path, select_ocr, roi_keys):
-        test_image_path = image_path
-        cutted_image = self.ocr_func.ocr_basic(
-            image=test_image_path, roi_keys=roi_keys)
-        ocr_error, right_error = self.evaluation.eval_static_text(
-            cutted_image, select_ocr)
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
-        return
-
-    def variable_text(self, image_path, select_ocr, roi_keys, roi_key):
-        test_image_path = image_path
-
-        # 첫 번째 이미지 처리
-        cutted_images = self.ocr_func.ocr_basic(
-            image=test_image_path, roi_keys=roi_keys)
-
-        # 두 번째 이미지 처리
-        ocr_calcul_results = self.ocr_func.ocr_basic(
-            image=test_image_path, roi_keys=roi_key)
-
-        # OCR 결과 비교
-        ocr_error, right_error = self.evaluation.eval_demo_test(
-            cutted_images, select_ocr, ocr_calcul_results)
-
-        if not ocr_error and not right_error:
-            print("PASS")
-        else:
-            print("FAIL: different text")
-
-    def ocr_process(self, image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys=None, reset_time=None):
+    def ocr_process(self, image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys=None, reset_time=None, base_save_path=None):
         """
         Args:
             image_path (str): The path to the image file.
@@ -188,9 +74,9 @@ class SetupProcess:
         if time_keys is not None:
             ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
             time_results = self.evaluation.check_time_diff(ocr_img_time, reset_time)
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path)
         else:
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path)
 
         return ocr_res
 
@@ -312,9 +198,10 @@ class DemoTest:
 
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
+    modbus_label = ModbusLabels()
     ocr_func = OCRManager()
     evaluation = Evaluation()
-    sp = SetupProcess()
+    sp = DemoProcess()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
@@ -1133,19 +1020,17 @@ class DemoTest:
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time)
 
     def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\csvtest\2024-08-29_10_35_06_M_H_AN_Harmonics.png"
-        roi_keys = [ecroi.harmonics_text_title ,ecroi.harmonics_text_img]
-        image_path = r"\\10.10.20.30\screenshot\10.10.26.159_2024-08-29_13_02_34_M_H_AN_Harmonics.png"
-        roi_keys = [ecroi.harmonics_text_img]
-        roi_keys_meas = ["harmonics_THD_A", "harmonics_THD_B", "harmonics_THD_C",
-                         "harmonics_Fund_A", "harmonics_Fund_B", "harmonics_Fund_C"]
-        ocr_ref = ec.harmonics_vol_3p4w
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        result = re.sub(r'[0-9.\s]', '', ocr_img[1])
-        if not result.strip() == None:
-            print("None")
-        else:
-            print(result)
+        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_28_35_M_H_AN_Curr_Symm.png"
+        reset_time = datetime.now()
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        base_save_path = os.path.expanduser(f"./results/{current_time}/")
+        os.makedirs(base_save_path, exist_ok=True)
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3",
+                         "a_meas", "b_meas", "c_meas"]
+        time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp"]
+        ocr_ref = ec.symm_curr
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
 
         print("Done")
 
@@ -1218,22 +1103,22 @@ class DemoTest:
         self.demo_mea_pow_pf()
         
     def demo_test_analysis(self):
-        # self.demo_mea_anal_phasor()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_harmonics()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_waveform()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_voltsym()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        self.demo_mea_anal_phasor()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_harmonics()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_waveform()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_voltsym()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_anal_voltunbal()
         if self.stop_event.is_set():
             print("Test stopped")

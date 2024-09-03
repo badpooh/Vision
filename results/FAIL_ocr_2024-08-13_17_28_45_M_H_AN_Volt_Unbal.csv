@@ -1,0 +1,6 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-09-03 21:41:41.369610),Img Match
+Max Voltage Unbalance,0.3 %,[] (PASS),[] (PASS),2024-08-13 17:28:07 / 1829614.36961 seconds (FAIL),
+NEMA,0.4 %,,,2024-08-13 17:28:31 / 1829590.36961 seconds (FAIL),
+NEMA,1.0 %,,,Time format error for 2024-08-1317:28:17: time data '2024-08-1317:28:17' does not match format '%Y-%m-%d %H:%M:%S',
+Negative- Sequence,0.9 %,,,2024-08-13 17:28:14 / 1829607.36961 seconds (FAIL),
+Zero- Sequence,,,,,

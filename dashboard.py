@@ -4,13 +4,15 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy, QMessageBox
 from resources_rc import *
 import threading
+import os
+from datetime import datetime
 
 from ui_dashboard import Ui_MainWindow
 from modules.ocr_setting import OcrSetting
 from modules.ocr_process import ImgOCR
-from setup_test.setup_process import SetupProcess
-from setup_test.setup_process import DemoTest
-from setup_test.setup_function import ModbusManager, ModbusLabels
+from demo_test.demo_process import DemoProcess
+from demo_test.demo_process import DemoTest
+from demo_test.demo_function import ModbusManager, ModbusLabels
 from frame_test.webcam_function import WebCam
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
@@ -36,8 +38,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stop_thread = False
         self.ocr = ImgOCR()
         self.modbus_manager = ModbusManager()
-        self.modbus_labels = ModbusLabels(self.modbus_manager)
-        self.meter_setup_process = SetupProcess(self.modbus_manager)
+        self.meter_setup_process = DemoProcess()
         self.alarm = Alarm()
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
@@ -60,7 +61,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_demo_mode_ui_test_2.clicked.connect(self.demo_ui_test_stop)
         self.pushButton_2.clicked.connect(self.ocr_start)
         self.debug_button.clicked.connect(self.debug_test)
-        self.input_ip.returnPressed.connect(self.input_ip_return_pressed)
+        # self.input_ip.returnPressed.connect(self.input_ip_return_pressed)
 
         self.checkBox_voltage.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
         self.checkBox_current.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "current"))
@@ -72,12 +73,12 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
         
-    def input_ip_return_pressed(self):
-        self.device_ip_address = self.input_ip.text()
-        self.modbus_manager.set_server_ip(self.device_ip_address)
-        self.modbus_labels.update_clients()
-        self.input_ip.setStyleSheet("background-color: lightgray;")
-        QTimer.singleShot(2000, lambda: self.input_ip.setStyleSheet("background-color: white;"))
+    # def input_ip_return_pressed(self):
+    #     self.device_ip_address = self.input_ip.text()
+    #     self.modbus_manager.set_server_ip(self.device_ip_address)
+    #     self.modbus_labels.update_clients()
+    #     self.input_ip.setStyleSheet("background-color: lightgray;")
+    #     QTimer.singleShot(2000, lambda: self.input_ip.setStyleSheet("background-color: white;"))
             
 
     def on_checkbox_changed(self, state, key):
@@ -141,13 +142,16 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         else:
             self.alarm.show_connection_error()
             
-
     def demo_ui_test_stop(self):
         self.stop_event.set()
         if self.thread is not None:
             self.thread.join()
 
     def demo_ui_test(self):
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        base_save_path = os.path.expanduser(f"./results/{current_time}/")
+        os.makedirs(base_save_path, exist_ok=True)
+        
         self.meter_demo_test.demo_test_start()
         if self.checkbox_states["voltage"]:
             self.meter_demo_test.demo_test_voltage()

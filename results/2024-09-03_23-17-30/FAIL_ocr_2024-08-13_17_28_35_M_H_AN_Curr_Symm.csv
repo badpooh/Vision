@@ -1,0 +1,7 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-09-03 23:17:30.096583),Img Match
+Max Curr. Symm. Component,,,,,
+Positive- Sequence,11,[] (PASS),[] (PASS),2024-08-13 17:27:52 / 1835378.096583 seconds (FAIL),
+Negative- Sequence,12,,,2024-08-13 17:27:27 / 1835403.096583 seconds (FAIL),
+Zero- Sequence,10,,,2024-08-13 17:27:25 / 1835405.096583 seconds (FAIL),
+,2.501 A,,,,
+,0.014 A,,,,
