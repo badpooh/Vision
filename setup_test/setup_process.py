@@ -21,7 +21,7 @@ class SetupProcess:
     modbus_manager = ModbusManager() 
     ocr_func = OCRManager()
     evaluation = Evaluation()
-    modbus_label = ModbusLabels(modbus_manager)
+    modbus_label = ModbusLabels()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
     now = datetime.now()
     file_time_diff = {}
@@ -317,7 +317,7 @@ class DemoTest:
     modbus_manager = ModbusManager()
     ocr_func = OCRManager()
     evaluation = Evaluation()
-    modbus_label = ModbusLabels(modbus_manager)
+    modbus_label = ModbusLabels()
     sp = SetupProcess(modbus_manager)
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
@@ -1154,7 +1154,7 @@ class DemoTest:
         print("Done")
 
     def demo_test_start(self):
-        self.modbus_label.demo_test_setting()
+        # self.modbus_label.demo_test_setting()
         print("----------------DEMO TEST START----------------")
         
     def demo_test_voltage(self):
@@ -1222,22 +1222,22 @@ class DemoTest:
         self.demo_mea_pow_pf()
         
     def demo_test_analysis(self):
-        # self.demo_mea_anal_phasor()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_harmonics()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_waveform()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_voltsym()
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        self.demo_mea_anal_phasor()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_harmonics()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_waveform()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_voltsym()
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_anal_voltunbal()
         if self.stop_event.is_set():
             print("Test stopped")

@@ -30,13 +30,13 @@ class ModbusManager:
     def __init__(self):
         # self.SERVER_IP = "10.10.10.10"
         self.is_connected = False
-        self.touch_client = None
-        self.setup_client = None
-        # self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
-        # self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        # self.touch_client = None
+        # self.setup_client = None
+        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
+        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
         
-    def set_server_ip(self, ip=None):
-        self.SERVER_IP = ip
+    def set_server_ip(self):
+        # self.SERVER_IP = ip
         self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
         self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
         print(f"Server IP set to {self.SERVER_IP}. Clients reinitialized.")
@@ -72,7 +72,6 @@ class ModbusManager:
         self.setup_client.close()
         self.is_connected = False
         print("is disconnected")
-
 
 class TouchManager:
 
@@ -232,7 +231,6 @@ class TouchManager:
         else:
             print("Button Apply Touch Error")
 
-
 class OCRManager:
 
     rois = config_data.roi_params()
@@ -319,17 +317,15 @@ class OCRManager:
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
 
-
 class ModbusLabels:
 
     touch_manager = TouchManager()
-    modbus_manager = ModbusManager()
     
     meter_m_vol_mappings_value, meter_m_vol_mappings_uint16, meter_m_vol_mappings_uint32 = config_data.meter_m_vol_mapping()
     meter_m_cur_mappings_value, meter_m_cur_mappings_uint16, meter_m_cur_mappings_uint32 = config_data.meter_m_cur_mapping()
 
-    def __init__(self, modbus_manager):
-        self.modbus_manager = modbus_manager
+    def __init__(self):
+        self.modbus_manager = ModbusManager()
         self.update_clients()
 
     def update_clients(self):

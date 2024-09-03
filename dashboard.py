@@ -36,7 +36,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stop_thread = False
         self.ocr = ImgOCR()
         self.modbus_manager = ModbusManager()
-        self.modbus_labels = ModbusLabels(self.modbus_manager)
+        self.modbus_labels = ModbusLabels()
         self.meter_setup_process = SetupProcess(self.modbus_manager)
         self.alarm = Alarm()
         self.stop_event = threading.Event()
@@ -148,7 +148,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             self.thread.join()
 
     def demo_ui_test(self):
-        self.meter_demo_test.demo_test_start()
+        self.modbus_labels.demo_test_setting()
         if self.checkbox_states["voltage"]:
             self.meter_demo_test.demo_test_voltage()
             print("Voltage_DemoTest_Done")
