@@ -14,9 +14,9 @@ import os
 import pandas as pd
 from paddleocr import PaddleOCR
 
-from setup_test.setup_config import ConfigSetup
-from setup_test.setup_config import ConfigTextRef as ec
-from setup_test.setup_config import ConfigROI as ecr
+from demo_test.demo_config import ConfigSetup
+from demo_test.demo_config import ConfigTextRef as ec
+from demo_test.demo_config import ConfigROI as ecr
 
 config_data = ConfigSetup()
 
@@ -29,15 +29,8 @@ class ModbusManager:
 
     def __init__(self):
         self.is_connected = False
-        # self.touch_client = None
-        # self.setup_client = None
         self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
         self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
-        
-    # def set_server_ip(self):
-    #     self.SERVER_IP = ip
-    #     self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
-    #     self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
 
     def tcp_connect(self):
         if self.touch_client.connect() and self.setup_client.connect():
@@ -70,6 +63,7 @@ class ModbusManager:
         self.setup_client.close()
         self.is_connected = False
         print("is disconnected")
+
 
 class TouchManager:
 
@@ -229,39 +223,13 @@ class TouchManager:
         else:
             print("Button Apply Touch Error")
 
+
 class OCRManager:
 
     rois = config_data.roi_params()
 
     def __init__(self):
         pass
-        # self.use_gpu = torch.cuda.is_available()
-
-    ########################## 이미지 커팅 기본 method ##########################
-
-    def image_cut(self, image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
-        height, width = image.shape[:2]
-        cropped_image = image[int(height*height_ratio_start):int(height*height_ratio_end),
-                              int(width*width_ratio_start):int(width*width_ratio_end)]
-        resized_image = cv2.resize(
-            cropped_image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-
-        ### 이미지 필터 ###
-        # gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        # _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
-        # alpha = 10.0 # Contrast control
-        # beta = -100 # Brightness control
-        # adjusted_image = cv2.convertScaleAbs(binary_image, alpha=alpha, beta=beta)
-        # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
-        # morph_image = cv2.morphologyEx(adjusted_image, cv2.MORPH_CLOSE, kernel)
-        # denoised_image = cv2.fastNlMeansDenoising(morph_image, None, 30, 7, 21)
-
-        # 이미지 블러 처리 및 선명하게 만들기
-        blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
-        sharpened_image = cv2.addWeighted(
-            resized_image, 1.5, blurred_image, -0.5, 0)
-        return sharpened_image
-    ####################################################
 
     def color_detection(self, image, color_data):
         x, y, w, h, R, G, B = color_data
@@ -273,7 +241,6 @@ class OCRManager:
         return color_difference
 
     def ocr_basic(self, image, roi_keys):
-        # 이미지 읽기 및 전처리
         image = cv2.imread(image)
         if image is None:
             print(f"이미지를 읽을 수 없습니다: {image}")
@@ -296,8 +263,7 @@ class OCRManager:
                 # cv2.imshow('ROI Image', roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
-                
-                # OCR 수행
+
                 text_results = ocr.ocr(roi_image, cls=False)
                 
                 if text_results:
@@ -315,93 +281,14 @@ class OCRManager:
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
 
+
 class ModbusLabels:
 
     touch_manager = TouchManager()
-    
-    meter_m_vol_mappings_value, meter_m_vol_mappings_uint16, meter_m_vol_mappings_uint32 = config_data.meter_m_vol_mapping()
-    meter_m_cur_mappings_value, meter_m_cur_mappings_uint16, meter_m_cur_mappings_uint32 = config_data.meter_m_cur_mapping()
+    modbus_manager = ModbusManager()
 
     def __init__(self):
         pass
-
-    def read_all_modbus_values(self):
-        self.read_results = {}
-        for address, info in self.meter_m_vol_mappings_value.items():
-            result = self.read_modbus_value(
-                address, self.meter_m_vol_mappings_value)
-            # self.results를 self.read_results로 바꿀껀데 검증 필요함
-            self.read_results[info["description"]] = result
-        for address, info in self.meter_m_vol_mappings_uint16.items():
-            result = self.read_uint16(address)
-            self.read_results[info["description"]] = result
-        for address, info in self.meter_m_vol_mappings_uint32.items():
-            result = self.read_uint32(address)
-            self.read_results[info["description"]] = result
-        for address, info in self.meter_m_cur_mappings_value.items():
-            result = self.read_modbus_value(
-                address, self.meter_m_cur_mappings_value)
-            self.read_results[info["description"]] = result
-        for address, info in self.meter_m_cur_mappings_uint16.items():
-            result = self.read_uint16(address)
-            self.read_results[info["description"]] = result
-        for address, info in self.meter_m_cur_mappings_uint32.items():
-            result = self.read_uint32(address)
-            self.read_results[info["description"]] = result
-        return self.read_results
-
-    def read_modbus_value(self, address, mapping):
-        response = self.setup_client.read_holding_registers(address, count=1)
-        if response.isError():
-            print("Error reading VALUE", address)
-            return None
-        else:
-            value = response.registers[0]
-            return mapping[address]["values"].get(value, "Unknown Value")
-
-    def read_uint16(self, address):
-        response = self.setup_client.read_holding_registers(address, count=1)
-        if response.isError():
-            print("Error reading UINT16", address)
-            return None
-        else:
-            value = response.registers[0]
-            return value
-
-    def read_uint32(self, address):
-        response = self.setup_client.read_holding_registers(address, count=2)
-        if response.isError():
-            print("Error reading UINT32", address)
-            return None
-        else:
-            high_register = response.registers[0]
-            low_register = response.registers[1]
-            value = (low_register << 16) + high_register
-            return value
-
-    def check_for_changes(self, initial_values):
-        if self.read_results:
-            current_values = self.read_results
-            changes = {}
-            for description, current_value in current_values.items():
-                initial_value = initial_values.get(description)
-                if initial_value != current_value:
-                    changes[description] = (initial_value, current_value)
-            return changes
-        else:
-            print("read_results is empty")
-
-    def display_changes(self, initial_values):
-        changes = self.check_for_changes(initial_values)
-        change_count = len(changes)
-        if changes:
-            print("Changes detected:")
-            for description, (initial, current) in changes.items():
-                print(f"Address {description}: Initial Value = {
-                      initial}, Current Value = {current}")
-        else:
-            print("No changes detected.")
-        return change_count
 
     def demo_test_setting(self):
         self.touch_manager.uitest_mode_start()
@@ -462,52 +349,7 @@ class Evaluation:
     rois = config_data.roi_params()
 
     def __init__(self):
-        self.labels = config_data.match_m_setup_labels()
-        self.pop_params = config_data.match_pop_labels()
         self.m_home, self.m_setup = config_data.match_m_setup_labels()
-
-    def eval_static_text(self, ocr_results_1, right_key):
-
-        right_list = self.pop_params[right_key]
-        ocr_right_1 = right_list
-
-        right_list_1 = [text.strip() for text in ocr_right_1]
-        ocr_list_1 = [result.strip() for result in ocr_results_1]
-
-        leave_ocr_all = [
-            result for result in ocr_list_1 if result not in right_list_1]
-        leave_right_all = [
-            text for text in right_list_1 if text not in ocr_list_1]
-
-        ocr_error = leave_ocr_all
-        right_error = leave_right_all
-
-        # OCR 결과와 매칭되지 않아 남은 단어
-        print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
-        print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
-
-        return ocr_error, right_error
-
-    def eval_variable_text(self, ocr_results_1, right_list):
-
-        ocr_right_1 = right_list
-
-        right_list_1 = [text.strip() for text in ocr_right_1]
-        ocr_list_1 = [result.strip() for result in ocr_results_1]
-
-        leave_ocr_all = [
-            result for result in ocr_list_1 if result not in right_list_1]
-        leave_right_all = [
-            text for text in right_list_1 if text not in ocr_list_1]
-
-        ocr_error = leave_ocr_all
-        right_error = leave_right_all
-
-        # OCR 결과와 매칭되지 않아 남은 단어
-        print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
-        print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
-
-        return ocr_error, right_error
 
     def eval_demo_test(self, ocr_res, right_key, ocr_res_meas=None, image_path=None, img_result=None):
         self.meas_error = False
@@ -702,9 +544,9 @@ class Evaluation:
             check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1])
             check_results(["I1"], (0, 1, "l2"), ocr_res_meas[1:2])
             check_results(["I1"], (0, 1, "l0"), ocr_res_meas[2:3])
-            check_results(["I1", "I2", "I0"], (2, 3), ocr_res_meas[3:4])
-            check_results(["I1", "I2", "I0"], (0, 0.1), ocr_res_meas[4:5])
-            check_results(["I1", "I2", "I0"], (0, 0.1), ocr_res_meas[5:6])
+            check_results(["I1"], (2, 3, "A"), ocr_res_meas[3:4])
+            check_results(["I2"], (0, 0.1, "A"), ocr_res_meas[4:5])
+            check_results(["I0"], (0, 0.1, "A"), ocr_res_meas[5:6])
             
         if "Current Unbalance" in ''.join(ocr_res[0]):
             check_results([""], (0, 1, "empty"), ocr_res_meas[0:1])
@@ -764,9 +606,9 @@ class Evaluation:
         x, y, w, h, R, G, B = color_data
         cut_img = image[y:y+h, x:x+w]
 
-        cv2.imshow('Image', cut_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow('Image', cut_img)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
         
         target_color = np.array([B, G, R])
         diff = np.abs(cut_img - target_color)
@@ -817,7 +659,7 @@ class Evaluation:
                 results.append(f"Time format error for {time_str}: {e}")
         return results
 
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None):
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None, base_save_path=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_results = time_results if time_results is not None else []
@@ -833,12 +675,20 @@ class Evaluation:
 
         csv_results = {
             "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
-            "Measurement": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
-            "OCR-Right": [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-1),
-            "Right-OCR": [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-1),
-            f"Time Stemp ({self.reset_time})": time_results + [None] * (num_entries - len(time_results)),
-            "Img Match": img_result + [None] * (num_entries-len(img_result)),
+            "Measurement": [None] + ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)-1),
+            "OCR-Right": [None] + [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-2),
+            "Right-OCR": [None] + [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-2),
+            f"Time Stemp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
+            "Img Match": [None] + img_result + [None] * (num_entries-len(img_result)-1),
         }
+        
+        for key in csv_results:
+            # print(f"{key} length: {len(value)}") 
+            csv_results[key] = csv_results[key][:num_entries]
+            if len(csv_results[key]) < num_entries:
+                csv_results[key].extend([None] * (num_entries - len(csv_results[key])))
+            else:
+                csv_results[key] = csv_results[key][:num_entries+1]
 
         df = pd.DataFrame(csv_results)
         
@@ -851,8 +701,8 @@ class Evaluation:
 
         image_file_name = os.path.splitext(file_name_without_ip)[0]
         
-        save_path = os.path.expanduser(f"./csvtest/{overall_result}_ocr_{image_file_name}.csv")
+        save_path = os.path.join(base_save_path, f"{overall_result}_ocr_{image_file_name}.csv")
 
         df.to_csv(save_path, index=False)
-        dest_image_path = os.path.join(os.path.dirname(save_path), file_name_without_ip)
+        dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
