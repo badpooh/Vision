@@ -1,0 +1,13 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (None),Img Match
+Phasor Voltage Current,,,,,
+VLL VLN,188.5 v,[] (PASS),[] (PASS),,"[0.9996436238288879, 1.0, 1.0]"
+Voltage,189.6 v,,,,
+AB BC CA,189.9 v,,,,
+Current,2.479 A,,,,
+A B C,2.483 A,,,,
+,2.493 A,,,,
+,30.2,,,,
+,-89.5,,,,
+,150.0,,,,
+,-30.0,,,,
+,-150.5,,,,

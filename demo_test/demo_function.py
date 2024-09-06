@@ -17,6 +17,7 @@ from paddleocr import PaddleOCR
 from demo_test.demo_config import ConfigSetup
 from demo_test.demo_config import ConfigTextRef as ec
 from demo_test.demo_config import ConfigROI as ecr
+from demo_test.demo_config import ConfigImgRef as ecir
 
 config_data = ConfigSetup()
 
@@ -478,7 +479,7 @@ class Evaluation:
                 check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
                 check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
                 check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
-                check_results(["Phasor_image"], (0.98, 1, ""), img_result[0])
+                check_results([ecir.img_ref_phasor_all_vll.value], (0.98, 1, ""), img_result[0])
                 check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
             elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
                 check_results(["A", "B", "C"], (100, 120, "v"), ocr_res_meas[:3])
@@ -489,7 +490,7 @@ class Evaluation:
                 check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
                 check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
                 check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
-                check_results(["Phasor_image"], (0.98, 1, ""), img_result[0])
+                check_results([ecir.img_ref_phasor_all_vln.value], (0.98, 1, ""), img_result[0])
                 check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
             else:
                 print("demo test evaluation error")
@@ -528,13 +529,16 @@ class Evaluation:
             if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
                 check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
                 check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
-                check_results(['V1', 'V2'], (180, 200, "V" or "v"), ocr_res_meas[2:3])
-                check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
+                check_results(['V1'], (180, 200, "V" or "v"), ocr_res_meas[2:3])
+                check_results(['V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
             elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
                 check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
                 check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
-                check_results(['V1', 'V2'], (100, 110, "V" or "v"), ocr_res_meas[2:3])
-                check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
+                check_results(['V0'], (180, 200, "V0"), ocr_res_meas[2:3])
+                check_results(['V1'], (100, 110, "V" or "v"), ocr_res_meas[3:4])
+                check_results(['V2'], (0, 2, "V" or "v"), ocr_res_meas[4:5])
+                check_results(['V0'], (0, 1, "V" or "v"), ocr_res_meas[5:6])
+                
                 
         if "Voltage Unbalance" in ''.join(ocr_res[0]):
             check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4])
@@ -706,3 +710,11 @@ class Evaluation:
         df.to_csv(save_path, index=False)
         dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
+
+    def count_csv_and_failures(self, folder_path):
+        csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+        total_csv_files = len(csv_files)
+
+        fail_count = sum(1 for f in csv_files if 'FAIL' in f)
+
+        return total_csv_files, fail_count

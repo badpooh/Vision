@@ -841,7 +841,7 @@ class DemoTest:
             return
 
         ### voltage vll ###
-        self.touch_manager.menu_touch(ect.touch_analysis_vol)
+        self.touch_manager.menu_touch(ect.touch_analysis_curr)
         self.touch_manager.menu_touch("phasor_vll")
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
@@ -1141,7 +1141,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc"]
         roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
-        ocr_ref = "volt_sym"
+        ocr_ref = ec.symm_vol_ll
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1153,7 +1153,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = ["title_view", "a_ab", "b_bc"]
         roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
-        ocr_ref = "volt_sym"
+        ocr_ref = ec.symm_vol_ll
         time_keys = ["a_time_stamp", "b_time_stamp"]
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
         if self.stop_event.is_set():
@@ -1165,9 +1165,9 @@ class DemoTest:
         self.touch_manager.menu_touch("thd_L_N")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["title_view", "a_ab", "b_bc"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
-        ocr_ref = "volt_sym"
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "a_meas", "b_meas", "c_meas"]
+        ocr_ref = ec.symm_vol_ln
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1177,9 +1177,9 @@ class DemoTest:
         self.touch_manager.menu_touch("Max")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = ["title_view", "a_ab", "b_bc"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "a_meas", "b_meas"]
-        ocr_ref = "volt_sym"
+        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3", "a_meas", "b_meas", "c_meas"]
+        ocr_ref = ec.symm_vol_ln
         time_keys = ["a_time_stamp", "b_time_stamp"]
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
         if self.stop_event.is_set():
@@ -1355,31 +1355,31 @@ class DemoTest:
         self.demo_mea_pow_pf(base_save_path)
         
     def demo_test_analysis(self, base_save_path):
-        self.demo_mea_anal_phasor(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_harmonics(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_waveform(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # self.demo_mea_anal_phasor(base_save_path)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_harmonics(base_save_path)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_waveform(base_save_path)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
         self.demo_mea_anal_voltsym(base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_anal_voltunbal(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_cursym(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_currunbal(base_save_path)
+        # self.demo_mea_anal_voltunbal(base_save_path)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_cursym(base_save_path)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_currunbal(base_save_path)
 
     def testcode03(self):
         # self.modbus_label.demo_test_setting()

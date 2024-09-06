@@ -44,6 +44,8 @@ class ConfigTextRef(Enum):
     harmonics_text = "harmonics_text"
     waveform_3p4w = "waveform_3p4w"
     unbal_vol = "unbal_vol"
+    symm_vol_ll = "symm_vol_ll"
+    symm_vol_ln = "symm_vol_ln"
     symm_curr = "symm_curr"
     unbal_curr = "unbal_curr"
     addr_reset_max_min = 12002
@@ -238,7 +240,8 @@ class ConfigSetup():
             ConfigTextRef.harmonics_per_rms: ["Harmonics", "Voltage", "Current","[%]RMS", "Graph", "THD", "Fund."],
             ConfigTextRef.harmonics_text: ["Harmonics", "Voltage", "Current", "[v]", "Text"],
             ConfigTextRef.waveform_3p4w: ["Waveform", "Voltage", "Current"],
-            "volt_sym": ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence"],
+            ConfigTextRef.symm_vol_ll: ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence"],
+            ConfigTextRef.symm_vol_ln: ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
             ConfigTextRef.unbal_vol: ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"],
             ConfigTextRef.symm_curr: ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
             ConfigTextRef.unbal_curr: ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"],

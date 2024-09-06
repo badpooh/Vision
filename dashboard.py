@@ -12,7 +12,7 @@ from modules.ocr_setting import OcrSetting
 from modules.ocr_process import ImgOCR
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
-from demo_test.demo_function import ModbusManager, ModbusLabels
+from demo_test.demo_function import ModbusManager, ModbusLabels, Evaluation
 from frame_test.webcam_function import WebCam
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
@@ -40,6 +40,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.modbus_manager = ModbusManager()
         self.meter_setup_process = DemoProcess()
         self.modbus_labels = ModbusLabels()
+        self.evaluation = Evaluation()
         self.alarm = Alarm()
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
@@ -167,6 +168,8 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             print("Analysis_DemoTest_Done")
         else:
             print("Done or Nothing to execute")
+        total_csv_files, fail_count = self.evaluation.count_csv_and_failures(base_save_path)
+        self.score.setText(f"{fail_count}/{total_csv_files}")
 
     def debug_test(self):
         self.meter_demo_test.testcode01()
