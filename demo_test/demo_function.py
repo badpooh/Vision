@@ -372,6 +372,7 @@ class Evaluation:
 
         def check_results(values, limits, ocr_meas_subset):
             self.condition_met = True
+            meas_results = []
 
             if isinstance(ocr_meas_subset, (float, int)):
                 results = {values[0]: str(ocr_meas_subset)}
@@ -394,16 +395,23 @@ class Evaluation:
                 text_matches = [lim for lim in limits if isinstance(lim, str)]
                 if any(text_match == value for text_match in text_matches):
                     print(f"{name or 'empty'} = {value} (PASS by text match)")
+                    meas_results.append(f"{name or 'empty'} = {value} (PASS by text)")
                     
                 elif numeric_value is not None and len(limits) >= 3 and isinstance(limits[0], (int, float)):
                     if limits[0] <= numeric_value <= limits[1] and limits[2] == unit:
                         print(f"{name} = {numeric_value}{unit} (PASS)")
+                        meas_results.append(f"{numeric_value}{unit} (PASS)")
                     else:
                         print(f"{name} = {value} (FAIL)")
+                        meas_results.append(f"{value} (FAIL)")
                         self.meas_error = True
                 else:
                     print(f"{name} = {value} (FAIL)")
+                    meas_results.append(f"{value} (FAIL)")
                     self.meas_error = True
+            return meas_results
+        
+        all_meas_results = []
 
         if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["rms_voltage_L_L"]) <= 10:
@@ -524,7 +532,6 @@ class Evaluation:
             else:
                 check_results(["waveform_img_detect"], (1, 1, ""), img_result)
 
-        
         if "Volt. Symm. Component" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
                 check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
@@ -539,32 +546,33 @@ class Evaluation:
                 check_results(['V2'], (0, 2, "V" or "v"), ocr_res_meas[4:5])
                 check_results(['V0'], (0, 1, "V" or "v"), ocr_res_meas[5:6])
                 
-                
         if "Voltage Unbalance" in ''.join(ocr_res[0]):
             check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4])
             check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8])
             
         if "Curr. Symm. Component" in ''.join(ocr_res[0]):
-            check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1])
-            check_results(["I1"], (0, 1, "l2"), ocr_res_meas[1:2])
-            check_results(["I1"], (0, 1, "l0"), ocr_res_meas[2:3])
-            check_results(["I1"], (2, 3, "A"), ocr_res_meas[3:4])
-            check_results(["I2"], (0, 0.1, "A"), ocr_res_meas[4:5])
-            check_results(["I0"], (0, 0.1, "A"), ocr_res_meas[5:6])
+            all_meas_results.extend(check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["I2"], (0, 1, "l2"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["I0"], (0, 1, "l0"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results(["I1"], (2, 3, "A"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["I2"], (0, 0.1, "A"), ocr_res_meas[4:5]))
+            all_meas_results.extend(check_results(["I0"], (0, 0.1, "A"), ocr_res_meas[5:6]))
             
         if "Current Unbalance" in ''.join(ocr_res[0]):
-            check_results([""], (0, 1, "empty"), ocr_res_meas[0:1])
-            check_results(["U2"], (0, 1, "U2"), ocr_res_meas[1:2])
-            check_results(["U0"], (0, 1, "U0"), ocr_res_meas[2:3])
-            check_results(["", "U2", "U0"], (0, 1, "%"), ocr_res_meas[3:6])
-
+            all_meas_results.extend(check_results([""], (0, 1, "empty"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["U2"], (0, 1, "U2"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["U0"], (0, 1, "U0"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results([""], (0, 1, "%"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["U2"], (0, 1, "%"), ocr_res_meas[4:5]))
+            all_meas_results.extend(check_results(["U0"], (0, 0.5, "%"), ocr_res_meas[5:6]))
+        
         if not self.condition_met:
             print("Nothing matching word")
 
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
 
-        return self.ocr_error, right_error, self.meas_error, ocr_res
+        return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results,
     
     def check_text(self, ocr_results):
         results = []
@@ -663,39 +671,43 @@ class Evaluation:
                 results.append(f"Time format error for {time_str}: {e}")
         return results
 
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None, base_save_path=None):
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None, base_save_path=None, all_meas_results=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_results = time_results if time_results is not None else []
         img_result = [img_result]
 
-        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time), len(img_result))
+        num_entries = max(len(ocr_img), len(ocr_img_meas)+1, len(ocr_img_time)+1, len(img_result)+1)
 
         overall_result = "PASS"
         if ocr_error or right_error or meas_error:
             overall_result = "FAIL"
         if any("FAIL" in result for result in time_results):
             overall_result = "FAIL"
+        
 
+        measurement_results = [f"{meas}" for meas in all_meas_results]
+        if len(measurement_results) < num_entries:
+            measurement_results = [None] + measurement_results + [None] * (num_entries - len(measurement_results) - 1)
+        
         csv_results = {
             "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
-            "Measurement": [None] + ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)-1),
+            "Measurement": measurement_results,
             "OCR-Right": [None] + [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-2),
             "Right-OCR": [None] + [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-2),
             f"Time Stemp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
             "Img Match": [None] + img_result + [None] * (num_entries-len(img_result)-1),
         }
         
+        # Ensure all columns have the same length
         for key in csv_results:
-            # print(f"{key} length: {len(value)}") 
             csv_results[key] = csv_results[key][:num_entries]
             if len(csv_results[key]) < num_entries:
                 csv_results[key].extend([None] * (num_entries - len(csv_results[key])))
-            else:
-                csv_results[key] = csv_results[key][:num_entries+1]
 
         df = pd.DataFrame(csv_results)
-        
+
+        # Saving the CSV
         file_name_with_extension = os.path.basename(img_path)
         ip_to_remove = "10.10.26.159_"
         if file_name_with_extension.startswith(ip_to_remove):
@@ -710,6 +722,7 @@ class Evaluation:
         df.to_csv(save_path, index=False)
         dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
+
 
     def count_csv_and_failures(self, folder_path):
         csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]

@@ -69,14 +69,14 @@ class DemoProcess:
         """
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
         
         if time_keys is not None:
             ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
             time_results = self.evaluation.check_time_diff(ocr_img_time, reset_time)
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
         else:
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
 
         return ocr_res
 
@@ -1271,21 +1271,6 @@ class DemoTest:
             print("Test stopped")
             return
 
-    def testcode01(self):
-        image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_28_35_M_H_AN_Curr_Symm.png"
-        reset_time = datetime.now()
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        base_save_path = os.path.expanduser(f"./results/{current_time}/")
-        os.makedirs(base_save_path, exist_ok=True)
-        roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
-        roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3",
-                         "a_meas", "b_meas", "c_meas"]
-        time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp"]
-        ocr_ref = ec.symm_curr
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
-
-        print("Done")
-
     def demo_test_start(self):
         self.modbus_label.demo_test_setting()
         print("----------------DEMO TEST START----------------")
@@ -1380,6 +1365,21 @@ class DemoTest:
         #     print("Test stopped")
         #     return
         # self.demo_mea_anal_currunbal(base_save_path)
+
+    def testcode01(self):
+            image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_28_37_M_H_AN_Curr_Unbal.png"
+            reset_time = datetime.now()
+            current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            base_save_path = os.path.expanduser(f"./results/{current_time}/")
+            os.makedirs(base_save_path, exist_ok=True)
+            roi_keys = ["title_view", "a_ab", "b_bc", "c_ca"]
+            roi_keys_meas = ["cur_percent_1", "cur_percent_2", "cur_percent_3",
+                            "a_meas", "b_meas", "c_meas"]
+            time_keys = ["a_time_stamp", "b_time_stamp", "c_time_stamp"]
+            ocr_ref = ec.unbal_curr
+            self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+
+            print("Done")
 
     def testcode03(self):
         # self.modbus_label.demo_test_setting()
