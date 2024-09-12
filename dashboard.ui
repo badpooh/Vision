@@ -571,8 +571,8 @@ QPushButton:checked{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
-                     <height>28</height>
+                     <width>60</width>
+                     <height>480</height>
                     </rect>
                    </property>
                   </widget>
@@ -830,12 +830,25 @@ UI TEST STOP</string>
             <rect>
              <x>380</x>
              <y>120</y>
-             <width>111</width>
+             <width>121</width>
              <height>16</height>
             </rect>
            </property>
            <property name="text">
             <string>RESULT (FAIL/TOTAL)</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="checkBox_demand">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>280</y>
+             <width>79</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>DEMAND</string>
            </property>
           </widget>
          </widget>

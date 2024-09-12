@@ -1270,6 +1270,12 @@ class DemoTest:
         if self.stop_event.is_set():
             print("Test stopped")
             return
+        
+    def demo_meter_demand_curr(self, base_save_path):
+        self.touch_manager.btn_front_meter()
+        self.touch_manager.btn_front_home()
+        self.touch_manager.menu_touch()
+        pass
 
     def demo_test_start(self):
         self.modbus_label.demo_test_setting()
@@ -1340,31 +1346,35 @@ class DemoTest:
         self.demo_mea_pow_pf(base_save_path)
         
     def demo_test_analysis(self, base_save_path):
-        # self.demo_mea_anal_phasor(base_save_path)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_harmonics(base_save_path)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_waveform(base_save_path)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        self.demo_mea_anal_phasor(base_save_path)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_harmonics(base_save_path)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_waveform(base_save_path)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_anal_voltsym(base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        # self.demo_mea_anal_voltunbal(base_save_path)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_cursym(base_save_path)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_currunbal(base_save_path)
+        self.demo_mea_anal_voltunbal(base_save_path)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_cursym(base_save_path)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_currunbal(base_save_path)
+
+    def demo_test_demand(self, base_save_path):
+        pass
+        
 
     def testcode01(self):
             image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-08-13_17_28_37_M_H_AN_Curr_Unbal.png"

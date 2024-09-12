@@ -11,7 +11,12 @@ class ConfigROI(Enum):
     harmonics_sub_title_1 = "harmonics_sub_title_1"
     harmonics_text_title = "harmonics_text_title"
     harmonics_text_img = "harmonics_text_image"
-
+    
+    color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
+    color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]
+    color_rms_vol_ll = [380, 140, 10, 10, 67, 136, 255]
+    color_rms_vol_ln = [480, 140, 10, 10, 67, 136, 255]
+    color_vol_thd_ll = [480, 140, 10, 10, 67, 136, 255]
     ### A상 버튼 눌러서 A상이 안보이는 지 확인 / 앞 4자리는 검사할 그래프 영역###
     ### 뒤 3자리는 RGB ###
     color_waveform_vol_a = [313, 253, 411, 203, 0, 0, 0]
@@ -48,7 +53,15 @@ class ConfigTextRef(Enum):
     symm_vol_ln = "symm_vol_ln"
     symm_curr = "symm_curr"
     unbal_curr = "unbal_curr"
+    
+class ConfigModbusMap(Enum):
     addr_reset_max_min = 12002
+    addr_demand_sync_mode = 6028
+    addr_demand_num_of_sub_interval = 6029
+    addr_demand_sub_interval_time = 6030
+    addr_reset_demand = 12000
+    addr_reset_demand_peak = 12001
+    addr_demand_sync = 12015
 
 class ConfigTouch(Enum):
     touch_analysis_vol = "touch_analysis_check_voltage"
@@ -206,7 +219,6 @@ class ConfigSetup():
 
     def match_m_setup_labels(self):
         m_home = {
-            #임시로 대문자 C를 소문자 C로 변경함
             "rms_vol_L_L": ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"],
             "rms_vol_L_N": ["RMS Voltage L-L L-N Min Max", "A", "B", "c", "Average"],
             "fund_vol_L_L": ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"],
@@ -297,15 +309,12 @@ class ConfigSetup():
     def color_detection_data(self):
 
         coordinates = {
-            "rms_voltage_L_L": [380, 140, 10, 10, 67, 136, 255],
-            "rms_voltage_L_N": [480, 140, 10, 10, 67, 136, 255],
-            "vol_thd_L_L": [480, 140, 10, 10, 67, 136, 255],
+            
             "vol_thd_L_N": [580, 140, 10, 10, 67, 136, 255],
             "phasor_VLL": [580, 200, 10, 10, 67, 136, 255],
             "phasor_VLN": [680, 200, 10, 10, 67, 136, 255],
             "measurement": [5, 70, 10, 10, 47, 180, 139],
-            "mea_voltage": [10, 70, 10, 10, 67, 136, 255],
-            "mea_current": [170, 70, 10, 10, 67, 136, 255],
+            
             "mea_demand": [110, 220, 10, 10, 255, 255, 255],
             "mea_power": [110, 270, 10, 10, 255, 255, 255],
 

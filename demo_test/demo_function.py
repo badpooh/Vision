@@ -18,6 +18,7 @@ from demo_test.demo_config import ConfigSetup
 from demo_test.demo_config import ConfigTextRef as ec
 from demo_test.demo_config import ConfigROI as ecr
 from demo_test.demo_config import ConfigImgRef as ecir
+from demo_test.demo_config import ConfigModbusMap as ecm
 
 config_data = ConfigSetup()
 
@@ -335,13 +336,65 @@ class ModbusLabels:
             for value_control in values_control:
                 self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
                 time.sleep(0.6)
-            self.response = self.modbus_manager.setup_client.write_register(ec.addr_reset_max_min.value, 1)
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_reset_max_min.value, 1)
             print("Max/Min Reset")
         else:
             print(self.response.isError())
         self.reset_time = datetime.now()
         return self.reset_time
+    
+    def reset_demand(self):
+        self.touch_manager.uitest_mode_start()
+        addr_control_lock = 2901
+        values_control = [2300, 0, 1600, 1]
+        if self.modbus_manager.setup_client:
+            for value_control in values_control:
+                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                time.sleep(0.6)
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_reset_demand.value, 1)
+            print("Max/Min Reset")
+        else:
+            print(self.response.isError())
+    
+    def reset_demand_peak(self):
+        self.touch_manager.uitest_mode_start()
+        addr_control_lock = 2901
+        values_control = [2300, 0, 1600, 1]
+        if self.modbus_manager.setup_client:
+            for value_control in values_control:
+                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                time.sleep(0.6)
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_reset_demand_peak.value, 1)
+            print("Max/Min Reset")
+        else:
+            print(self.response.isError())
+        self.reset_time = datetime.now()
+        return self.reset_time
+    
 
+    def demo_test_demand(self):
+        self.touch_manager.uitest_mode_start()
+        addr_control_lock = 2901
+        values_control = [2300, 0, 1600, 1]
+        if self.modbus_manager.setup_client:
+            for value_control in values_control:
+                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                time.sleep(0.6)
+            if self.response.isError():
+                print(f"Error reading registers: {self.response}")
+                return
+            self.response = self.modbus_manager.setup_client.read_holding_registers(6000, 1)
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_sync_mode.value, 1)
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_sub_interval_time.value, 2)
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_num_of_sub_interval.value, 3)
+            demand_reset_time = self.reset_demand_peak()
+            self.reset_demand()
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_sync.value, 1)
+        else:
+            print(self.response.isError())
+            
+        return demand_reset_time
+        
 
 class Evaluation:
 
@@ -414,54 +467,51 @@ class Evaluation:
         all_meas_results = []
 
         if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["rms_voltage_L_L"]) <= 10:
-                check_results(['AB', 'BC', 'CA', 'Aver'],
-                              (180, 200, "V"), ocr_res_meas[:5])
-            elif self.ocr_manager.color_detection(image, color_data["rms_voltage_L_N"]) <= 10:
-                check_results(['A', 'B', 'C', 'Aver'],
-                              (100, 120, "V"), ocr_res_meas[:5])
+            if self.ocr_manager.color_detection(image, color_data[ecr.color_rms_vol_ll.value]) <= 10:
+                all_meas_results.extend(check_results(["AB", "BC", "CA", "Aver"], (180, 200, "V"), ocr_res_meas[:5]))
+            elif self.ocr_manager.color_detection(image, color_data[ecr.color_rms_vol_ln.value]) <= 10:
+                all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (100, 120, "V"), ocr_res_meas[:5]))
             else:
-                print("demo test evaluation error")
+                print("RMS Voltage missed")
 
-        if self.ocr_manager.color_detection(image, color_data["mea_voltage"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
-                check_results(['AB', 'BC', 'CA'], (2.0, 4.0, "%"), ocr_res_meas[:4])
-            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
-                check_results(['A', 'B', 'C'], (3.0, 4.0, "%"),
-                              ocr_res_meas[:4])
+        elif self.ocr_manager.color_detection(image, color_data[ecr.color_main_menu_vol.value]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
+                all_meas_results.extend(check_results(["AB", "BC", "CA"], (2.0, 4.0, "%"), ocr_res_meas[:4]))
+            elif self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
+                all_meas_results.extend(check_results(["A", "B", "C"], (3.0, 4.0, "%"), ocr_res_meas[:4]))
             else:
-                print("demo test evaluation error")
+                print("Total Harmonic missed")
 
-        if "Frequency" in ''.join(ocr_res[0]):
-            check_results(['Freq'], (59, 61, "Hz"), ocr_res_meas[:1])
+        elif "Frequency" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["Freq"], (59, 61, "Hz"), ocr_res_meas[:1]))
 
-        if "Residual Voltage" in ''.join(ocr_res[0]):
-            check_results(["RMS", "Fund."], (0, 10, "V"), ocr_res_meas[:2])
+        elif "Residual Voltage" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["RMS", "Fund."], (0, 10, "V"), ocr_res_meas[:2]))
 
-        if "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Aver%'], (45, 55, "%"), ocr_res_meas[:4])
-            check_results(['A', 'B', 'C', 'Aver'], (2, 3, "A"), ocr_res_meas[4:])
+        elif "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A %", "B %", "C %", "Aver %"], (45, 55, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (2, 3, "A"), ocr_res_meas[4:]))
 
-        if self.ocr_manager.color_detection(image, color_data["mea_current"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3])
+        elif self.ocr_manager.color_detection(image, color_data[ecr.color_main_menu_curr.value]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3]))
 
-        if "Total Demand" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1, 2.5, "%"), ocr_res_meas[:3])
+        elif "Total Demand" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (1, 2.5, "%"), ocr_res_meas[:3]))
 
-        if "Crest Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.3, 1.6, ""), ocr_res_meas[:3])
+        elif "Crest Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (1.3, 1.6, ""), ocr_res_meas[:3]))
 
-        if "K-Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.2, 1.5, ""), ocr_res_meas[:3])
+        elif "K-Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (1.2, 1.5, ""), ocr_res_meas[:3]))
 
-        if "Residual Current" in ''.join(ocr_res[0]):
-            check_results(["RMS"], (70, 100, "mA"), ocr_res_meas[:1])
-            check_results(["RMS"], (20, 40, "mA"), ocr_res_meas[1:2])
+        elif "Residual Current" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["RMS"], (70, 100, "mA"), ocr_res_meas[:1]))
+            all_meas_results.extend(check_results(["RMS"], (20, 40, "mA"), ocr_res_meas[1:2]))
             
-        if "Active Power" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(40, 50, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C"], (230, 240, "W"), ocr_res_meas[4:7])
-            check_results(["Total"], (705, 715, "W"), ocr_res_meas[7:8])
+        elif "Active Power" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A %", "B %", "C %", "Total %"], (40, 50, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (230, 240, "W"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (705, 715, "W"), ocr_res_meas[7:8]))
             
         if "Reactive Power" in ''.join(ocr_res[0]):
             check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4])
