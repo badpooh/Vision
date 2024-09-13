@@ -12,6 +12,7 @@ from demo_test.demo_config import ConfigImgRef as ecir
 from demo_test.demo_config import ConfigROI as ecroi
 from demo_test.demo_config import ConfigTouch as ect
 
+
 image_directory = r"\\10.10.20.30\screenshot"
 
 
@@ -213,7 +214,7 @@ class DemoTest:
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_setup()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_3")
         self.touch_manager.menu_touch("data_view_2")
         self.touch_manager.screenshot()
@@ -240,7 +241,7 @@ class DemoTest:
     def reset_max_min(self):
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_setup()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.menu_touch("data_view_3")
         self.touch_manager.screenshot()
@@ -267,7 +268,7 @@ class DemoTest:
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch(ect.touch_main_menu_1.value)
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.menu_touch("meas_L-L")
         self.touch_manager.screenshot()
@@ -325,7 +326,7 @@ class DemoTest:
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch(ect.touch_main_menu_1.value)
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.menu_touch("meas_L-L")
         self.touch_manager.screenshot()
@@ -382,7 +383,7 @@ class DemoTest:
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch(ect.touch_main_menu_1.value)
         self.touch_manager.menu_touch("side_menu_3")
         self.touch_manager.menu_touch("thd_L_L")
         self.touch_manager.screenshot()
@@ -422,7 +423,7 @@ class DemoTest:
         ### 기본주파수 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch(ect.touch_main_menu_1.value)
         self.touch_manager.menu_touch("side_menu_4")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -468,7 +469,7 @@ class DemoTest:
         ### 기본 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_1")
+        self.touch_manager.menu_touch(ect.touch_main_menu_1.value)
         self.touch_manager.menu_touch("side_menu_5")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -514,7 +515,7 @@ class DemoTest:
         ### Current ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase("rms_curr", base_save_path)
@@ -544,7 +545,7 @@ class DemoTest:
         ### Current ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase("fund_curr", base_save_path)
@@ -574,7 +575,7 @@ class DemoTest:
         ### Current thd ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch("side_menu_4")
         self.touch_manager.screenshot()
         self.sp.ocr_3phase("curr_thd", base_save_path)
@@ -596,7 +597,7 @@ class DemoTest:
         ### Current tdd ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch("side_menu_5")
         self.touch_manager.screenshot()
         self.sp.ocr_3phase("curr_tdd", base_save_path)
@@ -618,7 +619,7 @@ class DemoTest:
         ### Current crest factor ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch("side_menu_6")
         self.touch_manager.screenshot()
         self.sp.ocr_3phase("curr_cf", base_save_path)
@@ -640,7 +641,7 @@ class DemoTest:
         ### Current k-factor ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch("side_menu_7")
         self.touch_manager.screenshot()
         self.sp.ocr_3phase("curr_kf", base_save_path)
@@ -662,7 +663,7 @@ class DemoTest:
         ### Current residual ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_2")
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch("side_menu_8")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -708,7 +709,7 @@ class DemoTest:
         ### active power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase("active", base_save_path)
@@ -738,7 +739,7 @@ class DemoTest:
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase("reactive", base_save_path)
@@ -768,7 +769,7 @@ class DemoTest:
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch("side_menu_3")
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase("apparent", base_save_path)
@@ -798,7 +799,7 @@ class DemoTest:
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_3")
+        self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch("side_menu_4")
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase("pf", base_save_path)
@@ -826,7 +827,7 @@ class DemoTest:
         ### voltage+current vll ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_1")
         self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vll.value, "phasor_L_L", "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
@@ -890,7 +891,7 @@ class DemoTest:
         ### voltage ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1003,7 +1004,7 @@ class DemoTest:
 
         ### [v], fund, rms 그래프 변화 확인 ###
         ### voltage fund ###
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_2")
         self.touch_manager.menu_touch(ect.touch_harmonics_submenu_1)
         self.touch_manager.menu_touch(ect.touch_harmonics_sub_fund)
@@ -1069,7 +1070,7 @@ class DemoTest:
         ### waveform basic ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_3")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1135,7 +1136,7 @@ class DemoTest:
         ### LL ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_4")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1191,7 +1192,7 @@ class DemoTest:
         ### vol unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_5")
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(ec.unbal_vol, base_save_path)
@@ -1212,7 +1213,7 @@ class DemoTest:
         ### symm ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_6")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1244,7 +1245,7 @@ class DemoTest:
         ### current unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_7")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1274,7 +1275,9 @@ class DemoTest:
     def demo_meter_demand_curr(self, base_save_path):
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch()
+        self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
+        self.touch_manager.menu_touch("side_menu_3")
+        self.sp.ocr_curr_4phase(ec.demand_current.value, base_save_path)
         pass
 
     def demo_test_start(self):
@@ -1373,7 +1376,10 @@ class DemoTest:
         self.demo_mea_anal_currunbal(base_save_path)
 
     def demo_test_demand(self, base_save_path):
-        pass
+        self.demo_meter_demand_curr(base_save_path)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         
 
     def testcode01(self):
@@ -1395,7 +1401,7 @@ class DemoTest:
         # self.modbus_label.demo_test_setting()
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch("main_menu_4")
+        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch("side_menu_1")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()

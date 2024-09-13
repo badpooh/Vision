@@ -69,6 +69,8 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.checkBox_current.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "current"))
         self.checkBox_power.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "power"))
         self.checkBox_analysis.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "analysis"))
+        self.checkBox_demand.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "demand"))
+
 
         self.scrollAreaLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.scrollAreaWidgetContents.setLayout(self.scrollAreaLayout)
@@ -166,6 +168,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         if self.checkbox_states["analysis"]:
             self.meter_demo_test.demo_test_analysis(base_save_path)
             print("Analysis_DemoTest_Done")
+        if self.checkbox_states["demand"]:
+            self.meter_demo_test.demo_test_demand(base_save_path)
+            print("Demand_DemoTest_Done")
         else:
             print("Done or Nothing to execute")
         total_csv_files, fail_count = self.evaluation.count_csv_and_failures(base_save_path)

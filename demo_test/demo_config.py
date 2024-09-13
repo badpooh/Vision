@@ -11,6 +11,7 @@ class ConfigROI(Enum):
     harmonics_sub_title_1 = "harmonics_sub_title_1"
     harmonics_text_title = "harmonics_text_title"
     harmonics_text_img = "harmonics_text_image"
+
     
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
     color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]
@@ -37,7 +38,6 @@ class ConfigROI(Enum):
     color_harmonics_vol = [540, 140, 10, 10, 67, 136, 255]
     color_harmonics_curr = [660, 140, 10, 10, 67, 136, 255]
 
-
 class ConfigTextRef(Enum):
     phasor_vll = "phasor_vll"
     phasor_vln = "phasor_vln"
@@ -53,6 +53,7 @@ class ConfigTextRef(Enum):
     symm_vol_ln = "symm_vol_ln"
     symm_curr = "symm_curr"
     unbal_curr = "unbal_curr"
+    demand_current = ["Demand Current Peak", "A", "B", "c", "Average"]
     
 class ConfigModbusMap(Enum):
     addr_reset_max_min = 12002
@@ -64,6 +65,11 @@ class ConfigModbusMap(Enum):
     addr_demand_sync = 12015
 
 class ConfigTouch(Enum):
+    touch_main_menu_1 = [100, 85]
+    touch_main_menu_2 = [260, 85]
+    touch_main_menu_3 = [390, 85]
+    touch_main_menu_4 = [560, 85]
+    touch_main_menu_5 = [720, 85]
     touch_analysis_vol = "touch_analysis_check_voltage"
     touch_analysis_curr = "touch_analysis_check_current"
     touch_harmonics_fund = "touch_harmonics_fund."
@@ -324,11 +330,6 @@ class ConfigSetup():
 
     def touch_data(self):
         coordinates = {
-            "main_menu_1": [100, 85],
-            "main_menu_2": [260, 85],
-            "main_menu_3": [390, 85],
-            "main_menu_4": [560, 85],
-            "main_menu_5": [720, 85],
             "side_menu_1": [80, 135],
             "side_menu_2": [80, 180],
             "side_menu_3": [80, 225],
@@ -461,7 +462,6 @@ class ConfigSetup():
             "touch_mode": 57112,
             "setup_button_bit": 57120,
             "setup_button": 57121,
-            ConfigTextRef.addr_reset_max_min: 12002
         }
 
         return coordinates
