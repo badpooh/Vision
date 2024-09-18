@@ -19,6 +19,7 @@ from demo_test.demo_config import ConfigTextRef as ec
 from demo_test.demo_config import ConfigROI as ecr
 from demo_test.demo_config import ConfigImgRef as ecir
 from demo_test.demo_config import ConfigModbusMap as ecm
+from demo_test.demo_config import ConfigTouch as ect
 
 config_data = ConfigSetup()
 
@@ -76,7 +77,6 @@ class TouchManager:
         self.client_check = self.mobus_manager.touch_client
         self.coords_touch = config_data.touch_data()
         self.coords_color = config_data.color_detection_data()
-        self.coords_TA = config_data.touch_address_data()
 
     def touch_write(self, address, value, delay=0.6):
         attempt = 0
@@ -100,47 +100,45 @@ class TouchManager:
 
     def screenshot(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["screen_capture"], self.hex_value)
+            self.touch_write(ect.touch_addr_screen_capture.value, self.hex_value)
         else:
             print("client Error")
 
     def menu_touch(self, menu_key):
         if self.client_check:
-            data_view_x, data_view_y = self.coords_touch[menu_key]
-            self.touch_write(self.coords_TA["pos_x"], data_view_x)
-            self.touch_write(self.coords_TA["pos_y"], data_view_y)
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+            data_view_x, data_view_y = menu_key
+            self.touch_write(ect.touch_addr_pos_x.value, data_view_x)
+            self.touch_write(ect.touch_addr_pos_y.value, data_view_y)
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
         else:
             print("Menu Touch Error")
 
     def btn_popup_touch(self, btn_popup_key):
         if self.client_check:
             btn_x, btn_y = self.coords_touch[btn_popup_key]
-            self.touch_write(self.coords_TA["pos_x"], btn_x)
-            self.touch_write(self.coords_TA["pos_y"], btn_y)
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(ect.touch_addr_pos_x.value, btn_x)
+            self.touch_write(ect.touch_addr_pos_y.value, btn_y)
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
             self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+                ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
         else:
             print("Button Popup Touch Error")
 
     def number_1_touch(self, number_key):
         if self.client_check:
             number_x, number_y = self.coords_touch[number_key]
-            self.touch_write(self.coords_TA["pos_x"], number_x)
-            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(ect.touch_addr_pos_x.value, number_x)
+            self.touch_write(ect.touch_addr_pos_y.value, number_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+                ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
         else:
@@ -149,19 +147,17 @@ class TouchManager:
     def number_2_touch(self, number_key1, number_key2):
         if self.client_check:
             number_x, number_y = self.coords_touch[number_key1]
-            self.touch_write(self.coords_TA["pos_x"], number_x)
-            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(ect.touch_addr_pos_x.value, number_x)
+            self.touch_write(ect.touch_addr_pos_y.value, number_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             number_a, number_b = self.coords_touch[number_key2]
-            self.touch_write(self.coords_TA["pos_x"], number_a)
-            self.touch_write(self.coords_TA["pos_y"], number_b)
+            self.touch_write(ect.touch_addr_pos_x.value, number_a)
+            self.touch_write(ect.touch_addr_pos_y.value, number_b)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
-            self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
         else:
@@ -170,24 +166,23 @@ class TouchManager:
     def number_3_touch(self, number_key1, number_key2, number_key3):
         if self.client_check:
             number_x, number_y = self.coords_touch[number_key1]
-            self.touch_write(self.coords_TA["pos_x"], number_x)
-            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(ect.touch_addr_pos_x.value, number_x)
+            self.touch_write(ect.touch_addr_pos_y.value, number_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             number_a, number_b = self.coords_touch[number_key2]
-            self.touch_write(self.coords_TA["pos_x"], number_a)
-            self.touch_write(self.coords_TA["pos_y"], number_b)
+            self.touch_write(ect.touch_addr_pos_x.value, number_a)
+            self.touch_write(ect.touch_addr_pos_y.value, number_b)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             number_c, number_d = self.coords_touch[number_key3]
-            self.touch_write(self.coords_TA["pos_x"], number_c)
-            self.touch_write(self.coords_TA["pos_y"], number_d)
+            self.touch_write(ect.touch_addr_pos_x.value, number_c)
+            self.touch_write(ect.touch_addr_pos_y.value, number_d)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
             self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+                ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
         else:
@@ -195,36 +190,33 @@ class TouchManager:
 
     def btn_apply_touch(self):
         if self.client_check:
-            self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_apply"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_apply"][1])
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_apply"][0])
+            self.touch_write(ect.touch_addr_pos_y.value, self.coords_touch["btn_apply"][1])
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_setup(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 0)
-            self.touch_write(self.coords_TA["setup_button_bit"], 2)
+            self.touch_write(ect.touch_addr_setup_button.value, 0)
+            self.touch_write(ect.touch_addr_setup_button_bit.value, 2)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_meter(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 0)
-            self.touch_write(self.coords_TA["setup_button_bit"], 64)
+            self.touch_write(ect.touch_addr_setup_button.value, 0)
+            self.touch_write(ect.touch_addr_setup_button_bit.value, 64)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_home(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 0)
-            self.touch_write(self.coords_TA["setup_button_bit"], 1)
+            self.touch_write(ect.touch_addr_setup_button.value, 0)
+            self.touch_write(ect.touch_addr_setup_button_bit.value, 1)
         else:
             print("Button Apply Touch Error")
-
 
 class OCRManager:
 
@@ -252,14 +244,13 @@ class OCRManager:
         gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
         denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
         
-        # OCR 객체 초기화
         ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
         
         ocr_results = {}
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = gray_image[y:y+h, x:x+w]
+                roi_image = resized_image[y:y+h, x:x+w]
                 
                 # ROI 이미지 표시 (디버깅용)
                 # cv2.imshow('ROI Image', roi_image)
@@ -283,7 +274,6 @@ class OCRManager:
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
 
-
 class ModbusLabels:
 
     touch_manager = TouchManager()
@@ -294,13 +284,11 @@ class ModbusLabels:
 
     def demo_test_setting(self):
         self.touch_manager.uitest_mode_start()
-        addr_setup_lock = 2900
-        addr_control_lock = 2901
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]
         if self.modbus_manager.setup_client:
             for value in values:
-                self.response = self.modbus_manager.setup_client.write_register(addr_setup_lock, value)
+                self.response = self.modbus_manager.setup_client.write_register(ecm.addr_setup_lock.value, value)
                 time.sleep(0.6)
             vol_value_32bit = 1900
             high_word = (vol_value_32bit >> 16) & 0xFFFF  # 상위 16비트
@@ -319,7 +307,7 @@ class ModbusLabels:
             self.response = self.modbus_manager.setup_client.write_register(6000, 1)
             time.sleep(0.6)
             for value_control in values_control:
-                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                self.response = self.modbus_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
                 time.sleep(0.6)
             self.response = self.modbus_manager.setup_client.write_register(4002, 0)
             self.response = self.modbus_manager.setup_client.write_register(4000, 1)
@@ -330,11 +318,10 @@ class ModbusLabels:
     
     def reset_max_min(self):
         self.touch_manager.uitest_mode_start()
-        addr_control_lock = 2901
         values_control = [2300, 0, 1600, 1]
         if self.modbus_manager.setup_client:
             for value_control in values_control:
-                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                self.response = self.modbus_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
                 time.sleep(0.6)
             self.response = self.modbus_manager.setup_client.write_register(ecm.addr_reset_max_min.value, 1)
             print("Max/Min Reset")
@@ -345,11 +332,10 @@ class ModbusLabels:
     
     def reset_demand(self):
         self.touch_manager.uitest_mode_start()
-        addr_control_lock = 2901
         values_control = [2300, 0, 1600, 1]
         if self.modbus_manager.setup_client:
             for value_control in values_control:
-                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                self.response = self.modbus_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
                 time.sleep(0.6)
             self.response = self.modbus_manager.setup_client.write_register(ecm.addr_reset_demand.value, 1)
             print("Max/Min Reset")
@@ -358,11 +344,10 @@ class ModbusLabels:
     
     def reset_demand_peak(self):
         self.touch_manager.uitest_mode_start()
-        addr_control_lock = 2901
         values_control = [2300, 0, 1600, 1]
         if self.modbus_manager.setup_client:
             for value_control in values_control:
-                self.response = self.modbus_manager.setup_client.write_register(addr_control_lock, value_control)
+                self.response = self.modbus_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
                 time.sleep(0.6)
             self.response = self.modbus_manager.setup_client.write_register(ecm.addr_reset_demand_peak.value, 1)
             print("Max/Min Reset")
@@ -371,7 +356,6 @@ class ModbusLabels:
         self.reset_time = datetime.now()
         return self.reset_time
     
-
     def demo_test_demand(self):
         self.touch_manager.uitest_mode_start()
         addr_control_lock = 2901
@@ -412,7 +396,7 @@ class Evaluation:
         
         image = cv2.imread(image_path)
 
-        ocr_right = self.m_home[right_key]
+        ocr_right = right_key
 
         right_list = ' '.join(text.strip() for text in ocr_right).split()
         ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
@@ -474,13 +458,14 @@ class Evaluation:
             else:
                 print("RMS Voltage missed")
 
-        elif self.ocr_manager.color_detection(image, color_data[ecr.color_main_menu_vol.value]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
-                all_meas_results.extend(check_results(["AB", "BC", "CA"], (2.0, 4.0, "%"), ocr_res_meas[:4]))
-            elif self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
-                all_meas_results.extend(check_results(["A", "B", "C"], (3.0, 4.0, "%"), ocr_res_meas[:4]))
-            else:
-                print("Total Harmonic missed")
+        elif "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_main_menu_vol.value) <= 10: 
+                if self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
+                    all_meas_results.extend(check_results(["AB", "BC", "CA"], (2.0, 4.0, "%"), ocr_res_meas[:4]))
+                elif self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
+                    all_meas_results.extend(check_results(["A", "B", "C"], (3.0, 4.0, "%"), ocr_res_meas[:4]))
+                else:
+                    print("Total Harmonic missed")
 
         elif "Frequency" in ''.join(ocr_res[0]):
             all_meas_results.extend(check_results(["Freq"], (59, 61, "Hz"), ocr_res_meas[:1]))
@@ -492,8 +477,9 @@ class Evaluation:
             all_meas_results.extend(check_results(["A %", "B %", "C %", "Aver %"], (45, 55, "%"), ocr_res_meas[:4]))
             all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (2, 3, "A"), ocr_res_meas[4:]))
 
-        elif self.ocr_manager.color_detection(image, color_data[ecr.color_main_menu_curr.value]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            all_meas_results.extend(check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3]))
+        elif "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, color_data[ecr.color_main_menu_curr.value]) <= 10: 
+                all_meas_results.extend(check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3]))
 
         elif "Total Demand" in ''.join(ocr_res[0]):
             all_meas_results.extend(check_results(["A", "B", "C"], (1, 2.5, "%"), ocr_res_meas[:3]))
@@ -513,21 +499,21 @@ class Evaluation:
             all_meas_results.extend(check_results(["A", "B", "C"], (230, 240, "W"), ocr_res_meas[4:7]))
             all_meas_results.extend(check_results(["Total"], (705, 715, "W"), ocr_res_meas[7:8]))
             
-        if "Reactive Power" in ''.join(ocr_res[0]):
+        elif "Reactive Power" in ''.join(ocr_res[0]):
             check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4])
             check_results(["A", "B", "C"], (130, 145, "VAR"), ocr_res_meas[4:7])
             check_results(["Total"], (400, 420, "VAR"), ocr_res_meas[7:8])
             
-        if "Apparent Power" in ''.join(ocr_res[0]):
+        elif "Apparent Power" in ''.join(ocr_res[0]):
             check_results(['A', 'B', 'C', 'Total'],(45, 55, "%"), ocr_res_meas[:4])
             check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7])
             check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8])
             
-        if "Power Factor" in ''.join(ocr_res[0]):
+        elif "Power Factor" in ''.join(ocr_res[0]):
             check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "Lag"), ocr_res_meas[:4])
             check_results(["A", "B", "C", "Total"], (0.860, 0.870, ""), ocr_res_meas[4:8])
 
-        if "Phasor" in ''.join(ocr_res[0]):
+        elif "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
                 check_results(["AB", "BC", "CA"], (180, 195, "v"), ocr_res_meas[:3])
                 check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
@@ -553,36 +539,35 @@ class Evaluation:
             else:
                 print("demo test evaluation error")
 
-        if "Harmonics" in ''.join(ocr_res[0]):
+        elif "Harmonics" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
                 if img_result == 1 or img_result == 0:
-                    check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))
                 elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
-                    check_results(["harmonic_%_img"], (0.95, 1, ""), img_result)
-                # elif "Text" in ''.join(ocr_res[1]):
-                #     check_text(ocr_res[1])
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
+                elif "Text" in ''.join(ocr_res[1]):
+                    all_meas_results.extend("PASS?")
                 else:
-                    check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
-                    check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6])
-                    check_results(["harmonic_image"], (0.9, 1, ""), img_result)
-
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
             else:
                 if img_result == 1 or img_result == 0:
-                    check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))  
                 elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
-                    check_results(["harmonic_%_img"], (0.95, 1, ""), img_result)
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
                 else:
-                    check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3])
-                    check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6])
-                    check_results(["harmonic_image"], (0.98, 1, ""), img_result)
-
-        if "Waveform" in ''.join(ocr_res[0]):
+                    all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.98, 1, ""), img_result))
+                    
+        elif "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
                 check_results(["waveform_image"], (0.945, 1, ""), img_result)
             else:
                 check_results(["waveform_img_detect"], (1, 1, ""), img_result)
 
-        if "Volt. Symm. Component" in ''.join(ocr_res[0]):
+        elif "Volt. Symm. Component" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
                 check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
                 check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
@@ -596,11 +581,11 @@ class Evaluation:
                 check_results(['V2'], (0, 2, "V" or "v"), ocr_res_meas[4:5])
                 check_results(['V0'], (0, 1, "V" or "v"), ocr_res_meas[5:6])
                 
-        if "Voltage Unbalance" in ''.join(ocr_res[0]):
+        elif "Voltage Unbalance" in ''.join(ocr_res[0]):
             check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4])
             check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8])
             
-        if "Curr. Symm. Component" in ''.join(ocr_res[0]):
+        elif "Curr. Symm. Component" in ''.join(ocr_res[0]):
             all_meas_results.extend(check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1]))
             all_meas_results.extend(check_results(["I2"], (0, 1, "l2"), ocr_res_meas[1:2]))
             all_meas_results.extend(check_results(["I0"], (0, 1, "l0"), ocr_res_meas[2:3]))
@@ -608,7 +593,7 @@ class Evaluation:
             all_meas_results.extend(check_results(["I2"], (0, 0.1, "A"), ocr_res_meas[4:5]))
             all_meas_results.extend(check_results(["I0"], (0, 0.1, "A"), ocr_res_meas[5:6]))
             
-        if "Current Unbalance" in ''.join(ocr_res[0]):
+        elif "Current Unbalance" in ''.join(ocr_res[0]):
             all_meas_results.extend(check_results([""], (0, 1, "empty"), ocr_res_meas[0:1]))
             all_meas_results.extend(check_results(["U2"], (0, 1, "U2"), ocr_res_meas[1:2]))
             all_meas_results.extend(check_results(["U0"], (0, 1, "U0"), ocr_res_meas[2:3]))
@@ -616,7 +601,7 @@ class Evaluation:
             all_meas_results.extend(check_results(["U2"], (0, 1, "%"), ocr_res_meas[4:5]))
             all_meas_results.extend(check_results(["U0"], (0, 0.5, "%"), ocr_res_meas[5:6]))
         
-        if not self.condition_met:
+        elif not self.condition_met:
             print("Nothing matching word")
 
         print(f"OCR - 정답: {self.ocr_error}")
@@ -697,7 +682,6 @@ class Evaluation:
             result = 1
         return result
 
-
     def check_time_diff(self, time_images, reset_time):
         self.reset_time = reset_time
         if not self.reset_time:
@@ -721,13 +705,17 @@ class Evaluation:
                 results.append(f"Time format error for {time_str}: {e}")
         return results
 
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None, base_save_path=None, all_meas_results=None):
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None, base_save_path=None, all_meas_results=None, invalid_elements=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_results = time_results if time_results is not None else []
         img_result = [img_result]
 
-        num_entries = max(len(ocr_img), len(ocr_img_meas)+1, len(ocr_img_time)+1, len(img_result)+1)
+        if ocr_img_meas == bool:
+            ocr_img_meas = []
+            num_entries = max(len(ocr_img), len(ocr_img_meas)+1, len(ocr_img_time)+1, len(img_result)+1)
+        else:
+            num_entries = max(len(ocr_img), len(ocr_img_meas)+1, len(ocr_img_time)+1, len(img_result)+1)
 
         overall_result = "PASS"
         if ocr_error or right_error or meas_error:
@@ -735,19 +723,31 @@ class Evaluation:
         if any("FAIL" in result for result in time_results):
             overall_result = "FAIL"
         
-
-        measurement_results = [f"{meas}" for meas in all_meas_results]
-        if len(measurement_results) < num_entries:
-            measurement_results = [None] + measurement_results + [None] * (num_entries - len(measurement_results) - 1)
-        
-        csv_results = {
+        if all_meas_results is not None:
+            measurement_results = [f"{meas}" for meas in all_meas_results]
+            if len(measurement_results) < num_entries:
+                measurement_results = [None] + measurement_results + [None] * (num_entries - len(measurement_results) - 1)
+            
+            csv_results = {
             "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
             "Measurement": measurement_results,
             "OCR-Right": [None] + [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-2),
             "Right-OCR": [None] + [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-2),
             f"Time Stemp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
             "Img Match": [None] + img_result + [None] * (num_entries-len(img_result)-1),
-        }
+            "H.Text": [None] + invalid_elements + [None] * (num_entries-len(img_result)-1),
+            }
+        
+        else:
+            csv_results = {
+            "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
+            "OCR-Right": [None] + [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-2),
+            "Right-OCR": [None] + [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-2),
+            f"Time Stemp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
+            "Img Match": [None] + img_result + [None] * (num_entries-len(img_result)-1),
+            "H.Text": [None] + invalid_elements + [None] * (num_entries-len(img_result)-1),
+            }
+        
         
         # Ensure all columns have the same length
         for key in csv_results:
@@ -773,7 +773,6 @@ class Evaluation:
         dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
 
-
     def count_csv_and_failures(self, folder_path):
         csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
         total_csv_files = len(csv_files)
@@ -781,3 +780,33 @@ class Evaluation:
         fail_count = sum(1 for f in csv_files if 'FAIL' in f)
 
         return total_csv_files, fail_count
+    
+    def validate_ocr(self, ocr_img):     
+        def is_float(value):
+            try:
+                float(value)
+                return True
+            except ValueError:
+                return False
+        def process_text(text):
+            elements = text.split()
+            numbers = []
+            invalid_elements = []
+
+            for elem in elements:
+                if is_float(elem):
+                    numbers.append(float(elem))
+                else:
+                    invalid_elements.append(elem)
+            return numbers, invalid_elements
+
+        for result in ocr_img:
+            numbers, invalid_elements = process_text(result)
+            
+            if invalid_elements:
+                print(f"FAIL: {invalid_elements}")
+            else:
+                print("PASS")
+            
+            print(f"추출된 숫자: {numbers}")
+        return invalid_elements

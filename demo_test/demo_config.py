@@ -2,15 +2,50 @@
 from types import coroutine
 from enum import Enum
 
+
 class ConfigROI(Enum):
+    title_view ="title_view"
+    a_ab = "meas_a_phase_name"
+    a_time_stamp = "meas_a_time_stamp"
+    a_meas = "meas_a_measurement_value"
+    b_bc = "meas_b_phase_name"
+    b_time_stamp = "meas_b_time_stamp"
+    b_meas = "meas_b_measurement_value"
+    c_ca = "meas_c_phase_name"
+    c_time_stamp = "meas_c_time_stamp"
+    c_meas = "meas_c_measurement_value"
+    aver = "meas_aver_phase_name"
+    aver_time_stamp = "meas_aver_time_stamp"
+    aver_meas = "meas_aver_measurement_value"
+    curr_per_a = "meas_curr_percent_a"
+    curr_per_b = "meas_curr_percent_b"
+    curr_per_c = "meas_curr_percent_c"
+    curr_per_aver = "meas_curr_percent_aver"
+    
     waveform_title = "waveform_title"
     waveform_all_img_cut = "waveform_img_cut"
     waveform_graph_img_cut = "waveform_graph_img_cut"
+    
+    harmonics_img_cut = "harmonics_img_cut"
+    harmonics_title = "harmonics_title"
+    harmonics_sub_title_1 = "harmonics_sub_title_1"
+    harmonics_sub_title_2 = "harmonics_sub_title_2"
     harmonics_graph_img_cut = "harmonics_graph_img_cut"
     harmonics_chart_img_cut = "harmonics_graph_with_bar_img_cut"
-    harmonics_sub_title_1 = "harmonics_sub_title_1"
+    harmonics_graph_a = "harmonics_graph_a"
+    harmonics_graph_b = "harmonics_graph_b"
+    harmonics_graph_c = "harmonics_graph_c"
     harmonics_text_title = "harmonics_text_title"
     harmonics_text_img = "harmonics_text_image"
+    harmonics_text_chart_img_cut = "harmonics_text_chart_img_cut"
+    harmonics_text_sub_title = "harmonics_text_sub_title"
+    harmonics_text_sub_abc = "harmonics_text_sub_a"
+    harmonics_thd_a = "harmonics_thd_a"
+    harmonics_thd_b = "harmonics_thd_b"
+    harmonics_thd_c = "harmonics_thd_c"
+    harmonics_fund_a = "harmonics_fund_a"
+    harmonics_fund_b = "harmonics_fund_b"
+    harmonics_fund_c = "harmonics_fund_c"
 
     
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
@@ -39,6 +74,28 @@ class ConfigROI(Enum):
     color_harmonics_curr = [660, 140, 10, 10, 67, 136, 255]
 
 class ConfigTextRef(Enum):
+    rms_vol_ll = "meas_rms_vol_ll"
+    rms_vol_ln = "meas_rms_vol_ln"
+    fund_vol_ll = "meas_fund_vol_ll"
+    fund_vol_ln = "meas_fund_vol_ln"
+    thd_vol_ll = "meas_thd_vol_ll"
+    thd_vol_ln = "meas_thd_vol_ll"
+    freq = "meas_frequency"
+    residual_vol = "meas_residual_vol"
+    rms_curr = "meas_rms_curr"
+    fund_curr = "meas_fund_curr"
+    thd_curr = "meas_thd_curr"
+    tdd_curr = "meas_tdd_curr"
+    cf_curr = "meas_crest_factor_curr"
+    kf_curr = "meas_k_factor_curr"
+    residual_curr = "meas_residual_curr"
+    active = "meas_pow_active"
+    reactive = "meas_pow_reactive"
+    apparent = "meas_pow_apparent"
+    pf = "meas_pow_pf"
+    phasor_ll = "phasor_ll"
+    phasor_ln = "phasor_ln"
+    
     phasor_vll = "phasor_vll"
     phasor_vln = "phasor_vln"
     harmonics_for_img = "harmonics_for_img_title"
@@ -46,7 +103,6 @@ class ConfigTextRef(Enum):
     harmonics_curr = "harmonics_current"
     harmonics_per_fund = "harmonics_[%]_fund"
     harmonics_per_rms = "harmonics_[%]_rms"
-    harmonics_text = "harmonics_text"
     waveform_3p4w = "waveform_3p4w"
     unbal_vol = "unbal_vol"
     symm_vol_ll = "symm_vol_ll"
@@ -54,6 +110,7 @@ class ConfigTextRef(Enum):
     symm_curr = "symm_curr"
     unbal_curr = "unbal_curr"
     demand_current = ["Demand Current Peak", "A", "B", "c", "Average"]
+    harmonics_text = ["Harmonics", "Voltage", "Current", "[v]", "Text", "A", "B", "C"]
     
 class ConfigModbusMap(Enum):
     addr_reset_max_min = 12002
@@ -63,6 +120,9 @@ class ConfigModbusMap(Enum):
     addr_reset_demand = 12000
     addr_reset_demand_peak = 12001
     addr_demand_sync = 12015
+    
+    addr_setup_lock = 2900
+    addr_control_lock = 2901
 
 class ConfigTouch(Enum):
     touch_main_menu_1 = [100, 85]
@@ -70,20 +130,49 @@ class ConfigTouch(Enum):
     touch_main_menu_3 = [390, 85]
     touch_main_menu_4 = [560, 85]
     touch_main_menu_5 = [720, 85]
-    touch_analysis_vol = "touch_analysis_check_voltage"
-    touch_analysis_curr = "touch_analysis_check_current"
-    touch_harmonics_fund = "touch_harmonics_fund."
-    touch_harmonics_submenu_1 = "touch_harmonics_dropdown_unit"
-    touch_harmonics_submenu_2 = "touch_harmonics_dropdown_shape"
-    touch_wave_vol_a = "touch_wave_vol_a"
-    touch_wave_vol_b = "touch_wave_vol_b"
-    touch_wave_vol_c = "touch_wave_vol_c"
-    touch_wave_curr_a = "touch_wave_curr_a"
-    touch_wave_curr_b = "touch_wave_curr_b"
-    touch_wave_curr_c = "touch_wave_curr_c"
-    touch_harmonics_sub_v = "touch_harmonics_submenu_[v]"
-    touch_harmonics_sub_fund = "touch_harmonics_sub_fund"
-    touch_harmonics_sub_rms = "touch_harmonics_sub_rms"
+    touch_side_menu_1 = [80, 135]
+    touch_side_menu_2 = [80, 180]
+    touch_side_menu_3 = [80, 225]
+    touch_side_menu_4 = [80, 270]
+    touch_side_menu_5 = [80, 315]
+    touch_side_menu_6 = [80, 360]
+    touch_side_menu_7 = [80, 405]
+    touch_side_menu_8 = [80, 450]
+
+    touch_meas_ll = [410, 150],
+    touch_meas_ln = [510, 150],
+    touch_thd_ll = [520, 150],
+    touch_thd_ln = [620, 150],
+    touch_max = [720, 150],
+    touch_min = [620, 150],
+    touch_phasor_vll = [620, 210],
+    touch_phasor_vln = [720, 210],
+    touch_analysis_vol = [590, 150],
+    touch_analysis_curr = [720, 150],
+    touch_harmonics_fund = [510, 200],
+    touch_harmonics_submenu_1 = [230, 200]
+    touch_harmonics_submenu_2 = [360, 200]
+    touch_wave_curr_a = [620, 200],
+    touch_wave_curr_b = [680, 200],
+    touch_wave_curr_c = [740, 200],
+    touch_wave_vol_a = [360, 200],
+    touch_wave_vol_b = [430, 200],
+    touch_wave_vol_c = [490, 200],
+    touch_harmonics_sub_v = [230, 240],
+    touch_harmonics_sub_fund = [230, 285],
+    touch_harmonics_sub_rms = [230, 330],
+    touch_harmonics_sub_graph = [360, 240]
+    touch_harmonics_sub_text = [360, 285]
+    
+    #touch_address
+    touch_addr_ui_test_mode = 57100
+    touch_addr_pos_x = 57110
+    touch_addr_pos_y = 57111
+    touch_addr_touch_mode = 57112
+    touch_addr_screen_capture = 57101
+    touch_addr_setup_button_bit = 57120
+    touch_addr_setup_button = 57121
+
 
 class ConfigColor(Enum):
     color_harmonics_vol_a = [313, 253, 411, 203, 0, 0, 0],
@@ -136,20 +225,19 @@ class ConfigSetup():
 
             # OCR 결과를 위한 좌표
             # rms voltage l-l l-m min max
-            "title_view": [n*x for x in [160, 120, 620, 53]],
-            "a_ab": [n*x for x in [175, 179, 135, 70]],  # AB
-            "a_time_stamp": [n*x for x in [320, 220, 190, 25]],  # time stamp
-            "a_meas": [n*x for x in [540, 190, 230, 55]],  # 190.0 V
-            "b_bc": [n*x for x in [165, 253, 135, 69]],  # BC
-            "b_time_stamp": [n*x for x in [320, 295, 190, 25]],  # time stamp
-            "b_meas": [n*x for x in [540, 260, 230, 60]],  # 190.0 V
-            "c_ca": [n*x for x in [165, 326, 135, 69]],  # CA
-            "c_time_stamp": [n*x for x in [320, 365, 190, 25]],  # time stamp
-            "c_meas": [n*x for x in [540, 340, 230, 50]],  # 190.0 V
-            "aver": [n*x for x in [165, 399, 135, 69]],  # Average
-            # time stamp
-            "aver_time_stamp": [n*x for x in [320, 435, 190, 25]],
-            "aver_meas": [n*x for x in [540, 410, 230, 60]],  # 190.0
+            ConfigROI.title_view: [n*x for x in [160, 120, 620, 53]],
+            ConfigROI.a_ab: [n*x for x in [175, 179, 135, 70]],  # AB
+            ConfigROI.a_time_stamp: [n*x for x in [320, 220, 190, 25]], # time stamp
+            ConfigROI.a_meas: [n*x for x in [540, 190, 230, 55]],  # 190.0 V
+            ConfigROI.b_bc: [n*x for x in [165, 253, 135, 69]],  # BC
+            ConfigROI.b_time_stamp: [n*x for x in [320, 295, 190, 25]], # time stamp
+            ConfigROI.b_meas: [n*x for x in [540, 260, 230, 60]],  # 190.0 V
+            ConfigROI.c_ca: [n*x for x in [165, 326, 135, 69]],  # CA
+            ConfigROI.c_time_stamp: [n*x for x in [320, 365, 190, 25]], # time stamp
+            ConfigROI.c_meas: [n*x for x in [540, 340, 230, 50]],  # 190.0 V
+            ConfigROI.aver: [n*x for x in [165, 399, 135, 69]],  # Average
+            ConfigROI.aver_time_stamp: [n*x for x in [320, 435, 190, 25]], # time stamp
+            ConfigROI.aver_meas: [n*x for x in [540, 410, 230, 60]],  # 190.0
 
             ### 확인 후 제거 ###
             "main_view_5": [n*x for x in [720, 200, 35, 40]],  # V
@@ -158,10 +246,10 @@ class ConfigSetup():
             "main_view_17": [n*x for x in [720, 420, 35, 40]],  # V
 
             # current % meas 수치 해야됨
-            "cur_percent_1": [n*x for x in [360, 190, 110, 30]],
-            "cur_percent_2": [n*x for x in [360, 265, 110, 30]],
-            "cur_percent_3": [n*x for x in [360, 335, 110, 30]],
-            "cur_percent_4": [n*x for x in [360, 405, 110, 35]],
+            ConfigROI.curr_per_a: [n*x for x in [360, 190, 110, 30]],
+            ConfigROI.curr_per_b: [n*x for x in [360, 265, 110, 30]],
+            ConfigROI.curr_per_c: [n*x for x in [360, 335, 110, 30]],
+            ConfigROI.curr_per_aver: [n*x for x in [360, 405, 110, 35]],
 
             # test mode confirm
             "999": [n*x for x in [220, 105, 350, 40]],
@@ -191,21 +279,23 @@ class ConfigSetup():
             "phasor_a_c_angle_cur": [763, 394, 14, 21], # A~C-각도기호
 
             # harmonics
-            "harmonics_img_cut": [170, 260, 600, 213],
+            ConfigROI.harmonics_img_cut: [170, 260, 600, 213],
             ConfigROI.harmonics_text_img: [n*x for x in [165, 230, 620, 240]],
-            "harmonics_title": [n*x for x in [160, 120, 630, 53]],
+            ConfigROI.harmonics_title: [n*x for x in [160, 120, 630, 53]],
             ConfigROI.harmonics_sub_title_1: [n*x for x in [160, 180, 270, 80]], # dropdown 버튼 + THD Fund.
-            "harmonics_sub_title_2": [n*x for x in [440, 180, 350, 40]], # Fund. ~ C
+            ConfigROI.harmonics_sub_title_2: [n*x for x in [440, 180, 350, 40]], # Fund. ~ 
             ConfigROI.harmonics_text_title: [n*x for x in [160, 180, 620, 40]],
-            "harmonics_text_A": [n*x for x in [435, 220, 15, 21]],
-            "harmonics_text_B": [n*x for x in [555, 220, 15, 21]],
-            "harmonics_text_C": [n*x for x in [675, 220, 15, 21]],
-            "harmonics_THD_A": [n*x for x in [465, 220, 70, 21]],
-            "harmonics_THD_B": [n*x for x in [585, 220, 70, 21]],
-            "harmonics_THD_C": [n*x for x in [705, 220, 70, 21]],
-            "harmonics_Fund_A": [n*x for x in [465, 241, 70, 23]],
-            "harmonics_Fund_B": [n*x for x in [585, 241, 70, 23]],
-            "harmonics_Fund_C": [n*x for x in [705, 241, 70, 23]],
+            ConfigROI.harmonics_text_sub_title : [n*x for x in [160, 180, 270, 40]],
+            ConfigROI.harmonics_text_sub_abc : [n*x for x in [590, 180, 190, 40]],
+            ConfigROI.harmonics_graph_a : [n*x for x in [435, 220, 15, 21]],
+            ConfigROI.harmonics_graph_b : [n*x for x in [555, 220, 15, 21]],
+            ConfigROI.harmonics_graph_c : [n*x for x in [675, 220, 15, 21]],
+            ConfigROI.harmonics_thd_a : [n*x for x in [465, 220, 70, 21]],
+            ConfigROI.harmonics_thd_b : [n*x for x in [585, 220, 70, 21]],
+            ConfigROI.harmonics_thd_c : [n*x for x in [705, 220, 70, 21]],
+            ConfigROI.harmonics_fund_a : [n*x for x in [465, 241, 70, 23]],
+            ConfigROI.harmonics_fund_b : [n*x for x in [585, 241, 70, 23]],
+            ConfigROI.harmonics_fund_c : [n*x for x in [705, 241, 70, 23]],
 
             #Waveform
             ConfigROI.waveform_all_img_cut: [170, 179, 610, 286],
@@ -213,6 +303,7 @@ class ConfigSetup():
             ConfigROI.waveform_title: [n*x for x in [160, 120, 630, 53]],
             ConfigROI.harmonics_graph_img_cut: [313, 283, 455, 173],
             ConfigROI.harmonics_chart_img_cut: [250, 260, 495, 214],
+            ConfigROI.harmonics_text_chart_img_cut: [n*x for x in [170, 230, 610, 240]]
         }
         return params
     
@@ -225,38 +316,37 @@ class ConfigSetup():
 
     def match_m_setup_labels(self):
         m_home = {
-            "rms_vol_L_L": ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"],
-            "rms_vol_L_N": ["RMS Voltage L-L L-N Min Max", "A", "B", "c", "Average"],
-            "fund_vol_L_L": ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"],
-            "fund_vol_L_N": ["Fund. Volt. L-L L-N Min Max", "A", "B", "c", "Average"],
-            "thd_vol_L_L": ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA"],
-            "thd_vol_L_N": ["Total Harmonic Distortion L-L L-N Max", "A", "B", "c"],
-            "freq": ["Frequency Min Max", "Frequency"],
-            "vol_residual": ["Residual Voltage Min Max", "RMS", "Fund."],
-            "rms_curr": ["RMS Current Min Max", "A", "B", "c", "Average"],
-            "fund_curr": ["Fundamental Current Min Max", "A", "B", "c", "Average"],
-            "curr_thd": ["Total Harmonic Distortion Max", "A", "B", "c"],
-            "curr_tdd": ["Total Demand Distortion Max", "A", "B", "c"],
-            "curr_cf": ["Crest Factor Max", "A", "B", "c"],
-            "curr_kf": ["K-Factor Max", "A", "B", "c"],
-            "curr_residual": ["Residual Current Min Max", "RMS", "Fund."],
-            "active": ["Active Power Min Max", "A", "B", "c", "Total"],
-            "reactive": ["Reactive Power Min Max", "A", "B", "c", "Total"],
-            "apparent": ["Apparent Power Min Max", "A", "B", "c", "Total"],
-            "pf": ["Power Factor Min Max", "A", "B", "c", "Total"],
+            ConfigTextRef.rms_vol_ll: ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"],
+            ConfigTextRef.rms_vol_ln: ["RMS Voltage L-L L-N Min Max", "A", "B", "c", "Average"],
+            ConfigTextRef.fund_vol_ll: ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"],
+            ConfigTextRef.fund_vol_ln: ["Fund. Volt. L-L L-N Min Max", "A", "B", "c", "Average"],
+            ConfigTextRef.thd_vol_ll: ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA"],
+            ConfigTextRef.thd_vol_ln: ["Total Harmonic Distortion L-L L-N Max", "A", "B", "c"],
+            ConfigTextRef.freq: ["Frequency Min Max", "Frequency"],
+            ConfigTextRef.residual_vol: ["Residual Voltage Min Max", "RMS", "Fund."],
+            ConfigTextRef.rms_curr: ["RMS Current Min Max", "A", "B", "c", "Average"],
+            ConfigTextRef.fund_curr: ["Fundamental Current Min Max", "A", "B", "c", "Average"],
+            ConfigTextRef.thd_curr: ["Total Harmonic Distortion Max", "A", "B", "c"],
+            ConfigTextRef.tdd_curr: ["Total Demand Distortion Max", "A", "B", "c"],
+            ConfigTextRef.cf_curr: ["Crest Factor Max", "A", "B", "c"],
+            ConfigTextRef.kf_curr: ["K-Factor Max", "A", "B", "c"],
+            ConfigTextRef.residual_curr: ["Residual Current Min Max", "RMS", "Fund."],
+            ConfigTextRef.active: ["Active Power Min Max", "A", "B", "c", "Total"],
+            ConfigTextRef.reactive: ["Reactive Power Min Max", "A", "B", "c", "Total"],
+            ConfigTextRef.apparent: ["Apparent Power Min Max", "A", "B", "c", "Total"],
+            ConfigTextRef.pf: ["Power Factor Min Max", "A", "B", "c", "Total"],
             "L-N": ["A", "B", "c", "Average"],
             "L_Min": ["AB", "BC", "CA", "Average"],
             "L_Max": ["AB", "BC", "CA", "Average"],
             "N_Min": ["A", "B", "c", "Average"],
             "N_Max": ["A", "B", "c", "Average"],
-            "phasor_L_L": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
-            "phasor_L_N": ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
+            ConfigTextRef.phasor_ll: ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
+            ConfigTextRef.phasor_ln: ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
             ConfigTextRef.harmonics_for_img: ["Harmonics", "Voltage", "Current"],
             ConfigTextRef.harmonics_vol_3p4w: ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "c"],
             ConfigTextRef.harmonics_curr: ["Harmonics", "Voltage", "Current", "[A]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
             ConfigTextRef.harmonics_per_fund: ["Harmonics", "Voltage", "Current","[%]Fund", "Graph", "THD", "Fund."],
             ConfigTextRef.harmonics_per_rms: ["Harmonics", "Voltage", "Current","[%]RMS", "Graph", "THD", "Fund."],
-            ConfigTextRef.harmonics_text: ["Harmonics", "Voltage", "Current", "[v]", "Text"],
             ConfigTextRef.waveform_3p4w: ["Waveform", "Voltage", "Current"],
             ConfigTextRef.symm_vol_ll: ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence"],
             ConfigTextRef.symm_vol_ln: ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
@@ -330,14 +420,6 @@ class ConfigSetup():
 
     def touch_data(self):
         coordinates = {
-            "side_menu_1": [80, 135],
-            "side_menu_2": [80, 180],
-            "side_menu_3": [80, 225],
-            "side_menu_4": [80, 270],
-            "side_menu_5": [80, 315],
-            "side_menu_6": [80, 360],
-            "side_menu_7": [80, 405],
-            "side_menu_8": [80, 450],
             "data_view_1": [320, 210],
             "data_view_2": [620, 210],
             "data_view_3": [320, 280],
@@ -384,28 +466,6 @@ class ConfigSetup():
             "infinite": [490, 125],
             "cauiton_confirm": [340, 330],
             "cauiton_cancel": [450, 330],
-            "meas_L-L": [410, 150],
-            "meas_L-N": [510, 150],
-            "Min": [620, 150],
-            "Max": [720, 150],
-            "thd_L_L": [520, 150],
-            "thd_L_N": [620, 150],
-            ConfigTouch.touch_analysis_vol: [590, 150],
-            ConfigTouch.touch_analysis_curr: [720, 150],
-            ConfigTouch.touch_harmonics_fund: [510, 200],
-            ConfigTouch.touch_harmonics_submenu_1: [230, 200],
-            ConfigTouch.touch_harmonics_submenu_2: [360, 200],
-            ConfigTouch.touch_harmonics_sub_v: [230, 240],
-            ConfigTouch.touch_harmonics_sub_fund: [230, 285],
-            ConfigTouch.touch_harmonics_sub_rms: [230, 330],
-            "phasor_vll": [620, 210],
-            "phasor_vln": [720, 210],
-            ConfigTouch.touch_wave_vol_a: [360, 200],
-            ConfigTouch.touch_wave_vol_b: [430, 200],
-            ConfigTouch.touch_wave_vol_c: [490, 200],
-            ConfigTouch.touch_wave_curr_a: [620, 200],
-            ConfigTouch.touch_wave_curr_b: [680, 200],
-            ConfigTouch.touch_wave_curr_c: [740, 200],
         }
         return coordinates
 
@@ -451,17 +511,3 @@ class ConfigSetup():
         }
 
         return meter_m_cur_mappings_value, meter_m_cur_mappings_uint16, meter_m_cur_mappings_uint32
-
-    def touch_address_data(self):
-
-        coordinates = {
-            "ui_test_mode": 57100,
-            "screen_capture": 57101,
-            "pos_x": 57110,
-            "pos_y": 57111,
-            "touch_mode": 57112,
-            "setup_button_bit": 57120,
-            "setup_button": 57121,
-        }
-
-        return coordinates
