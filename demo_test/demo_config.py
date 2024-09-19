@@ -53,6 +53,10 @@ class ConfigROI(Enum):
     color_rms_vol_ll = [380, 140, 10, 10, 67, 136, 255]
     color_rms_vol_ln = [480, 140, 10, 10, 67, 136, 255]
     color_vol_thd_ll = [480, 140, 10, 10, 67, 136, 255]
+    color_phasor_vll = [580, 200, 10, 10, 67, 136, 255]
+    color_phasor_vln = [680, 200, 10, 10, 67, 136, 255]
+    color_symm_thd_vol_ll = [480, 140, 10, 10, 67, 136, 255]
+    color_symm_thd_vol_ln = [580, 140, 10, 10, 67, 136, 255]
     ### A상 버튼 눌러서 A상이 안보이는 지 확인 / 앞 4자리는 검사할 그래프 영역###
     ### 뒤 3자리는 RGB ###
     color_waveform_vol_a = [313, 253, 411, 203, 0, 0, 0]
@@ -82,20 +86,19 @@ class ConfigTextRef(Enum):
     thd_vol_ln = ["Total Harmonic Distortion L-L L-N Max", "A", "B", "c"]
     freq = ["Frequency Min Max", "Frequency"]
     residual_vol = ["Residual Voltage Min Max", "RMS", "Fund."]
-    rms_curr = "meas_rms_curr"
-    fund_curr = "meas_fund_curr"
-    thd_curr = "meas_thd_curr"
-    tdd_curr = "meas_tdd_curr"
-    cf_curr = "meas_crest_factor_curr"
-    kf_curr = "meas_k_factor_curr"
-    residual_curr = "meas_residual_curr"
-    active = "meas_pow_active"
-    reactive = "meas_pow_reactive"
-    apparent = "meas_pow_apparent"
-    pf = "meas_pow_pf"
+    rms_curr = ["RMS Current Min Max", "A", "B", "c", "Average"]
+    fund_curr = ["Fundamental Current Min Max", "A", "B", "c", "Average"]
+    thd_curr = ["Total Harmonic Distortion Max", "A", "B", "c"]
+    tdd_curr = ["Total Demand Distortion Max", "A", "B", "c"]
+    cf_curr = ["Crest Factor Max", "A", "B", "c"]
+    kf_curr = ["K-Factor Max", "A", "B", "c"]
+    residual_curr = ["Residual Current Min Max", "RMS", "Fund."]
+    active = ["Active Power Min Max", "A", "B", "c", "Total"]
+    reactive = ["Reactive Power Min Max", "A", "B", "c", "Total"]
+    apparent = ["Apparent Power Min Max", "A", "B", "c", "Total"]
+    pf = ["Power Factor Min Max", "A", "B", "c", "Total"]
     phasor_ll = "phasor_ll"
     phasor_ln = "phasor_ln"
-    
     phasor_vll = "phasor_vll"
     phasor_vln = "phasor_vln"
     harmonics_for_img = "harmonics_for_img_title"
@@ -316,17 +319,6 @@ class ConfigSetup():
 
     def match_m_setup_labels(self):
         m_home = {
-            ConfigTextRef.rms_curr: ["RMS Current Min Max", "A", "B", "c", "Average"],
-            ConfigTextRef.fund_curr: ["Fundamental Current Min Max", "A", "B", "c", "Average"],
-            ConfigTextRef.thd_curr: ["Total Harmonic Distortion Max", "A", "B", "c"],
-            ConfigTextRef.tdd_curr: ["Total Demand Distortion Max", "A", "B", "c"],
-            ConfigTextRef.cf_curr: ["Crest Factor Max", "A", "B", "c"],
-            ConfigTextRef.kf_curr: ["K-Factor Max", "A", "B", "c"],
-            ConfigTextRef.residual_curr: ["Residual Current Min Max", "RMS", "Fund."],
-            ConfigTextRef.active: ["Active Power Min Max", "A", "B", "c", "Total"],
-            ConfigTextRef.reactive: ["Reactive Power Min Max", "A", "B", "c", "Total"],
-            ConfigTextRef.apparent: ["Apparent Power Min Max", "A", "B", "c", "Total"],
-            ConfigTextRef.pf: ["Power Factor Min Max", "A", "B", "c", "Total"],
             "L-N": ["A", "B", "c", "Average"],
             "L_Min": ["AB", "BC", "CA", "Average"],
             "L_Max": ["AB", "BC", "CA", "Average"],
@@ -397,10 +389,6 @@ class ConfigSetup():
     def color_detection_data(self):
 
         coordinates = {
-            
-            "vol_thd_L_N": [580, 140, 10, 10, 67, 136, 255],
-            "phasor_VLL": [580, 200, 10, 10, 67, 136, 255],
-            "phasor_VLN": [680, 200, 10, 10, 67, 136, 255],
             "measurement": [5, 70, 10, 10, 47, 180, 139],
             
             "mea_demand": [110, 220, 10, 10, 255, 255, 255],

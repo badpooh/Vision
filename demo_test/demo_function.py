@@ -500,42 +500,44 @@ class Evaluation:
             all_meas_results.extend(check_results(["Total"], (705, 715, "W"), ocr_res_meas[7:8]))
             
         elif "Reactive Power" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C"], (130, 145, "VAR"), ocr_res_meas[4:7])
-            check_results(["Total"], (400, 420, "VAR"), ocr_res_meas[7:8])
+            all_meas_results.extend(check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (130, 145, "VAR"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (400, 420, "VAR"), ocr_res_meas[7:8]))
             
         elif "Apparent Power" in ''.join(ocr_res[0]):
-            check_results(['A', 'B', 'C', 'Total'],(45, 55, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7])
-            check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8])
+            all_meas_results.extend(check_results(['A', 'B', 'C', 'Total'],(45, 55, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8]))
             
         elif "Power Factor" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "Lag"), ocr_res_meas[:4])
-            check_results(["A", "B", "C", "Total"], (0.860, 0.870, ""), ocr_res_meas[4:8])
-
+            all_meas_results.extend(check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "Lag"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Total"], (0.860, 0.870, ""), ocr_res_meas[4:8]))
+            
         elif "Phasor" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                check_results(["AB", "BC", "CA"], (180, 195, "v"), ocr_res_meas[:3])
-                check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
-                check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7])
-                check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8])
-                check_results(["CA_angle"], (145, 155, ""), ocr_res_meas[8:9])
-                check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
-                check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
-                check_results([ecir.img_ref_phasor_all_vll.value], (0.98, 1, ""), img_result[0])
-                check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
-            elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
-                check_results(["A", "B", "C"], (100, 120, "v"), ocr_res_meas[:3])
-                check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
-                check_results(["A_angle"], (-0.2, 5, ""), ocr_res_meas[6:7])
-                check_results(["B_angle"], (-125, -115, ""), ocr_res_meas[7:8])
-                check_results(["C_angle"], (115, 125, ""), ocr_res_meas[8:9])
-                check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
-                check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
-                check_results([ecir.img_ref_phasor_all_vln.value], (0.98, 1, ""), img_result[0])
-                check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
+            if self.ocr_manager.color_detection(image, ecr.color_phasor_vll.value) <= 10:
+                all_meas_results.extend(check_results(["AB", "BC", "CA"], (180, 195, "v"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6]))
+                all_meas_results.extend(check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7]))
+                all_meas_results.extend(check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8]))
+                all_meas_results.extend(check_results(["CA_angle"], (145, 155, ""), ocr_res_meas[8:9]))
+                all_meas_results.extend(check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10]))
+                all_meas_results.extend(check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11]))
+                all_meas_results.extend(check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12]))
+                all_meas_results.extend(check_results([ecir.img_ref_phasor_all_vll.value], (0.98, 1, ""), img_result[0]))
+                all_meas_results.extend(check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3]))
+                
+            elif self.ocr_manager.color_detection(image, ecr.color_phasor_vln.value) <= 10:
+                all_meas_results.extend(check_results(["A", "B", "C"], (100, 120, "v"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6]))
+                all_meas_results.extend(check_results(["A_angle"], (-0.2, 5, ""), ocr_res_meas[6:7]))
+                all_meas_results.extend(check_results(["B_angle"], (-125, -115, ""), ocr_res_meas[7:8]))
+                all_meas_results.extend(check_results(["C_angle"], (115, 125, ""), ocr_res_meas[8:9]))
+                all_meas_results.extend(check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10]))
+                all_meas_results.extend(check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11]))
+                all_meas_results.extend(check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12]))
+                all_meas_results.extend(check_results([ecir.img_ref_phasor_all_vln.value], (0.98, 1, ""), img_result[0]))
+                all_meas_results.extend(check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3]))
+                
             else:
                 print("demo test evaluation error")
 
@@ -563,27 +565,27 @@ class Evaluation:
                     
         elif "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
-                check_results(["waveform_image"], (0.945, 1, ""), img_result)
+                all_meas_results.extend(check_results(["waveform_image"], (0.945, 1, ""), img_result))
             else:
-                check_results(["waveform_img_detect"], (1, 1, ""), img_result)
-
+                all_meas_results.extend(check_results(["waveform_img_detect"], (1, 1, ""), img_result))
+                
         elif "Volt. Symm. Component" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
-                check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
-                check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
-                check_results(['V1'], (180, 200, "V" or "v"), ocr_res_meas[2:3])
-                check_results(['V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
-            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
-                check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
-                check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
-                check_results(['V0'], (180, 200, "V0"), ocr_res_meas[2:3])
-                check_results(['V1'], (100, 110, "V" or "v"), ocr_res_meas[3:4])
-                check_results(['V2'], (0, 2, "V" or "v"), ocr_res_meas[4:5])
-                check_results(['V0'], (0, 1, "V" or "v"), ocr_res_meas[5:6])
+            if self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ll.value) <= 10:
+                all_meas_results.extend(check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1]))
+                all_meas_results.extend(check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2]))
+                all_meas_results.extend(check_results(['V1'], (180, 200, "V" or "v"), ocr_res_meas[2:3]))
+                all_meas_results.extend(check_results(['V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4]))
+            elif self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ll.value) <= 10:
+                all_meas_results.extend(check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1]))
+                all_meas_results.extend(check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2]))
+                all_meas_results.extend(check_results(['V0'], (180, 200, "V0"), ocr_res_meas[2:3]))
+                all_meas_results.extend(check_results(['V1'], (100, 110, "V" or "v"), ocr_res_meas[3:4]))
+                all_meas_results.extend(check_results(['V2'], (0, 2, "V" or "v"), ocr_res_meas[4:5]))
+                all_meas_results.extend(check_results(['V0'], (0, 1, "V" or "v"), ocr_res_meas[5:6]))
                 
         elif "Voltage Unbalance" in ''.join(ocr_res[0]):
-            check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4])
-            check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8])
+            all_meas_results.extend(check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4]))
+            all_meas_results.extend(check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8]))
             
         elif "Curr. Symm. Component" in ''.join(ocr_res[0]):
             all_meas_results.extend(check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1]))
