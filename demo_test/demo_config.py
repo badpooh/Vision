@@ -74,14 +74,14 @@ class ConfigROI(Enum):
     color_harmonics_curr = [660, 140, 10, 10, 67, 136, 255]
 
 class ConfigTextRef(Enum):
-    rms_vol_ll = "meas_rms_vol_ll"
-    rms_vol_ln = "meas_rms_vol_ln"
-    fund_vol_ll = "meas_fund_vol_ll"
-    fund_vol_ln = "meas_fund_vol_ln"
-    thd_vol_ll = "meas_thd_vol_ll"
-    thd_vol_ln = "meas_thd_vol_ll"
-    freq = "meas_frequency"
-    residual_vol = "meas_residual_vol"
+    rms_vol_ll =  ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"]
+    rms_vol_ln = ["RMS Voltage L-L L-N Min Max", "A", "B", "c", "Average"]
+    fund_vol_ll = ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"]
+    fund_vol_ln = ["Fund. Volt. L-L L-N Min Max", "A", "B", "c", "Average"]
+    thd_vol_ll = ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA"]
+    thd_vol_ln = ["Total Harmonic Distortion L-L L-N Max", "A", "B", "c"]
+    freq = ["Frequency Min Max", "Frequency"]
+    residual_vol = ["Residual Voltage Min Max", "RMS", "Fund."]
     rms_curr = "meas_rms_curr"
     fund_curr = "meas_fund_curr"
     thd_curr = "meas_thd_curr"
@@ -139,28 +139,28 @@ class ConfigTouch(Enum):
     touch_side_menu_7 = [80, 405]
     touch_side_menu_8 = [80, 450]
 
-    touch_meas_ll = [410, 150],
-    touch_meas_ln = [510, 150],
-    touch_thd_ll = [520, 150],
-    touch_thd_ln = [620, 150],
-    touch_max = [720, 150],
-    touch_min = [620, 150],
-    touch_phasor_vll = [620, 210],
-    touch_phasor_vln = [720, 210],
-    touch_analysis_vol = [590, 150],
-    touch_analysis_curr = [720, 150],
-    touch_harmonics_fund = [510, 200],
+    touch_meas_ll = [410, 150]
+    touch_meas_ln = [510, 150]
+    touch_thd_ll = [520, 150]
+    touch_thd_ln = [620, 150]
+    touch_max = [720, 150]
+    touch_min = [620, 150]
+    touch_phasor_vll = [620, 210]
+    touch_phasor_vln = [720, 210]
+    touch_analysis_vol = [590, 150]
+    touch_analysis_curr = [720, 150]
+    touch_harmonics_fund = [510, 200]
     touch_harmonics_submenu_1 = [230, 200]
     touch_harmonics_submenu_2 = [360, 200]
-    touch_wave_curr_a = [620, 200],
-    touch_wave_curr_b = [680, 200],
-    touch_wave_curr_c = [740, 200],
-    touch_wave_vol_a = [360, 200],
-    touch_wave_vol_b = [430, 200],
-    touch_wave_vol_c = [490, 200],
-    touch_harmonics_sub_v = [230, 240],
-    touch_harmonics_sub_fund = [230, 285],
-    touch_harmonics_sub_rms = [230, 330],
+    touch_wave_curr_a = [620, 200]
+    touch_wave_curr_b = [680, 200]
+    touch_wave_curr_c = [740, 200]
+    touch_wave_vol_a = [360, 200]
+    touch_wave_vol_b = [430, 200]
+    touch_wave_vol_c = [490, 200]
+    touch_harmonics_sub_v = [230, 240]
+    touch_harmonics_sub_fund = [230, 285]
+    touch_harmonics_sub_rms = [230, 330]
     touch_harmonics_sub_graph = [360, 240]
     touch_harmonics_sub_text = [360, 285]
     
@@ -175,7 +175,7 @@ class ConfigTouch(Enum):
 
 
 class ConfigColor(Enum):
-    color_harmonics_vol_a = [313, 253, 411, 203, 0, 0, 0],
+    color_harmonics_vol_a = [313, 253, 411, 203, 0, 0, 0]
 
 class ConfigImgRef(Enum):
     img_ref_phasor_all_vll = r".\image_ref\phasor_ref_all_vll.png"
@@ -316,14 +316,6 @@ class ConfigSetup():
 
     def match_m_setup_labels(self):
         m_home = {
-            ConfigTextRef.rms_vol_ll: ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"],
-            ConfigTextRef.rms_vol_ln: ["RMS Voltage L-L L-N Min Max", "A", "B", "c", "Average"],
-            ConfigTextRef.fund_vol_ll: ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"],
-            ConfigTextRef.fund_vol_ln: ["Fund. Volt. L-L L-N Min Max", "A", "B", "c", "Average"],
-            ConfigTextRef.thd_vol_ll: ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA"],
-            ConfigTextRef.thd_vol_ln: ["Total Harmonic Distortion L-L L-N Max", "A", "B", "c"],
-            ConfigTextRef.freq: ["Frequency Min Max", "Frequency"],
-            ConfigTextRef.residual_vol: ["Residual Voltage Min Max", "RMS", "Fund."],
             ConfigTextRef.rms_curr: ["RMS Current Min Max", "A", "B", "c", "Average"],
             ConfigTextRef.fund_curr: ["Fundamental Current Min Max", "A", "B", "c", "Average"],
             ConfigTextRef.thd_curr: ["Total Harmonic Distortion Max", "A", "B", "c"],

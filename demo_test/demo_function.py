@@ -94,7 +94,7 @@ class TouchManager:
 
     def uitest_mode_start(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["ui_test_mode"], 1)
+            self.touch_write(ect.touch_addr_ui_test_mode.value, 1)
         else:
             print("client Error")
 
@@ -451,18 +451,18 @@ class Evaluation:
         all_meas_results = []
 
         if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data[ecr.color_rms_vol_ll.value]) <= 10:
+            if self.ocr_manager.color_detection(image, ecr.color_rms_vol_ll.value) <= 10:
                 all_meas_results.extend(check_results(["AB", "BC", "CA", "Aver"], (180, 200, "V"), ocr_res_meas[:5]))
-            elif self.ocr_manager.color_detection(image, color_data[ecr.color_rms_vol_ln.value]) <= 10:
+            elif self.ocr_manager.color_detection(image, ecr.color_rms_vol_ln.value) <= 10:
                 all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (100, 120, "V"), ocr_res_meas[:5]))
             else:
                 print("RMS Voltage missed")
 
         elif "Total Harmonic" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_main_menu_vol.value) <= 10: 
-                if self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
+                if self.ocr_manager.color_detection(image, ecr.color_vol_thd_ll.value) <= 10:
                     all_meas_results.extend(check_results(["AB", "BC", "CA"], (2.0, 4.0, "%"), ocr_res_meas[:4]))
-                elif self.ocr_manager.color_detection(image, color_data[ecr.color_vol_thd_ll.value]) <= 10:
+                elif self.ocr_manager.color_detection(image, ecr.color_vol_thd_ll.value) <= 10:
                     all_meas_results.extend(check_results(["A", "B", "C"], (3.0, 4.0, "%"), ocr_res_meas[:4]))
                 else:
                     print("Total Harmonic missed")
@@ -478,7 +478,7 @@ class Evaluation:
             all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (2, 3, "A"), ocr_res_meas[4:]))
 
         elif "Total Harmonic" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data[ecr.color_main_menu_curr.value]) <= 10: 
+            if self.ocr_manager.color_detection(image, ecr.color_main_menu_curr.value) <= 10: 
                 all_meas_results.extend(check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3]))
 
         elif "Total Demand" in ''.join(ocr_res[0]):
@@ -710,6 +710,9 @@ class Evaluation:
         ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_results = time_results if time_results is not None else []
         img_result = [img_result]
+
+        if invalid_elements is None:
+            invalid_elements = []
 
         if ocr_img_meas == bool:
             ocr_img_meas = []
