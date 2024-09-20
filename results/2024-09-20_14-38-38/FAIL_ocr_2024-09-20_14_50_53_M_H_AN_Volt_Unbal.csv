@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-09-20 14:47:45.371658),Img Match,H.Text
+Voltage Unbalance Max,,,,,,
+NEMA,LL (FAIL),[] (PASS),[] (PASS),2024-09-20 14:50:52 (PASS),,
+NEMA,LN (FAIL),,,2024-09-20 14:50:52 (PASS),,
+Negative- Sequence,U2 (FAIL),,,2024-09-20 14:50:50 (PASS),,
+Zero- Sequence,U0 (FAIL),,,2024-09-20 14:50:30 (PASS),,
+,0.2% (PASS),,,,,
+,0.5% (PASS),,,,,
+,0.9% (PASS),,,,,
+,1.0% (PASS),,,,,

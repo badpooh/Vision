@@ -268,7 +268,7 @@ class OCRManager:
                 ocr_results[roi_key] = extracted_texts
    
         for roi_key, text in ocr_results.items():
-            print(f'ROI {roi_key}: {text}')
+            print(f'{roi_key}: {text}')
         
         # 유효한 텍스트만 리스트로 반환
         ocr_results_list = [text for text in ocr_results.values() if text]
@@ -462,7 +462,7 @@ class Evaluation:
             if self.ocr_manager.color_detection(image, ecr.color_main_menu_vol.value) <= 10: 
                 if self.ocr_manager.color_detection(image, ecr.color_vol_thd_ll.value) <= 10:
                     all_meas_results.extend(check_results(["AB", "BC", "CA"], (2.0, 4.0, "%"), ocr_res_meas[:4]))
-                elif self.ocr_manager.color_detection(image, ecr.color_vol_thd_ll.value) <= 10:
+                elif self.ocr_manager.color_detection(image, ecr.color_vol_thd_ln.value) <= 10:
                     all_meas_results.extend(check_results(["A", "B", "C"], (3.0, 4.0, "%"), ocr_res_meas[:4]))
                 else:
                     print("Total Harmonic missed")
@@ -584,8 +584,11 @@ class Evaluation:
                 all_meas_results.extend(check_results(['V0'], (0, 1, "V" or "v"), ocr_res_meas[5:6]))
                 
         elif "Voltage Unbalance" in ''.join(ocr_res[0]):
-            all_meas_results.extend(check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4]))
-            all_meas_results.extend(check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8]))
+            all_meas_results.extend(check_results(["NEMA LL"], (0, 1, "LL"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["NEMA LN"], (0, 1, "LN"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["U2"], (0, 1, "U2"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results(["U0"], (0, 1, "U0"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["NEMA LL", "NEMA LN", "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8]))
             
         elif "Curr. Symm. Component" in ''.join(ocr_res[0]):
             all_meas_results.extend(check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1]))

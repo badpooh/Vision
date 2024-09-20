@@ -33,7 +33,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             "voltage": False,
             "current": False,
             "power": False,
-            "analysis": False,}
+            "analysis": False,
+            "demand": False,
+            }
         self.thread = False
         self.stop_thread = False
         self.ocr = ImgOCR()

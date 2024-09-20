@@ -181,7 +181,7 @@ class DemoProcess:
         image_results.append(self.evaluation.img_match(image_path, img_cut1, img_ref))
         image_results.append(self.evaluation.img_match(image_path, img_cut2, img_ref))
         image_results.append(self.evaluation.img_match(image_path, img_cut3, img_ref))
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
 
     def ocr_graph_detection(self, roi_keys, ocr_ref, value, base_save_path):
@@ -191,7 +191,7 @@ class DemoProcess:
         ocr_ref = ocr_ref
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_detection(image_path, value, 2)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
 
 class DemoTest:
@@ -517,7 +517,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.rms_curr, base_save_path)
+        self.sp.ocr_curr_4phase(ec.rms_curr.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -525,7 +525,7 @@ class DemoTest:
         ### Current Min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.rms_curr, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.rms_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -533,7 +533,7 @@ class DemoTest:
         ### Current Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.rms_curr, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.rms_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -547,7 +547,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.fund_curr, base_save_path)
+        self.sp.ocr_curr_4phase(ec.fund_curr.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -555,7 +555,7 @@ class DemoTest:
         ### Current Min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.fund_curr, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.fund_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -563,7 +563,7 @@ class DemoTest:
         ### Current Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.fund_curr, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.fund_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -577,7 +577,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_4.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.thd_curr, base_save_path)
+        self.sp.ocr_3phase(ec.thd_curr.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -585,7 +585,7 @@ class DemoTest:
         ### Current thd Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.thd_curr, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.thd_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -599,7 +599,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_5.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.tdd_curr, base_save_path)
+        self.sp.ocr_3phase(ec.tdd_curr.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -607,7 +607,7 @@ class DemoTest:
         ### Current tdd Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.tdd_curr, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.tdd_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -621,7 +621,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_6.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.cf_curr, base_save_path)
+        self.sp.ocr_3phase(ec.cf_curr.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -629,7 +629,7 @@ class DemoTest:
         ### Current crest factor Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.cf_curr, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.cf_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -643,7 +643,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_7.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.kf_curr, base_save_path)
+        self.sp.ocr_3phase(ec.kf_curr.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -651,7 +651,7 @@ class DemoTest:
         ### Current k-factor Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.kf_curr, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.kf_curr.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -668,7 +668,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas]
-        ocr_ref = ec.residual_curr
+        ocr_ref = ec.residual_curr.value
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -680,7 +680,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas]
-        ocr_ref = ec.residual_curr
+        ocr_ref = ec.residual_curr.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
                             roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
@@ -694,7 +694,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas]
-        ocr_ref = ec.residual_curr
+        ocr_ref = ec.residual_curr.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
                             roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
@@ -711,7 +711,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.active, base_save_path)
+        self.sp.ocr_curr_4phase(ec.active.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -719,7 +719,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.active, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.active.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -727,7 +727,7 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.active, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.active.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -741,7 +741,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.reactive, base_save_path)
+        self.sp.ocr_curr_4phase(ec.reactive.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -749,7 +749,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.reactive, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.reactive.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -757,7 +757,7 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.reactive, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.reactive.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -771,7 +771,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_3.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.apparent, base_save_path)
+        self.sp.ocr_curr_4phase(ec.apparent.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -779,7 +779,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.apparent, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.apparent.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -787,7 +787,7 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.apparent, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.apparent.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -801,7 +801,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_4.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.pf, base_save_path)
+        self.sp.ocr_curr_4phase(ec.pf.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -809,7 +809,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.pf, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.pf.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -817,7 +817,7 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.pf, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.pf.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -828,14 +828,14 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vll.value, ec.phasor_ll, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ## voltage+current vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vln.value, ec.phasor_ln, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -843,14 +843,14 @@ class DemoTest:
         ### voltage vll ###
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vll.value, ec.phasor_ll, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### voltage vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vln.value, ec.phasor_ln, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -859,14 +859,14 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_analysis_vol.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vll.value, ec.phasor_ll, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### current vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vln.value, ec.phasor_ln, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -874,14 +874,14 @@ class DemoTest:
         ### nothing vll ###
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vll.value, ec.phasor_ll, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### nothing vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vln.value, ec.phasor_ln, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -898,11 +898,11 @@ class DemoTest:
                     ecroi.harmonics_graph_a, ecroi.harmonics_graph_b, ecroi.harmonics_graph_c]
         roi_keys_meas = [ecroi.harmonics_thd_a, ecroi.harmonics_thd_b, ecroi.harmonics_thd_c,
                          ecroi.harmonics_fund_a, ecroi.harmonics_fund_b, ecroi.harmonics_fund_c]
-        ocr_ref = ec.harmonics_vol_3p4w
+        ocr_ref = ec.harmonics_vol_3p4w.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_vol_3p4w.value,)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -916,11 +916,11 @@ class DemoTest:
                     ecroi.harmonics_graph_a, ecroi.harmonics_graph_b, ecroi.harmonics_graph_c]
         roi_keys_meas = [ecroi.harmonics_thd_a, ecroi.harmonics_thd_b, ecroi.harmonics_thd_c,
                          ecroi.harmonics_fund_a, ecroi.harmonics_fund_b, ecroi.harmonics_fund_c]
-        ocr_ref = ec.harmonics_curr
+        ocr_ref = ec.harmonics_curr.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_curr.value,)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -929,7 +929,7 @@ class DemoTest:
         ### vol_a-phase X ###
         self.touch_manager.menu_touch(ect.touch_analysis_vol.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -937,7 +937,7 @@ class DemoTest:
         ### vol_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -945,7 +945,7 @@ class DemoTest:
         ### vol_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -954,7 +954,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -962,7 +962,7 @@ class DemoTest:
         ### curr_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -970,7 +970,7 @@ class DemoTest:
         ### curr_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -980,23 +980,23 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_analysis_vol.value)
         self.touch_manager.menu_touch(ect.touch_harmonics_fund.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1010,10 +1010,10 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
-        ocr_ref = ec.harmonics_per_fund
+        ocr_ref = ec.harmonics_per_fund.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_fund.value,)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1025,10 +1025,10 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
-        ocr_ref = ec.harmonics_per_rms
+        ocr_ref = ec.harmonics_per_rms.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_rms.value,)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1041,25 +1041,25 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
-        ocr_ref = ec.harmonics_per_fund
+        ocr_ref = ec.harmonics_per_fund.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_fund.value,)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### current rms ###
-        self.touch_manager.menu_touch(ect.touch_harmonics_submenu_1.value.value)
+        self.touch_manager.menu_touch(ect.touch_harmonics_submenu_1.value)
         self.touch_manager.menu_touch(ect.touch_harmonics_sub_rms.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.waveform_title, ecroi.harmonics_sub_title_1]
-        ocr_ref = ec.harmonics_per_rms
+        ocr_ref = ec.harmonics_per_rms.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_rms.value,)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1096,10 +1096,10 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.waveform_title]
-        ocr_ref = ec.waveform_3p4w
+        ocr_ref = ec.waveform_3p4w.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all.value,)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1107,7 +1107,7 @@ class DemoTest:
 
         ### waveform vol_a-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_a.value)
-        self.sp.ocr_graph_detection(roi_keys=[ecroi.waveform_title], ocr_ref=ec.waveform_3p4w, value=ecroi.color_waveform_vol_a.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection(roi_keys=[ecroi.waveform_title], ocr_ref=ec.waveform_3p4w.value, value=ecroi.color_waveform_vol_a.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1115,7 +1115,7 @@ class DemoTest:
         ### waveform vol_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_a.value)
         self.touch_manager.menu_touch(ect.touch_wave_vol_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_vol_b.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w.value, ecroi.color_waveform_vol_b.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1123,7 +1123,7 @@ class DemoTest:
         ### waveform vol_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_b.value)
         self.touch_manager.menu_touch(ect.touch_wave_vol_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_vol_c.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w.value, ecroi.color_waveform_vol_c.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1131,7 +1131,7 @@ class DemoTest:
         ### waveform curr_a-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_c.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_curr_a.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w.value, ecroi.color_waveform_curr_a.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1139,7 +1139,7 @@ class DemoTest:
         ### waveform curr_b-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_curr_b.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w.value, ecroi.color_waveform_curr_b.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1147,7 +1147,7 @@ class DemoTest:
         ### waveform curr_c-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_curr_b.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w, ecroi.color_waveform_curr_c.value, base_save_path=base_save_path)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.waveform_3p4w.value, ecroi.color_waveform_curr_c.value, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1163,7 +1163,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.a_meas, ecroi.b_meas]
-        ocr_ref = ec.symm_vol_ll
+        ocr_ref = ec.symm_vol_ll.value
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1175,7 +1175,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.a_meas, ecroi.b_meas]
-        ocr_ref = ec.symm_vol_ll
+        ocr_ref = ec.symm_vol_ll.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
         if self.stop_event.is_set():
@@ -1189,7 +1189,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c, ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
-        ocr_ref = ec.symm_vol_ln
+        ocr_ref = ec.symm_vol_ln.value
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1201,7 +1201,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c, ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
-        ocr_ref = ec.symm_vol_ln
+        ocr_ref = ec.symm_vol_ln.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
         if self.stop_event.is_set():
@@ -1216,7 +1216,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_5.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.unbal_vol, base_save_path)
+        self.sp.ocr_curr_4phase(ec.unbal_vol.value, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1224,7 +1224,7 @@ class DemoTest:
         ### vol unbalance max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.unbal_vol, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.unbal_vol.value, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1241,7 +1241,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
-        ocr_ref = ec.symm_curr
+        ocr_ref = ec.symm_curr.value
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1255,7 +1255,7 @@ class DemoTest:
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp, ecroi.c_time_stamp]
-        ocr_ref = ec.symm_curr
+        ocr_ref = ec.symm_curr.value
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1273,7 +1273,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
-        ocr_ref = ec.unbal_curr
+        ocr_ref = ec.unbal_curr.value
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1287,7 +1287,7 @@ class DemoTest:
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp, ecroi.c_time_stamp]
-        ocr_ref = ec.unbal_curr
+        ocr_ref = ec.unbal_curr.value
         self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")

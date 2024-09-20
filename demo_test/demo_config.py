@@ -53,6 +53,7 @@ class ConfigROI(Enum):
     color_rms_vol_ll = [380, 140, 10, 10, 67, 136, 255]
     color_rms_vol_ln = [480, 140, 10, 10, 67, 136, 255]
     color_vol_thd_ll = [480, 140, 10, 10, 67, 136, 255]
+    color_vol_thd_ln = [580, 140, 10, 10, 67, 136, 255]
     color_phasor_vll = [580, 200, 10, 10, 67, 136, 255]
     color_phasor_vln = [680, 200, 10, 10, 67, 136, 255]
     color_symm_thd_vol_ll = [480, 140, 10, 10, 67, 136, 255]
@@ -97,21 +98,19 @@ class ConfigTextRef(Enum):
     reactive = ["Reactive Power Min Max", "A", "B", "c", "Total"]
     apparent = ["Apparent Power Min Max", "A", "B", "c", "Total"]
     pf = ["Power Factor Min Max", "A", "B", "c", "Total"]
-    phasor_ll = "phasor_ll"
-    phasor_ln = "phasor_ln"
-    phasor_vll = "phasor_vll"
-    phasor_vln = "phasor_vln"
-    harmonics_for_img = "harmonics_for_img_title"
-    harmonics_vol_3p4w = "harmonics_voltage_wye"
-    harmonics_curr = "harmonics_current"
-    harmonics_per_fund = "harmonics_[%]_fund"
-    harmonics_per_rms = "harmonics_[%]_rms"
-    waveform_3p4w = "waveform_3p4w"
-    unbal_vol = "unbal_vol"
-    symm_vol_ll = "symm_vol_ll"
-    symm_vol_ln = "symm_vol_ln"
-    symm_curr = "symm_curr"
-    unbal_curr = "unbal_curr"
+    phasor_ll = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"]
+    phasor_ln = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"]
+    harmonics_for_img = ["Harmonics", "Voltage", "Current"]
+    harmonics_vol_3p4w = ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"]
+    harmonics_curr = ["Harmonics", "Voltage", "Current", "[A]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"]
+    harmonics_per_fund = ["Harmonics", "Voltage", "Current","[%]Fund", "Graph", "THD", "Fund."]
+    harmonics_per_rms = ["Harmonics", "Voltage", "Current","[%]RMS", "Graph", "THD", "Fund."]
+    waveform_3p4w = ["Waveform", "Voltage", "Current"]
+    symm_vol_ll = ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence"]
+    symm_vol_ln = ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"]
+    unbal_vol = ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"]
+    symm_curr = ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"]
+    unbal_curr = ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"]
     demand_current = ["Demand Current Peak", "A", "B", "c", "Average"]
     harmonics_text = ["Harmonics", "Voltage", "Current", "[v]", "Text", "A", "B", "C"]
     
@@ -324,20 +323,7 @@ class ConfigSetup():
             "L_Max": ["AB", "BC", "CA", "Average"],
             "N_Min": ["A", "B", "c", "Average"],
             "N_Max": ["A", "B", "c", "Average"],
-            ConfigTextRef.phasor_ll: ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"],
-            ConfigTextRef.phasor_ln: ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"],
-            ConfigTextRef.harmonics_for_img: ["Harmonics", "Voltage", "Current"],
-            ConfigTextRef.harmonics_vol_3p4w: ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "c"],
-            ConfigTextRef.harmonics_curr: ["Harmonics", "Voltage", "Current", "[A]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"],
-            ConfigTextRef.harmonics_per_fund: ["Harmonics", "Voltage", "Current","[%]Fund", "Graph", "THD", "Fund."],
-            ConfigTextRef.harmonics_per_rms: ["Harmonics", "Voltage", "Current","[%]RMS", "Graph", "THD", "Fund."],
-            ConfigTextRef.waveform_3p4w: ["Waveform", "Voltage", "Current"],
-            ConfigTextRef.symm_vol_ll: ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence"],
-            ConfigTextRef.symm_vol_ln: ["Volt. Symm. Component L-L L-N Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
-            ConfigTextRef.unbal_vol: ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"],
-            ConfigTextRef.symm_curr: ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"],
-            ConfigTextRef.unbal_curr: ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"],
-        }
+                    }
 
         m_setup = {
             # voltage
