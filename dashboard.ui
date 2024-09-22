@@ -571,8 +571,8 @@ QPushButton:checked{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>60</width>
-                     <height>480</height>
+                     <width>98</width>
+                     <height>28</height>
                     </rect>
                    </property>
                   </widget>
@@ -849,6 +849,19 @@ UI TEST STOP</string>
            </property>
            <property name="text">
             <string>DEMAND</string>
+           </property>
+          </widget>
+          <widget class="QTextEdit" name="log">
+           <property name="geometry">
+            <rect>
+             <x>610</x>
+             <y>100</y>
+             <width>551</width>
+             <height>501</height>
+            </rect>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </widget>

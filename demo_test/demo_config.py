@@ -22,6 +22,29 @@ class ConfigROI(Enum):
     curr_per_c = "meas_curr_percent_c"
     curr_per_aver = "meas_curr_percent_aver"
     
+    phasor_img_cut = "phasor_img_cut"
+    phasor_title = "phasor_title"
+    phasor_view_2 = "phasor_view_2"
+    phasor_vl_vn = "phasor_vl_vn"
+    phasor_voltage = "phasor_voltage"
+    phasor_a_c_vol = "phasor_a_c_vol"
+    phasor_a_meas = "phasor_a_meas"
+    phasor_a_angle = "phasor_a_angle"
+    phasor_b_meas = "phasor_b_meas"
+    phasor_b_angle = "phasor_b_angle"
+    phasor_c_meas = "phasor_c_meas"
+    phasor_c_angle = "phasor_c_angle"
+    phasor_a_c_angle_vol = "phasor_a_c_angle_vol"
+    phasor_current = "phasor_current"
+    phasor_a_c_cur = "phasor_a_c_cur"
+    phasor_a_meas_cur = "phasor_a_meas_cur"
+    phasor_a_angle_cur = "phasor_a_angle_cur"
+    phasor_b_meas_cur = "phasor_b_meas_cur"
+    phasor_b_angle_cur = "phasor_b_angle_cur"
+    phasor_c_meas_cur = "phasor_c_meas_cur"
+    phasor_c_angle_cur = "phasor_c_angle_cur"
+    phasor_a_c_angle_cur = "phasor_a_c_angle_cur"
+    
     waveform_title = "waveform_title"
     waveform_all_img_cut = "waveform_img_cut"
     waveform_graph_img_cut = "waveform_graph_img_cut"
@@ -257,28 +280,28 @@ class ConfigSetup():
             "999": [n*x for x in [220, 105, 350, 40]],
 
             # Phasor
-            "phasor_img_cut": [176, 179, 425, 295],
-            "phasor_title": [n*x for x in [160, 120, 630, 53]], # Phasor, [V]Voltage, [V]Current
-            "phasor_view_2": [n*x for x in [480, 120, 310, 53]], # [V]Voltage, [V]Current
-            "phasor_vl_vn": [n*x for x in [570, 190, 210, 39]],  # VLL VLN
-            "phasor_voltage": [n*x for x in [465, 235, 80, 27]],  # Voltage
-            "phasor_a_c_vol": [n*x for x in [550, 234, 55, 76]], # AB,BC,CA or A,B,C
-            "phasor_a_meas": [n*x for x in [610, 236, 95, 23]],  # A-전압수치
-            "phasor_a_angle": [n*x for x in [705, 236, 58, 23]],  # A-각도수치
-            "phasor_b_meas": [n*x for x in [610, 260, 95, 23]],  # B-전압수치
-            "phasor_b_angle": [n*x for x in [705, 260, 58, 23]],  # B-각도수치
-            "phasor_c_meas": [n*x for x in [610, 284, 95, 23]],  # C-전압수치
-            "phasor_c_angle": [n*x for x in [705, 284, 58, 23]],  # C-각도수치
-            "phasor_a_c_angle_vol": [763, 236, 14, 66],  # A~C-각도기호
-            "phasor_current": [n*x for x in [465, 345, 80, 24]],  # Current
-            "phasor_a_c_cur": [n*x for x in [550, 345, 55, 76]],  # A,B,C
-            "phasor_a_meas_cur": [n*x for x in [610, 346, 95, 23]],  # A-전류수치
-            "phasor_a_angle_cur": [n*x for x in [705, 346, 58, 23]],  # A-각도수치
-            "phasor_b_meas_cur": [n*x for x in [610, 370, 95, 23]],  # B-전류수치
-            "phasor_b_angle_cur": [n*x for x in [705, 370, 58, 23]],  # B-각도수치
-            "phasor_c_meas_cur": [n*x for x in [610, 394, 95, 23]],  # C-전류수치
-            "phasor_c_angle_cur": [n*x for x in [705, 394, 58, 23]],  # C-각도수치
-            "phasor_a_c_angle_cur": [763, 394, 14, 21], # A~C-각도기호
+            ConfigROI.phasor_img_cut: [176, 179, 425, 295],
+            ConfigROI.phasor_title: [n*x for x in [160, 120, 630, 53]], # Phasor, [V]Voltage, [V]Current
+            ConfigROI.phasor_view_2: [n*x for x in [480, 120, 310, 53]], # [V]Voltage, [V]Current
+            ConfigROI.phasor_vl_vn: [n*x for x in [570, 190, 210, 39]],  # VLL VLN
+            ConfigROI.phasor_voltage: [n*x for x in [465, 235, 80, 27]],  # Voltage
+            ConfigROI.phasor_a_c_vol: [n*x for x in [550, 234, 55, 76]], # AB,BC,CA or A,B,C
+            ConfigROI.phasor_a_meas: [n*x for x in [610, 236, 95, 23]],  # A-전압수치
+            ConfigROI.phasor_a_angle: [n*x for x in [705, 236, 58, 23]],  # A-각도수치
+            ConfigROI.phasor_b_meas: [n*x for x in [610, 260, 95, 23]],  # B-전압수치
+            ConfigROI.phasor_b_angle: [n*x for x in [705, 260, 58, 23]],  # B-각도수치
+            ConfigROI.phasor_c_meas: [n*x for x in [610, 284, 95, 23]],  # C-전압수치
+            ConfigROI.phasor_c_angle: [n*x for x in [705, 284, 58, 23]],  # C-각도수치
+            ConfigROI.phasor_a_c_angle_vol: [763, 236, 14, 66],  # A~C-각도기호
+            ConfigROI.phasor_current: [n*x for x in [465, 345, 80, 24]],  # Current
+            ConfigROI.phasor_a_c_cur: [n*x for x in [550, 345, 55, 76]],  # A,B,C
+            ConfigROI.phasor_a_meas_cur: [n*x for x in [610, 346, 95, 23]],  # A-전류수치
+            ConfigROI.phasor_a_angle_cur: [n*x for x in [705, 346, 58, 23]],  # A-각도수치
+            ConfigROI.phasor_b_meas_cur: [n*x for x in [610, 370, 95, 23]],  # B-전류수치
+            ConfigROI.phasor_b_angle_cur: [n*x for x in [705, 370, 58, 23]],  # B-각도수치
+            ConfigROI.phasor_c_meas_cur: [n*x for x in [610, 394, 95, 23]],  # C-전류수치
+            ConfigROI.phasor_c_angle_cur: [n*x for x in [705, 394, 58, 23]],  # C-각도수치
+            ConfigROI.phasor_a_c_angle_cur: [763, 394, 14, 21], # A~C-각도기호
 
             # harmonics
             ConfigROI.harmonics_img_cut: [170, 260, 600, 213],

@@ -67,7 +67,6 @@ class ModbusManager:
         self.is_connected = False
         print("is disconnected")
 
-
 class TouchManager:
 
     mobus_manager = ModbusManager()

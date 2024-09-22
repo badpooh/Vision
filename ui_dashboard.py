@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QGridLayout,
     QHBoxLayout, QLabel, QLineEdit, QMainWindow,
     QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QStackedWidget, QVBoxLayout, QWidget)
+    QStackedWidget, QTextEdit, QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
@@ -318,7 +318,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 60, 480))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 98, 28))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.gridLayout_2.addWidget(self.scrollArea, 0, 0, 1, 1)
@@ -430,6 +430,10 @@ class Ui_MainWindow(object):
         self.checkBox_demand = QCheckBox(self.setup_test_page)
         self.checkBox_demand.setObjectName(u"checkBox_demand")
         self.checkBox_demand.setGeometry(QRect(20, 280, 79, 20))
+        self.log = QTextEdit(self.setup_test_page)
+        self.log.setObjectName(u"log")
+        self.log.setGeometry(QRect(610, 100, 551, 501))
+        self.log.setReadOnly(True)
         self.stackedWidget.addWidget(self.setup_test_page)
         self.frame_test_page = QWidget()
         self.frame_test_page.setObjectName(u"frame_test_page")
@@ -535,4 +539,3 @@ class Ui_MainWindow(object):
         self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"focus_value", None))
     # retranslateUi
-

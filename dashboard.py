@@ -1,8 +1,9 @@
-from PySide6.QtGui import QIcon, QCursor
-from PySide6.QtCore import QSize, Qt, QTimer
+from PySide6.QtGui import QIcon, QCursor, QTextCursor
+from PySide6.QtCore import QSize, Qt, QTimer, QObject, Signal, Slot
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy, QMessageBox
 from resources_rc import *
+import sys
 import threading
 import os
 from datetime import datetime
@@ -79,13 +80,31 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
         
+        self.original_stdout = sys.stdout
+        self.original_stderr = sys.stderr
+        sys.stdout = EmittingStream()
+        sys.stdout.text_written.connect(self.write_log)
+        sys.stderr = EmittingStream()
+        sys.stderr.text_written.connect(self.write_log)
+        
     # def input_ip_return_pressed(self):
     #     self.device_ip_address = self.input_ip.text()
     #     self.modbus_manager.set_server_ip(self.device_ip_address)
     #     self.modbus_labels.update_clients()
     #     self.input_ip.setStyleSheet("background-color: lightgray;")
     #     QTimer.singleShot(2000, lambda: self.input_ip.setStyleSheet("background-color: white;"))
-            
+
+    @Slot(str)
+    def write_log(self, text):
+        self.log.moveCursor(QTextCursor.End)
+        self.log.insertPlainText(text)
+        self.log.moveCursor(QTextCursor.End)
+
+    def closeEvent(self, event):
+        # 프로그램 종료 시 stdout과 stderr 복원
+        sys.stdout = self.original_stdout
+        sys.stderr = self.original_stderr
+        event.accept()            
 
     def on_checkbox_changed(self, state, key):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
@@ -319,3 +338,12 @@ class Alarm:
         msg.setText("장치와 미연결 상태")
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
+        
+class EmittingStream(QObject):
+    text_written = Signal(str)
+
+    def write(self, text):
+        self.text_written.emit(str(text))
+
+    def flush(self):
+        pass  # 필요한 경우 구현
