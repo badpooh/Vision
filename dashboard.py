@@ -1,7 +1,7 @@
 from PySide6.QtGui import QIcon, QCursor, QTextCursor
 from PySide6.QtCore import QSize, Qt, QTimer, QObject, Signal, Slot
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy, QMessageBox, QHeaderView
 from resources_rc import *
 import sys
 import threading
@@ -47,6 +47,13 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.alarm = Alarm()
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
+        
+        self.tableWidget.setHorizontalHeaderLabels(["TITLE", "CONTENT", "RESULT"])
+        self.tableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(2, QHeaderView.Fixed)
+        self.tableWidget.setColumnWidth(0, 250)
+        self.tableWidget.setColumnWidth(2, 250)
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
@@ -74,9 +81,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.checkBox_analysis.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "analysis"))
         self.checkBox_demand.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "demand"))
 
-
-        self.scrollAreaLayout = QVBoxLayout(self.scrollAreaWidgetContents)
-        self.scrollAreaWidgetContents.setLayout(self.scrollAreaLayout)
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
         

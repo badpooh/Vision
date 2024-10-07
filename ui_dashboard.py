@@ -16,16 +16,17 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QGridLayout,
-    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QStackedWidget, QTextEdit, QVBoxLayout, QWidget)
+    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
+    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
+    QStackedWidget, QTableWidget, QTableWidgetItem, QTextEdit,
+    QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1414, 731)
+        MainWindow.resize(1280, 720)
         MainWindow.setMinimumSize(QSize(1280, 720))
         MainWindow.setStyleSheet(u"background-color: rgb(245, 250, 254);")
         self.centralwidget = QWidget(MainWindow)
@@ -297,6 +298,40 @@ class Ui_MainWindow(object):
         self.btn_add_tc = QPushButton(self.menu_widget)
         self.btn_add_tc.setObjectName(u"btn_add_tc")
         self.btn_add_tc.setGeometry(QRect(910, 50, 75, 24))
+        self.input_ip_2 = QLineEdit(self.menu_widget)
+        self.input_ip_2.setObjectName(u"input_ip_2")
+        self.input_ip_2.setGeometry(QRect(30, 40, 151, 31))
+        font2 = QFont()
+        font2.setPointSize(12)
+        self.input_ip_2.setFont(font2)
+        self.btn_disconnect_2 = QPushButton(self.menu_widget)
+        self.btn_disconnect_2.setObjectName(u"btn_disconnect_2")
+        self.btn_disconnect_2.setGeometry(QRect(330, 40, 91, 31))
+        self.btn_disconnect_2.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        background-color: #f0f0f0;\n"
+"        padding: 5px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
+        self.btn_connect_2 = QPushButton(self.menu_widget)
+        self.btn_connect_2.setObjectName(u"btn_connect_2")
+        self.btn_connect_2.setGeometry(QRect(210, 40, 101, 31))
+        self.btn_connect_2.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        background-color: #f0f0f0;\n"
+"        padding: 5px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
+        self.btn_connect_2.setAutoDefault(False)
+        self.btn_connect_2.setFlat(False)
 
         self.verticalLayout_6.addWidget(self.menu_widget)
 
@@ -305,23 +340,33 @@ class Ui_MainWindow(object):
         self.tc_widget.setMinimumSize(QSize(0, 500))
         self.gridLayout_2 = QGridLayout(self.tc_widget)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.scrollArea = QScrollArea(self.tc_widget)
-        self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setEnabled(True)
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
-        self.scrollArea.setSizePolicy(sizePolicy)
-        self.scrollArea.setMinimumSize(QSize(0, 0))
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
-        self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 98, 28))
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.tableWidget = QTableWidget(self.tc_widget)
+        if (self.tableWidget.columnCount() < 3):
+            self.tableWidget.setColumnCount(3)
+        self.tableWidget.setObjectName(u"tableWidget")
+        self.tableWidget.setStyleSheet(u"QHeaderView::section {\n"
+"	border-bottom: 10px solid black;\n"
+"}")
+        self.tableWidget.setFrameShape(QFrame.Shape.Box)
+        self.tableWidget.setFrameShadow(QFrame.Shadow.Sunken)
+        self.tableWidget.setLineWidth(1)
+        self.tableWidget.setMidLineWidth(1)
+        self.tableWidget.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.tableWidget.setAlternatingRowColors(True)
+        self.tableWidget.setGridStyle(Qt.PenStyle.SolidLine)
+        self.tableWidget.setSortingEnabled(False)
+        self.tableWidget.setColumnCount(3)
+        self.tableWidget.horizontalHeader().setVisible(True)
+        self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
+        self.tableWidget.horizontalHeader().setDefaultSectionSize(200)
+        self.tableWidget.horizontalHeader().setHighlightSections(True)
+        self.tableWidget.horizontalHeader().setProperty("showSortIndicator", False)
+        self.tableWidget.horizontalHeader().setStretchLastSection(False)
+        self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
+        self.tableWidget.verticalHeader().setProperty("showSortIndicator", False)
+        self.tableWidget.verticalHeader().setStretchLastSection(False)
 
-        self.gridLayout_2.addWidget(self.scrollArea, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.tableWidget, 0, 0, 1, 1)
 
 
         self.verticalLayout_6.addWidget(self.tc_widget)
@@ -363,9 +408,9 @@ class Ui_MainWindow(object):
         self.line = QFrame(self.setup_test_page)
         self.line.setObjectName(u"line")
         self.line.setGeometry(QRect(10, 80, 1151, 16))
-        font2 = QFont()
-        font2.setBold(False)
-        self.line.setFont(font2)
+        font3 = QFont()
+        font3.setBold(False)
+        self.line.setFont(font3)
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
         self.btn_demo_mode_ui_test = QPushButton(self.setup_test_page)
@@ -412,9 +457,7 @@ class Ui_MainWindow(object):
         self.input_ip = QLineEdit(self.setup_test_page)
         self.input_ip.setObjectName(u"input_ip")
         self.input_ip.setGeometry(QRect(10, 30, 151, 31))
-        font3 = QFont()
-        font3.setPointSize(12)
-        self.input_ip.setFont(font3)
+        self.input_ip.setFont(font2)
         self.score = QLabel(self.setup_test_page)
         self.score.setObjectName(u"score")
         self.score.setGeometry(QRect(370, 150, 131, 81))
@@ -492,7 +535,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked["bool"].connect(self.icon_only_widget.setHidden)
         self.pushButton_3.clicked["bool"].connect(self.icon_name_widget.setVisible)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -512,12 +555,16 @@ class Ui_MainWindow(object):
         self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"DASHBOARD", None))
         self.btn_home_2.setText(QCoreApplication.translate("MainWindow", u"HOME", None))
         self.btn_ui_test_2.setText(QCoreApplication.translate("MainWindow", u"UI TEST", None))
-        self.btn_demo_test.setText(QCoreApplication.translate("MainWindow", u"DEMO TEST", None))
+        self.btn_demo_test.setText(QCoreApplication.translate("MainWindow", u"UI TEST (Demo Ver)", None))
         self.btn_frame_test_2.setText(QCoreApplication.translate("MainWindow", u"FRAME TEST", None))
         self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"Sign Out", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"home", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.btn_add_tc.setText(QCoreApplication.translate("MainWindow", u"ADD TC", None))
+        self.input_ip_2.setInputMask("")
+        self.input_ip_2.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter IP address", None))
+        self.btn_disconnect_2.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
+        self.btn_connect_2.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.btn_demo_mode_ui_test.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
@@ -539,3 +586,4 @@ class Ui_MainWindow(object):
         self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"focus_value", None))
     # retranslateUi
+
