@@ -1,0 +1,5 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-09-26 08:34:02.000529),Img Match,H.Text
+K-Factor Max,,,,,,
+A,1.306 (PASS),[] (PASS),[] (PASS),2024-09-26 08:37:23 (PASS),,
+B,1.306 (PASS),,,Time format error for 2024-09-2608:37:15: time data '2024-09-2608:37:15' does not match format '%Y-%m-%d %H:%M:%S' (FAIL),,
+c,1.309 (PASS),,,2024-09-26 08:37:21 (PASS),,

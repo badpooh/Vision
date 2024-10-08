@@ -222,7 +222,7 @@ class ConfigImgRef(Enum):
 class ConfigSetup():
 
     def roi_params(self):
-        n = 3
+        n = 4
         params = {
             "1": [n*x for x in [176, 181, 298, 35]],
             "2": [n*x for x in [477, 181, 298, 35]],
