@@ -743,7 +743,7 @@ class Evaluation:
             
         elif "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_phasor_vll.value) <= 10:
-                all_meas_results.extend(check_results(["AB", "BC", "CA"], (180, 195, "v"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["AB", "BC", "CA"], (0, 0, "v"), ocr_res_meas[:3]))
                 all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6]))
                 all_meas_results.extend(check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7]))
                 all_meas_results.extend(check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8]))
