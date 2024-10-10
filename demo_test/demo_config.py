@@ -205,6 +205,8 @@ class ConfigColor(Enum):
 class ConfigImgRef(Enum):
     img_ref_phasor_all_vll = r".\image_ref\phasor_ref_all_vll.png"
     img_ref_phasor_all_vln = r".\image_ref\phasor_ref_all_vln.png"
+    img_ref_phasor_all_vll_none = r".\image_ref\phasor_ref_all_vll_none.png"
+    img_ref_phasor_all_vln_none = r".\image_ref\phasor_ref_all_vln_none.png"
     img_ref_phasor_vol_vll = r".\image_ref\phasor_ref_vol_vll.png"
     img_ref_phasor_vol_vln = r".\image_ref\phasor_ref_vol_vln.png"
     img_ref_phasor_curr_vll = r".\image_ref\phasor_ref_curr_vll.png"

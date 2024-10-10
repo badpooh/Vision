@@ -477,6 +477,32 @@ class Ui_MainWindow(object):
         self.log.setObjectName(u"log")
         self.log.setGeometry(QRect(610, 100, 551, 501))
         self.log.setReadOnly(True)
+        self.btn_demo_mode_ui_test_3 = QPushButton(self.setup_test_page)
+        self.btn_demo_mode_ui_test_3.setObjectName(u"btn_demo_mode_ui_test_3")
+        self.btn_demo_mode_ui_test_3.setGeometry(QRect(190, 230, 121, 41))
+        self.btn_demo_mode_ui_test_3.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        background-color: #f0f0f0;\n"
+"        padding: 5px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
+        self.btn_demo_mode_ui_test_4 = QPushButton(self.setup_test_page)
+        self.btn_demo_mode_ui_test_4.setObjectName(u"btn_demo_mode_ui_test_4")
+        self.btn_demo_mode_ui_test_4.setGeometry(QRect(190, 290, 121, 41))
+        self.btn_demo_mode_ui_test_4.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        background-color: #f0f0f0;\n"
+"        padding: 5px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
         self.stackedWidget.addWidget(self.setup_test_page)
         self.frame_test_page = QWidget()
         self.frame_test_page.setObjectName(u"frame_test_page")
@@ -535,7 +561,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked["bool"].connect(self.icon_only_widget.setHidden)
         self.pushButton_3.clicked["bool"].connect(self.icon_name_widget.setVisible)
 
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -581,6 +607,10 @@ class Ui_MainWindow(object):
         self.score.setText("")
         self.score_label.setText(QCoreApplication.translate("MainWindow", u"RESULT (FAIL/TOTAL)", None))
         self.checkBox_demand.setText(QCoreApplication.translate("MainWindow", u"DEMAND", None))
+        self.btn_demo_mode_ui_test_3.setText(QCoreApplication.translate("MainWindow", u"None  \n"
+"UI TEST START ", None))
+        self.btn_demo_mode_ui_test_4.setText(QCoreApplication.translate("MainWindow", u"None \n"
+"UI TEST STOP", None))
         self.btn_select_webcam.setText(QCoreApplication.translate("MainWindow", u"Select WebCam", None))
         self.btn_start_webcam.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))

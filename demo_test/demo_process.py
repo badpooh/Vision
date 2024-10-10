@@ -170,10 +170,9 @@ class DemoProcess:
     def ocr_phaosr_process(self, img_ref, ref, img_cut1, img_cut2, img_cut3, base_save_path):
         self.touch_manager.screenshot()
         image_path = self.load_image_file()
-        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
-                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
-        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
-                        "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
+        roi_keys = [ecroi.phasor_title, ecroi.phasor_vl_vn, ecroi.phasor_voltage, ecroi.phasor_a_c_vol, ecroi.phasor_current, ecroi.phasor_a_c_cur]
+        roi_keys_meas = [ecroi.phasor_a_meas, ecroi.phasor_b_meas, ecroi.phasor_c_meas, ecroi.phasor_a_meas_cur, ecroi.phasor_b_meas_cur, ecroi.phasor_c_meas_cur,
+                        ecroi.phasor_a_angle, ecroi.phasor_b_angle, ecroi.phasor_c_angle, ecroi.phasor_a_angle_cur, ecroi.phasor_b_angle_cur, ecroi.phasor_c_angle_cur]
         ocr_ref = ref
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
@@ -828,14 +827,15 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
+        
 
         ## voltage+current vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_all_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -843,14 +843,14 @@ class DemoTest:
         ### voltage vll ###
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### voltage vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_vol_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -859,14 +859,14 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_analysis_vol.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### current vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_curr_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -874,14 +874,14 @@ class DemoTest:
         ### nothing vll ###
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vll.value, ec.phasor_ll.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### nothing vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(ecir.img_ref_phasor_na_vln.value, ec.phasor_ln.value, "phasor_img_cut", "phasor_a_c_angle_vol", "phasor_a_c_angle_cur", base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
