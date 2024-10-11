@@ -103,11 +103,11 @@ class ConfigROI(Enum):
 
 class ConfigTextRef(Enum):
     rms_vol_ll =  ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"]
-    rms_vol_ln = ["RMS Voltage L-L L-N Min Max", "A", "B", "c", "Average"]
+    rms_vol_ln = ["RMS Voltage L-L L-N Min Max", "A", "B", "C", "Average"]
     fund_vol_ll = ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"]
-    fund_vol_ln = ["Fund. Volt. L-L L-N Min Max", "A", "B", "c", "Average"]
+    fund_vol_ln = ["Fund. Volt. L-L L-N Min Max", "A", "B", "C", "Average"]
     thd_vol_ll = ["Total Harmonic Distortion L-L L-N Max", "AB", "BC", "CA"]
-    thd_vol_ln = ["Total Harmonic Distortion L-L L-N Max", "A", "B", "c"]
+    thd_vol_ln = ["Total Harmonic Distortion L-L L-N Max", "A", "B", "C"]
     freq = ["Frequency Min Max", "Frequency"]
     residual_vol = ["Residual Voltage Min Max", "RMS", "Fund."]
     rms_curr = ["RMS Current Min Max", "A", "B", "c", "Average"]

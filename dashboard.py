@@ -71,6 +71,8 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.lineEdit.returnPressed.connect(self.set_focus)
         self.btn_demo_mode_ui_test.clicked.connect(self.demo_ui_test_start)
         self.btn_demo_mode_ui_test_2.clicked.connect(self.demo_ui_test_stop)
+        self.btn_demo_mode_ui_test_3.clicked.connect(self.none_ui_test_start)
+        self.btn_demo_mode_ui_test_4.clicked.connect(self.none_ui_test_stop)
         self.pushButton_2.clicked.connect(self.ocr_start)
         self.debug_button.clicked.connect(self.debug_test)
         # self.input_ip.returnPressed.connect(self.input_ip_return_pressed)
@@ -180,21 +182,60 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         base_save_path = os.path.expanduser(f"./results/{current_time}/")
         os.makedirs(base_save_path, exist_ok=True)
+        test_mode = "Demo"
         self.meter_demo_test.demo_test_start()
         if self.checkbox_states["voltage"]:
-            self.meter_demo_test.demo_test_voltage(base_save_path)
+            self.meter_demo_test.demo_test_voltage(base_save_path, test_mode)
             print("Voltage_DemoTest_Done")
         if self.checkbox_states["current"]:
-            self.meter_demo_test.demo_test_current(base_save_path)
+            self.meter_demo_test.demo_test_current(base_save_path, test_mode)
             print("Current_DemoTest_Done")
         if self.checkbox_states["power"]:
-            self.meter_demo_test.demo_test_power(base_save_path)
+            self.meter_demo_test.demo_test_power(base_save_path, test_mode)
             print("Power_DemoTest_Done")
         if self.checkbox_states["analysis"]:
-            self.meter_demo_test.demo_test_analysis(base_save_path)
+            self.meter_demo_test.demo_test_analysis(base_save_path, test_mode)
             print("Analysis_DemoTest_Done")
         if self.checkbox_states["demand"]:
-            self.meter_demo_test.demo_test_demand(base_save_path)
+            self.meter_demo_test.demo_test_demand(base_save_path, test_mode)
+            print("Demand_DemoTest_Done")
+        else:
+            print("Done or Nothing to execute")
+        total_csv_files, fail_count = self.evaluation.count_csv_and_failures(base_save_path)
+        self.score.setText(f"{fail_count}/{total_csv_files}")
+
+    def none_ui_test_start(self):
+        # if self.modbus_manager.is_connected == True:
+        self.stop_event.clear()
+        self.thread = threading.Thread(target=self.none_ui_test, daemon=True)
+        self.thread.start()
+        # else:
+        #     self.alarm.show_connection_error()
+            
+    def none_ui_test_stop(self):
+        self.stop_event.set()
+        if self.thread is not None:
+            self.thread.join()
+
+    def none_ui_test(self):
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        base_save_path = os.path.expanduser(f"./results/{current_time}/")
+        os.makedirs(base_save_path, exist_ok=True)
+        test_mode = "None"
+        if self.checkbox_states["voltage"]:
+            self.meter_demo_test.demo_test_voltage(base_save_path, test_mode)
+            print("Voltage_DemoTest_Done")
+        if self.checkbox_states["current"]:
+            self.meter_demo_test.demo_test_current(base_save_path, test_mode)
+            print("Current_DemoTest_Done")
+        if self.checkbox_states["power"]:
+            self.meter_demo_test.demo_test_power(base_save_path, test_mode)
+            print("Power_DemoTest_Done")
+        if self.checkbox_states["analysis"]:
+            self.meter_demo_test.demo_test_analysis(base_save_path, test_mode)
+            print("Analysis_DemoTest_Done")
+        if self.checkbox_states["demand"]:
+            self.meter_demo_test.demo_test_demand(base_save_path, test_mode)
             print("Demand_DemoTest_Done")
         else:
             print("Done or Nothing to execute")

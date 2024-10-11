@@ -29,6 +29,7 @@ class DemoProcess:
     def __init__(self):
         self.coords_touch = self.touch_manager.coords_touch
         self.coords_color = self.touch_manager.coords_color
+        self.test_mode = ""
         
     def modbus_connect(self):
         self.modbus_manager.start_monitoring()
@@ -54,7 +55,7 @@ class DemoProcess:
 
         return self.latest_image_path
 
-    def ocr_process(self, image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys=None, reset_time=None, base_save_path=None):
+    def ocr_process(self, image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys=None, reset_time=None, base_save_path=None, test_mode=""):
         """
         Args:
             image_path (str): The path to the image file.
@@ -67,20 +68,33 @@ class DemoProcess:
         Returns:
             None
         """
+        self.test_mode = test_mode
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+        if self.test_mode == "Demo":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+            if time_keys is not None:
+                ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+                time_results = self.evaluation.check_time_diff(ocr_img_time, reset_time)
+                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+            else:
+                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+
+        elif self.test_mode == "None":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+            if time_keys is not None:
+                ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+                time_results = self.evaluation.check_time_diff(ocr_img_time, reset_time)
+                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+            else:
+                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
         
-        if time_keys is not None:
-            ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-            time_results = self.evaluation.check_time_diff(ocr_img_time, reset_time)
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
         else:
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+            print("self.test_mode type error")
 
         return ocr_res
 
-    def ocr_4phase(self, ref, base_save_path):  # A,B,C,Aver ###
+    def ocr_4phase(self, ref, base_save_path, test_mode):  # A,B,C,Aver ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
@@ -91,7 +105,7 @@ class DemoProcess:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca, ecroi.aver]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas, ecroi.c_meas, ecroi.aver_meas]
         ocr_ref = ref
-        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
+        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
 
     def ocr_curr_4phase(self, ref, base_save_path):  # A,B,C,Aver ###
         """
@@ -107,7 +121,7 @@ class DemoProcess:
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
 
-    def ocr_4phase_time(self, ref, reset_time, base_save_path):  # A,B,C,Aver + time stamp ###
+    def ocr_4phase_time(self, ref, reset_time, base_save_path, test_mode):  # A,B,C,Aver + time stamp ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
@@ -121,9 +135,9 @@ class DemoProcess:
                      ecroi.c_time_stamp, ecroi.aver_time_stamp]
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys,
-                         roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                         roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
 
-    def ocr_curr_4phase_time(self, ref, reset_time, base_save_path):  # A,B,C,Aver ###
+    def ocr_curr_4phase_time(self, ref, reset_time, base_save_path, test_mode):  # A,B,C,Aver ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
@@ -138,9 +152,9 @@ class DemoProcess:
                      ecroi.c_time_stamp, ecroi.aver_time_stamp]
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys,
-                         roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                         roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
 
-    def ocr_3phase(self, ref, base_save_path):  # A,B,C ###
+    def ocr_3phase(self, ref, base_save_path, test_mode):  # A,B,C ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
@@ -151,9 +165,9 @@ class DemoProcess:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         ocr_ref = ref
-        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
+        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
 
-    def ocr_3phase_time(self, ref, reset_time, base_save_path):  # A,B,C + time stamp ###
+    def ocr_3phase_time(self, ref, reset_time, base_save_path, test_mode):  # A,B,C + time stamp ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
@@ -165,9 +179,9 @@ class DemoProcess:
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp, ecroi.c_time_stamp]
         ocr_ref = ref
-        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
 
-    def ocr_phaosr_process(self, img_ref, ref, img_cut1, img_cut2, img_cut3, base_save_path):
+    def ocr_phaosr_process(self, img_ref, ref, img_cut1, img_cut2, img_cut3, base_save_path, test_mode):
         self.touch_manager.screenshot()
         image_path = self.load_image_file()
         roi_keys = [ecroi.phasor_title, ecroi.phasor_vl_vn, ecroi.phasor_voltage, ecroi.phasor_a_c_vol, ecroi.phasor_current, ecroi.phasor_a_c_cur]
@@ -180,18 +194,32 @@ class DemoProcess:
         image_results.append(self.evaluation.img_match(image_path, img_cut1, img_ref))
         image_results.append(self.evaluation.img_match(image_path, img_cut2, img_ref))
         image_results.append(self.evaluation.img_match(image_path, img_cut3, img_ref))
-        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
 
-    def ocr_graph_detection(self, roi_keys, ocr_ref, value, base_save_path):
+        if test_mode == "Demo":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+        elif test_mode == "None":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+        else :
+            print("ocr phasor process error")
+
+    def ocr_graph_detection(self, roi_keys, ocr_ref, value, base_save_path, test_mode):
         self.touch_manager.screenshot()
         image_path = self.load_image_file()
         roi_keys = roi_keys
         ocr_ref = ocr_ref
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_detection(image_path, value, 2)
-        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+
+        if test_mode == "Demo":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+        if test_mode == "None":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+        else :
+            print("ocr phasor process error")
 
 class DemoTest:
 
@@ -260,7 +288,7 @@ class DemoTest:
         print(self.reset_time)
         return self.reset_time
 
-    def demo_mea_vol_rms(self, base_save_path):
+    def demo_mea_vol_rms(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### L-L 만 검사 ###
@@ -270,7 +298,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         self.touch_manager.menu_touch(ect.touch_meas_ll.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ec.rms_vol_ll.value, base_save_path)
+        self.sp.ocr_4phase(ec.rms_vol_ll.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -278,7 +306,7 @@ class DemoTest:
         ### L-L min 검사 ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -286,7 +314,7 @@ class DemoTest:
         ### L-L max 검사 ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -295,7 +323,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.menu_touch(ect.touch_meas_ln.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ec.rms_vol_ln.value, base_save_path)
+        self.sp.ocr_4phase(ec.rms_vol_ln.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -303,7 +331,7 @@ class DemoTest:
         ### L-N min 검사 ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -311,14 +339,14 @@ class DemoTest:
         ### L-N max 검사 ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         print("Voltage_RMS_Done")
 
-    def demo_mea_vol_fund(self, base_save_path):
+    def demo_mea_vol_fund(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### L-L 만 검사 ###
@@ -328,7 +356,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_meas_ll.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ec.fund_vol_ll.value, base_save_path)
+        self.sp.ocr_4phase(ec.fund_vol_ll.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -336,7 +364,7 @@ class DemoTest:
         ### L-L min 검사 ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -344,7 +372,7 @@ class DemoTest:
         ### L-L max 검사 ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -353,7 +381,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.menu_touch(ect.touch_meas_ln.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ec.fund_vol_ln.value, base_save_path)
+        self.sp.ocr_4phase(ec.fund_vol_ln.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -361,7 +389,7 @@ class DemoTest:
         ### L-N min 검사 ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -369,14 +397,14 @@ class DemoTest:
         ### L-N max 검사 ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path)
+        self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         print("Voltage_Fund_Done")
 
-    def demo_mea_vol_thd(self, base_save_path):
+    def demo_mea_vol_thd(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
@@ -385,7 +413,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_side_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_thd_ll.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.thd_vol_ll.value, base_save_path)
+        self.sp.ocr_3phase(ec.thd_vol_ll.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -393,7 +421,7 @@ class DemoTest:
         ### L-L max 검사 ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.thd_vol_ll.value, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.thd_vol_ll.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -402,7 +430,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.menu_touch(ect.touch_thd_ln.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.thd_vol_ln.value, base_save_path)
+        self.sp.ocr_3phase(ec.thd_vol_ln.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -410,12 +438,12 @@ class DemoTest:
         ### L-N max 검사 ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.thd_vol_ln.value, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.thd_vol_ln.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_vol_freq(self, base_save_path):
+    def demo_mea_vol_freq(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### 기본주파수 검사 ###
@@ -428,7 +456,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab]
         roi_keys_meas = [ecroi.a_meas]
         ocr_ref = ec.freq.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -442,7 +470,7 @@ class DemoTest:
         ocr_ref = ec.freq.value
         time_keys = [ecroi.a_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
-                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -456,12 +484,12 @@ class DemoTest:
         ocr_ref = ec.freq.value
         time_keys = [ecroi.a_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
-                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_vol_residual(self, base_save_path):
+    def demo_mea_vol_residual(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### 기본 검사 ###
@@ -474,7 +502,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas]
         ocr_ref = ec.residual_vol.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -488,7 +516,7 @@ class DemoTest:
         ocr_ref = ec.residual_vol.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
-                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -502,12 +530,12 @@ class DemoTest:
         ocr_ref = ec.residual_vol.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
-                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_curr_rms(self, base_save_path):
+    def demo_mea_curr_rms(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### Current ###
@@ -516,7 +544,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.rms_curr.value, base_save_path)
+        self.sp.ocr_curr_4phase(ec.rms_curr.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -524,7 +552,7 @@ class DemoTest:
         ### Current Min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.rms_curr.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.rms_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -532,12 +560,12 @@ class DemoTest:
         ### Current Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.rms_curr.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.rms_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_curr_fund(self, base_save_path):
+    def demo_mea_curr_fund(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### Current ###
@@ -546,7 +574,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.fund_curr.value, base_save_path)
+        self.sp.ocr_curr_4phase(ec.fund_curr.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -554,7 +582,7 @@ class DemoTest:
         ### Current Min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.fund_curr.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.fund_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -562,12 +590,12 @@ class DemoTest:
         ### Current Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.fund_curr.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.fund_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_curr_thd(self, base_save_path):
+    def demo_mea_curr_thd(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### Current thd ###
@@ -576,7 +604,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_4.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.thd_curr.value, base_save_path)
+        self.sp.ocr_3phase(ec.thd_curr.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -584,7 +612,7 @@ class DemoTest:
         ### Current thd Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.thd_curr.value, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.thd_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -598,7 +626,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_5.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.tdd_curr.value, base_save_path)
+        self.sp.ocr_3phase(ec.tdd_curr.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -606,12 +634,12 @@ class DemoTest:
         ### Current tdd Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.tdd_curr.value, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.tdd_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_curr_cf(self, base_save_path):
+    def demo_mea_curr_cf(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### Current crest factor ###
@@ -620,7 +648,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_6.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.cf_curr.value, base_save_path)
+        self.sp.ocr_3phase(ec.cf_curr.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -628,12 +656,12 @@ class DemoTest:
         ### Current crest factor Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.cf_curr.value, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.cf_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_curr_kf(self, base_save_path):
+    def demo_mea_curr_kf(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### Current k-factor ###
@@ -642,7 +670,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_7.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase(ec.kf_curr.value, base_save_path)
+        self.sp.ocr_3phase(ec.kf_curr.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -650,12 +678,12 @@ class DemoTest:
         ### Current k-factor Max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_3phase_time(ec.kf_curr.value, reset_time, base_save_path)
+        self.sp.ocr_3phase_time(ec.kf_curr.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_curr_residual(self, base_save_path):
+    def demo_mea_curr_residual(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### Current residual ###
@@ -668,7 +696,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas]
         ocr_ref = ec.residual_curr.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -682,7 +710,7 @@ class DemoTest:
         ocr_ref = ec.residual_curr.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
-                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -696,12 +724,12 @@ class DemoTest:
         ocr_ref = ec.residual_curr.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
         self.sp.ocr_process(image_path, roi_keys,
-                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path)
+                            roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_pow_active(self, base_save_path):
+    def demo_mea_pow_active(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### active power ###
@@ -710,7 +738,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.active.value, base_save_path)
+        self.sp.ocr_curr_4phase(ec.active.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -718,7 +746,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.active.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.active.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -726,12 +754,12 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.active.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.active.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
         
-    def demo_mea_pow_reactive(self, base_save_path):
+    def demo_mea_pow_reactive(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### reactive power ###
@@ -740,7 +768,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.reactive.value, base_save_path)
+        self.sp.ocr_curr_4phase(ec.reactive.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -748,7 +776,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.reactive.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.reactive.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -756,12 +784,12 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.reactive.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.reactive.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
     
-    def demo_mea_pow_apparent(self, base_save_path):
+    def demo_mea_pow_apparent(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### reactive power ###
@@ -770,7 +798,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_3.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.apparent.value, base_save_path)
+        self.sp.ocr_curr_4phase(ec.apparent.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -778,7 +806,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.apparent.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.apparent.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -786,12 +814,12 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.apparent.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.apparent.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
         
-    def demo_mea_pow_pf(self, base_save_path):
+    def demo_mea_pow_pf(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### reactive power ###
@@ -800,7 +828,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_main_menu_3.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_4.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(ec.pf.value, base_save_path)
+        self.sp.ocr_curr_4phase(ec.pf.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -808,7 +836,7 @@ class DemoTest:
         ### power min ###
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.pf.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.pf.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -816,18 +844,18 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(ec.pf.value, reset_time, base_save_path)
+        self.sp.ocr_curr_4phase_time(ec.pf.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
     
-    def demo_mea_anal_phasor(self, base_save_path):
+    def demo_mea_anal_phasor(self, base_save_path, test_mode):
         ### voltage+current vll ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -835,7 +863,7 @@ class DemoTest:
 
         ## voltage+current vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -843,14 +871,14 @@ class DemoTest:
         ### voltage vll ###
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### voltage vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -859,14 +887,14 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_analysis_vol.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### current vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -874,19 +902,20 @@ class DemoTest:
         ### nothing vll ###
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
         ### nothing vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path)
+        self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
 
-    def demo_mea_anal_harmonics(self, base_save_path):
+    def demo_mea_anal_harmonics(self, base_save_path, test_mode):
+        self.test_mode = test_mode
         ### voltage ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -901,9 +930,13 @@ class DemoTest:
         ocr_ref = ec.harmonics_vol_3p4w.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_vol_3p4w.value,)
-        ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+        image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_vol_3p4w.value)
+        if test_mode == "Demo":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+        elif test_mode == "None":
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1305,24 +1338,24 @@ class DemoTest:
         self.modbus_label.demo_test_setting()
         print("----------------DEMO TEST START----------------")
         
-    def demo_test_voltage(self, base_save_path):
-        self.demo_mea_vol_rms(base_save_path)
+    def demo_test_voltage(self, base_save_path, test_mode):
+        self.demo_mea_vol_rms(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_vol_fund(base_save_path)
+        self.demo_mea_vol_fund(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_vol_thd(base_save_path)
+        self.demo_mea_vol_thd(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_vol_freq(base_save_path)
+        self.demo_mea_vol_freq(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_vol_residual(base_save_path)
+        self.demo_mea_vol_residual(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return

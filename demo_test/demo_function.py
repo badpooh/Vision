@@ -927,7 +927,7 @@ class Evaluation:
                 image_time = datetime.strptime(time_str, time_format)
                 time_diff = abs(
                     (image_time - self.reset_time).total_seconds())
-                if time_diff <= 5 * 60:
+                if time_diff <= 3.5 * 60:
                     print(f"{time_str} (PASS)")
                     results.append(f"{time_str} (PASS)")
                 else:
