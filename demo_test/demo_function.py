@@ -4,7 +4,7 @@ import threading
 import time
 import numpy as np
 import cv2
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import time
 from pymodbus.client import ModbusTcpClient as ModbusClient
 import threading
@@ -241,9 +241,14 @@ class OCRManager:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
         
-        resized_image = cv2.resize(image, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
         gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+        threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                                        cv2.THRESH_BINARY, 11, 2)
         denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
+
+        kernel = np.array([[0, -1, 0], [-1, 5,-1], [0, -1, 0]])  # 기본 샤프닝 커널
+        sharpened_image = cv2.filter2D(resized_image, -1, kernel)
         
         ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
         
@@ -251,7 +256,7 @@ class OCRManager:
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
-                roi_image = resized_image[y:y+h, x:x+w]
+                roi_image = sharpened_image[y:y+h, x:x+w]
                 
                 # ROI 이미지 표시 (디버깅용)
                 # cv2.imshow('ROI Image', roi_image)
@@ -321,6 +326,7 @@ class ModbusLabels:
         self.touch_manager.uitest_mode_start()
         values_control = [2300, 0, 1600, 1]
         if self.modbus_manager.setup_client:
+            self.response = self.modbus_manager.setup_client.read_holding_registers(3060, 3)
             for value_control in values_control:
                 self.response = self.modbus_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
                 time.sleep(0.6)
@@ -328,7 +334,15 @@ class ModbusLabels:
             print("Max/Min Reset")
         else:
             print(self.response.isError())
-        self.reset_time = datetime.now()
+
+        high_word = self.modbus_manager.setup_client.read_holding_registers(3061, 1).registers[0]
+        low_word = self.modbus_manager.setup_client.read_holding_registers(3062, 1).registers[0]
+        unix_timestamp = (high_word << 16) | low_word
+
+        utc_time = datetime.fromtimestamp(unix_timestamp, tz=timezone.utc)
+        kst_time = utc_time + timedelta(minutes=540)
+        self.reset_time = kst_time
+        print(kst_time)
         return self.reset_time
     
     def reset_demand(self):
@@ -925,9 +939,10 @@ class Evaluation:
         for time_str in time_images:
             try:
                 image_time = datetime.strptime(time_str, time_format)
+                image_time = image_time.replace(tzinfo=timezone.utc)
                 time_diff = abs(
                     (image_time - self.reset_time).total_seconds())
-                if time_diff <= 3.5 * 60:
+                if time_diff <= 1 * 5:
                     print(f"{time_str} (PASS)")
                     results.append(f"{time_str} (PASS)")
                 else:

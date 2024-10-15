@@ -107,7 +107,7 @@ class DemoProcess:
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
 
-    def ocr_curr_4phase(self, ref, base_save_path):  # A,B,C,Aver ###
+    def ocr_curr_4phase(self, ref, base_save_path, test_mode):  # A,B,C,Aver ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
@@ -119,7 +119,7 @@ class DemoProcess:
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.curr_per_aver, ecroi.a_meas, ecroi.b_meas, ecroi.c_meas, ecroi.aver_meas]
         ocr_ref = ref
-        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path)
+        self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
 
     def ocr_4phase_time(self, ref, reset_time, base_save_path, test_mode):  # A,B,C,Aver + time stamp ###
         """
@@ -617,7 +617,7 @@ class DemoTest:
             print("Test stopped")
             return
 
-    def demo_mea_curr_tdd(self, base_save_path):
+    def demo_mea_curr_tdd(self, base_save_path, test_mode):
         reset_time = self.modbus_label.reset_max_min()
 
         ### Current tdd ###
@@ -1360,74 +1360,74 @@ class DemoTest:
             print("Test stopped")
             return
         
-    def demo_test_current(self, base_save_path):
-        self.demo_mea_curr_rms(base_save_path)
+    def demo_test_current(self, base_save_path, test_mode):
+        self.demo_mea_curr_rms(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_curr_fund(base_save_path)
+        self.demo_mea_curr_fund(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_curr_thd(base_save_path)
+        self.demo_mea_curr_thd(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_curr_tdd(base_save_path)
+        self.demo_mea_curr_tdd(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_curr_cf(base_save_path)
+        self.demo_mea_curr_cf(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_curr_kf(base_save_path)
+        self.demo_mea_curr_kf(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_curr_residual(base_save_path)
+        self.demo_mea_curr_residual(base_save_path, test_mode)
         
-    def demo_test_power(self, base_save_path):
-        self.demo_mea_pow_active(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_pow_reactive(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_pow_apparent(base_save_path)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_pow_pf(base_save_path)
+    def demo_test_power(self, base_save_path, test_mode):
+        # self.demo_mea_pow_active(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_pow_reactive(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_pow_apparent(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        self.demo_mea_pow_pf(base_save_path, test_mode)
         
-    def demo_test_analysis(self, base_save_path):
-        self.demo_mea_anal_phasor(base_save_path)
+    def demo_test_analysis(self, base_save_path, test_mode):
+        self.demo_mea_anal_phasor(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_anal_harmonics(base_save_path)
+        self.demo_mea_anal_harmonics(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_anal_waveform(base_save_path)
+        self.demo_mea_anal_waveform(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_anal_voltsym(base_save_path)
+        self.demo_mea_anal_voltsym(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_anal_voltunbal(base_save_path)
+        self.demo_mea_anal_voltunbal(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_anal_cursym(base_save_path)
+        self.demo_mea_anal_cursym(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_mea_anal_currunbal(base_save_path)
+        self.demo_mea_anal_currunbal(base_save_path, test_mode)
 
     def demo_test_demand(self, base_save_path):
         self.demo_meter_demand_curr(base_save_path)

@@ -117,10 +117,10 @@ class ConfigTextRef(Enum):
     cf_curr = ["Crest Factor Max", "A", "B", "c"]
     kf_curr = ["K-Factor Max", "A", "B", "c"]
     residual_curr = ["Residual Current Min Max", "RMS", "Fund."]
-    active = ["Active Power Min Max", "A", "B", "c", "Total"]
-    reactive = ["Reactive Power Min Max", "A", "B", "c", "Total"]
-    apparent = ["Apparent Power Min Max", "A", "B", "c", "Total"]
-    pf = ["Power Factor Min Max", "A", "B", "c", "Total"]
+    active = ["Active Power Min Max", "A", "B", "C", "Total"]
+    reactive = ["Reactive Power Min Max", "A", "B", "C", "Total"]
+    apparent = ["Apparent Power Min Max", "A", "B", "C", "Total"]
+    pf = ["Power Factor Min Max", "A", "B", "C", "Total"]
     phasor_ll = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"]
     phasor_ln = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"]
     harmonics_for_img = ["Harmonics", "Voltage", "Current"]
@@ -224,7 +224,7 @@ class ConfigImgRef(Enum):
 class ConfigSetup():
 
     def roi_params(self):
-        n = 4
+        n = 3
         params = {
             "1": [n*x for x in [176, 181, 298, 35]],
             "2": [n*x for x in [477, 181, 298, 35]],
@@ -257,13 +257,13 @@ class ConfigSetup():
             ConfigROI.a_time_stamp: [n*x for x in [320, 220, 190, 25]], # time stamp
             ConfigROI.a_meas: [n*x for x in [540, 190, 230, 55]],  # 190.0 V
             ConfigROI.b_bc: [n*x for x in [165, 253, 135, 69]],  # BC
-            ConfigROI.b_time_stamp: [n*x for x in [320, 295, 190, 25]], # time stamp
+            ConfigROI.b_time_stamp: [n*x for x in [320, 293, 190, 25]], # time stamp
             ConfigROI.b_meas: [n*x for x in [540, 260, 230, 60]],  # 190.0 V
             ConfigROI.c_ca: [n*x for x in [165, 326, 135, 69]],  # CA
             ConfigROI.c_time_stamp: [n*x for x in [320, 365, 190, 25]], # time stamp
             ConfigROI.c_meas: [n*x for x in [540, 340, 230, 50]],  # 190.0 V
             ConfigROI.aver: [n*x for x in [165, 399, 135, 69]],  # Average
-            ConfigROI.aver_time_stamp: [n*x for x in [320, 435, 190, 25]], # time stamp
+            ConfigROI.aver_time_stamp: [n*x for x in [320, 438, 190, 25]], # time stamp
             ConfigROI.aver_meas: [n*x for x in [540, 410, 230, 60]],  # 190.0
 
             ### 확인 후 제거 ###
@@ -273,10 +273,10 @@ class ConfigSetup():
             "main_view_17": [n*x for x in [720, 420, 35, 40]],  # V
 
             # current % meas 수치 해야됨
-            ConfigROI.curr_per_a: [n*x for x in [360, 190, 110, 30]],
-            ConfigROI.curr_per_b: [n*x for x in [360, 265, 110, 30]],
-            ConfigROI.curr_per_c: [n*x for x in [360, 335, 110, 30]],
-            ConfigROI.curr_per_aver: [n*x for x in [360, 405, 110, 35]],
+            ConfigROI.curr_per_a: [n*x for x in [360, 190, 120, 30]],
+            ConfigROI.curr_per_b: [n*x for x in [360, 265, 120, 30]],
+            ConfigROI.curr_per_c: [n*x for x in [360, 335, 120, 30]],
+            ConfigROI.curr_per_aver: [n*x for x in [360, 405, 120, 35]],
 
             # test mode confirm
             "999": [n*x for x in [220, 105, 350, 40]],
