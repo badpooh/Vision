@@ -1,7 +1,7 @@
 from PySide6.QtGui import QIcon, QCursor, QTextCursor
 from PySide6.QtCore import QSize, Qt, QTimer, QObject, Signal, Slot
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy, QMessageBox, QHeaderView
+from PySide6.QtWidgets import QMainWindow, QPushButton, QMenu, QMessageBox, QHeaderView, QTableWidgetItem
 from resources_rc import *
 import sys
 import threading
@@ -14,6 +14,7 @@ from modules.ocr_process import ImgOCR
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
 from demo_test.demo_function import ModbusManager, ModbusLabels, Evaluation
+from setup_test.setup_setting import SettingWindow
 from frame_test.webcam_function import WebCam
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
@@ -28,6 +29,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.box_list = []
         self.tc_box_index = 0
         self.ocr_settings = {}
+        self.set_windows = {}
         self.label_load_text = "OCR NO"
         self.label_judge_text = ""
         self.checkbox_states = {
@@ -47,6 +49,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.alarm = Alarm()
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
+        self.setting_window = SettingWindow()
         
         self.tableWidget.setHorizontalHeaderLabels(["TITLE", "CONTENT", "RESULT"])
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
@@ -85,6 +88,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
+        self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)
         
         # self.original_stdout = sys.stdout
         # self.original_stderr = sys.stderr
@@ -164,6 +168,12 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def stop_callback(self):
         return self.stop_thread
+    
+    def on_cell_double_click(self, row, col):
+        if col == 0 or col == 1:
+            if row not in self.set_windows:
+                self.set_windows[row] = self.setting_window.open_new_window(row)
+            self.set_windows[row].show()
 
     def demo_ui_test_start(self):
         # if self.modbus_manager.is_connected == True:
@@ -301,57 +311,14 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             print("Found matching index:", label_judge)
             break
 
-    def add_box_tc(self, checkBox_contents=[], images_loaded=False, judge=None):
-        if checkBox_contents:
-            label_name = ", ".join(checkBox_contents)
-        else:
-            label_name = ""
+    def add_box_tc(self):
+        row_position = self.tableWidget.rowCount()
+        self.tableWidget.insertRow(row_position)
 
-        new_widget = QWidget()
-        new_widget_layout = QHBoxLayout(new_widget)
-        new_widget.setLayout(new_widget_layout)
-        new_widget.setStyleSheet(u"QWidget{background-color: lightgrey;}"
-                                 "QPushButton {color:black; max-width:25px; max-height:100px;}")
-        new_widget.setMinimumHeight(100)
-        new_widget.setMaximumHeight(100)
-
-        # QLabel 추가
-        label_index = QLabel(str(self.tc_box_index))
-        label_item = QLabel(str(label_name))
-
-        label_load_text = "OCR OK" if images_loaded else "OCR NO"
-        label_load = QLabel(label_load_text)
-        label_judge_text = "PASS" if judge is True else (
-            "" if judge is None else "FAIL")
-        label_judge = QLabel(label_judge_text)
-
-        label_item.setAlignment(Qt.AlignCenter)
-        new_widget_layout.addWidget(label_index)
-        new_widget_layout.addWidget(label_item)
-        new_widget_layout.addWidget(label_load)
-        new_widget_layout.addWidget(label_judge)
-
-        self.spacer = QSpacerItem(
-            100, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        new_widget_layout.addItem(self.spacer)
-
-        new_widget_setting = QPushButton(new_widget)
-        new_widget_setting.setObjectName(u"Setting")
-        self.icon = QIcon()
-        self.icon.addFile(u":/images/more.png", QSize(),
-                          QIcon.Normal, QIcon.Off)
-        new_widget_setting.setIcon(self.icon)
-        new_widget_layout.addWidget(new_widget_setting)
-        current_index = self.tc_box_index
-        new_widget_setting.clicked.connect(
-            lambda: self.create_menu(current_index))
-
-        # 스크롤 영역에 새로운 위젯 추가
-        self.scrollAreaLayout.addWidget(new_widget)
-
-        self.box_list.append(
-            (new_widget, label_item, self.tc_box_index, label_load, label_judge))
-        self.tc_box_index += 1
+        for col in range(3):
+            readonly_item = QTableWidgetItem()
+            readonly_item.setFlags(readonly_item.flags() & ~Qt.ItemIsEditable)
+            self.tableWidget.setItem(row_position, col, readonly_item)
 
     def create_menu(self, tc_box_index):
         menu = QMenu()
