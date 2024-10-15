@@ -1,7 +1,7 @@
 from PySide6.QtGui import QIcon, QCursor, QTextCursor
 from PySide6.QtCore import QSize, Qt, QTimer, QObject, Signal, Slot
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QPushButton, QMenu, QMessageBox, QHeaderView, QTableWidgetItem
+from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget, QVBoxLayout, QHBoxLayout, QMenu, QLabel, QSpacerItem, QSizePolicy, QMessageBox, QHeaderView
 from resources_rc import *
 import sys
 import threading
@@ -302,71 +302,56 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             break
 
     def add_box_tc(self, checkBox_contents=[], images_loaded=False, judge=None):
-        row_position = self.tableWidget.rowCount()
-        self.tableWidget.insertRow(row_position)
-        
-        button = QPushButton("Action")
-        self.tableWidget.setCellWidget(row_position, 1, button)
-        
-        # 텍스트 입력을 방지하기 위해 읽기 전용 셀을 추가
-        item = QTableWidgetItem()  # 새로운 빈 QTableWidgetItem
-        item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # 셀을 읽기 전용으로 설정
-        self.tableWidget.setItem(row_position, 0, item)  # 0번째 컬럼에 읽기 전용 아이템 추가
+        if checkBox_contents:
+            label_name = ", ".join(checkBox_contents)
+        else:
+            label_name = ""
 
-        # 다른 셀에도 필요하다면 읽기 전용 설정 가능
-        readonly_item = QTableWidgetItem("Some content")
-        readonly_item.setFlags(readonly_item.flags() & ~Qt.ItemIsEditable)
-        self.tableWidget.setItem(row_position, 2, readonly_item)
-        # if checkBox_contents:
-        #     label_name = ", ".join(checkBox_contents)
-        # else:
-        #     label_name = ""
+        new_widget = QWidget()
+        new_widget_layout = QHBoxLayout(new_widget)
+        new_widget.setLayout(new_widget_layout)
+        new_widget.setStyleSheet(u"QWidget{background-color: lightgrey;}"
+                                 "QPushButton {color:black; max-width:25px; max-height:100px;}")
+        new_widget.setMinimumHeight(100)
+        new_widget.setMaximumHeight(100)
 
-        # new_widget = QWidget()
-        # new_widget_layout = QHBoxLayout(new_widget)
-        # new_widget.setLayout(new_widget_layout)
-        # new_widget.setStyleSheet(u"QWidget{background-color: lightgrey;}"
-        #                          "QPushButton {color:black; max-width:25px; max-height:100px;}")
-        # new_widget.setMinimumHeight(100)
-        # new_widget.setMaximumHeight(100)
+        # QLabel 추가
+        label_index = QLabel(str(self.tc_box_index))
+        label_item = QLabel(str(label_name))
 
-        # # QLabel 추가
-        # label_index = QLabel(str(self.tc_box_index))
-        # label_item = QLabel(str(label_name))
+        label_load_text = "OCR OK" if images_loaded else "OCR NO"
+        label_load = QLabel(label_load_text)
+        label_judge_text = "PASS" if judge is True else (
+            "" if judge is None else "FAIL")
+        label_judge = QLabel(label_judge_text)
 
-        # label_load_text = "OCR OK" if images_loaded else "OCR NO"
-        # label_load = QLabel(label_load_text)
-        # label_judge_text = "PASS" if judge is True else (
-        #     "" if judge is None else "FAIL")
-        # label_judge = QLabel(label_judge_text)
+        label_item.setAlignment(Qt.AlignCenter)
+        new_widget_layout.addWidget(label_index)
+        new_widget_layout.addWidget(label_item)
+        new_widget_layout.addWidget(label_load)
+        new_widget_layout.addWidget(label_judge)
 
-        # label_item.setAlignment(Qt.AlignCenter)
-        # new_widget_layout.addWidget(label_index)
-        # new_widget_layout.addWidget(label_item)
-        # new_widget_layout.addWidget(label_load)
-        # new_widget_layout.addWidget(label_judge)
+        self.spacer = QSpacerItem(
+            100, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        new_widget_layout.addItem(self.spacer)
 
-        # self.spacer = QSpacerItem(
-        #     100, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        # new_widget_layout.addItem(self.spacer)
+        new_widget_setting = QPushButton(new_widget)
+        new_widget_setting.setObjectName(u"Setting")
+        self.icon = QIcon()
+        self.icon.addFile(u":/images/more.png", QSize(),
+                          QIcon.Normal, QIcon.Off)
+        new_widget_setting.setIcon(self.icon)
+        new_widget_layout.addWidget(new_widget_setting)
+        current_index = self.tc_box_index
+        new_widget_setting.clicked.connect(
+            lambda: self.create_menu(current_index))
 
-        # new_widget_setting = QPushButton(new_widget)
-        # new_widget_setting.setObjectName(u"Setting")
-        # self.icon = QIcon()
-        # self.icon.addFile(u":/images/more.png", QSize(),
-        #                   QIcon.Normal, QIcon.Off)
-        # new_widget_setting.setIcon(self.icon)
-        # new_widget_layout.addWidget(new_widget_setting)
-        # current_index = self.tc_box_index
-        # new_widget_setting.clicked.connect(
-        #     lambda: self.create_menu(current_index))
+        # 스크롤 영역에 새로운 위젯 추가
+        self.scrollAreaLayout.addWidget(new_widget)
 
-        # # 스크롤 영역에 새로운 위젯 추가
-        # self.tableWidget.setCellWidget(3, 1, new_widget)
-
-        # self.box_list.append(
-        #     (new_widget, label_item, self.tc_box_index, label_load, label_judge))
-        # self.tc_box_index += 1
+        self.box_list.append(
+            (new_widget, label_item, self.tc_box_index, label_load, label_judge))
+        self.tc_box_index += 1
 
     def create_menu(self, tc_box_index):
         menu = QMenu()

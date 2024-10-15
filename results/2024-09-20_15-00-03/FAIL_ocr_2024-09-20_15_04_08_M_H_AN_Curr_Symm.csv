@@ -1,8 +1,0 @@
-Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-09-20 15:01:01.827133),Img Match,H.Text
-Curr. Symm. Component Max,,,,,,
-Positive- Sequence,I1 (FAIL),"['Curr.', 'Symm.', 'Positive-', 'Component'] (FAIL)","['Current', 'Unbalance', 'NEMA'] (FAIL)",,,
-Negative- Sequence,12 (FAIL),,,,,
-Zero- Sequence,10 (FAIL),,,,,
-,2.492A (PASS),,,,,
-,0.01A (PASS),,,,,
-,0.012A (PASS),,,,,

@@ -1,6 +1,0 @@
-Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-09-26 08:17:17.043929),Img Match,H.Text
-RMS Voltage L-L L-N Min Max,,,,,,
-AB,189.4V (PASS),[] (PASS),[] (PASS),2024-09-26 08:20:52 (PASS),,
-BC,189.4V (PASS),,,Time format error for 2024-09-2608:20:48: time data '2024-09-2608:20:48' does not match format '%Y-%m-%d %H:%M:%S' (FAIL),,
-CA,189.5V (PASS),,,2024-09-26 08:20:51 (PASS),,
-Average,189.5V (PASS),,,2024-09-26 08:20:52 (PASS),,
