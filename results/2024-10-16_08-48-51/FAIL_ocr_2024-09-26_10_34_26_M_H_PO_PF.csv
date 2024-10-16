@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-09-26 10:33:35+00:00),Img Match,H.Text
+Min Power Factor Max,,,,,,
+A,A% = No Load (PASS by text),[] (PASS),[] (PASS),2024-09-26 10:34:24 / 49.0 seconds (FAIL),,
+B,B% = No Load (PASS by text),,,2024-09-26 10:34:24 / 49.0 seconds (FAIL),,
+C,C% = No Load (PASS by text),,,2024-09-26 10:34:24 / 49.0 seconds (FAIL),,
+Total,Total% = No Load (PASS by text),,,2024-09-26 10:34:24 / 49.0 seconds (FAIL),,
+,1.0 (PASS),,,,,
+,1.0 (PASS),,,,,
+,1.0 (PASS),,,,,
+,1.0 (PASS),,,,,
