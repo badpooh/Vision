@@ -172,7 +172,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def on_cell_double_click(self, row, col):
         if col == 0 or col == 1:
             if row not in self.set_windows:
-                self.set_windows[row] = self.setting_window.open_new_window(row)
+                self.set_windows[row] = self.setting_window.open_new_window(row+1)
             self.set_windows[row].show()
 
     def demo_ui_test_start(self):
