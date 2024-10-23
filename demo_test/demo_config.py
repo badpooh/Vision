@@ -121,11 +121,11 @@ class ConfigTextRef(Enum):
     reactive = ["Reactive Power Min Max", "A", "B", "C", "Total"]
     apparent = ["Apparent Power Min Max", "A", "B", "C", "Total"]
     pf = ["Power Factor Min Max", "A", "B", "C", "Total"]
-    phasor_ll = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "c"]
-    phasor_ln = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "c", "Current", "A", "B", "c"]
+    phasor_ll = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "AB", "BC", "CA", "Current", "A", "B", "C"]
+    phasor_ln = ["Phasor", "Voltage", "Current", "VLL", "VLN", "Voltage", "A", "B", "C", "Current", "A", "B", "C"]
     harmonics_for_img = ["Harmonics", "Voltage", "Current"]
-    harmonics_vol_3p4w = ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "c", "A", "B", "c"]
-    harmonics_curr = ["Harmonics", "Voltage", "Current", "[A]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "c", "A", "B", "c"]
+    harmonics_vol_3p4w = ["Harmonics", "Voltage", "Current", "[v]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"]
+    harmonics_curr = ["Harmonics", "Voltage", "Current", "[A]", "Graph", "Fund.", "THD", "Fund.", "A", "B", "C", "A", "B", "C"]
     harmonics_per_fund = ["Harmonics", "Voltage", "Current","[%]Fund", "Graph", "THD", "Fund."]
     harmonics_per_rms = ["Harmonics", "Voltage", "Current","[%]RMS", "Graph", "THD", "Fund."]
     waveform_3p4w = ["Waveform", "Voltage", "Current"]
@@ -204,21 +204,31 @@ class ConfigColor(Enum):
 
 class ConfigImgRef(Enum):
     img_ref_phasor_all_vll = r".\image_ref\phasor_ref_all_vll.png"
-    img_ref_phasor_all_vln = r".\image_ref\phasor_ref_all_vln.png"
     img_ref_phasor_all_vll_none = r".\image_ref\phasor_ref_all_vll_none.png"
+    img_ref_phasor_all_vln = r".\image_ref\phasor_ref_all_vln.png"
     img_ref_phasor_all_vln_none = r".\image_ref\phasor_ref_all_vln_none.png"
     img_ref_phasor_vol_vll = r".\image_ref\phasor_ref_vol_vll.png"
+    img_ref_phasor_vol_vll_none = r".\image_ref\phasor_ref_vol_vll_none.png"
     img_ref_phasor_vol_vln = r".\image_ref\phasor_ref_vol_vln.png"
+    img_ref_phasor_vol_vln_none = r".\image_ref\phasor_ref_vol_vln_none.png"
     img_ref_phasor_curr_vll = r".\image_ref\phasor_ref_curr_vll.png"
+    img_ref_phasor_curr_vll_none = r".\image_ref\phasor_ref_curr_vll_none.png"
     img_ref_phasor_curr_vln = r".\image_ref\phasor_ref_curr_vln.png"
+    img_ref_phasor_curr_vln_none = r".\image_ref\phasor_ref_curr_vln_none.png"
     img_ref_phasor_na_vll = r".\image_ref\phasor_ref_na_vll.png"
     img_ref_phasor_na_vln = r".\image_ref\phasor_ref_na_vln.png"
-    img_ref_harmonics_vol_3p4w = r".\image_ref\Harmonics_ref_vol_3p4w.png"
-    img_ref_harmonics_curr = r".\image_ref\Harmonics_ref_curr.png"
-    img_ref_harmonics_vol_fund = r".\image_ref\img_ref_harmonics_vol_fund.png"
-    img_ref_harmonics_vol_rms = r".\image_ref\img_ref_harmonics_vol_rms.png"
-    img_ref_harmonics_curr_fund = r".\image_ref\img_ref_harmonics_curr_fund.png"
-    img_ref_harmonics_curr_rms = r".\image_ref\img_ref_harmonics_curr_rms.png"
+    img_ref_harmonics_vol_3p4w = r".\image_ref\21.img_ref_harmonics_vol_3p4w.png"
+    img_ref_harmonics_vol_3p4w_none = r".\image_ref\21.img_ref_harmonics_vol_3p4w_none.png"
+    img_ref_harmonics_curr = r".\image_ref\22.img_ref_harmonics_curr.png"
+    img_ref_harmonics_curr_none = r".\image_ref\22.img_ref_harmonics_curr_none.png"
+    img_ref_harmonics_vol_fund = r".\image_ref\23.img_ref_harmonics_vol_fund.png"
+    img_ref_harmonics_vol_fund_none = r".\image_ref\23.img_ref_harmonics_vol_fund_none.png"
+    img_ref_harmonics_vol_rms = r".\image_ref\24.img_ref_harmonics_vol_rms.png"
+    img_ref_harmonics_vol_rms_none = r".\image_ref\24.img_ref_harmonics_vol_rms_none.png"
+    img_ref_harmonics_curr_fund = r".\image_ref\25.img_ref_harmonics_curr_fund.png"
+    img_ref_harmonics_curr_fund_none = r".\image_ref\25.img_ref_harmonics_curr_fund_none.png"
+    img_ref_harmonics_curr_rms = r".\image_ref\26.img_ref_harmonics_curr_rms.png"
+    img_ref_harmonics_curr_rms_none = r".\image_ref\26.img_ref_harmonics_curr_rms_none.png"
     img_ref_waveform_all = r".\image_ref\waveform_ref_all.png"
 
 class ConfigSetup():

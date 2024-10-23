@@ -271,6 +271,9 @@ class OCRManager:
                         for line in text_results])
                 else:
                     extracted_texts = "empty"
+                
+                extracted_texts = self.handle_special_cases(extracted_texts)
+                
                 ocr_results[roi_key] = extracted_texts
    
         for roi_key, text in ocr_results.items():
@@ -279,6 +282,31 @@ class OCRManager:
         # 유효한 텍스트만 리스트로 반환
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
+    
+    def handle_special_cases(self, text):
+        words = text.strip().split()
+        processed_words = []
+        for i, word in enumerate(words):
+            # 'c'를 검사하고 조건에 맞으면 대문자 'C'로 변환
+            if word.lower() == 'c':
+                is_last_word = (i == len(words) - 1)
+                has_space_before = (i > 0)
+                has_space_after = (i < len(words) - 1)
+                
+                # 앞에 공백이 있고 뒤에 공백이 있거나, 앞에 공백이 있고 마지막 단어인 경우
+                if (has_space_before and has_space_after) or (has_space_before and is_last_word):
+                    processed_words.append('C')
+                    continue
+            if word == 'V':
+                has_word_before = (i > 0)
+                has_word_after = (i < len(words) - 1)
+                if has_word_before and has_word_after:
+                    # 앞뒤로 단어가 있는 경우 'V'를 제외
+                    print(f"예외 처리: '{word}'를 결과에서 제외")
+                    continue  # 'V'를 결과에서 제외하고 다음 단어로 이동
+            # 조건에 맞지 않으면 원래 단어 사용
+            processed_words.append(word)
+        return ' '.join(processed_words)
 
 class ModbusLabels:
 
@@ -895,31 +923,58 @@ class Evaluation:
             
             return max_val
     
-    def img_detection(self, image_path, color_data, tolerance):
-        image = cv2.imread(image_path)
-        x, y, w, h, R, G, B = color_data
-        cut_img = image[y:y+h, x:x+w]
+    def img_detection(self, image_path, color_data, tolerance, test_mode):
+        if test_mode == "Demo":
+            image = cv2.imread(image_path)
+            x, y, w, h, R, G, B = color_data
+            cut_img = image[y:y+h, x:x+w]
 
-        # cv2.imshow('Image', cut_img)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        
-        target_color = np.array([B, G, R])
-        diff = np.abs(cut_img - target_color)
-        match = np.all(diff <= tolerance, axis=2)
+            # cv2.imshow('Image', cut_img)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+            
+            target_color = np.array([B, G, R])
+            diff = np.abs(cut_img - target_color)
+            match = np.all(diff <= tolerance, axis=2)
 
-        if np.array_equal(target_color, np.array([0, 0, 0])):
-            target_color = "Vol_A(X)"
-        elif np.array_equal(target_color, np.array([37, 29, 255])):  # BGR 순서로 비교
-            target_color = "Vol_B(X)"
-        elif np.array_equal(target_color, np.array([255, 0, 0])):
-            target_color = "Vol_C(X)"
-        elif np.array_equal(target_color, np.array([153, 153, 153])):
-            target_color = "Curr_A(X)"
-        elif np.array_equal(target_color, np.array([245, 180, 255])):  # BGR 순서로 비교
-            target_color = "Curr_B(X)"
-        elif np.array_equal(target_color, np.array([255, 175, 54])):  # BGR 순서로 비교
-            target_color = "Curr_C(X)"
+            if np.array_equal(target_color, np.array([0, 0, 0])):
+                target_color = "Vol_A(X)"
+            elif np.array_equal(target_color, np.array([37, 29, 255])):  # BGR 순서로 비교
+                target_color = "Vol_B(X)"
+            elif np.array_equal(target_color, np.array([255, 0, 0])):
+                target_color = "Vol_C(X)"
+            elif np.array_equal(target_color, np.array([153, 153, 153])):
+                target_color = "Curr_A(X)"
+            elif np.array_equal(target_color, np.array([245, 180, 255])):  # BGR 순서로 비교
+                target_color = "Curr_B(X)"
+            elif np.array_equal(target_color, np.array([255, 175, 54])):  # BGR 순서로 비교
+                target_color = "Curr_C(X)"
+
+        elif test_mode == "None":
+            color_harmonics_vol_a = [313, 283, 455, 173, 0, 0, 0]
+            color_harmonics_vol_b = [313, 283, 455, 173, 255, 29, 37]
+            color_harmonics_vol_c = [313, 283, 455, 173, 0, 0, 255]
+
+            image = cv2.imread(image_path)
+            x, y, w, h, R, G, B = color_data
+            cut_img = image[y:y+h, x:x+w]
+            
+            target_color = np.array([B, G, R])
+            diff = np.abs(cut_img - target_color)
+            match = np.all(diff <= tolerance, axis=2)
+
+            if np.array_equal(target_color, np.array([0, 0, 0])):
+                target_color = "Vol_A(X)"
+            elif np.array_equal(target_color, np.array([37, 29, 255])):  # BGR 순서로 비교
+                target_color = "Vol_B(X)"
+            elif np.array_equal(target_color, np.array([255, 0, 0])):
+                target_color = "Vol_C(X)"
+            elif np.array_equal(target_color, np.array([153, 153, 153])):
+                target_color = "Curr_A(X)"
+            elif np.array_equal(target_color, np.array([245, 180, 255])):  # BGR 순서로 비교
+                target_color = "Curr_B(X)"
+            elif np.array_equal(target_color, np.array([255, 175, 54])):  # BGR 순서로 비교
+                target_color = "Curr_C(X)"
 
         if np.any(match):
             print(f"{target_color} (FAIL)")
@@ -942,7 +997,7 @@ class Evaluation:
                 image_time = image_time.replace(tzinfo=timezone.utc)
                 time_diff = abs(
                     (image_time - self.reset_time).total_seconds())
-                if time_diff <= 1 * 5:
+                if time_diff <= 1 * 5: # 숫자 * Sec
                     print(f"{time_str} (PASS)")
                     results.append(f"{time_str} (PASS)")
                 else:
