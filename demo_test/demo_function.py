@@ -13,6 +13,7 @@ import shutil
 import os
 import pandas as pd
 from paddleocr import PaddleOCR
+from collections import Counter
 
 from demo_test.demo_config import ConfigSetup
 from demo_test.demo_config import ConfigTextRef as ec
@@ -445,11 +446,11 @@ class Evaluation:
         right_list = ' '.join(text.strip() for text in ocr_right).split()
         ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
 
-        right_set = set(right_list)
-        ocr_rt_set = set(ocr_rt_list)
+        right_counter = Counter(right_list)
+        ocr_rt_counter = Counter(ocr_rt_list)
 
-        self.ocr_error = list(ocr_rt_set - right_set)
-        right_error = list(right_set - ocr_rt_set)
+        self.ocr_error = list((ocr_rt_counter - right_counter).elements())
+        right_error = list((right_counter - ocr_rt_counter).elements())
 
         def check_results(values, limits, ocr_meas_subset):
             self.condition_met = True
@@ -671,11 +672,11 @@ class Evaluation:
         right_list = ' '.join(text.strip() for text in ocr_right).split()
         ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
 
-        right_set = set(right_list)
-        ocr_rt_set = set(ocr_rt_list)
+        right_counter = Counter(right_list)
+        ocr_rt_counter = Counter(ocr_rt_list)
 
-        self.ocr_error = list(ocr_rt_set - right_set)
-        right_error = list(right_set - ocr_rt_set)
+        self.ocr_error = list((ocr_rt_counter - right_counter).elements())
+        right_error = list((right_counter - ocr_rt_counter).elements())
 
         def check_results(values, limits, ocr_meas_subset):
             self.condition_met = True
@@ -923,58 +924,31 @@ class Evaluation:
             
             return max_val
     
-    def img_detection(self, image_path, color_data, tolerance, test_mode):
-        if test_mode == "Demo":
-            image = cv2.imread(image_path)
-            x, y, w, h, R, G, B = color_data
-            cut_img = image[y:y+h, x:x+w]
+    def img_detection(self, image_path, color_data, tolerance):
+        image = cv2.imread(image_path)
+        x, y, w, h, R, G, B = color_data
+        cut_img = image[y:y+h, x:x+w]
 
-            # cv2.imshow('Image', cut_img)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
-            
-            target_color = np.array([B, G, R])
-            diff = np.abs(cut_img - target_color)
-            match = np.all(diff <= tolerance, axis=2)
+        # cv2.imshow('Image', cut_img)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+        
+        target_color = np.array([B, G, R])
+        diff = np.abs(cut_img - target_color)
+        match = np.all(diff <= tolerance, axis=2)
 
-            if np.array_equal(target_color, np.array([0, 0, 0])):
-                target_color = "Vol_A(X)"
-            elif np.array_equal(target_color, np.array([37, 29, 255])):  # BGR 순서로 비교
-                target_color = "Vol_B(X)"
-            elif np.array_equal(target_color, np.array([255, 0, 0])):
-                target_color = "Vol_C(X)"
-            elif np.array_equal(target_color, np.array([153, 153, 153])):
-                target_color = "Curr_A(X)"
-            elif np.array_equal(target_color, np.array([245, 180, 255])):  # BGR 순서로 비교
-                target_color = "Curr_B(X)"
-            elif np.array_equal(target_color, np.array([255, 175, 54])):  # BGR 순서로 비교
-                target_color = "Curr_C(X)"
-
-        elif test_mode == "None":
-            color_harmonics_vol_a = [313, 283, 455, 173, 0, 0, 0]
-            color_harmonics_vol_b = [313, 283, 455, 173, 255, 29, 37]
-            color_harmonics_vol_c = [313, 283, 455, 173, 0, 0, 255]
-
-            image = cv2.imread(image_path)
-            x, y, w, h, R, G, B = color_data
-            cut_img = image[y:y+h, x:x+w]
-            
-            target_color = np.array([B, G, R])
-            diff = np.abs(cut_img - target_color)
-            match = np.all(diff <= tolerance, axis=2)
-
-            if np.array_equal(target_color, np.array([0, 0, 0])):
-                target_color = "Vol_A(X)"
-            elif np.array_equal(target_color, np.array([37, 29, 255])):  # BGR 순서로 비교
-                target_color = "Vol_B(X)"
-            elif np.array_equal(target_color, np.array([255, 0, 0])):
-                target_color = "Vol_C(X)"
-            elif np.array_equal(target_color, np.array([153, 153, 153])):
-                target_color = "Curr_A(X)"
-            elif np.array_equal(target_color, np.array([245, 180, 255])):  # BGR 순서로 비교
-                target_color = "Curr_B(X)"
-            elif np.array_equal(target_color, np.array([255, 175, 54])):  # BGR 순서로 비교
-                target_color = "Curr_C(X)"
+        if np.array_equal(target_color, np.array([0, 0, 0])):
+            target_color = "Vol_A(X)"
+        elif np.array_equal(target_color, np.array([37, 29, 255])):  # BGR 순서로 비교
+            target_color = "Vol_B(X)"
+        elif np.array_equal(target_color, np.array([255, 0, 0])):
+            target_color = "Vol_C(X)"
+        elif np.array_equal(target_color, np.array([153, 153, 153])):
+            target_color = "Curr_A(X)"
+        elif np.array_equal(target_color, np.array([245, 180, 255])):  # BGR 순서로 비교
+            target_color = "Curr_B(X)"
+        elif np.array_equal(target_color, np.array([255, 175, 54])):  # BGR 순서로 비교
+            target_color = "Curr_C(X)"
 
         if np.any(match):
             print(f"{target_color} (FAIL)")

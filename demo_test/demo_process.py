@@ -210,7 +210,7 @@ class DemoProcess:
         roi_keys = roi_keys
         ocr_ref = ocr_ref
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        image_results = self.evaluation.img_detection(image_path, value, 2, test_mode)
+        image_results = self.evaluation.img_detection(image_path, value, 2)
 
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
@@ -942,7 +942,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = [ecroi.harmonics_title, ecroi.harmonics_sub_title_1, ecroi.harmonics_sub_title_2,
+        roi_keys = [ecroi.harmonics_title, ecroi.harmonics_sub_title_1, ecroi.harmonics_sub_title_2, ecroi.harmonics_sub_title_3,
                     ecroi.harmonics_graph_a, ecroi.harmonics_graph_b, ecroi.harmonics_graph_c]
         roi_keys_meas = [ecroi.harmonics_thd_a, ecroi.harmonics_thd_b, ecroi.harmonics_thd_c,
                          ecroi.harmonics_fund_a, ecroi.harmonics_fund_b, ecroi.harmonics_fund_c]
@@ -965,7 +965,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
-        roi_keys = [ecroi.harmonics_title, ecroi.harmonics_sub_title_1, ecroi.harmonics_sub_title_2,
+        roi_keys = [ecroi.harmonics_title, ecroi.harmonics_sub_title_1, ecroi.harmonics_sub_title_2, ecroi.harmonics_sub_title_3,
                     ecroi.harmonics_graph_a, ecroi.harmonics_graph_b, ecroi.harmonics_graph_c]
         roi_keys_meas = [ecroi.harmonics_thd_a, ecroi.harmonics_thd_b, ecroi.harmonics_thd_c,
                          ecroi.harmonics_fund_a, ecroi.harmonics_fund_b, ecroi.harmonics_fund_c]
@@ -1446,10 +1446,10 @@ class DemoTest:
         self.demo_mea_pow_pf(base_save_path, test_mode)
         
     def demo_test_analysis(self, base_save_path, test_mode):
-        self.demo_mea_anal_phasor(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # self.demo_mea_anal_phasor(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
         self.demo_mea_anal_harmonics(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")

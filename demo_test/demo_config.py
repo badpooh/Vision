@@ -53,6 +53,7 @@ class ConfigROI(Enum):
     harmonics_title = "harmonics_title"
     harmonics_sub_title_1 = "harmonics_sub_title_1"
     harmonics_sub_title_2 = "harmonics_sub_title_2"
+    harmonics_sub_title_3 = "harmonics_sub_title_3"
     harmonics_graph_img_cut = "harmonics_graph_img_cut"
     harmonics_chart_img_cut = "harmonics_graph_with_bar_img_cut"
     harmonics_graph_a = "harmonics_graph_a"
@@ -320,7 +321,8 @@ class ConfigSetup():
             ConfigROI.harmonics_text_img: [n*x for x in [165, 230, 620, 240]],
             ConfigROI.harmonics_title: [n*x for x in [160, 120, 630, 53]],
             ConfigROI.harmonics_sub_title_1: [n*x for x in [160, 180, 270, 80]], # dropdown 버튼 + THD Fund.
-            ConfigROI.harmonics_sub_title_2: [n*x for x in [440, 180, 350, 40]], # Fund. ~ 
+            ConfigROI.harmonics_sub_title_2: [n*x for x in [440, 180, 130, 40]], # Fund.
+            ConfigROI.harmonics_sub_title_3: [n*x for x in [580, 180, 2000, 40]], # Fund.
             ConfigROI.harmonics_text_title: [n*x for x in [160, 180, 620, 40]],
             ConfigROI.harmonics_text_sub_title : [n*x for x in [160, 180, 270, 40]],
             ConfigROI.harmonics_text_sub_abc : [n*x for x in [590, 180, 190, 40]],

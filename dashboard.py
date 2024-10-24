@@ -13,7 +13,7 @@ from modules.ocr_setting import OcrSetting
 from modules.ocr_process import ImgOCR
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
-from demo_test.demo_function import ModbusManager, ModbusLabels, Evaluation
+from demo_test.demo_function import ModbusManager, ModbusLabels, TouchManager, Evaluation
 from setup_test.setup_setting import SettingWindow
 from frame_test.webcam_function import WebCam
 
@@ -45,6 +45,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.modbus_manager = ModbusManager()
         self.meter_setup_process = DemoProcess()
         self.modbus_labels = ModbusLabels()
+        self.touch_manager = TouchManager()
         self.evaluation = Evaluation()
         self.alarm = Alarm()
         self.stop_event = threading.Event()
@@ -232,6 +233,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         base_save_path = os.path.expanduser(f"./results/{current_time}/")
         os.makedirs(base_save_path, exist_ok=True)
         test_mode = "None"
+        self.touch_manager.uitest_mode_start()
         if self.checkbox_states["voltage"]:
             self.meter_demo_test.demo_test_voltage(base_save_path, test_mode)
             print("Voltage_DemoTest_Done")
