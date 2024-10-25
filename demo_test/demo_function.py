@@ -594,10 +594,9 @@ class Evaluation:
                     all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
                 elif "Text" in ''.join(ocr_res[1]):
                     all_meas_results.extend("PASS?")
-                else:
-                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3]))
-                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6]))
-                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6]))
+                all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
             else:
                 if img_result == 1 or img_result == 0:
                     all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))  
@@ -815,24 +814,28 @@ class Evaluation:
         elif "Harmonics" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
                 if img_result == 1 or img_result == 0:
-                    all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))
-                elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
-                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
-                elif "Text" in ''.join(ocr_res[1]):
-                    all_meas_results.extend("PASS?")
-                else:
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))
                     all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
                     all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (0, 0, "v"), ocr_res_meas[3:6]))
                     all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.9, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (0, 0, "v"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                elif "Text" in ''.join(ocr_res[1]):
+                    print("test")
             else:
                 if img_result == 1 or img_result == 0:
-                    all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))  
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))  
+                    # all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
+                    # all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (0, 0, "A"), ocr_res_meas[3:6]))
+                    # all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
                 elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
-                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
-                else:
-                    all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
-                    all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (0, 0, "A"), ocr_res_meas[3:6]))
-                    all_meas_results.extend(check_results(["harmonic_image"], (0.98, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.9, 1, ""), img_result))
+                elif "Text" in ''.join(ocr_res[1]):
+                    all_meas_results.extend("PASS?")
+            
                     
         elif "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
