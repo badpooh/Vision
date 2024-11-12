@@ -1183,10 +1183,11 @@ class DemoTest:
         roi_keys = [ecroi.waveform_title]
         ocr_ref = ec.waveform_3p4w.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all.value)
         if test_mode == "Demo":
+            image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         elif test_mode == "None":
+            image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all_none.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
@@ -1470,22 +1471,22 @@ class DemoTest:
         # if self.stop_event.is_set():
         #     print("Test stopped")
         #     return
-        self.demo_mea_anal_waveform(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_voltsym(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_voltunbal(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_cursym(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # self.demo_mea_anal_waveform(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_voltsym(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_voltunbal(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_cursym(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
         self.demo_mea_anal_currunbal(base_save_path, test_mode)
 
     def demo_test_demand(self, base_save_path):
