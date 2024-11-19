@@ -1,0 +1,4 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stemp (2024-11-19 17:14:39+00:00),Img Match,H.Text
+Min Max Residual Current,,,,,,
+RMS,0.0A (PASS),[] (PASS),[] (PASS),Time format error for 2024-11-1917:14:41: time data '2024-11-1917:14:41' does not match format '%Y-%m-%d %H:%M:%S' (FAIL),,
+Fund.,0.0A (PASS),,,Time format error for 2024-11-1917:14:41: time data '2024-11-1917:14:41' does not match format '%Y-%m-%d %H:%M:%S' (FAIL),,

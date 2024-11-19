@@ -237,7 +237,10 @@ class ConfigSetup():
     def __init__(self, n=3):
         self.n = n
 
-    def roi_params(self, n):
+    def update_n(self, new_n):
+        self.n = new_n
+
+    def roi_params(self):
         n = self.n
         params = {
             "1": [n*x for x in [176, 181, 298, 35]],

@@ -83,9 +83,9 @@ class DemoProcess:
         elif self.test_mode == "None":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys is not None:
-                ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+                # ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
                 time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time)
-                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
             else:
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
         

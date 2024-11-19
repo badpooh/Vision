@@ -223,11 +223,10 @@ class TouchManager:
 
 class OCRManager:
 
-    rois = config_data.roi_params(3)
-
-    def __init__(self):
-        self.config = ConfigSetup()
-        pass
+    def __init__(self, n=3):
+        self.n = n
+        self.config = ConfigSetup(n=self.n)
+        self.rois = self.config.roi_params()
 
     def color_detection(self, image, color_data):
         x, y, w, h, R, G, B = color_data
@@ -237,6 +236,12 @@ class OCRManager:
         target_color = np.array([R, G, B])
         color_difference = np.linalg.norm(average_color - target_color)
         return color_difference
+    
+    def update_n(self, new_n):
+        self.n = new_n
+        self.config.update_n(new_n)
+        self.rois = self.config.roi_params()
+        print(f"n 값이 {new_n}으로 변경되었습니다.")
 
     def ocr_basic(self, image, roi_keys):
         image = cv2.imread(image)
@@ -245,8 +250,7 @@ class OCRManager:
             return []
 
         # 초기 이미지 처리
-        self.n = 6
-        self.config.roi_params(self.n)
+        self.update_n(3)
         resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
         gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
         threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
@@ -263,9 +267,9 @@ class OCRManager:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
-                cv2.imshow("test", roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                # cv2.imshow("test", roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
 
                 # OCR 처리
                 text_results = ocr.ocr(roi_image, cls=False)
@@ -305,7 +309,7 @@ class OCRManager:
                         continue  # 유효하지 않은 영역은 건너뜁니다
 
                     # 문자 이미지를 확대하여 인식률 향상
-                    self.n = 6
+                    self.update_n(4)
                     char_image = cv2.resize(text_roi, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                     kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
                     char_image = cv2.filter2D(char_image, -1, kernel2)
@@ -315,9 +319,9 @@ class OCRManager:
                     # 3채널로 변환
                     # char_image = cv2.cvtColor(char_image, cv2.COLOR_GRAY2BGR)
 
-                    # cv2.imshow("test", char_image)
-                    # cv2.waitKey(0)
-                    # cv2.destroyAllWindows()
+                    cv2.imshow("test", char_image)
+                    cv2.waitKey(0)
+                    cv2.destroyAllWindows()
 
                     # OCR 재시도
                     max_retries = 1
@@ -507,7 +511,7 @@ class Evaluation:
 
     reset_time = None
     ocr_manager = OCRManager()
-    rois = config_data.roi_params(3)
+    rois = config_data.roi_params()
 
     def __init__(self):
         self.m_home, self.m_setup = config_data.match_m_setup_labels()
@@ -1051,7 +1055,8 @@ class Evaluation:
             return []
 
         # 초기 이미지 처리
-        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        self.ocr_manager.update_n(3)
+        resized_image = cv2.resize(image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
         kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
         sharpened_image = cv2.filter2D(resized_image, -1, kernel)
 
@@ -1098,7 +1103,8 @@ class Evaluation:
                         continue  # 유효하지 않은 영역은 건너뜁니다
 
                     # 문자 이미지를 확대하여 인식률 향상
-                    char_image = cv2.resize(text_roi, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+                    self.ocr_manager.update_n(4)
+                    char_image = cv2.resize(text_roi, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
                     kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
                     char_image = cv2.filter2D(char_image, -1, kernel2)
 
@@ -1178,9 +1184,13 @@ class Evaluation:
                     if retry_count < max_retries_time_format:
                         print("시간 파싱 실패로 OCR 재시도 중...")
                         # 이미지 전처리 강화 또는 파라미터 조정
-                        roi_image_processed = cv2.resize(roi_image, None, fx=6, fy=6, interpolation=cv2.INTER_CUBIC)
+                        self.ocr_manager.update_n(5)
+                        roi_image_processed = cv2.resize(roi_image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
                         kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
                         roi_image_processed = cv2.filter2D(roi_image, -1, kernel2)
+
+                        x, y, w, h = self.rois[roi_key]
+                        roi_image_processed = roi_image_processed[y:y+h, x:x+w]
                         # OCR 재시도
                         retry_result = ocr.ocr(roi_image_processed, cls=False)
 
