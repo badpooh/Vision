@@ -234,9 +234,11 @@ class ConfigImgRef(Enum):
     img_ref_waveform_all_none = r".\image_ref\42.img_ref_waveform_all_none.png"
 
 class ConfigSetup():
+    def __init__(self, n=3):
+        self.n = n
 
-    def roi_params(self):
-        n = 3
+    def roi_params(self, n):
+        n = self.n
         params = {
             "1": [n*x for x in [176, 181, 298, 35]],
             "2": [n*x for x in [477, 181, 298, 35]],

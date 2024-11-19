@@ -14,6 +14,7 @@ import os
 import pandas as pd
 from paddleocr import PaddleOCR
 from collections import Counter
+from itertools import chain
 
 from demo_test.demo_config import ConfigSetup
 from demo_test.demo_config import ConfigTextRef as ec
@@ -222,9 +223,10 @@ class TouchManager:
 
 class OCRManager:
 
-    rois = config_data.roi_params()
+    rois = config_data.roi_params(3)
 
     def __init__(self):
+        self.config = ConfigSetup()
         pass
 
     def color_detection(self, image, color_data):
@@ -241,49 +243,126 @@ class OCRManager:
         if image is None:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
-        
-        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+
+        # 초기 이미지 처리
+        self.n = 6
+        self.config.roi_params(self.n)
+        resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
         gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
-                                        cv2.THRESH_BINARY, 11, 2)
+        threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
         denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
 
-        kernel = np.array([[0, -1, 0], [-1, 5,-1], [0, -1, 0]])  # 기본 샤프닝 커널
+        kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
         sharpened_image = cv2.filter2D(resized_image, -1, kernel)
-        
-        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
-        
+
+        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
+
         ocr_results = {}
         for roi_key in roi_keys:
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
-                
-                # ROI 이미지 표시 (디버깅용)
-                # cv2.imshow('ROI Image', roi_image)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
 
+                cv2.imshow("test", roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+
+                # OCR 처리
                 text_results = ocr.ocr(roi_image, cls=False)
                 
+                # text_results를 평탄화
                 if text_results:
-                    extracted_texts = ' '.join(
-                        ['empty' if line is None else ' '.join([text[1][0] if text is not None else 'empty' for text in line])
-                        for line in text_results])
+                    flat_text_results = list(chain.from_iterable(text_results))
                 else:
-                    extracted_texts = "empty"
-                
-                extracted_texts = self.handle_special_cases(extracted_texts)
-                
-                ocr_results[roi_key] = extracted_texts
-   
+                    flat_text_results = []
+
+                extracted_texts = []
+                low_confidence_texts = []
+                for result in flat_text_results:
+                    coords, (text, confidence) = result
+                    text = text.strip()
+                    confidence = float(confidence)
+
+                    # 신뢰도 검사
+                    if confidence >= 0.98:
+                        extracted_texts.append(text)
+                    else:
+                        low_confidence_texts.append((text, confidence, coords))
+
+                # 신뢰도 낮은 텍스트 처리
+                for text, conf, coords in low_confidence_texts:
+                    print(f"ROI '{roi_key}'에서 신뢰도 98% 미만의 텍스트:")
+                    print(f" - '{text}' (신뢰도: {conf * 100:.2f}%)")
+                    # coords를 사용하여 해당 텍스트 영역 이미지 추출
+                    x_min = int(min([pt[0] for pt in coords]))
+                    x_max = int(max([pt[0] for pt in coords]))
+                    y_min = int(min([pt[1] for pt in coords]))
+                    y_max = int(max([pt[1] for pt in coords]))
+                    text_roi = roi_image[y_min:y_max, x_min:x_max]
+
+                    # 이미지 전처리 및 OCR 재시도
+                    if text_roi.size == 0:
+                        continue  # 유효하지 않은 영역은 건너뜁니다
+
+                    # 문자 이미지를 확대하여 인식률 향상
+                    self.n = 6
+                    char_image = cv2.resize(text_roi, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                    kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                    char_image = cv2.filter2D(char_image, -1, kernel2)
+                    # 그레이스케일 및 이진화
+                    # gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                    # _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    # 3채널로 변환
+                    # char_image = cv2.cvtColor(char_image, cv2.COLOR_GRAY2BGR)
+
+                    # cv2.imshow("test", char_image)
+                    # cv2.waitKey(0)
+                    # cv2.destroyAllWindows()
+
+                    # OCR 재시도
+                    max_retries = 1
+                    retry_count = 0
+                    success = False
+
+                    while retry_count < max_retries and not success:
+                        retry_result = ocr.ocr(char_image, cls=False)
+                        print(f"재시도 OCR 결과 (시도 {retry_count + 1}):", retry_result)
+                        if retry_result and retry_result[0]:
+                            # 결과에서 텍스트와 신뢰도 추출
+                            try:
+                                new_text_info = retry_result[0][1]
+                                new_text = new_text_info[0].strip()
+                                new_confidence = float(new_text_info[1])
+                            except:
+                                # 결과 구조가 다를 경우
+                                new_text_info = retry_result[0][0][1]
+                                new_text = new_text_info[0].strip()
+                                new_confidence = float(new_text_info[1])
+
+                            if new_confidence >= 0.95 or new_text == "c" or new_text == "C":
+                                extracted_texts.append(new_text)
+                                success = True  # 성공적으로 인식하면 반복 종료
+                            else:
+                                print(f"재시도 후에도 신뢰도 낮음: '{new_text}' (신뢰도: {new_confidence * 100:.2f}%)")
+                        else:
+                            print("재시도 후에도 텍스트를 인식하지 못했습니다.")
+                        retry_count += 1  # 재시도 횟수 증가
+
+                extracted_texts = ' '.join(extracted_texts)
+                # extracted_texts = self.handle_special_cases(extracted_texts)
+                if extracted_texts:
+                    ocr_results[roi_key] = extracted_texts
+            else:
+                print(f"{roi_key}가 self.rois에 존재하지 않습니다.")
+
         for roi_key, text in ocr_results.items():
             print(f'{roi_key}: {text}')
-        
+
         # 유효한 텍스트만 리스트로 반환
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
-    
+
+
     def handle_special_cases(self, text):
         words = text.strip().split()
         processed_words = []
@@ -428,7 +507,7 @@ class Evaluation:
 
     reset_time = None
     ocr_manager = OCRManager()
-    rois = config_data.roi_params()
+    rois = config_data.roi_params(3)
 
     def __init__(self):
         self.m_home, self.m_setup = config_data.match_m_setup_labels()
@@ -961,28 +1040,172 @@ class Evaluation:
             result = 1
         return result
 
-    def check_time_diff(self, time_images, reset_time):
+    def check_time_diff(self, image, roi_keys, reset_time):
         self.reset_time = reset_time
         if not self.reset_time:
             self.reset_time = datetime.now()
 
+        image = cv2.imread(image)
+        if image is None:
+            print(f"이미지를 읽을 수 없습니다: {image}")
+            return []
+
+        # 초기 이미지 처리
+        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+        sharpened_image = cv2.filter2D(resized_image, -1, kernel)
+
+        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
+
+        ocr_results = {}
+        for roi_key in roi_keys:
+            if roi_key in self.rois:
+                x, y, w, h = self.rois[roi_key]
+                roi_image = sharpened_image[y:y+h, x:x+w]
+                text_results = ocr.ocr(roi_image, cls=False)
+                
+                if text_results:
+                    flat_text_results = list(chain.from_iterable(text_results))
+                else:
+                    flat_text_results = []
+
+                extracted_texts = []
+                low_confidence_texts = []
+                for result in flat_text_results:
+                    coords, (text, confidence) = result
+                    text = text.strip()
+                    confidence = float(confidence)
+
+                    # 신뢰도 검사
+                    if confidence >= 0.95:
+                        extracted_texts.append(text)
+                    else:
+                        low_confidence_texts.append((text, confidence, coords))
+
+                # 신뢰도 낮은 텍스트 처리
+                for text, conf, coords in low_confidence_texts:
+                    print(f"ROI '{roi_key}'에서 신뢰도 98% 미만의 텍스트:")
+                    print(f" - '{text}' (신뢰도: {conf * 100:.2f}%)")
+                    # coords를 사용하여 해당 텍스트 영역 이미지 추출
+                    x_min = int(min([pt[0] for pt in coords]))
+                    x_max = int(max([pt[0] for pt in coords]))
+                    y_min = int(min([pt[1] for pt in coords]))
+                    y_max = int(max([pt[1] for pt in coords]))
+                    text_roi = roi_image[y_min:y_max, x_min:x_max]
+
+                    # 이미지 전처리 및 OCR 재시도
+                    if text_roi.size == 0:
+                        continue  # 유효하지 않은 영역은 건너뜁니다
+
+                    # 문자 이미지를 확대하여 인식률 향상
+                    char_image = cv2.resize(text_roi, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+                    kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                    char_image = cv2.filter2D(char_image, -1, kernel2)
+
+                    # cv2.imshow("test", char_image)
+                    # cv2.waitKey(0)
+                    # cv2.destroyAllWindows()
+
+                    # OCR 재시도
+                    max_retries = 1
+                    retry_count = 0
+                    success = False
+
+                    while retry_count < max_retries and not success:
+                        retry_result = ocr.ocr(char_image, cls=False)
+
+                        cv2.imshow("첫번째", char_image)
+                        cv2.waitKey(0)
+                        cv2.destroyAllWindows() 
+
+                        print(f"재시도 OCR 결과 (시도 {retry_count + 1}):", retry_result)
+                        if retry_result and retry_result[0]:
+                            # 결과에서 텍스트와 신뢰도 추출
+                            try:
+                                new_text_info = retry_result[0][1]
+                                new_text = new_text_info[0].strip()
+                                new_confidence = float(new_text_info[1])
+                            except:
+                                # 결과 구조가 다를 경우
+                                new_text_info = retry_result[0][0][1]
+                                new_text = new_text_info[0].strip()
+                                new_confidence = float(new_text_info[1])
+
+                            if new_confidence >= 0.94:
+                                extracted_texts.append(new_text)
+                                success = True  # 성공적으로 인식하면 반복 종료
+                            else:
+                                print(f"재시도 후에도 신뢰도 낮음: '{new_text}' (신뢰도: {new_confidence * 100:.2f}%)")
+                        else:
+                            print("재시도 후에도 텍스트를 인식하지 못했습니다.")
+                        retry_count += 1  # 재시도 횟수 증가
+
+                extracted_texts = ' '.join(extracted_texts)
+                # extracted_texts = self.handle_special_cases(extracted_texts)
+                if extracted_texts:
+                    ocr_results[roi_key] = extracted_texts
+            else:
+                print(f"{roi_key}가 self.rois에 존재하지 않습니다.")
+
+        for roi_key, text in ocr_results.items():
+            print(f'{roi_key}: {text}')
+
+        # 유효한 텍스트만 리스트로 반환
+        time_images = [text for text in ocr_results.values() if text]
+
         time_format = "%Y-%m-%d %H:%M:%S"
         results = []
+        max_retries_time_format = 2
         for time_str in time_images:
-            try:
-                image_time = datetime.strptime(time_str, time_format)
-                image_time = image_time.replace(tzinfo=timezone.utc)
-                time_diff = abs(
-                    (image_time - self.reset_time).total_seconds())
-                if time_diff <= 1 * 5: # 숫자 * Sec
-                    print(f"{time_str} (PASS)")
-                    results.append(f"{time_str} (PASS)")
-                else:
-                    print(f"{time_str} / {time_diff} seconds (FAIL)")
-                    results.append(f"{time_str} / {time_diff} seconds (FAIL)")      
-            except ValueError as e:
-                print(f"Time format error for {time_str}: {e}")
-                results.append(f"Time format error for {time_str}: {e} (FAIL)")
+            retry_count = 0
+            success = False
+
+            while retry_count <= max_retries_time_format and not success:
+                try:
+                    image_time = datetime.strptime(time_str, time_format)
+                    image_time = image_time.replace(tzinfo=timezone.utc)
+                    time_diff = abs((image_time - self.reset_time).total_seconds())
+                    if time_diff <= 5:
+                        print(f"{time_str} (PASS)")
+                        results.append(f"{time_str} (PASS)")
+                    else:
+                        print(f"{time_str} / {time_diff} seconds (FAIL)")
+                        results.append(f"{time_str} / {time_diff} seconds (FAIL)")
+                    success = True
+                except ValueError as e:
+                    print(f"Time format error for {time_str}: {e}")
+                    # OCR 재시도
+                    if retry_count < max_retries_time_format:
+                        print("시간 파싱 실패로 OCR 재시도 중...")
+                        # 이미지 전처리 강화 또는 파라미터 조정
+                        roi_image_processed = cv2.resize(roi_image, None, fx=6, fy=6, interpolation=cv2.INTER_CUBIC)
+                        kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                        roi_image_processed = cv2.filter2D(roi_image, -1, kernel2)
+                        # OCR 재시도
+                        retry_result = ocr.ocr(roi_image_processed, cls=False)
+
+                        cv2.imshow("두번째", roi_image_processed)
+                        cv2.waitKey(0)
+                        cv2.destroyAllWindows()    
+
+                        if retry_result and retry_result[0]:
+                            # 새로운 텍스트 추출
+                            try:
+                                new_text_info = retry_result[0][1]
+                                time_str = new_text_info[0].strip()
+                                new_confidence = float(new_text_info[1])
+                            except:
+                                new_text_info = retry_result[0][0][1]
+                                time_str = new_text_info[0].strip()
+                                new_confidence = float(new_text_info[1])
+                            print(f"재시도 OCR 결과: {time_str} (신뢰도: {new_confidence * 100:.2f}%)")
+                        else:
+                            print("재시도 후에도 텍스트를 인식하지 못했습니다.")
+                    else:
+                        print("최대 재시도 횟수에 도달했습니다.")
+                        results.append(f"Time format error for {time_str}: {e} (FAIL)")
+                        break
+                    retry_count += 1
         return results
 
     def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None, base_save_path=None, all_meas_results=None, invalid_elements=None):
