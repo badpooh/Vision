@@ -241,7 +241,7 @@ class OCRManager:
         self.n = new_n
         self.config.update_n(new_n)
         self.rois = self.config.roi_params()
-        print(f"n 값이 {new_n}으로 변경되었습니다.")
+        # print(f"n 값이 {new_n}으로 변경되었습니다.")
 
     def ocr_basic(self, image, roi_keys):
         image = cv2.imread(image)
@@ -249,20 +249,19 @@ class OCRManager:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
 
-        # 초기 이미지 처리
-        self.update_n(3)
-        resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-        gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
-
-        kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-        sharpened_image = cv2.filter2D(resized_image, -1, kernel)
-
         ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
 
         ocr_results = {}
         for roi_key in roi_keys:
+             # 이미지 처리
+            self.update_n(3)
+            resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+            gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+            threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+            denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
+            kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+            sharpened_image = cv2.filter2D(resized_image, -1, kernel)
+
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
@@ -319,9 +318,9 @@ class OCRManager:
                     # 3채널로 변환
                     # char_image = cv2.cvtColor(char_image, cv2.COLOR_GRAY2BGR)
 
-                    cv2.imshow("test", char_image)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows()
+                    # cv2.imshow("test", char_image)
+                    # cv2.waitKey(0)
+                    # cv2.destroyAllWindows()
 
                     # OCR 재시도
                     max_retries = 1
@@ -1054,19 +1053,24 @@ class Evaluation:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
 
-        # 초기 이미지 처리
-        self.ocr_manager.update_n(3)
-        resized_image = cv2.resize(image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
-        kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-        sharpened_image = cv2.filter2D(resized_image, -1, kernel)
-
         ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
 
         ocr_results = {}
         for roi_key in roi_keys:
+            # 초기 이미지 처리
+            self.ocr_manager.update_n(3)
+            resized_image = cv2.resize(image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
+            kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+            sharpened_image = cv2.filter2D(resized_image, -1, kernel)
+
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
+
+                # cv2.imshow("test", roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
+
                 text_results = ocr.ocr(roi_image, cls=False)
                 
                 if text_results:
@@ -1120,9 +1124,9 @@ class Evaluation:
                     while retry_count < max_retries and not success:
                         retry_result = ocr.ocr(char_image, cls=False)
 
-                        cv2.imshow("첫번째", char_image)
-                        cv2.waitKey(0)
-                        cv2.destroyAllWindows() 
+                        # cv2.imshow("첫번째", char_image)
+                        # cv2.waitKey(0)
+                        # cv2.destroyAllWindows() 
 
                         print(f"재시도 OCR 결과 (시도 {retry_count + 1}):", retry_result)
                         if retry_result and retry_result[0]:

@@ -1500,22 +1500,22 @@ class DemoTest:
             return
         
     def demo_test_current(self, base_save_path, test_mode):
-        # self.demo_mea_curr_rms(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_curr_fund(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_curr_thd(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_curr_tdd(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        self.demo_mea_curr_rms(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_curr_fund(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_curr_thd(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_curr_tdd(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_curr_cf(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1542,18 +1542,18 @@ class DemoTest:
         self.demo_mea_pow_pf(base_save_path, test_mode)
         
     def demo_test_analysis(self, base_save_path, test_mode):
-        # self.demo_mea_anal_phasor(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_harmonics(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_meter_harmonics_text(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        self.demo_mea_anal_phasor(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_harmonics(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_meter_harmonics_text(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_anal_waveform(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
