@@ -292,40 +292,50 @@ class OCRManager:
                     else:
                         low_confidence_texts.append((text, confidence, coords))
 
+                height, width = roi_image.shape[:2]
+                margin = 5
                 # 신뢰도 낮은 텍스트 처리
                 for text, conf, coords in low_confidence_texts:
+                    max_retries = 2
+                    retry_count = 0
+                    success = False
+
                     print(f"ROI '{roi_key}'에서 신뢰도 98% 미만의 텍스트:")
                     print(f" - '{text}' (신뢰도: {conf * 100:.2f}%)")
                     # coords를 사용하여 해당 텍스트 영역 이미지 추출
-                    x_min = int(min([pt[0] for pt in coords]))
-                    x_max = int(max([pt[0] for pt in coords]))
-                    y_min = int(min([pt[1] for pt in coords]))
-                    y_max = int(max([pt[1] for pt in coords]))
+                    x_min = max(0, int(min([pt[0] for pt in coords])) - margin)
+                    x_max = min(width, int(max([pt[0] for pt in coords])) + margin)
+                    y_min = max(0, int(min([pt[1] for pt in coords])) - margin)
+                    y_max = min(height, int(max([pt[1] for pt in coords])) + margin)
                     text_roi = roi_image[y_min:y_max, x_min:x_max]
 
                     # 이미지 전처리 및 OCR 재시도
                     if text_roi.size == 0:
                         continue  # 유효하지 않은 영역은 건너뜁니다
+                    
+                    if max_retries <= 1:
+                        self.update_n(4)
+                        char_image = cv2.resize(text_roi, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                        kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                        char_image = cv2.filter2D(char_image, -1, kernel2)
+                        # 그레이스케일 및 이진화
+                        # gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                        # _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                        # 3채널로 변환
+                        # char_image = cv2.cvtColor(char_image, cv2.COLOR_GRAY2BGR)
+                    
+                    else:
+                        self.update_n(4)
+                        char_image = cv2.resize(text_roi, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                        # kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                        # char_image = cv2.filter2D(char_image, -1, kernel2)
 
-                    # 문자 이미지를 확대하여 인식률 향상
-                    self.update_n(4)
-                    char_image = cv2.resize(text_roi, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                    kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-                    char_image = cv2.filter2D(char_image, -1, kernel2)
-                    # 그레이스케일 및 이진화
-                    # gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
-                    # _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                    # 3채널로 변환
-                    # char_image = cv2.cvtColor(char_image, cv2.COLOR_GRAY2BGR)
-
-                    # cv2.imshow("test", char_image)
-                    # cv2.waitKey(0)
-                    # cv2.destroyAllWindows()
+                    cv2.imshow("test2", char_image)
+                    cv2.waitKey(0)
+                    cv2.destroyAllWindows()
 
                     # OCR 재시도
-                    max_retries = 1
-                    retry_count = 0
-                    success = False
+                    
 
                     while retry_count < max_retries and not success:
                         retry_result = ocr.ocr(char_image, cls=False)
@@ -342,7 +352,7 @@ class OCRManager:
                                 new_text = new_text_info[0].strip()
                                 new_confidence = float(new_text_info[1])
 
-                            if new_confidence >= 0.95 or new_text == "c" or new_text == "C":
+                            if new_confidence >= 0.92 or new_text == "c" or new_text == "C":
                                 extracted_texts.append(new_text)
                                 success = True  # 성공적으로 인식하면 반복 종료
                             else:
@@ -1112,9 +1122,9 @@ class Evaluation:
                     kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
                     char_image = cv2.filter2D(char_image, -1, kernel2)
 
-                    # cv2.imshow("test", char_image)
-                    # cv2.waitKey(0)
-                    # cv2.destroyAllWindows()
+                    cv2.imshow("test", char_image)
+                    cv2.waitKey(0)
+                    cv2.destroyAllWindows()
 
                     # OCR 재시도
                     max_retries = 1
@@ -1124,9 +1134,9 @@ class Evaluation:
                     while retry_count < max_retries and not success:
                         retry_result = ocr.ocr(char_image, cls=False)
 
-                        # cv2.imshow("첫번째", char_image)
-                        # cv2.waitKey(0)
-                        # cv2.destroyAllWindows() 
+                        cv2.imshow("첫번째", char_image)
+                        cv2.waitKey(0)
+                        cv2.destroyAllWindows() 
 
                         print(f"재시도 OCR 결과 (시도 {retry_count + 1}):", retry_result)
                         if retry_result and retry_result[0]:
@@ -1253,7 +1263,7 @@ class Evaluation:
             "Measurement": measurement_results,
             "OCR-Right": [None] + [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-2),
             "Right-OCR": [None] + [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-2),
-            f"Time Stemp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
+            f"Time Stamp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
             "Img Match": [None] + img_result + [None] * (num_entries-len(img_result)-1),
             "H.Text": [None] + invalid_elements + [None] * (num_entries-len(img_result)-1),
             }

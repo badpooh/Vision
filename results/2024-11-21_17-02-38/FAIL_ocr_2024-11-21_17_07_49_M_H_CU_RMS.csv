@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-11-21 17:06:47+00:00),Img Match,H.Text
+Min Max RMS Current,,,,,,
+A,49.6% (PASS),[] (PASS),[] (PASS),2024-11-21 17:07:38 / 51.0 seconds (FAIL),,
+B,49.8% (PASS),,,2024-11-21 17:07:34 / 47.0 seconds (FAIL),,
+C,49.7% (PASS),,,2024-11-21 17:07:29 / 42.0 seconds (FAIL),,
+Average,49.7% (PASS),,,2024-11-21 17:07:15 / 28.0 seconds (FAIL),,
+,2.48A (PASS),,,,,
+,2.488A (PASS),,,,,
+,2.487A (PASS),,,,,
+,Aver = A (PASS by text),,,,,
