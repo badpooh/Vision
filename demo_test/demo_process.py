@@ -317,7 +317,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         self.touch_manager.menu_touch(ect.touch_meas_ll.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ec.rms_vol_ll.value, base_save_path, test_mode)
+        self.sp.ocr_4phase(ecroi.title_view.value, base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1232,28 +1232,67 @@ class DemoTest:
 
     def demo_meter_harmonics_text(self, base_save_path, test_mode):
         ### voltage ###
-        self.touch_manager.btn_front_meter()
-        self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
-        self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
-        self.touch_manager.menu_touch(ect.touch_harmonics_submenu_2.value)
-        self.touch_manager.menu_touch(ect.touch_harmonics_sub_text.value)
-        self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_key = [ecroi.harmonics_title, ecroi.harmonics_text_sub_title, ecroi.harmonics_text_sub_abc]
-        roi_keys = [ecroi.harmonics_text_chart_img_cut]
-        ocr_ref = ec.harmonics_text.value
+        # self.touch_manager.btn_front_meter()
+        # self.touch_manager.btn_front_home()
+        # self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
+        # self.touch_manager.menu_touch(ect.touch_side_menu_2.value)
+        # self.touch_manager.menu_touch(ect.touch_harmonics_submenu_2.value)
+        # self.touch_manager.menu_touch(ect.touch_harmonics_sub_text.value)
+        # self.touch_manager.screenshot()
+        # image_path = self.sp.load_image_file()
+        image_path = r"C:\Users\jscho\Desktop\123.png"
+        roi_key = [ecroi.harmonics_title, ecroi.harmonics_text_sub_title, ecroi.harmonics_text_sub_abc, ecroi.harmonics_text_number_title_1]
+        roi_keys = [ecroi.harmonics_text_number_title_1]
+        roi_keys_meas = [ecroi.harmonics_text_number_meas_1]
+        ocr_ref = ec.harmonics_text.value, ecroi.harmonics_text_number_title_1.value
         ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        validate_ocr_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        invalid_elements = self.evaluation.validate_ocr(validate_ocr_results)
+        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path)
+            validate_ocr_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+            invalid_elements = self.evaluation.validate_ocr(validate_ocr_results)
+            self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, img_path=image_path,base_save_path=base_save_path, invalid_elements=invalid_elements)
         elif test_mode == "None":
-            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, image_path=image_path)
-        self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, img_path=image_path,base_save_path=base_save_path, invalid_elements=invalid_elements)
+            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path)
+            self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, ocr_img_meas=ocr_img_meas, img_path=image_path,base_save_path=base_save_path)
+        
         if self.stop_event.is_set():
             print("Test stopped")
             return
+        
+        # def ocr_process(self, image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys=None, reset_time=None, base_save_path=None, test_mode=""):
+        # """
+        # Args:
+        #     image_path (str): The path to the image file.
+        #     roi_keys (list): List of ROI keys for general OCR processing.
+        #     roi_keys_meas (list): List of ROI keys for measurement OCR processing.
+        #     ocr_ref (str): The OCR type to be selected for evaluation.
+        #     time_keys (list): Min, Max time
+        #     reset_time (time): Min, Max reset time
+        #     img_result (str): image match curculation result
+        # Returns:
+        #     None
+        # """
+        # self.test_mode = test_mode
+        # ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        # ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        # if self.test_mode == "Demo":
+        #     ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+        #     if time_keys is not None:
+        #         ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        #         time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time)
+        #         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+        #     else:
+        #         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+
+        # elif self.test_mode == "None":
+        #     ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
+        #     if time_keys is not None:
+        #         # ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+        #         time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time)
+        #         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+        #     else:
+        #         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
         
     def demo_mea_anal_waveform(self, base_save_path, test_mode):
         ### waveform basic ###
@@ -1546,14 +1585,14 @@ class DemoTest:
         # if self.stop_event.is_set():
         #     print("Test stopped")
         #     return
-        self.demo_mea_anal_harmonics(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        # self.demo_meter_harmonics_text(base_save_path, test_mode)
+        # self.demo_mea_anal_harmonics(base_save_path, test_mode)
         # if self.stop_event.is_set():
         #     print("Test stopped")
         #     return
+        self.demo_meter_harmonics_text(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         # self.demo_mea_anal_waveform(base_save_path, test_mode)
         # if self.stop_event.is_set():
         #     print("Test stopped")

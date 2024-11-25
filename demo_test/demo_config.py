@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class ConfigROI(Enum):
-    title_view ="title_view"
+    title_view = ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"]
     a_ab = "meas_a_phase_name"
     a_time_stamp = "meas_a_time_stamp"
     a_meas = "meas_a_measurement_value"
@@ -61,7 +61,9 @@ class ConfigROI(Enum):
     harmonics_graph_c = "harmonics_graph_c"
     harmonics_text_title = "harmonics_text_title"
     harmonics_text_img = "harmonics_text_image"
-    harmonics_text_chart_img_cut = "harmonics_text_chart_img_cut"
+    harmonics_text_number_title_1 = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
+    harmonics_text_number_meas_1 = "measurement result"
+    harmonics_text_chart_img_cut_3 = ["6, 0.000, 15, 0.000, 24, 0.000, 33, 0.000, 42, 0.000, 7, 0.000, 16, 0.000, 25, 0.000, 34, 0.000, 43, 0.000, 8, 0.000, 17, 0.000, 26, 0.000, 35, 0.000, 44, 0.000"]
     harmonics_text_sub_title = "harmonics_text_sub_title"
     harmonics_text_sub_abc = "harmonics_text_sub_a"
     harmonics_thd_a = "harmonics_thd_a"
@@ -70,6 +72,7 @@ class ConfigROI(Enum):
     harmonics_fund_a = "harmonics_fund_a"
     harmonics_fund_b = "harmonics_fund_b"
     harmonics_fund_c = "harmonics_fund_c"
+
 
     
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
@@ -348,7 +351,9 @@ class ConfigSetup():
             ConfigROI.waveform_title: [n*x for x in [160, 120, 630, 53]],
             ConfigROI.harmonics_graph_img_cut: [313, 283, 455, 173],
             ConfigROI.harmonics_chart_img_cut: [250, 260, 495, 214],
-            ConfigROI.harmonics_text_chart_img_cut: [n*x for x in [170, 230, 610, 240]]
+            ConfigROI.harmonics_text_number_title_1: [n*x for x in [175, 237, 30, 225]],
+            ConfigROI.harmonics_text_number_meas_1: [n*x for x in [206, 238, 67, 232]],
+            ConfigROI.harmonics_text_chart_img_cut_3: [n*x for x in [170, 389, 610, 240]]
         }
         return params
     

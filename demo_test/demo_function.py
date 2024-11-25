@@ -258,9 +258,9 @@ class OCRManager:
             resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
             gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
             threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-            denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
+            denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
             kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-            sharpened_image = cv2.filter2D(resized_image, -1, kernel)
+            sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
 
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
@@ -296,7 +296,7 @@ class OCRManager:
                 margin = 5
                 # 신뢰도 낮은 텍스트 처리
                 for text, conf, coords in low_confidence_texts:
-                    max_retries = 2
+                    max_retries = 3
                     retry_count = 0
                     success = False
 
@@ -312,34 +312,32 @@ class OCRManager:
                     # 이미지 전처리 및 OCR 재시도
                     if text_roi.size == 0:
                         continue  # 유효하지 않은 영역은 건너뜁니다
-                    
-                    if max_retries <= 1:
-                        self.update_n(4)
-                        char_image = cv2.resize(text_roi, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                        kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-                        char_image = cv2.filter2D(char_image, -1, kernel2)
-                        # 그레이스케일 및 이진화
-                        # gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
-                        # _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                        # 3채널로 변환
-                        # char_image = cv2.cvtColor(char_image, cv2.COLOR_GRAY2BGR)
-                    
-                    else:
-                        self.update_n(4)
-                        char_image = cv2.resize(text_roi, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                        # kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-                        # char_image = cv2.filter2D(char_image, -1, kernel2)
-
-                    cv2.imshow("test2", char_image)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows()
-
-                    # OCR 재시도
-                    
-
                     while retry_count < max_retries and not success:
+                        char_image = text_roi.copy()
+                        if retry_count == 1:
+                            self.update_n(4)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+                        
+                        elif retry_count > 1:
+                            self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+
+                        # cv2.imshow("test2", char_image)
+                        # cv2.waitKey(0)
+                        # cv2.destroyAllWindows()
+
                         retry_result = ocr.ocr(char_image, cls=False)
-                        print(f"재시도 OCR 결과 (시도 {retry_count + 1}):", retry_result)
+                        print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
                         if retry_result and retry_result[0]:
                             # 결과에서 텍스트와 신뢰도 추출
                             try:
@@ -352,7 +350,7 @@ class OCRManager:
                                 new_text = new_text_info[0].strip()
                                 new_confidence = float(new_text_info[1])
 
-                            if new_confidence >= 0.92 or new_text == "c" or new_text == "C":
+                            if new_confidence >= 0.95 or new_text == "c" or new_text == "C":
                                 extracted_texts.append(new_text)
                                 success = True  # 성공적으로 인식하면 반복 종료
                             else:
@@ -758,7 +756,24 @@ class Evaluation:
         
         image = cv2.imread(image_path)
 
-        ocr_right = right_key
+        def flatten(lst):
+            flat_list = []
+            for item in lst:
+                if isinstance(item, list):
+                    flat_list.extend(flatten(item))
+                else:
+                    flat_list.append(item)
+            return flat_list
+        
+        if isinstance(right_key, tuple):
+            right_key = list(right_key)
+
+        # ocr_right를 평탄화
+        if isinstance(right_key, list):
+            ocr_right = flatten(right_key)
+        else:
+            ocr_right = [right_key] 
+        
 
         right_list = ' '.join(text.strip() for text in ocr_right).split()
         ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
@@ -916,6 +931,8 @@ class Evaluation:
                     all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (0, 0, "v"), ocr_res_meas[3:6]))
                     all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
                 elif "Text" in ''.join(ocr_res[1]):
+                    print(ocr_res_meas)
+                    all_meas_results.extend(check_results(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], (0, 0, ""), ocr_res_meas[0:10]))
                     print("test")
             else:
                 if img_result == 1 or img_result == 0:
