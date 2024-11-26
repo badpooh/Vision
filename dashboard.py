@@ -219,6 +219,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         # if self.modbus_manager.is_connected == True:
         self.stop_event.clear()
         self.thread = threading.Thread(target=self.none_ui_test, daemon=True)
+        print("None UI TEST Start")
         self.thread.start()
         # else:
         #     self.alarm.show_connection_error()

@@ -1,0 +1,9 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-11-26 14:16:26+00:00),Img Match,H.Text
+Voltage Unbalance Max,,,,,,
+NEMA,NEMA LL = LL (PASS by text),[] (PASS),[] (PASS),2024-11-26 14:16:28 (PASS),,
+NEMA,NEMA LN = LN (PASS by text),,,2024-11-26 14:16:28 (PASS),,
+Negative- Sequence,U2 = U2 (PASS by text),,,2024-11-26 14:16:28 (PASS),,
+Zero- Sequence,0.0 % (FAIL),,,2024-11-26 14:16:28 (PASS),,
+,0.0% (PASS),,,,,
+,0.0% (PASS),,,,,
+,0.0% (PASS),,,,,

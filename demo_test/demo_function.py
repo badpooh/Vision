@@ -338,26 +338,23 @@ class OCRManager:
 
                         retry_result = ocr.ocr(char_image, cls=False)
                         print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
-                        if retry_result and retry_result[0]:
-                            # 결과에서 텍스트와 신뢰도 추출
-                            try:
-                                new_text_info = retry_result[0][1]
-                                new_text = new_text_info[0].strip()
-                                new_confidence = float(new_text_info[1])
-                            except:
-                                # 결과 구조가 다를 경우
-                                new_text_info = retry_result[0][0][1]
-                                new_text = new_text_info[0].strip()
-                                new_confidence = float(new_text_info[1])
+                        if retry_result:
+                            flat_retry_result = list(chain.from_iterable(retry_result))
+                            for res in flat_retry_result:
+                                coords, (new_text, new_confidence) = res
+                                new_text = new_text.strip()
+                                new_confidence = float(new_confidence)
 
-                            if new_confidence >= 0.95 or new_text == "c" or new_text == "C":
-                                extracted_texts.append(new_text)
-                                success = True  # 성공적으로 인식하면 반복 종료
-                            else:
-                                print(f"재시도 후에도 신뢰도 낮음: '{new_text}' (신뢰도: {new_confidence * 100:.2f}%)")
+                                if new_confidence >= 0.95 or new_text.lower() == "c":
+                                    extracted_texts.append(new_text)
+                                    success = True
+                                else:
+                                    print(f"재시도 후에도 신뢰도 낮음: '{new_text}' (신뢰도: {new_confidence * 100:.2f}%)")
+                            if success:
+                                break
                         else:
                             print("재시도 후에도 텍스트를 인식하지 못했습니다.")
-                        retry_count += 1  # 재시도 횟수 증가
+                        retry_count += 1
 
                 extracted_texts = ' '.join(extracted_texts)
                 # extracted_texts = self.handle_special_cases(extracted_texts)
@@ -756,26 +753,7 @@ class Evaluation:
         
         image = cv2.imread(image_path)
 
-        def flatten(lst):
-            flat_list = []
-            for item in lst:
-                if isinstance(item, list):
-                    flat_list.extend(flatten(item))
-                else:
-                    flat_list.append(item)
-            return flat_list
-        
-        if isinstance(right_key, tuple):
-            right_key = list(right_key)
-
-        # ocr_right를 평탄화
-        if isinstance(right_key, list):
-            ocr_right = flatten(right_key)
-        else:
-            ocr_right = [right_key] 
-        
-
-        right_list = ' '.join(text.strip() for text in ocr_right).split()
+        right_list = ' '.join(text.strip() for text in right_key).split()
         ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
 
         right_counter = Counter(right_list)
@@ -1084,11 +1062,14 @@ class Evaluation:
 
         ocr_results = {}
         for roi_key in roi_keys:
-            # 초기 이미지 처리
+             # 이미지 처리
             self.ocr_manager.update_n(3)
             resized_image = cv2.resize(image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
-            kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-            sharpened_image = cv2.filter2D(resized_image, -1, kernel)
+            gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+            threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+            denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
+            kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+            sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
 
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
@@ -1098,8 +1079,10 @@ class Evaluation:
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
 
+                # OCR 처리
                 text_results = ocr.ocr(roi_image, cls=False)
                 
+                # text_results를 평탄화
                 if text_results:
                     flat_text_results = list(chain.from_iterable(text_results))
                 else:
@@ -1113,69 +1096,74 @@ class Evaluation:
                     confidence = float(confidence)
 
                     # 신뢰도 검사
-                    if confidence >= 0.95:
+                    if confidence >= 0.98:
                         extracted_texts.append(text)
                     else:
                         low_confidence_texts.append((text, confidence, coords))
 
+                height, width = roi_image.shape[:2]
+                margin = 5
                 # 신뢰도 낮은 텍스트 처리
                 for text, conf, coords in low_confidence_texts:
+                    max_retries = 3
+                    retry_count = 0
+                    success = False
+
                     print(f"ROI '{roi_key}'에서 신뢰도 98% 미만의 텍스트:")
                     print(f" - '{text}' (신뢰도: {conf * 100:.2f}%)")
                     # coords를 사용하여 해당 텍스트 영역 이미지 추출
-                    x_min = int(min([pt[0] for pt in coords]))
-                    x_max = int(max([pt[0] for pt in coords]))
-                    y_min = int(min([pt[1] for pt in coords]))
-                    y_max = int(max([pt[1] for pt in coords]))
+                    x_min = max(0, int(min([pt[0] for pt in coords])) - margin)
+                    x_max = min(width, int(max([pt[0] for pt in coords])) + margin)
+                    y_min = max(0, int(min([pt[1] for pt in coords])) - margin)
+                    y_max = min(height, int(max([pt[1] for pt in coords])) + margin)
                     text_roi = roi_image[y_min:y_max, x_min:x_max]
 
                     # 이미지 전처리 및 OCR 재시도
                     if text_roi.size == 0:
                         continue  # 유효하지 않은 영역은 건너뜁니다
-
-                    # 문자 이미지를 확대하여 인식률 향상
-                    self.ocr_manager.update_n(4)
-                    char_image = cv2.resize(text_roi, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
-                    kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-                    char_image = cv2.filter2D(char_image, -1, kernel2)
-
-                    cv2.imshow("test", char_image)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows()
-
-                    # OCR 재시도
-                    max_retries = 1
-                    retry_count = 0
-                    success = False
-
                     while retry_count < max_retries and not success:
+                        char_image = text_roi.copy()
+                        if retry_count == 1:
+                            self.ocr_manager.update_n(4)
+                            char_image = cv2.resize(char_image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+                        
+                        elif retry_count > 1:
+                            self.ocr_manager.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+
+                        # cv2.imshow("test2", char_image)
+                        # cv2.waitKey(0)
+                        # cv2.destroyAllWindows()
+
                         retry_result = ocr.ocr(char_image, cls=False)
+                        print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
+                        if retry_result:
+                            flat_retry_result = list(chain.from_iterable(retry_result))
+                            for res in flat_retry_result:
+                                coords, (new_text, new_confidence) = res
+                                new_text = new_text.strip()
+                                new_confidence = float(new_confidence)
 
-                        cv2.imshow("첫번째", char_image)
-                        cv2.waitKey(0)
-                        cv2.destroyAllWindows() 
-
-                        print(f"재시도 OCR 결과 (시도 {retry_count + 1}):", retry_result)
-                        if retry_result and retry_result[0]:
-                            # 결과에서 텍스트와 신뢰도 추출
-                            try:
-                                new_text_info = retry_result[0][1]
-                                new_text = new_text_info[0].strip()
-                                new_confidence = float(new_text_info[1])
-                            except:
-                                # 결과 구조가 다를 경우
-                                new_text_info = retry_result[0][0][1]
-                                new_text = new_text_info[0].strip()
-                                new_confidence = float(new_text_info[1])
-
-                            if new_confidence >= 0.94:
-                                extracted_texts.append(new_text)
-                                success = True  # 성공적으로 인식하면 반복 종료
-                            else:
-                                print(f"재시도 후에도 신뢰도 낮음: '{new_text}' (신뢰도: {new_confidence * 100:.2f}%)")
+                                if new_confidence >= 0.95 or new_text.lower() == "c":
+                                    extracted_texts.append(new_text)
+                                    success = True
+                                else:
+                                    print(f"재시도 후에도 신뢰도 낮음: '{new_text}' (신뢰도: {new_confidence * 100:.2f}%)")
+                            if success:
+                                break
                         else:
                             print("재시도 후에도 텍스트를 인식하지 못했습니다.")
-                        retry_count += 1  # 재시도 횟수 증가
+                        retry_count += 1
 
                 extracted_texts = ' '.join(extracted_texts)
                 # extracted_texts = self.handle_special_cases(extracted_texts)
@@ -1215,17 +1203,18 @@ class Evaluation:
                     if retry_count < max_retries_time_format:
                         print("시간 파싱 실패로 OCR 재시도 중...")
                         # 이미지 전처리 강화 또는 파라미터 조정
+                        char_image = text_roi.copy()
                         self.ocr_manager.update_n(5)
-                        roi_image_processed = cv2.resize(roi_image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
+                        char_image_processed = cv2.resize(char_image, None, fx=self.ocr_manager.n, fy=self.ocr_manager.n, interpolation=cv2.INTER_CUBIC)
                         kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-                        roi_image_processed = cv2.filter2D(roi_image, -1, kernel2)
+                        char_image_processed = cv2.filter2D(char_image_processed, -1, kernel2)
 
                         x, y, w, h = self.rois[roi_key]
-                        roi_image_processed = roi_image_processed[y:y+h, x:x+w]
+                        char_image_processed = char_image_processed[y:y+h, x:x+w]
                         # OCR 재시도
-                        retry_result = ocr.ocr(roi_image_processed, cls=False)
+                        retry_result = ocr.ocr(char_image_processed, cls=False)
 
-                        cv2.imshow("두번째", roi_image_processed)
+                        cv2.imshow("두번째", char_image_processed)
                         cv2.waitKey(0)
                         cv2.destroyAllWindows()    
 
