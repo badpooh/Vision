@@ -245,7 +245,6 @@ class DemoTest:
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
     modbus_label = ModbusLabels()
-    ocr_func = OCRManager()
     evaluation = Evaluation()
     sp = DemoProcess()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
@@ -254,6 +253,7 @@ class DemoTest:
 
     def __init__(self, stop_event):
         self.stop_event = stop_event
+        self.ocr_func = OCRManager()
 
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
@@ -869,6 +869,7 @@ class DemoTest:
             return
     
     def demo_mea_anal_phasor(self, base_save_path, test_mode):
+        self.ocr_func.update_phasor_condition(1)
         ### voltage+current vll ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -878,6 +879,7 @@ class DemoTest:
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         elif test_mode == "None":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll_none.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+        self.ocr_func.update_phasor_condition(0)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -948,9 +950,11 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
         if test_mode == "Demo" or test_mode == "None":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+        self.ocr_func.phasor_condition = 0
         if self.stop_event.is_set():
             print("Test stopped")
             return
+        
 
     def demo_mea_anal_harmonics(self, base_save_path, test_mode):
         self.test_mode = test_mode
@@ -1542,22 +1546,22 @@ class DemoTest:
         self.demo_mea_pow_pf(base_save_path, test_mode)
         
     def demo_test_analysis(self, base_save_path, test_mode):
-        # self.demo_mea_anal_phasor(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_harmonics(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_meter_harmonics_text(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_waveform(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        self.demo_mea_anal_phasor(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_harmonics(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_meter_harmonics_text(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_waveform(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_anal_voltsym(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")

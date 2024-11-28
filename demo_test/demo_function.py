@@ -227,6 +227,7 @@ class OCRManager:
         self.n = n
         self.config = ConfigSetup(n=self.n)
         self.rois = self.config.roi_params()
+        self.phasor_condition = 0
 
     def color_detection(self, image, color_data):
         x, y, w, h, R, G, B = color_data
@@ -243,7 +244,11 @@ class OCRManager:
         self.rois = self.config.roi_params()
         # print(f"n 값이 {new_n}으로 변경되었습니다.")
 
+    def update_phasor_condition(self, new_c):
+        self.phasor_condition = new_c
+
     def ocr_basic(self, image, roi_keys):
+        print(self.phasor_condition)
         image = cv2.imread(image)
         if image is None:
             print(f"이미지를 읽을 수 없습니다: {image}")
@@ -253,14 +258,23 @@ class OCRManager:
 
         ocr_results = {}
         for roi_key in roi_keys:
-             # 이미지 처리
-            self.update_n(3)
-            resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-            gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-            threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-            denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
-            kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-            sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
+            # 이미지 처리
+            if self.phasor_condition == 0:
+                self.update_n(3)
+                resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+                threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+                denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
+                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
+            
+            elif self.phasor_condition == 1:
+                self.update_n(3)
+                sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+
+            else:
+                print(f"Error {self.phasor_condition}")
+
 
             if roi_key in self.rois:
                 x, y, w, h = self.rois[roi_key]
@@ -338,7 +352,7 @@ class OCRManager:
 
                         retry_result = ocr.ocr(char_image, cls=False)
                         print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
-                        if retry_result:
+                        if retry_result and retry_result[0]:
                             flat_retry_result = list(chain.from_iterable(retry_result))
                             for res in flat_retry_result:
                                 coords, (new_text, new_confidence) = res
