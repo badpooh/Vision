@@ -15,12 +15,13 @@ from demo_test.demo_config import ConfigTouch as ect
 
 image_directory = r"\\10.10.20.30\screenshot"
 
+ocr_func = OCRManager()
+
 
 class DemoProcess:
 
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
-    ocr_func = OCRManager()
     evaluation = Evaluation()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
     now = datetime.now()
@@ -69,12 +70,12 @@ class DemoProcess:
             None
         """
         self.test_mode = test_mode
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if self.test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys is not None:
-                ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+                ocr_img_time = ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
                 time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time)
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
             else:
@@ -83,7 +84,7 @@ class DemoProcess:
         elif self.test_mode == "None":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys is not None:
-                # ocr_img_time = self.ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+                # ocr_img_time = ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
                 time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time)
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
             else:
@@ -188,8 +189,8 @@ class DemoProcess:
         roi_keys_meas = [ecroi.phasor_a_meas, ecroi.phasor_b_meas, ecroi.phasor_c_meas, ecroi.phasor_a_meas_cur, ecroi.phasor_b_meas_cur, ecroi.phasor_c_meas_cur,
                         ecroi.phasor_a_angle, ecroi.phasor_b_angle, ecroi.phasor_c_angle, ecroi.phasor_a_angle_cur, ecroi.phasor_b_angle_cur, ecroi.phasor_c_angle_cur]
         ocr_ref = ref
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         image_results = []
         image_results.append(self.evaluation.img_match(image_path, img_cut1, img_ref))
         image_results.append(self.evaluation.img_match(image_path, img_cut2, img_ref))
@@ -209,8 +210,8 @@ class DemoProcess:
         image_path = self.load_image_file()
         roi_keys = roi_keys
         ocr_ref = ocr_ref
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         image_results = self.evaluation.img_detection(image_path, value, 2)
 
         if test_mode == "Demo":
@@ -227,7 +228,7 @@ class DemoProcess:
         image_path = self.load_image_file()
         roi_keys = roi_keys
         ocr_ref = ocr_ref
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = None
         image_results = self.evaluation.img_detection(image_path, value, 2)
 
@@ -244,6 +245,7 @@ class DemoTest:
 
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
+    # ocr_func = OCRManager()
     modbus_label = ModbusLabels()
     evaluation = Evaluation()
     sp = DemoProcess()
@@ -253,7 +255,7 @@ class DemoTest:
 
     def __init__(self, stop_event):
         self.stop_event = stop_event
-        self.ocr_func = OCRManager()
+        
 
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
@@ -265,7 +267,7 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = ["999"]
-        cutted_image = self.ocr_func.ocr_basic(
+        cutted_image = ocr_func.ocr_basic(
             image=image_path, roi_keys=roi_keys)
         if "Password" in cutted_image:
             for _ in range(4):
@@ -292,7 +294,7 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = ["999"]
-        cutted_image = self.ocr_func.ocr_basic(
+        cutted_image = ocr_func.ocr_basic(
             image=image_path, roi_keys=roi_keys)
         if "Password" in cutted_image:
             for _ in range(4):
@@ -869,7 +871,7 @@ class DemoTest:
             return
     
     def demo_mea_anal_phasor(self, base_save_path, test_mode):
-        self.ocr_func.update_phasor_condition(1)
+        ocr_func.update_phasor_condition(1)
         ### voltage+current vll ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -879,7 +881,7 @@ class DemoTest:
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         elif test_mode == "None":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll_none.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        self.ocr_func.update_phasor_condition(0)
+        ocr_func.update_phasor_condition(0)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -950,7 +952,6 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
         if test_mode == "Demo" or test_mode == "None":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        self.ocr_func.phasor_condition = 0
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -970,8 +971,8 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = ec.harmonics_vol_3p4w.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if test_mode == "Demo":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_vol_3p4w.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
@@ -989,8 +990,8 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = ec.harmonics_curr.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if test_mode == "Demo":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_curr.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
@@ -1087,8 +1088,8 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = ec.harmonics_per_fund.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if test_mode == "Demo":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_fund.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
@@ -1126,8 +1127,8 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = ec.harmonics_per_rms.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_rms_none.value)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
@@ -1166,7 +1167,7 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = ec.harmonics_per_fund.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_fund_none.value)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
@@ -1203,7 +1204,7 @@ class DemoTest:
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = ec.harmonics_per_rms.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_rms_none.value)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
@@ -1249,11 +1250,11 @@ class DemoTest:
         roi_keys = [ecroi.harmonics_text_number_title_1]
         roi_keys_meas = [ecroi.harmonics_text_number_meas_1]
         ocr_ref = ec.harmonics_text.value, ecroi.harmonics_text_number_title_1.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path)
-            validate_ocr_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+            validate_ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
             invalid_elements = self.evaluation.validate_ocr(validate_ocr_results)
             self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, img_path=image_path,base_save_path=base_save_path, invalid_elements=invalid_elements)
         elif test_mode == "None":
@@ -1274,7 +1275,7 @@ class DemoTest:
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.waveform_title]
         ocr_ref = ec.waveform_3p4w.value
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         if test_mode == "Demo":
             image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
@@ -1592,8 +1593,8 @@ class DemoTest:
             roi_key = [ecroi.harmonics_title, ecroi.harmonics_text_sub_title, ecroi.harmonics_text_sub_abc]
             roi_keys = [ecroi.harmonics_text_chart_img_cut]
             ocr_ref = ec.harmonics_text.value
-            ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-            validate_ocr_results = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+            ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
+            validate_ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
             invalid_elements = self.evaluation.validate_ocr(validate_ocr_results)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path)
             self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, img_path=image_path,base_save_path=base_save_path, invalid_elements=invalid_elements)
@@ -1614,8 +1615,8 @@ class DemoTest:
         roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
                          "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
         ocr_ref = ec.phasor_ll
-        ocr_img = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = self.ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
+        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         image_result = self.evaluation.img_match(image_path, "phasor_img_cut", ecir.img_ref_phasor_all_vll.value)
         ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_result)
     
