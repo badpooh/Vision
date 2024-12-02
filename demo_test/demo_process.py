@@ -881,7 +881,6 @@ class DemoTest:
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         elif test_mode == "None":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll_none.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        ocr_func.update_phasor_condition(0)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -952,6 +951,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
         if test_mode == "Demo" or test_mode == "None":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+        ocr_func.update_phasor_condition(0)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -959,6 +959,7 @@ class DemoTest:
 
     def demo_mea_anal_harmonics(self, base_save_path, test_mode):
         self.test_mode = test_mode
+        ocr_func.update_phasor_condition(1)
         roi_keys = [ecroi.harmonics_title, ecroi.harmonics_sub_title_1, ecroi.harmonics_sub_title_2, ecroi.harmonics_sub_title_3,
                     ecroi.harmonics_graph_a, ecroi.harmonics_graph_b, ecroi.harmonics_graph_c]
         roi_keys_meas = [ecroi.harmonics_thd_a, ecroi.harmonics_thd_b, ecroi.harmonics_thd_c,
@@ -1231,6 +1232,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
         self.touch_manager.menu_touch(ect.touch_wave_curr_c.value)
+        ocr_func.update_phasor_condition(0)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1266,6 +1268,7 @@ class DemoTest:
             return
         
     def demo_mea_anal_waveform(self, base_save_path, test_mode):
+        ocr_func.update_phasor_condition(1)
         ### waveform basic ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1325,6 +1328,7 @@ class DemoTest:
         ### waveform curr_all_vol_all-phase X ###
         self.touch_manager.menu_touch(ect.touch_wave_vol_a.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], ec.waveform_3p4w.value, ecroi.color_waveform_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
+        ocr_func.update_phasor_condition(0)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1547,34 +1551,34 @@ class DemoTest:
         self.demo_mea_pow_pf(base_save_path, test_mode)
         
     def demo_test_analysis(self, base_save_path, test_mode):
-        self.demo_mea_anal_phasor(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_harmonics(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_meter_harmonics_text(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_waveform(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_voltsym(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_voltunbal(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
-        self.demo_mea_anal_cursym(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # self.demo_mea_anal_phasor(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_harmonics(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_meter_harmonics_text(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_waveform(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_voltsym(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_voltunbal(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        # self.demo_mea_anal_cursym(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
         self.demo_mea_anal_currunbal(base_save_path, test_mode)
 
     def demo_test_demand(self, base_save_path):

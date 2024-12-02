@@ -248,7 +248,6 @@ class OCRManager:
         self.phasor_condition = new_c
 
     def ocr_basic(self, image, roi_keys):
-        print(self.phasor_condition)
         image = cv2.imread(image)
         if image is None:
             print(f"이미지를 읽을 수 없습니다: {image}")
@@ -277,34 +276,36 @@ class OCRManager:
 
 
             if roi_key in self.rois:
+                extracted_texts = []
+                low_confidence_texts = []
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
                 # cv2.imshow("test", roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
-
-                # OCR 처리
+                
                 text_results = ocr.ocr(roi_image, cls=False)
                 
                 # text_results를 평탄화
                 if text_results:
-                    flat_text_results = list(chain.from_iterable(text_results))
-                else:
-                    flat_text_results = []
-
-                extracted_texts = []
-                low_confidence_texts = []
-                for result in flat_text_results:
-                    coords, (text, confidence) = result
-                    text = text.strip()
-                    confidence = float(confidence)
-
-                    # 신뢰도 검사
-                    if confidence >= 0.98:
-                        extracted_texts.append(text)
+                    text_results_filtered = [tr for tr in text_results if tr is not None]
+                    if text_results_filtered:
+                        flat_text_results = list(chain.from_iterable(text_results_filtered))
+                        for result in flat_text_results:
+                            coords, (text, confidence) = result
+                            text = text.strip()
+                            confidence = float(confidence)
+                            # 신뢰도 검사
+                            if confidence >= 0.975:
+                                extracted_texts.append(text)
+                            else:
+                                low_confidence_texts.append((text, confidence, coords))
                     else:
-                        low_confidence_texts.append((text, confidence, coords))
+                        flat_text_results = []
+                        extracted_texts.append("empty")
+                else:
+                    print("text_results error")
 
                 height, width = roi_image.shape[:2]
                 margin = 5
@@ -328,7 +329,7 @@ class OCRManager:
                         continue  # 유효하지 않은 영역은 건너뜁니다
                     while retry_count < max_retries and not success:
                         char_image = text_roi.copy()
-                        if retry_count == 1:
+                        if retry_count == 0 and self.phasor_condition == 0:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                             kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
@@ -337,8 +338,46 @@ class OCRManager:
                             _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
                         
-                        elif retry_count > 1:
+                        elif retry_count == 0 and self.phasor_condition == 1:
                             self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            sharpening_kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                            char_image = cv2.filter2D(char_image, -1, sharpening_kernel)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 100, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            edges = cv2.Canny(thresh_char, 50, 150)
+                            char_image = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+                        
+                        elif retry_count == 1 and self.phasor_condition == 0:
+                            self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+
+                        elif retry_count == 1 and self.phasor_condition == 1:
+                            self.update_n(4)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+
+                        elif retry_count > 1 and self.phasor_condition == 0:
+                            self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            edges = cv2.Canny(thresh_char, 50, 150)
+                            char_image = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+
+                        elif retry_count > 1 and self.phasor_condition == 1:
+                            self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                             kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
                             char_image = cv2.filter2D(char_image, -1, kernel2)
@@ -359,7 +398,7 @@ class OCRManager:
                                 new_text = new_text.strip()
                                 new_confidence = float(new_confidence)
 
-                                if new_confidence >= 0.95 or new_text.lower() == "c":
+                                if new_confidence >= 0.95 or new_text.lower() == "c" or ((new_text.upper() == "V0" or new_text.upper() == "U0") and new_confidence >= 0.80):
                                     extracted_texts.append(new_text)
                                     success = True
                                 else:
@@ -371,7 +410,7 @@ class OCRManager:
                         retry_count += 1
 
                 extracted_texts = ' '.join(extracted_texts)
-                # extracted_texts = self.handle_special_cases(extracted_texts)
+                extracted_texts = self.handle_special_cases(extracted_texts)
                 if extracted_texts:
                     ocr_results[roi_key] = extracted_texts
             else:
@@ -390,15 +429,15 @@ class OCRManager:
         processed_words = []
         for i, word in enumerate(words):
             # 'c'를 검사하고 조건에 맞으면 대문자 'C'로 변환
-            if word.lower() == 'c':
-                is_last_word = (i == len(words) - 1)
-                has_space_before = (i > 0)
-                has_space_after = (i < len(words) - 1)
+            # if word.lower() == 'c':
+            #     is_last_word = (i == len(words) - 1)
+            #     has_space_before = (i > 0)
+            #     has_space_after = (i < len(words) - 1)
                 
-                # 앞에 공백이 있고 뒤에 공백이 있거나, 앞에 공백이 있고 마지막 단어인 경우
-                if (has_space_before and has_space_after) or (has_space_before and is_last_word):
-                    processed_words.append('C')
-                    continue
+                 # 앞에 공백이 있고 뒤에 공백이 있거나, 앞에 공백이 있고 마지막 단어인 경우
+            #     if (has_space_before and has_space_after) or (has_space_before and is_last_word):
+            #         processed_words.append('C')
+            #         continue
             if word == 'V':
                 has_word_before = (i > 0)
                 has_word_after = (i < len(words) - 1)
@@ -950,7 +989,7 @@ class Evaluation:
                 all_meas_results.extend(check_results(['V2'], (0, 0, "V2"), ocr_res_meas[1:2]))
                 all_meas_results.extend(check_results(['V1'], (0, 0, "V" or "v"), ocr_res_meas[2:3]))
                 all_meas_results.extend(check_results(['V2'], (0, 0, "V" or "v"), ocr_res_meas[3:4]))
-            elif self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ll.value) <= 10:
+            elif self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ln.value) <= 10:
                 all_meas_results.extend(check_results(['V1'], (0, 0, "V1"), ocr_res_meas[0:1]))
                 all_meas_results.extend(check_results(['V2'], (0, 0, "V2"), ocr_res_meas[1:2]))
                 all_meas_results.extend(check_results(['V0'], (0, 0, "V0"), ocr_res_meas[2:3]))
@@ -987,7 +1026,7 @@ class Evaluation:
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
 
-        return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results,
+        return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
     def check_text(self, ocr_results):
         results = []
@@ -1216,7 +1255,7 @@ class Evaluation:
                         # 해당 ROI의 이미지를 다시 가져옵니다
                         if roi_key in self.rois:
                             x, y, w, h = self.rois[roi_key]
-                            char_image = image[y:y+h, x:x+w]
+                            char_image = sharpened_image[y:y+h, x:x+w]
 
                             # 이미지 전처리
                             self.ocr_manager.update_n(5)
