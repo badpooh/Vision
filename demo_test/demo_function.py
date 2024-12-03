@@ -387,7 +387,7 @@ class OCRManager:
                         elif retry_count > 1 and self.phasor_condition == 1:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
                             char_image = cv2.filter2D(char_image, -1, kernel2)
                             gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
                             _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
