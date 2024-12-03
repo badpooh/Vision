@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-12-03 13:07:05+00:00),Img Match,H.Text
+Min Max Fundamental Current,,,,,,
+A,49.8% (PASS),[] (PASS),[] (PASS),2024-12-03 13:09:17 / 132.0 seconds (FAIL),,
+B,50.0% (PASS),,,2024-12-03 13:07:52 / 47.0 seconds (FAIL),,
+C,49.9% (PASS),,,2024-12-03 13:09:28 / 143.0 seconds (FAIL),,
+Average,49.8% (PASS),,,2024-12-03 13:08:16 / 71.0 seconds (FAIL),,
+,2.488A (PASS),,,,,
+,2.498A (PASS),,,,,
+,2.495A (PASS),,,,,
+,2.491A (PASS),,,,,

@@ -1,0 +1,4 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-12-03 13:01:40+00:00),Img Match,H.Text
+Residual Voltage Min Max,,,,,,
+RMS,7.015V (PASS),[] (PASS),[] (PASS),2024-12-03 13:01:46 / 6.0 seconds (FAIL),,
+Fund.,1.815V (PASS),,,2024-12-03 13:01:58 / 18.0 seconds (FAIL),,

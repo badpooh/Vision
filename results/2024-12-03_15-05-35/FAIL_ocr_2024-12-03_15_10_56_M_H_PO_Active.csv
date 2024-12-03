@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (None),Img Match,H.Text
+Min Active Power Max,,,,,,
+A,% 43.0 (FAIL),[] (PASS),[] (PASS),,,
+B,43.0% (PASS),,,,,
+C,43.1% (PASS),,,,,
+Total,43.0% (PASS),,,,,
+,235.7 (FAIL),,,,,
+,235.6W (PASS),,,,,
+,236.4 (FAIL),,,,,
+,707.7W (PASS),,,,,

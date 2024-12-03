@@ -116,15 +116,17 @@ class OCRManager:
                         continue  # 유효하지 않은 영역은 건너뜁니다
                     while retry_count < max_retries and not success:
                         char_image = text_roi.copy()
+                        ### 일반 텍스트 영역 / 97% 초과가 되지않으면 바로 실행
                         if retry_count == 0 and self.phasor_condition == 0:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
                             char_image = cv2.filter2D(char_image, -1, kernel2)
                             gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
                             _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
                         
+                        ### 그림 영역 / 97% 초과가 되지않으면 바로 실행 (Phasor와 같은 A, B, C 주위에 색박스로 된 부분)
                         elif retry_count == 0 and self.phasor_condition == 1:
                             self.update_n(3)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
@@ -135,34 +137,44 @@ class OCRManager:
                             edges = cv2.Canny(thresh_char, 50, 150)
                             char_image = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
                         
+                        ### 일반 텍스트 영역 재시도 2번째 -> 이부분에서 U0일때 인식률 87% 나옴 집에서 90%이상으로 향상 필요
                         elif retry_count == 1 and self.phasor_condition == 0:
                             self.update_n(3)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            kernel2 = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
                             char_image = cv2.filter2D(char_image, -1, kernel2)
                             gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
-                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            _, thresh_char = cv2.threshold(gray_char, 150, 255, cv2.THRESH_BINARY)
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
 
+                        ### 그림 영역 재시도 2번째
                         elif retry_count == 1 and self.phasor_condition == 1:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
                             char_image = cv2.filter2D(char_image, -1, kernel2)
                             gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
                             _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
 
+                        ### 일반 텍스트 영역 재시도 3번째
                         elif retry_count > 1 and self.phasor_condition == 0:
                             self.update_n(3)
-                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
-                            char_image = cv2.filter2D(char_image, -1, kernel2)
-                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
-                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                            edges = cv2.Canny(thresh_char, 50, 150)
-                            char_image = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
-
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_LANCZOS4)
+                            char_image = cv2.Canny(char_image, 0, 200)
+                            kernel = np.array([
+                                                [-1, -1, -1, -1, -1],
+                                                [-1,  1,  1,  1, -1],
+                                                [-1,  1,  5,  1, -1],
+                                                [-1,  1,  1,  1, -1],
+                                                [-1, -1, -1, -1, -1]], dtype=np.float32)
+                            char_image = cv2.filter2D(char_image, -1, kernel)
+                            
+                            
+                            cv2.imshow("test2", char_image)
+                            cv2.waitKey(0)
+                            cv2.destroyAllWindows()
+            
                         elif retry_count > 1 and self.phasor_condition == 1:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
@@ -172,9 +184,7 @@ class OCRManager:
                             _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
 
-                        # cv2.imshow("test2", char_image)
-                        # cv2.waitKey(0)
-                        # cv2.destroyAllWindows()
+                        
 
                         retry_result = ocr.ocr(char_image, cls=False)
                         print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
@@ -240,9 +250,9 @@ class OCRManager:
 if __name__ == "__main__":
     ocr_manager = OCRManager()
 
-    image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\10.10.26.159_2024-12-02_16_41_13_M_H_AN_Curr_Unbal.png"
+    image_path = r"C:\PNT\09.AutoProgram\AutoProgram\image_test\10.10.26.159_2024-12-03_13_19_51_M_H_PO_Active.png"
 
-    roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b]
+    roi_keys_meas = [ecroi.a_meas, ecroi.aver_meas]
 
     results = ocr_manager.ocr_basic(image_path, roi_keys_meas)
     print(f"OCR 결과: {results}")

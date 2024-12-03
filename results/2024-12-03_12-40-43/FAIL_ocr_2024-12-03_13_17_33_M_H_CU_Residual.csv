@@ -1,0 +1,4 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-12-03 13:16:54+00:00),Img Match,H.Text
+Min Max Residual Current,,,,,,
+RMS,81.41mA (PASS),[] (PASS),[] (PASS),2024-12-03 13:17:08 / 14.0 seconds (FAIL),,
+Fund.,21.76mA (PASS),,,2024-12-03 13:17:23 / 29.0 seconds (FAIL),,

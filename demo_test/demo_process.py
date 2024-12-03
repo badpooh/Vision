@@ -74,10 +74,10 @@ class DemoProcess:
         ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if self.test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
-            if time_keys is not None:
-                ocr_img_time = ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-                time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time)
-                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, ocr_img_time, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+            if time_keys:
+                # ocr_img_time = ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
+                time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time, test_mode=test_mode)
+                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
             else:
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
 
@@ -85,8 +85,8 @@ class DemoProcess:
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys is not None:
                 # ocr_img_time = ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
-                time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time)
-                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
+                time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time, test_mode=test_mode)
+                self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
             else:
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
         
@@ -1485,6 +1485,10 @@ class DemoTest:
     def demo_test_start(self):
         self.modbus_label.demo_test_setting()
         print("----------------DEMO TEST START----------------")
+
+    def none_test_start(self):
+        self.modbus_label.none_test_setting()
+        print("----------------NONE TEST START----------------")
         
     def demo_test_voltage(self, base_save_path, test_mode):
         self.demo_mea_vol_rms(base_save_path, test_mode)
@@ -1551,34 +1555,34 @@ class DemoTest:
         self.demo_mea_pow_pf(base_save_path, test_mode)
         
     def demo_test_analysis(self, base_save_path, test_mode):
-        # self.demo_mea_anal_phasor(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_harmonics(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_meter_harmonics_text(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_waveform(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_voltsym(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_voltunbal(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
-        # self.demo_mea_anal_cursym(base_save_path, test_mode)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        self.demo_mea_anal_phasor(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_harmonics(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_meter_harmonics_text(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_waveform(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_voltsym(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_voltunbal(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
+        self.demo_mea_anal_cursym(base_save_path, test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         self.demo_mea_anal_currunbal(base_save_path, test_mode)
 
     def demo_test_demand(self, base_save_path):
@@ -1586,43 +1590,3 @@ class DemoTest:
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        
-
-    def testcode01(self):
-            image_path = r"C:\Users\Jin\Desktop\test_11.png"
-            reset_time = datetime.now()
-            current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            base_save_path = os.path.expanduser(f"./results/{current_time}/")
-            os.makedirs(base_save_path, exist_ok=True)
-            roi_key = [ecroi.harmonics_title, ecroi.harmonics_text_sub_title, ecroi.harmonics_text_sub_abc]
-            roi_keys = [ecroi.harmonics_text_chart_img_cut]
-            ocr_ref = ec.harmonics_text.value
-            ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_key)
-            validate_ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-            invalid_elements = self.evaluation.validate_ocr(validate_ocr_results)
-            ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path)
-            self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, img_path=image_path,base_save_path=base_save_path, invalid_elements=invalid_elements)
-            if self.stop_event.is_set():
-                print("Test stopped")
-                return
-                  
-    def testcode03(self):
-        # self.modbus_label.demo_test_setting()
-        # self.touch_manager.btn_front_meter()
-        # self.touch_manager.btn_front_home()
-        self.touch_manager.menu_touch(ect.touch_main_menu_4.value)
-        self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
-        self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
-        roi_keys = ["phasor_title", "phasor_vl_vn", "phasor_voltage",
-                    "phasor_a_c_vol", "phasor_current", "phasor_a_c_cur"]
-        roi_keys_meas = ["phasor_a_meas", "phasor_b_meas", "phasor_c_meas", "phasor_a_meas_cur", "phasor_b_meas_cur", "phasor_c_meas_cur",
-                         "phasor_a_angle", "phasor_b_angle", "phasor_c_angle", "phasor_a_angle_cur", "phasor_b_angle_cur", "phasor_c_angle_cur"]
-        ocr_ref = ec.phasor_ll
-        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        image_result = self.evaluation.img_match(image_path, "phasor_img_cut", ecir.img_ref_phasor_all_vll.value)
-        ocr_error, right_error, meas_error, ocr_res = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_result)
-    
-        self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_result)
-           

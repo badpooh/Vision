@@ -1,0 +1,6 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-12-03 12:51:24+00:00),Img Match,H.Text
+L-L L-N Min Max Fund. Volt.,,,,,,
+A,109.4V (PASS),[] (PASS),[] (PASS),2024-12-03 12:53:52 / 148.0 seconds (FAIL),,
+B,109.0V (PASS),,,2024-12-03 12:51:32 / 8.0 seconds (FAIL),,
+C,109.2V (PASS),,,2024-12-03 12:52:56 / 92.0 seconds (FAIL),,
+Average,109.4V (PASS),,,2024-12-03 12:52:54 / 90.0 seconds (FAIL),,

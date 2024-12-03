@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-12-03 15:29:57+00:00),Img Match,H.Text
+Active Power Min Max,,,,,,
+A,42.8% (PASS),[] (PASS),[] (PASS),2024-12-03 15:30:18 / 21.0 seconds (FAIL),,
+B,42.8% (PASS),,,2024-12-03 15:30:11 / 14.0 seconds (FAIL),,
+C,42.9% (PASS),,,2024-12-03 15:30:18 / 21.0 seconds (FAIL),,
+Total,42.9% (PASS),,,2024-12-03 15:30:36 / 39.0 seconds (FAIL),,
+,234.9W (PASS),,,,,
+,234.6W (PASS),,,,,
+,235.2W (PASS),,,,,
+,705.7W (PASS),,,,,

@@ -1,7 +1,0 @@
-Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (None),Img Match,H.Text
-Max Current Unbalance,,,,,,
-NEMA,empty = empty (PASS by text),[] (PASS),[] (PASS),,,
-Negative- Sequence,U2 = U2 (PASS by text),,,,,
-Zero- Sequence,0.0 % (FAIL),,,,,
-,0.0% (PASS),,,,,
-,0.0% (PASS),,,,,
