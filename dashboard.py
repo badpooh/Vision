@@ -121,15 +121,15 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
         print(f"{key.capitalize()} checkbox {'checked' if state == 2 else 'unchecked'}")
 
-    def on_current_checkbox_changed(self, state):
-        if state == 2:
-            self.current_checked = True
-            print("Voltage checkbox checked")
-        elif state == 0:
-            self.current_checked = False
-            print("Voltage checkbox unchecked")
-        else:
-            print(f"Unknown state: {state}")
+    # def on_current_checkbox_changed(self, state):
+    #     if state == 2:
+    #         self.current_checked = True
+    #         print("Voltage checkbox checked")
+    #     elif state == 0:
+    #         self.current_checked = False
+    #         print("Voltage checkbox unchecked")
+    #     else:
+    #         print(f"Unknown state: {state}")
 
     def switch_to_homePage(self):
         self.stackedWidget.setCurrentIndex(0)

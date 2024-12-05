@@ -264,8 +264,7 @@ class WebCam:
                 last_focus_time = current_time
 
             focus_value = self.capture.get(cv2.CAP_PROP_FOCUS)
-            cv2.putText(self.display_frame, f"Focus: {
-                        focus_value}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(self.display_frame, f"Focus: {focus_value}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
             if self.dragging:
                 cv2.rectangle(self.display_frame, (self.x1, self.y1),

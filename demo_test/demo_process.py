@@ -75,7 +75,6 @@ class DemoProcess:
         if self.test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys:
-                # ocr_img_time = ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
                 time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time, test_mode=test_mode)
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
             else:
@@ -84,7 +83,6 @@ class DemoProcess:
         elif self.test_mode == "None":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys is not None:
-                # ocr_img_time = ocr_func.ocr_basic(image=image_path, roi_keys=time_keys)
                 time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time, test_mode=test_mode)
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, time_results=time_results, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
             else:
@@ -185,7 +183,7 @@ class DemoProcess:
     def ocr_phaosr_process(self, img_ref, ref, img_cut1, img_cut2, img_cut3, base_save_path, test_mode):
         self.touch_manager.screenshot()
         image_path = self.load_image_file()
-        roi_keys = [ecroi.phasor_title, ecroi.phasor_vl_vn, ecroi.phasor_voltage, ecroi.phasor_a_c_vol, ecroi.phasor_current, ecroi.phasor_a_c_cur]
+        roi_keys = [ecroi.phasor_title, ecroi.phasor_title_2, ecroi.phasor_vl_vn, ecroi.phasor_voltage, ecroi.phasor_a_c_vol, ecroi.phasor_current, ecroi.phasor_a_c_cur]
         roi_keys_meas = [ecroi.phasor_a_meas, ecroi.phasor_b_meas, ecroi.phasor_c_meas, ecroi.phasor_a_meas_cur, ecroi.phasor_b_meas_cur, ecroi.phasor_c_meas_cur,
                         ecroi.phasor_a_angle, ecroi.phasor_b_angle, ecroi.phasor_c_angle, ecroi.phasor_a_angle_cur, ecroi.phasor_b_angle_cur, ecroi.phasor_c_angle_cur]
         ocr_ref = ref
@@ -198,10 +196,10 @@ class DemoProcess:
 
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, all_meas_results=all_meas_results, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         elif test_mode == "None":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, all_meas_results=all_meas_results, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         else :
             print("ocr phasor process error")
 
@@ -310,7 +308,6 @@ class DemoTest:
         return self.reset_time
 
     def demo_mea_vol_rms(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
 
         ## L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
@@ -325,6 +322,7 @@ class DemoTest:
             return
 
         ### L-L min 검사 ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path, test_mode)
@@ -350,6 +348,7 @@ class DemoTest:
             return
 
         ### L-N min 검사 ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path, test_mode)
@@ -368,8 +367,6 @@ class DemoTest:
         print("Voltage_RMS_Done")
 
     def demo_mea_vol_fund(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -383,6 +380,7 @@ class DemoTest:
             return
 
         ### L-L min 검사 ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path, test_mode)
@@ -408,6 +406,7 @@ class DemoTest:
             return
 
         ### L-N min 검사 ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path, test_mode)
@@ -426,7 +425,6 @@ class DemoTest:
         print("Voltage_Fund_Done")
 
     def demo_mea_vol_thd(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -440,6 +438,7 @@ class DemoTest:
             return
 
         ### L-L max 검사 ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(ec.thd_vol_ll.value, reset_time, base_save_path, test_mode)
@@ -457,6 +456,7 @@ class DemoTest:
             return
 
         ### L-N max 검사 ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(ec.thd_vol_ln.value, reset_time, base_save_path, test_mode)
@@ -465,7 +465,6 @@ class DemoTest:
             return
 
     def demo_mea_vol_freq(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
 
         ### 기본주파수 검사 ###
         self.touch_manager.btn_front_meter()
@@ -483,6 +482,7 @@ class DemoTest:
             return
 
         ### 주파수 Min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -511,7 +511,6 @@ class DemoTest:
             return
 
     def demo_mea_vol_residual(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
 
         ### 기본 검사 ###
         self.touch_manager.btn_front_meter()
@@ -529,6 +528,7 @@ class DemoTest:
             return
 
         ### 잔류전압 Min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -557,8 +557,6 @@ class DemoTest:
             return
 
     def demo_mea_curr_rms(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### Current ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -571,6 +569,7 @@ class DemoTest:
             return
 
         ### Current Min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(ec.rms_curr.value, reset_time, base_save_path, test_mode)
@@ -587,8 +586,6 @@ class DemoTest:
             return
 
     def demo_mea_curr_fund(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### Current ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -601,6 +598,7 @@ class DemoTest:
             return
 
         ### Current Min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(ec.fund_curr.value, reset_time, base_save_path, test_mode)
@@ -617,8 +615,6 @@ class DemoTest:
             return
 
     def demo_mea_curr_thd(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### Current thd ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -631,6 +627,7 @@ class DemoTest:
             return
 
         ### Current thd Max ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(ec.thd_curr.value, reset_time, base_save_path, test_mode)
@@ -639,8 +636,6 @@ class DemoTest:
             return
 
     def demo_mea_curr_tdd(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### Current tdd ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -653,6 +648,7 @@ class DemoTest:
             return
 
         ### Current tdd Max ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(ec.tdd_curr.value, reset_time, base_save_path, test_mode)
@@ -661,8 +657,6 @@ class DemoTest:
             return
 
     def demo_mea_curr_cf(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### Current crest factor ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -675,6 +669,7 @@ class DemoTest:
             return
 
         ### Current crest factor Max ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(ec.cf_curr.value, reset_time, base_save_path, test_mode)
@@ -683,8 +678,6 @@ class DemoTest:
             return
 
     def demo_mea_curr_kf(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### Current k-factor ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -697,6 +690,7 @@ class DemoTest:
             return
 
         ### Current k-factor Max ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(ec.kf_curr.value, reset_time, base_save_path, test_mode)
@@ -705,8 +699,6 @@ class DemoTest:
             return
 
     def demo_mea_curr_residual(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### Current residual ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -723,6 +715,7 @@ class DemoTest:
             return
 
         ### Current residual Min###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -751,8 +744,6 @@ class DemoTest:
             return
 
     def demo_mea_pow_active(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### active power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -765,6 +756,7 @@ class DemoTest:
             return
         
         ### power min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(ec.active.value, reset_time, base_save_path, test_mode)
@@ -781,8 +773,6 @@ class DemoTest:
             return
         
     def demo_mea_pow_reactive(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -795,6 +785,7 @@ class DemoTest:
             return
         
         ### power min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(ec.reactive.value, reset_time, base_save_path, test_mode)
@@ -811,8 +802,6 @@ class DemoTest:
             return
     
     def demo_mea_pow_apparent(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -825,6 +814,7 @@ class DemoTest:
             return
         
         ### power min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(ec.apparent.value, reset_time, base_save_path, test_mode)
@@ -841,8 +831,6 @@ class DemoTest:
             return
         
     def demo_mea_pow_pf(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
-
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -855,6 +843,7 @@ class DemoTest:
             return
         
         ### power min ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(ec.pf.value, reset_time, base_save_path, test_mode)
@@ -1334,7 +1323,6 @@ class DemoTest:
             return
 
     def demo_mea_anal_voltsym(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
         ### LL ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1351,6 +1339,7 @@ class DemoTest:
             return
 
         ### LL Max###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1377,6 +1366,7 @@ class DemoTest:
             return
 
         ### LN Max###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1390,7 +1380,6 @@ class DemoTest:
             return
 
     def demo_mea_anal_voltunbal(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
         ### vol unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1403,6 +1392,7 @@ class DemoTest:
             return
 
         ### vol unbalance max ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(ec.unbal_vol.value, reset_time, base_save_path, test_mode=test_mode)
@@ -1411,7 +1401,6 @@ class DemoTest:
             return
 
     def demo_mea_anal_cursym(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
         ### symm ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1429,6 +1418,7 @@ class DemoTest:
             return
 
         ### symm max ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1443,7 +1433,6 @@ class DemoTest:
             return
 
     def demo_mea_anal_currunbal(self, base_save_path, test_mode):
-        reset_time = self.modbus_label.reset_max_min()
         ### current unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1461,6 +1450,7 @@ class DemoTest:
             return
 
         ### symm max ###
+        reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1563,10 +1553,10 @@ class DemoTest:
         if self.stop_event.is_set():
             print("Test stopped")
             return
-        self.demo_meter_harmonics_text(base_save_path, test_mode)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # self.demo_meter_harmonics_text(base_save_path, test_mode)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
         self.demo_mea_anal_waveform(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -1585,8 +1575,9 @@ class DemoTest:
             return
         self.demo_mea_anal_currunbal(base_save_path, test_mode)
 
-    def demo_test_demand(self, base_save_path):
-        self.demo_meter_demand_curr(base_save_path)
+    def demo_test_demand(self, base_save_path, test_mode):
+
+        self.demo_meter_demand_curr(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return

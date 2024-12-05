@@ -1,6 +1,0 @@
-Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2024-12-03 12:45:48+00:00),Img Match,H.Text
-RMS Voltage L-L L-N Min Max,,,,,,
-AB,189.5V (PASS),[] (PASS),[] (PASS),2024-12-03 12:45:57 / 9.0 seconds (FAIL),,
-BC,189.3V (PASS),,,2024-12-03 12:46:21 / 33.0 seconds (FAIL),,
-CA,189.4V (PASS),,,2024-12-03 12:46:15 / 27.0 seconds (FAIL),,
-Average,189.6V (PASS),,,2024-12-03 12:46:15 / 27.0 seconds (FAIL),,

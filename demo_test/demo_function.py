@@ -253,7 +253,7 @@ class OCRManager:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
 
-        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
+        ocr = PaddleOCR(use_gpu=True, use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
 
         ocr_results = {}
         for roi_key in roi_keys:
@@ -279,9 +279,9 @@ class OCRManager:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
-                # cv2.imshow("test", roi_image)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
+                cv2.imshow("test", roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
                 
                 text_results = ocr.ocr(roi_image, cls=False)
                 original_results = []
@@ -359,7 +359,9 @@ class OCRManager:
                             char_image = cv2.filter2D(char_image, -1, kernel2)
                             gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
                             _, thresh_char = cv2.threshold(gray_char, 150, 255, cv2.THRESH_BINARY)
-                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+                            clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(9, 9))
+                            enhanced_char = clahe.apply(thresh_char)
+                            char_image = cv2.cvtColor(enhanced_char, cv2.COLOR_GRAY2BGR)
 
                         ### 그림 영역 재시도 2번째
                         elif retry_count == 1 and self.phasor_condition == 1:
@@ -406,11 +408,12 @@ class OCRManager:
                                 new_text = new_text.strip()
                                 new_confidence = float(new_confidence)
 
-                                if new_confidence >= 0.94 or new_text.lower() == "c" or ((new_text.upper() == "V0" or new_text.upper() == "U0") and new_confidence >= 0.80):
+                                if new_confidence >= 0.94 or new_text.lower() == "c" or ((new_text.upper() == "V0" or new_text.upper() == "U0") and new_confidence >= 0.85):
                                     # original_results에서 해당 좌표를 찾아 업데이트
                                     for i, (orig_coords, orig_text, orig_conf) in enumerate(original_results):
                                         if orig_coords == coords:
-                                            original_results[i] = (coords, new_text, new_confidence)
+                                            combined_text = self.merge_texts(orig_text, new_text, orig_coords, new_coords)
+                                            original_results[i] = (orig_coords, combined_text, new_confidence)
                                             success = True
                                             break
                                     success = True
@@ -418,7 +421,7 @@ class OCRManager:
                         else:
                             print("재시도 후에도 텍스트를 인식하지 못했습니다.")
                         retry_count += 1
-
+                
                 extracted_texts = [text for coords, text, conf in original_results]
                 extracted_texts = ' '.join(extracted_texts)
                 extracted_texts = self.handle_special_cases(extracted_texts)
@@ -434,21 +437,19 @@ class OCRManager:
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
 
+    def merge_texts(self, orig_text, new_text, orig_coords, new_coords):
+        if len(new_text) < len(orig_text):
+            if new_coords[0][0] > orig_coords[0][0]:
+                return orig_text[:len(orig_text)-len(new_text)] + new_text
+            else:    
+                return new_text + orig_text[len(new_text):]
+        else:
+            return new_text
 
     def handle_special_cases(self, text):
         words = text.strip().split()
         processed_words = []
         for i, word in enumerate(words):
-            # 'c'를 검사하고 조건에 맞으면 대문자 'C'로 변환
-            # if word.lower() == 'c':
-            #     is_last_word = (i == len(words) - 1)
-            #     has_space_before = (i > 0)
-            #     has_space_after = (i < len(words) - 1)
-                
-                 # 앞에 공백이 있고 뒤에 공백이 있거나, 앞에 공백이 있고 마지막 단어인 경우
-            #     if (has_space_before and has_space_after) or (has_space_before and is_last_word):
-            #         processed_words.append('C')
-            #         continue
             if word == 'V':
                 has_word_before = (i > 0)
                 has_word_after = (i < len(words) - 1)
@@ -456,7 +457,6 @@ class OCRManager:
                     # 앞뒤로 단어가 있는 경우 'V'를 제외
                     print(f"예외 처리: '{word}'를 결과에서 제외")
                     continue  # 'V'를 결과에서 제외하고 다음 단어로 이동
-            # 조건에 맞지 않으면 원래 단어 사용
             processed_words.append(word)
         return ' '.join(processed_words)
 
@@ -578,10 +578,11 @@ class ModbusLabels:
             if self.response.isError():
                 print(f"Error reading registers: {self.response}")
                 return
-            self.response = self.modbus_manager.setup_client.read_holding_registers(6000, 1)
+            self.response = self.modbus_manager.setup_client.read_holding_registers(ecm.addr_meas_setup_access.value, 1)
             self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_sync_mode.value, 1)
             self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_sub_interval_time.value, 2)
             self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_num_of_sub_interval.value, 3)
+            self.response = self.modbus_manager.setup_client.write_register(ecm.addr_meas_setup_access.value, 1)
             demand_reset_time = self.reset_demand_peak()
             self.reset_demand()
             self.response = self.modbus_manager.setup_client.write_register(ecm.addr_demand_sync.value, 1)
@@ -1161,6 +1162,7 @@ class Evaluation:
                         time_results.append(f"{time_str} / {time_diff} seconds (FAIL)")
             except ValueError as e:
                 print(f"Time format error for {time_str}: {e}")
+                time_results.append(f"{time_str} / format error (FAIL)")
         return time_results
 
 

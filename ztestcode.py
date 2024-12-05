@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 from paddleocr import PaddleOCR
 from itertools import chain
+import sys
+
+
 
 from demo_test.demo_config import ConfigSetup
 from demo_test.demo_config import ConfigROI as ecroi
@@ -32,7 +35,7 @@ class OCRManager:
         self.phasor_condition = new_c
 
     def ocr_basic(self, image, roi_keys):
-        self.phasor_condition = 0
+        self.phasor_condition = 1
         image = cv2.imread(image)
         if image is None:
             print(f"이미지를 읽을 수 없습니다: {image}")
@@ -46,10 +49,8 @@ class OCRManager:
             if self.phasor_condition == 0:
                 self.update_n(3)
                 resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-                threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
                 denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
-                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
                 sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
             
             elif self.phasor_condition == 1:
@@ -66,9 +67,9 @@ class OCRManager:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
-                # cv2.imshow("test", roi_image)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
+                cv2.imshow("test", roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
                 # OCR 처리
                 text_results = ocr.ocr(roi_image, cls=False)
@@ -137,7 +138,7 @@ class OCRManager:
                             edges = cv2.Canny(thresh_char, 50, 150)
                             char_image = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
                         
-                        ### 일반 텍스트 영역 재시도 2번째 -> 이부분에서 U0일때 인식률 87% 나옴 집에서 90%이상으로 향상 필요
+                        ### 일반 텍스트 영역 재시도 2번째
                         elif retry_count == 1 and self.phasor_condition == 0:
                             self.update_n(3)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
@@ -148,9 +149,6 @@ class OCRManager:
                             clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(9, 9))
                             enhanced_char = clahe.apply(thresh_char)
                             char_image = cv2.cvtColor(enhanced_char, cv2.COLOR_GRAY2BGR)
-                            # cv2.imshow("123", char_image)
-                            # cv2.waitKey(0)
-                            # cv2.destroyAllWindows()
 
                         ### 그림 영역 재시도 2번째
                         elif retry_count == 1 and self.phasor_condition == 1:
@@ -175,11 +173,10 @@ class OCRManager:
                                                 [-1, -1, -1, -1, -1]], dtype=np.float32)
                             char_image = cv2.filter2D(char_image, -1, kernel)
 
-            
                         elif retry_count > 1 and self.phasor_condition == 1:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])  # 샤프닝 커널
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
                             char_image = cv2.filter2D(char_image, -1, kernel2)
                             gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
                             _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -224,16 +221,6 @@ class OCRManager:
         words = text.strip().split()
         processed_words = []
         for i, word in enumerate(words):
-            # 'c'를 검사하고 조건에 맞으면 대문자 'C'로 변환
-            # if word.lower() == 'c':
-            #     is_last_word = (i == len(words) - 1)
-            #     has_space_before = (i > 0)
-            #     has_space_after = (i < len(words) - 1)
-                
-                 # 앞에 공백이 있고 뒤에 공백이 있거나, 앞에 공백이 있고 마지막 단어인 경우
-            #     if (has_space_before and has_space_after) or (has_space_before and is_last_word):
-            #         processed_words.append('C')
-            #         continue
             if word == 'V':
                 has_word_before = (i > 0)
                 has_word_after = (i < len(words) - 1)
@@ -249,9 +236,12 @@ class OCRManager:
 if __name__ == "__main__":
     ocr_manager = OCRManager()
 
-    image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\10.10.26.159_2024-12-02_16_41_13_M_H_AN_Curr_Unbal.png"
+    image_path = r"C:\PNT\09.AutoProgram\AutoProgram\results\2024-12-04_13-20-36\2024-12-04_13_25_59_M_H_AN_Phasor.png"
 
-    roi_keys_meas = [ecroi.curr_per_c]
+    roi_keys_meas = [ecroi.phasor_title] 
+    #ecroi.phasor_vl_vn, ecroi.phasor_voltage, ecroi.phasor_a_c_vol, ecroi.phasor_current, ecroi.phasor_a_c_cur, 
+                    #  ecroi.phasor_a_meas, ecroi.phasor_b_meas, ecroi.phasor_c_meas, ecroi.phasor_a_meas_cur, ecroi.phasor_b_meas_cur, ecroi.phasor_c_meas_cur, 
+                    #  ecroi.phasor_a_angle, ecroi.phasor_b_angle, ecroi.phasor_c_angle, ecroi.phasor_a_angle_cur, ecroi.phasor_b_angle_cur, ecroi.phasor_c_angle_cur]
 
     results = ocr_manager.ocr_basic(image_path, roi_keys_meas)
     print(f"OCR 결과: {results}")

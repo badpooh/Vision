@@ -24,6 +24,7 @@ class ConfigROI(Enum):
     
     phasor_img_cut = "phasor_img_cut"
     phasor_title = "phasor_title"
+    phasor_title_2 = "phasor_title_2"
     phasor_view_2 = "phasor_view_2"
     phasor_vl_vn = "phasor_vl_vn"
     phasor_voltage = "phasor_voltage"
@@ -143,6 +144,7 @@ class ConfigTextRef(Enum):
     
 class ConfigModbusMap(Enum):
     addr_reset_max_min = 12002
+    addr_meas_setup_access = 6000
     addr_demand_sync_mode = 6028
     addr_demand_num_of_sub_interval = 6029
     addr_demand_sub_interval_time = 6030
@@ -303,7 +305,8 @@ class ConfigSetup():
 
             # Phasor
             ConfigROI.phasor_img_cut: [176, 179, 425, 295],
-            ConfigROI.phasor_title: [n*x for x in [160, 120, 630, 53]], # Phasor, [V]Voltage, [V]Current
+            ConfigROI.phasor_title: [n*x for x in [160, 130, 140, 40]], # Phasor
+            ConfigROI.phasor_title_2: [n*x for x in [530, 130, 246, 40]], # [V]Voltage, [V]Current
             ConfigROI.phasor_view_2: [n*x for x in [480, 120, 310, 53]], # [V]Voltage, [V]Current
             ConfigROI.phasor_vl_vn: [n*x for x in [570, 190, 210, 39]],  # VLL VLN
             ConfigROI.phasor_voltage: [n*x for x in [465, 235, 80, 27]],  # Voltage
