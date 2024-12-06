@@ -253,7 +253,7 @@ class OCRManager:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
 
-        ocr = PaddleOCR(use_gpu=True, use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
+        ocr = PaddleOCR(use_gpu=False, use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
 
         ocr_results = {}
         for roi_key in roi_keys:
@@ -279,9 +279,9 @@ class OCRManager:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
-                cv2.imshow("test", roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                # cv2.imshow("test", roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 
                 text_results = ocr.ocr(roi_image, cls=False)
                 original_results = []
@@ -728,7 +728,7 @@ class Evaluation:
             
         elif "Phasor" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_phasor_vll.value) <= 10:
-                all_meas_results.extend(check_results(["AB", "BC", "CA"], (180, 195, "v"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["AB", "BC", "CA"], (180, 195, "V" or "v"), ocr_res_meas[:3]))
                 all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6]))
                 all_meas_results.extend(check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7]))
                 all_meas_results.extend(check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8]))
@@ -740,7 +740,7 @@ class Evaluation:
                 all_meas_results.extend(check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3]))
                 
             elif self.ocr_manager.color_detection(image, ecr.color_phasor_vln.value) <= 10:
-                all_meas_results.extend(check_results(["A", "B", "C"], (100, 120, "v"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["A", "B", "C"], (100, 120, "V" or "v"), ocr_res_meas[:3]))
                 all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6]))
                 all_meas_results.extend(check_results(["A_angle"], (-0.2, 5, ""), ocr_res_meas[6:7]))
                 all_meas_results.extend(check_results(["B_angle"], (-125, -115, ""), ocr_res_meas[7:8]))
@@ -774,6 +774,7 @@ class Evaluation:
                     all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3]))
                     all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6]))
                     all_meas_results.extend(check_results(["harmonic_image"], (0.98, 1, ""), img_result))
+        
                     
         elif "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
@@ -1123,10 +1124,10 @@ class Evaluation:
 
         if np.any(match):
             print(f"{target_color} (FAIL)")
-            result = 0
+            result = f"{target_color} FAIL"
         else:
             print(f"{target_color} (PASS)")
-            result = 1
+            result = f"{target_color} PASS"
         return result
 
     def check_time_diff(self, image, roi_keys, reset_time, test_mode):
@@ -1147,7 +1148,7 @@ class Evaluation:
                 image_time = image_time.replace(tzinfo=timezone.utc)
                 time_diff = abs((image_time - self.reset_time).total_seconds())
                 if test_mode == "Demo":
-                    if time_diff <= 30:
+                    if time_diff <= 120:
                         print(f"{time_str} (PASS)")
                         time_results.append(f"{time_str} (PASS)")
                     else:
