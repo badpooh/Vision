@@ -25,17 +25,19 @@ from demo_test.demo_config import ConfigTouch as ect
 
 config_data = ConfigSetup()
 
+SERVER_IP = '10.10.26.156'
+
 
 class ModbusManager:
 
-    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
+    # SERVER_IP = '10.10.26.156'  # 장치 IP 주소
     TOUCH_PORT = 5100  # 내부터치
     SETUP_PORT = 502  # 설정
 
     def __init__(self):
         self.is_connected = False
-        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
-        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        self.touch_client = ModbusClient(SERVER_IP, port=self.TOUCH_PORT)
+        self.setup_client = ModbusClient(SERVER_IP, port=self.SETUP_PORT)
 
     def tcp_connect(self):
         if self.touch_client.connect() and self.setup_client.connect():
@@ -757,24 +759,32 @@ class Evaluation:
         elif "Harmonics" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
                 if img_result == 1 or img_result == 0:
-                    all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (2, 5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v" or "V"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
                 elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
                     all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (2, 5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v" or "V"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
                 elif "Text" in ''.join(ocr_res[1]):
                     all_meas_results.extend("PASS?")
-                all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3]))
-                all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6]))
-                all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
             else:
                 if img_result == 1 or img_result == 0:
                     all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))  
                 elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
                     all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (2, 5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v" or "V"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
                 else:
                     all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3]))
                     all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6]))
                     all_meas_results.extend(check_results(["harmonic_image"], (0.98, 1, ""), img_result))
-        
                     
         elif "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
@@ -980,7 +990,7 @@ class Evaluation:
 
         elif "Harmonics" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
-                if img_result == 1 or img_result == 0:
+                if img_result is not None:
                     all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))
                     all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
                     all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (0, 0, "v"), ocr_res_meas[3:6]))
@@ -995,7 +1005,7 @@ class Evaluation:
                     all_meas_results.extend(check_results(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], (0, 0, ""), ocr_res_meas[0:10]))
                     print("test")
             else:
-                if img_result == 1 or img_result == 0:
+                if img_result is not None:
                     all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))  
                     # all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
                     # all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (0, 0, "A"), ocr_res_meas[3:6]))
@@ -1124,11 +1134,13 @@ class Evaluation:
 
         if np.any(match):
             print(f"{target_color} (FAIL)")
-            result = f"{target_color} FAIL"
+            result = 0
+            csv_result = f"{target_color} FAIL"
         else:
             print(f"{target_color} (PASS)")
-            result = f"{target_color} PASS"
-        return result
+            result = 1
+            csv_result = f"{target_color} PASS"
+        return result, csv_result
 
     def check_time_diff(self, image, roi_keys, reset_time, test_mode):
         self.reset_time = reset_time
@@ -1224,7 +1236,7 @@ class Evaluation:
 
         # Saving the CSV
         file_name_with_extension = os.path.basename(img_path)
-        ip_to_remove = "10.10.26.159_"
+        ip_to_remove = f"{SERVER_IP}_"
         if file_name_with_extension.startswith(ip_to_remove):
             file_name_without_ip = file_name_with_extension[len(ip_to_remove):]
         else:

@@ -23,7 +23,7 @@ class DemoProcess:
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
     evaluation = Evaluation()
-    search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
+    search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
 
@@ -208,16 +208,17 @@ class DemoProcess:
         image_path = self.load_image_file()
         ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
-        image_results = self.evaluation.img_detection(image_path, value, 2)
+        image_results, csv_result = self.evaluation.img_detection(image_path, value, 2)
 
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=csv_result, base_save_path=base_save_path)
         if test_mode == "None":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
+            self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=csv_result, base_save_path=base_save_path)
         else :
             print("ocr phasor process error")
+
 
     def ocr_waveform_detection(self, roi_keys, ocr_ref, value, base_save_path, test_mode):
         self.touch_manager.screenshot()
@@ -994,7 +995,7 @@ class DemoTest:
         ### vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
         self.touch_manager.menu_touch(ect.touch_analysis_vol.value)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], ec.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_graph_detection([ecroi.harmonics_title], ec.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
         self.touch_manager.menu_touch(ect.touch_wave_curr_a.value)
         if self.stop_event.is_set():
             print("Test stopped")
