@@ -828,6 +828,10 @@ class Evaluation:
             all_meas_results.extend(check_results([""], (0, 1, "%"), ocr_res_meas[3:4]))
             all_meas_results.extend(check_results(["U2"], (0, 1, "%"), ocr_res_meas[4:5]))
             all_meas_results.extend(check_results(["U0"], (0, 0.5, "%"), ocr_res_meas[5:6]))
+            
+        elif "Demand Currnet" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A%", "B%", "C%", "Aver%"], (40, 60, "%"), ocr_res_meas[0:5]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (4, 6, "A"), ocr_res_meas[5:9]))
         
         elif not self.condition_met:
             print("Nothing matching word")
@@ -1059,6 +1063,10 @@ class Evaluation:
             all_meas_results.extend(check_results(["U2"], (0, 0, "%"), ocr_res_meas[4:5]))
             all_meas_results.extend(check_results(["U0"], (0, 0, "%"), ocr_res_meas[5:6]))
         
+        elif "Demand Currnet" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A%", "B%", "C%", "Aver%"], (0, 0, "%"), ocr_res_meas[0:5]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (0, 0, "A"), ocr_res_meas[5:9]))
+            
         elif not self.condition_met:
             print("Nothing matching word")
 

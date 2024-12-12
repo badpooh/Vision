@@ -3,9 +3,9 @@ import numpy as np
 from paddleocr import PaddleOCR
 from itertools import chain
 import sys
+from PySide6.QtWidgets import (QApplication, QDialog, QVBoxLayout, QLabel, QPushButton)
 
-
-
+from demo_test.demo_interface import Interface
 from demo_test.demo_config import ConfigSetup
 from demo_test.demo_config import ConfigROI as ecroi
 
@@ -15,6 +15,7 @@ class OCRManager:
         self.n = n
         self.config = ConfigSetup(n=self.n)
         self.rois = self.config.roi_params()
+        self.interface = Interface()
 
     def color_detection(self, image, color_data):
         x, y, w, h, R, G, B = color_data
@@ -41,7 +42,7 @@ class OCRManager:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
 
-        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
+        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False, use_gpu=False)
 
         ocr_results = {}
         for roi_key in roi_keys:
@@ -235,13 +236,13 @@ class OCRManager:
 # 테스트 코드
 if __name__ == "__main__":
     ocr_manager = OCRManager()
+    app = QApplication(sys.argv)
+    ocr_manager.interface.show_interface(130)
 
-    image_path = r"C:\PNT\09.AutoProgram\AutoProgram\results\2024-12-04_13-20-36\2024-12-04_13_25_59_M_H_AN_Phasor.png"
+    image_path = r"C:\Users\Jin\Desktop\Company\Rootech\PNT\AutoProgram\image_test\vol_pow\10.10.26.156_2024-08-09_09_48_45_M_H_CU_Demand.png"
 
-    roi_keys_meas = [ecroi.phasor_title] 
-    #ecroi.phasor_vl_vn, ecroi.phasor_voltage, ecroi.phasor_a_c_vol, ecroi.phasor_current, ecroi.phasor_a_c_cur, 
-                    #  ecroi.phasor_a_meas, ecroi.phasor_b_meas, ecroi.phasor_c_meas, ecroi.phasor_a_meas_cur, ecroi.phasor_b_meas_cur, ecroi.phasor_c_meas_cur, 
-                    #  ecroi.phasor_a_angle, ecroi.phasor_b_angle, ecroi.phasor_c_angle, ecroi.phasor_a_angle_cur, ecroi.phasor_b_angle_cur, ecroi.phasor_c_angle_cur]
+    roi_keys_meas = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca, ecroi.aver, ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
+                         ecroi.curr_per_aver, ecroi.a_meas, ecroi.b_meas, ecroi.c_meas, ecroi.aver_meas] 
 
     results = ocr_manager.ocr_basic(image_path, roi_keys_meas)
     print(f"OCR 결과: {results}")

@@ -12,6 +12,8 @@ from demo_test.demo_config import ConfigImgRef as ecir
 from demo_test.demo_config import ConfigROI as ecroi
 from demo_test.demo_config import ConfigTouch as ect
 
+from demo_test.demo_interface import Interface
+
 
 image_directory = r"\\10.10.20.30\screenshot"
 
@@ -219,7 +221,6 @@ class DemoProcess:
         else :
             print("ocr phasor process error")
 
-
     def ocr_waveform_detection(self, roi_keys, ocr_ref, value, base_save_path, test_mode):
         self.touch_manager.screenshot()
         image_path = self.load_image_file()
@@ -246,6 +247,7 @@ class DemoTest:
     modbus_label = ModbusLabels()
     evaluation = Evaluation()
     sp = DemoProcess()
+    interface = Interface()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
@@ -253,7 +255,6 @@ class DemoTest:
     def __init__(self, stop_event):
         self.stop_event = stop_event
         
-
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
         self.touch_manager.btn_front_meter()
@@ -1468,8 +1469,15 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(ect.touch_main_menu_2.value)
         self.touch_manager.menu_touch(ect.touch_side_menu_3.value)
-        self.sp.ocr_curr_4phase(ec.demand_current.value, base_save_path, test_mode=test_mode)
-        pass
+        self.modbus_label.reset_demand()
+        self.modbus_label.reset_demand_peak()
+        self.modbus_label.demo_test_demand()
+        self.interface.show_interface(130)
+        reset_time = self.modbus_label.reset_max_min()
+        self.sp.ocr_curr_4phase(ec.demand_current.value, reset_time, base_save_path, test_mode=test_mode)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
 
     def demo_test_start(self):
         self.modbus_label.demo_test_setting()

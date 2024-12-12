@@ -139,7 +139,7 @@ class ConfigTextRef(Enum):
     unbal_vol = ["Voltage Unbalance Max", "NEMA", "NEMA", "Negative- Sequence", "Zero- Sequence"]
     symm_curr = ["Curr. Symm. Component Max", "Positive- Sequence", "Negative- Sequence", "Zero- Sequence"]
     unbal_curr = ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"]
-    demand_current = ["Demand Current Peak", "A", "B", "c", "Average"]
+    demand_current = ["Demand Current Peak", "A", "B", "C", "Average"]
     harmonics_text = ["Harmonics", "Voltage", "Current", "[v]", "Text", "A", "B", "C"]
     
 class ConfigModbusMap(Enum):
