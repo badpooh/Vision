@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'dashboard.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -26,14 +26,13 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(1280, 886)
         MainWindow.setMinimumSize(QSize(1280, 720))
         MainWindow.setStyleSheet(u"background-color: rgb(245, 250, 254);")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.icon_only_widget = QWidget(self.centralwidget)
         self.icon_only_widget.setObjectName(u"icon_only_widget")
         self.icon_only_widget.setMinimumSize(QSize(0, 0))
@@ -152,7 +151,81 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.pushButton_6)
 
 
-        self.gridLayout.addWidget(self.icon_only_widget, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.icon_only_widget, 0, 0, 2, 1)
+
+        self.condition_bar = QWidget(self.centralwidget)
+        self.condition_bar.setObjectName(u"condition_bar")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.condition_bar.sizePolicy().hasHeightForWidth())
+        self.condition_bar.setSizePolicy(sizePolicy)
+        self.condition_bar.setMinimumSize(QSize(0, 0))
+        self.horizontalLayout = QHBoxLayout(self.condition_bar)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.btn_setting = QPushButton(self.condition_bar)
+        self.btn_setting.setObjectName(u"btn_setting")
+        self.btn_setting.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        padding: 5 10px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
+        self.btn_setting.setCheckable(False)
+        self.btn_setting.setAutoDefault(False)
+
+        self.horizontalLayout.addWidget(self.btn_setting)
+
+        self.btn_all_connect = QPushButton(self.condition_bar)
+        self.btn_all_connect.setObjectName(u"btn_all_connect")
+        self.btn_all_connect.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        padding: 5 10px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
+        self.btn_all_connect.setCheckable(False)
+
+        self.horizontalLayout.addWidget(self.btn_all_connect)
+
+        self.btn_all_disconnect = QPushButton(self.condition_bar)
+        self.btn_all_disconnect.setObjectName(u"btn_all_disconnect")
+        self.btn_all_disconnect.setStyleSheet(u"QPushButton {\n"
+"        border: 1px solid #8f8f91;\n"
+"        border-radius: 5px;\n"
+"        padding: 5 10px;\n"
+"    }\n"
+"\n"
+"QPushButton:pressed {\n"
+"        background-color: #d0d0d0;\n"
+"    }")
+        self.btn_all_disconnect.setCheckable(False)
+        self.btn_all_disconnect.setChecked(False)
+        self.btn_all_disconnect.setFlat(False)
+
+        self.horizontalLayout.addWidget(self.btn_all_disconnect)
+
+        self.horizontalSpacer = QSpacerItem(868, 19, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.IP = QLabel(self.condition_bar)
+        self.IP.setObjectName(u"IP")
+        self.IP.setMinimumSize(QSize(130, 30))
+        self.IP.setFrameShape(QFrame.Shape.WinPanel)
+        self.IP.setFrameShadow(QFrame.Shadow.Raised)
+        self.IP.setLineWidth(1)
+
+        self.horizontalLayout.addWidget(self.IP)
+
+
+        self.gridLayout.addWidget(self.condition_bar, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
 
         self.icon_name_widget = QWidget(self.centralwidget)
         self.icon_name_widget.setObjectName(u"icon_name_widget")
@@ -264,7 +337,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addWidget(self.pushButton_7)
 
 
-        self.gridLayout.addWidget(self.icon_name_widget, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.icon_name_widget, 0, 1, 2, 1)
 
         self.main_menu = QWidget(self.centralwidget)
         self.main_menu.setObjectName(u"main_menu")
@@ -360,10 +433,10 @@ class Ui_MainWindow(object):
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(200)
         self.tableWidget.horizontalHeader().setHighlightSections(True)
-        self.tableWidget.horizontalHeader().setProperty("showSortIndicator", False)
+        self.tableWidget.horizontalHeader().setProperty(u"showSortIndicator", False)
         self.tableWidget.horizontalHeader().setStretchLastSection(False)
         self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
-        self.tableWidget.verticalHeader().setProperty("showSortIndicator", False)
+        self.tableWidget.verticalHeader().setProperty(u"showSortIndicator", False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
 
         self.gridLayout_2.addWidget(self.tableWidget, 0, 0, 1, 1)
@@ -539,7 +612,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.stackedWidget)
 
 
-        self.gridLayout.addWidget(self.main_menu, 0, 2, 1, 1)
+        self.gridLayout.addWidget(self.main_menu, 1, 2, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -561,7 +634,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked["bool"].connect(self.icon_only_widget.setHidden)
         self.pushButton_3.clicked["bool"].connect(self.icon_name_widget.setVisible)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -576,6 +649,10 @@ class Ui_MainWindow(object):
         self.btn_setup_test_1.setText("")
         self.btn_frame_test_1.setText("")
         self.pushButton_6.setText("")
+        self.btn_setting.setText(QCoreApplication.translate("MainWindow", u"Setting", None))
+        self.btn_all_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
+        self.btn_all_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
+        self.IP.setText("")
         self.label_2.setText("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"ROOTECH", None))
         self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"DASHBOARD", None))
