@@ -14,7 +14,12 @@ from modules.ocr_process import ImgOCR
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
 from demo_test.demo_function import ModbusManager, ModbusLabels, TouchManager, Evaluation
+
+from setup_test.setup_function import SetupModbusManager
 from setup_test.setup_setting import SettingWindow
+from setup_test.setup_setting import SettingIP
+from setup_test.setup_db import IPDataBase
+
 from frame_test.webcam_function import WebCam
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
@@ -43,6 +48,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stop_thread = False
         self.ocr = ImgOCR()
         self.modbus_manager = ModbusManager()
+        self.setup_modbus_manager = SetupModbusManager()
         self.meter_setup_process = DemoProcess()
         self.modbus_labels = ModbusLabels()
         self.touch_manager = TouchManager()
@@ -51,6 +57,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
         self.setting_window = SettingWindow()
+        self.setting_ip = SettingIP()
         
         self.tableWidget.setHorizontalHeaderLabels(["TITLE", "CONTENT", "RESULT"])
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
@@ -58,6 +65,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QHeaderView.Fixed)
         self.tableWidget.setColumnWidth(0, 250)
         self.tableWidget.setColumnWidth(2, 250)
+        
+        self.setting_ip.ipSelected.connect(self.on_ip_selected)
+        self.setting_ip.ipSelected.connect(self.setup_modbus_manager.ip_connect)
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
@@ -79,6 +89,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_demo_mode_ui_test_4.clicked.connect(self.none_ui_test_stop)
         self.pushButton_2.clicked.connect(self.ocr_start)
         self.debug_button.clicked.connect(self.debug_test)
+        self.btn_setting.clicked.connect(self.ip_setting)
+        self.btn_all_connect.clicked.connect(self.all_connect)
+        self.btn_all_disconnect.clicked.connect(self.all_disconnect)
         # self.input_ip.returnPressed.connect(self.input_ip_return_pressed)
 
         self.checkBox_voltage.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
@@ -120,6 +133,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def on_checkbox_changed(self, state, key):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
         print(f"{key.capitalize()} checkbox {'checked' if state == 2 else 'unchecked'}")
+        
+    def on_ip_selected(self, selected_ip):
+        print("대시보드에서 수신한 IP:", selected_ip)
+        self.cur_ip = self.ip_display.setText(selected_ip) 
 
     # def on_current_checkbox_changed(self, state):
     #     if state == 2:
@@ -142,6 +159,15 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def switch_to_frameTestPage(self):
         self.stackedWidget.setCurrentIndex(3)
+        
+    def ip_setting(self):
+        self.setting_ip.open_ip_window()
+        
+    def all_connect(self):
+        self.setup_modbus_manager.tcp_connect()
+        
+    def all_disconnect(self):
+        self.meter_setup_process.modbus_connect()
 
     def setup_connect(self):
         self.meter_setup_process.modbus_connect()

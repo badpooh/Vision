@@ -341,7 +341,7 @@ QPushButton:pressed {
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="IP">
+        <widget class="QLabel" name="ip_display">
          <property name="minimumSize">
           <size>
            <width>130</width>

@@ -215,14 +215,14 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.IP = QLabel(self.condition_bar)
-        self.IP.setObjectName(u"IP")
-        self.IP.setMinimumSize(QSize(130, 30))
-        self.IP.setFrameShape(QFrame.Shape.WinPanel)
-        self.IP.setFrameShadow(QFrame.Shadow.Raised)
-        self.IP.setLineWidth(1)
+        self.ip_display = QLabel(self.condition_bar)
+        self.ip_display.setObjectName(u"ip_display")
+        self.ip_display.setMinimumSize(QSize(130, 30))
+        self.ip_display.setFrameShape(QFrame.Shape.WinPanel)
+        self.ip_display.setFrameShadow(QFrame.Shadow.Raised)
+        self.ip_display.setLineWidth(1)
 
-        self.horizontalLayout.addWidget(self.IP)
+        self.horizontalLayout.addWidget(self.ip_display)
 
 
         self.gridLayout.addWidget(self.condition_bar, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
@@ -652,7 +652,7 @@ class Ui_MainWindow(object):
         self.btn_setting.setText(QCoreApplication.translate("MainWindow", u"Setting", None))
         self.btn_all_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_all_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
-        self.IP.setText("")
+        self.ip_display.setText("")
         self.label_2.setText("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"ROOTECH", None))
         self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"DASHBOARD", None))

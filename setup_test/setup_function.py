@@ -21,24 +21,23 @@ from setup_test.setup_config import ConfigROI as ecr
 config_data = ConfigSetup()
 
 
-class ModbusManager:
+class SetupModbusManager:
 
     SERVER_IP = '10.10.26.159'  # 장치 IP 주소
-    TOUCH_PORT = 5100  # 내부터치
+    TOUCH_PORT = 502  # 내부터치
     SETUP_PORT = 502  # 설정
 
     def __init__(self):
         self.is_connected = False
-        # self.touch_client = None
-        # self.setup_client = None
+        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
+        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        # self.setting_ip.ipSelected.connect(self.ip_connect)
+    
+    def ip_connect(self, selected_ip):
+        self.SERVER_IP = selected_ip
         self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
         self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
         
-    # def set_server_ip(self):
-    #     self.SERVER_IP = ip
-    #     self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
-    #     self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
-
     def tcp_connect(self):
         if self.touch_client.connect() and self.setup_client.connect():
             self.is_connected = True
@@ -73,7 +72,7 @@ class ModbusManager:
 
 class TouchManager:
 
-    mobus_manager = ModbusManager()
+    mobus_manager = SetupModbusManager()
     hex_value = int("A5A5", 16)
 
     def __init__(self):
@@ -93,8 +92,7 @@ class TouchManager:
                 return
             else:
                 attempt += 1
-        print(f"Failed to write value {value} to address {
-              address}. Read back {read_value} instead.")
+        print(f"Failed to write value {value} to address {address}. Read back {read_value} instead.")
 
     def uitest_mode_start(self):
         if self.client_check:
@@ -397,8 +395,7 @@ class ModbusLabels:
         if changes:
             print("Changes detected:")
             for description, (initial, current) in changes.items():
-                print(f"Address {description}: Initial Value = {
-                      initial}, Current Value = {current}")
+                print(f"Address {description}: Initial Value = {initial}, Current Value = {current}")
         else:
             print("No changes detected.")
         return change_count
