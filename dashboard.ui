@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>886</height>
+    <height>720</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -251,11 +251,43 @@ QPushButton:checked{
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>0</height>
+        <height>60</height>
        </size>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="1" column="3">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>868</width>
+           <height>19</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="5">
+        <widget class="QLabel" name="touch_port_display">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::WinPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QPushButton" name="btn_setting">
          <property name="styleSheet">
           <string notr="true">QPushButton {
@@ -279,7 +311,7 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
-       <item>
+       <item row="1" column="1">
         <widget class="QPushButton" name="btn_all_connect">
          <property name="styleSheet">
           <string notr="true">QPushButton {
@@ -300,7 +332,29 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
-       <item>
+       <item row="1" column="4">
+        <widget class="QLabel" name="ip_display">
+         <property name="minimumSize">
+          <size>
+           <width>130</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::WinPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
         <widget class="QPushButton" name="btn_all_disconnect">
          <property name="styleSheet">
           <string notr="true">QPushButton {
@@ -327,24 +381,37 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
+       <item row="0" column="4">
+        <widget class="QLabel" name="label_6">
+         <property name="frameShape">
+          <enum>QFrame::Shape::Box</enum>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>868</width>
-           <height>19</height>
-          </size>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
-        </spacer>
+         <property name="text">
+          <string>TCP/IP</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <widget class="QLabel" name="ip_display">
+       <item row="0" column="5">
+        <widget class="QLabel" name="label_7">
+         <property name="frameShape">
+          <enum>QFrame::Shape::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <property name="text">
+          <string>Touch Port</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="6">
+        <widget class="QLabel" name="label_8">
          <property name="minimumSize">
           <size>
-           <width>130</width>
+           <width>60</width>
            <height>30</height>
           </size>
          </property>
@@ -354,11 +421,34 @@ QPushButton:pressed {
          <property name="frameShadow">
           <enum>QFrame::Shadow::Raised</enum>
          </property>
-         <property name="lineWidth">
-          <number>1</number>
-         </property>
          <property name="text">
           <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="6">
+        <widget class="QLabel" name="label_9">
+         <property name="frameShape">
+          <enum>QFrame::Shape::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <property name="text">
+          <string>Setup Port</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="label_10">
+         <property name="frameShape">
+          <enum>QFrame::Shape::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <property name="text">
+          <string>Ethernet connect menu</string>
          </property>
         </widget>
        </item>
@@ -610,7 +700,7 @@ QPushButton:checked{
                <property name="minimumSize">
                 <size>
                  <width>1020</width>
-                 <height>100</height>
+                 <height>50</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -622,8 +712,8 @@ QPushButton:checked{
                <widget class="QPushButton" name="pushButton_2">
                 <property name="geometry">
                  <rect>
-                  <x>810</x>
-                  <y>50</y>
+                  <x>90</x>
+                  <y>10</y>
                   <width>75</width>
                   <height>24</height>
                  </rect>
@@ -635,91 +725,14 @@ QPushButton:checked{
                <widget class="QPushButton" name="btn_add_tc">
                 <property name="geometry">
                  <rect>
-                  <x>910</x>
-                  <y>50</y>
+                  <x>10</x>
+                  <y>10</y>
                   <width>75</width>
                   <height>24</height>
                  </rect>
                 </property>
                 <property name="text">
                  <string>ADD TC</string>
-                </property>
-               </widget>
-               <widget class="QLineEdit" name="input_ip_2">
-                <property name="geometry">
-                 <rect>
-                  <x>30</x>
-                  <y>40</y>
-                  <width>151</width>
-                  <height>31</height>
-                 </rect>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="inputMask">
-                 <string/>
-                </property>
-                <property name="placeholderText">
-                 <string>Enter IP address</string>
-                </property>
-               </widget>
-               <widget class="QPushButton" name="btn_disconnect_2">
-                <property name="geometry">
-                 <rect>
-                  <x>330</x>
-                  <y>40</y>
-                  <width>91</width>
-                  <height>31</height>
-                 </rect>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        border: 1px solid #8f8f91;
-        border-radius: 5px;
-        background-color: #f0f0f0;
-        padding: 5px;
-    }
-
-QPushButton:pressed {
-        background-color: #d0d0d0;
-    }</string>
-                </property>
-                <property name="text">
-                 <string>Disconnect</string>
-                </property>
-               </widget>
-               <widget class="QPushButton" name="btn_connect_2">
-                <property name="geometry">
-                 <rect>
-                  <x>210</x>
-                  <y>40</y>
-                  <width>101</width>
-                  <height>31</height>
-                 </rect>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        border: 1px solid #8f8f91;
-        border-radius: 5px;
-        background-color: #f0f0f0;
-        padding: 5px;
-    }
-
-QPushButton:pressed {
-        background-color: #d0d0d0;
-    }</string>
-                </property>
-                <property name="text">
-                 <string>Connect</string>
-                </property>
-                <property name="autoDefault">
-                 <bool>false</bool>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
                 </property>
                </widget>
               </widget>

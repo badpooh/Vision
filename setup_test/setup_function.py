@@ -23,8 +23,8 @@ config_data = ConfigSetup()
 
 class SetupModbusManager:
 
-    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
-    TOUCH_PORT = 502  # 내부터치
+    SERVER_IP = ''  # 장치 IP 주소
+    TOUCH_PORT = 5200  # 내부터치
     SETUP_PORT = 502  # 설정
 
     def __init__(self):

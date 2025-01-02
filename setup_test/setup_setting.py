@@ -106,3 +106,19 @@ class SettingIP(QWidget, Ui_setup_ip):
         self.db.delete_ip(selected_ip)
         # 2) 테이블에서도 삭제
         self.ip_list.removeRow(row)
+        
+  def add_touch_port(self):
+    typed_text = self.tp_typing.text()
+    if not typed_text:
+      return
+    row_position = self.tp_list.rowCount()
+    self.tp_list.insertRow(row_position)
+    item = QTableWidgetItem(typed_text)
+    item.setTextAlignment(Qt.AlignCenter)
+    self.tp_list.setItem(row_position, 0, item)
+    self.db.add_ip(typed_text)
+
+    all_ips = self.db.get_all_ips()
+    print("=== 현재 저장된 IP 목록 ===")
+    for ip_row in all_ips:
+        print(ip_row)  # (id, ip) 형태

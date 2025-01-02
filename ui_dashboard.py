@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1280, 886)
+        MainWindow.resize(1280, 720)
         MainWindow.setMinimumSize(QSize(1280, 720))
         MainWindow.setStyleSheet(u"background-color: rgb(245, 250, 254);")
         self.centralwidget = QWidget(MainWindow)
@@ -160,9 +160,21 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.condition_bar.sizePolicy().hasHeightForWidth())
         self.condition_bar.setSizePolicy(sizePolicy)
-        self.condition_bar.setMinimumSize(QSize(0, 0))
-        self.horizontalLayout = QHBoxLayout(self.condition_bar)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.condition_bar.setMinimumSize(QSize(0, 60))
+        self.gridLayout_4 = QGridLayout(self.condition_bar)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.horizontalSpacer = QSpacerItem(868, 19, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_4.addItem(self.horizontalSpacer, 1, 3, 1, 1)
+
+        self.touch_port_display = QLabel(self.condition_bar)
+        self.touch_port_display.setObjectName(u"touch_port_display")
+        self.touch_port_display.setMinimumSize(QSize(60, 30))
+        self.touch_port_display.setFrameShape(QFrame.Shape.WinPanel)
+        self.touch_port_display.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.gridLayout_4.addWidget(self.touch_port_display, 1, 5, 1, 1)
+
         self.btn_setting = QPushButton(self.condition_bar)
         self.btn_setting.setObjectName(u"btn_setting")
         self.btn_setting.setStyleSheet(u"QPushButton {\n"
@@ -177,7 +189,7 @@ class Ui_MainWindow(object):
         self.btn_setting.setCheckable(False)
         self.btn_setting.setAutoDefault(False)
 
-        self.horizontalLayout.addWidget(self.btn_setting)
+        self.gridLayout_4.addWidget(self.btn_setting, 1, 0, 1, 1)
 
         self.btn_all_connect = QPushButton(self.condition_bar)
         self.btn_all_connect.setObjectName(u"btn_all_connect")
@@ -192,7 +204,16 @@ class Ui_MainWindow(object):
 "    }")
         self.btn_all_connect.setCheckable(False)
 
-        self.horizontalLayout.addWidget(self.btn_all_connect)
+        self.gridLayout_4.addWidget(self.btn_all_connect, 1, 1, 1, 1)
+
+        self.ip_display = QLabel(self.condition_bar)
+        self.ip_display.setObjectName(u"ip_display")
+        self.ip_display.setMinimumSize(QSize(130, 30))
+        self.ip_display.setFrameShape(QFrame.Shape.WinPanel)
+        self.ip_display.setFrameShadow(QFrame.Shadow.Raised)
+        self.ip_display.setLineWidth(1)
+
+        self.gridLayout_4.addWidget(self.ip_display, 1, 4, 1, 1)
 
         self.btn_all_disconnect = QPushButton(self.condition_bar)
         self.btn_all_disconnect.setObjectName(u"btn_all_disconnect")
@@ -209,20 +230,43 @@ class Ui_MainWindow(object):
         self.btn_all_disconnect.setChecked(False)
         self.btn_all_disconnect.setFlat(False)
 
-        self.horizontalLayout.addWidget(self.btn_all_disconnect)
+        self.gridLayout_4.addWidget(self.btn_all_disconnect, 1, 2, 1, 1)
 
-        self.horizontalSpacer = QSpacerItem(868, 19, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.label_6 = QLabel(self.condition_bar)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setFrameShape(QFrame.Shape.Box)
+        self.label_6.setFrameShadow(QFrame.Shadow.Raised)
 
-        self.horizontalLayout.addItem(self.horizontalSpacer)
+        self.gridLayout_4.addWidget(self.label_6, 0, 4, 1, 1)
 
-        self.ip_display = QLabel(self.condition_bar)
-        self.ip_display.setObjectName(u"ip_display")
-        self.ip_display.setMinimumSize(QSize(130, 30))
-        self.ip_display.setFrameShape(QFrame.Shape.WinPanel)
-        self.ip_display.setFrameShadow(QFrame.Shadow.Raised)
-        self.ip_display.setLineWidth(1)
+        self.label_7 = QLabel(self.condition_bar)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setFrameShape(QFrame.Shape.Box)
+        self.label_7.setFrameShadow(QFrame.Shadow.Raised)
 
-        self.horizontalLayout.addWidget(self.ip_display)
+        self.gridLayout_4.addWidget(self.label_7, 0, 5, 1, 1)
+
+        self.label_8 = QLabel(self.condition_bar)
+        self.label_8.setObjectName(u"label_8")
+        self.label_8.setMinimumSize(QSize(60, 30))
+        self.label_8.setFrameShape(QFrame.Shape.WinPanel)
+        self.label_8.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.gridLayout_4.addWidget(self.label_8, 1, 6, 1, 1)
+
+        self.label_9 = QLabel(self.condition_bar)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setFrameShape(QFrame.Shape.Box)
+        self.label_9.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.gridLayout_4.addWidget(self.label_9, 0, 6, 1, 1)
+
+        self.label_10 = QLabel(self.condition_bar)
+        self.label_10.setObjectName(u"label_10")
+        self.label_10.setFrameShape(QFrame.Shape.Box)
+        self.label_10.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.gridLayout_4.addWidget(self.label_10, 0, 0, 1, 2)
 
 
         self.gridLayout.addWidget(self.condition_bar, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
@@ -363,48 +407,14 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.menu_widget = QWidget(self.ui_test_page)
         self.menu_widget.setObjectName(u"menu_widget")
-        self.menu_widget.setMinimumSize(QSize(1020, 100))
+        self.menu_widget.setMinimumSize(QSize(1020, 50))
         self.menu_widget.setMaximumSize(QSize(500, 100))
         self.pushButton_2 = QPushButton(self.menu_widget)
         self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(810, 50, 75, 24))
+        self.pushButton_2.setGeometry(QRect(90, 10, 75, 24))
         self.btn_add_tc = QPushButton(self.menu_widget)
         self.btn_add_tc.setObjectName(u"btn_add_tc")
-        self.btn_add_tc.setGeometry(QRect(910, 50, 75, 24))
-        self.input_ip_2 = QLineEdit(self.menu_widget)
-        self.input_ip_2.setObjectName(u"input_ip_2")
-        self.input_ip_2.setGeometry(QRect(30, 40, 151, 31))
-        font2 = QFont()
-        font2.setPointSize(12)
-        self.input_ip_2.setFont(font2)
-        self.btn_disconnect_2 = QPushButton(self.menu_widget)
-        self.btn_disconnect_2.setObjectName(u"btn_disconnect_2")
-        self.btn_disconnect_2.setGeometry(QRect(330, 40, 91, 31))
-        self.btn_disconnect_2.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
-        self.btn_connect_2 = QPushButton(self.menu_widget)
-        self.btn_connect_2.setObjectName(u"btn_connect_2")
-        self.btn_connect_2.setGeometry(QRect(210, 40, 101, 31))
-        self.btn_connect_2.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
-        self.btn_connect_2.setAutoDefault(False)
-        self.btn_connect_2.setFlat(False)
+        self.btn_add_tc.setGeometry(QRect(10, 10, 75, 24))
 
         self.verticalLayout_6.addWidget(self.menu_widget)
 
@@ -481,9 +491,9 @@ class Ui_MainWindow(object):
         self.line = QFrame(self.setup_test_page)
         self.line.setObjectName(u"line")
         self.line.setGeometry(QRect(10, 80, 1151, 16))
-        font3 = QFont()
-        font3.setBold(False)
-        self.line.setFont(font3)
+        font2 = QFont()
+        font2.setBold(False)
+        self.line.setFont(font2)
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
         self.btn_demo_mode_ui_test = QPushButton(self.setup_test_page)
@@ -530,7 +540,9 @@ class Ui_MainWindow(object):
         self.input_ip = QLineEdit(self.setup_test_page)
         self.input_ip.setObjectName(u"input_ip")
         self.input_ip.setGeometry(QRect(10, 30, 151, 31))
-        self.input_ip.setFont(font2)
+        font3 = QFont()
+        font3.setPointSize(12)
+        self.input_ip.setFont(font3)
         self.score = QLabel(self.setup_test_page)
         self.score.setObjectName(u"score")
         self.score.setGeometry(QRect(370, 150, 131, 81))
@@ -649,10 +661,16 @@ class Ui_MainWindow(object):
         self.btn_setup_test_1.setText("")
         self.btn_frame_test_1.setText("")
         self.pushButton_6.setText("")
+        self.touch_port_display.setText("")
         self.btn_setting.setText(QCoreApplication.translate("MainWindow", u"Setting", None))
         self.btn_all_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
-        self.btn_all_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.ip_display.setText("")
+        self.btn_all_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"TCP/IP", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Touch Port", None))
+        self.label_8.setText("")
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Setup Port", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Ethernet connect menu", None))
         self.label_2.setText("")
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"ROOTECH", None))
         self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"DASHBOARD", None))
@@ -664,10 +682,6 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"home", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.btn_add_tc.setText(QCoreApplication.translate("MainWindow", u"ADD TC", None))
-        self.input_ip_2.setInputMask("")
-        self.input_ip_2.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter IP address", None))
-        self.btn_disconnect_2.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
-        self.btn_connect_2.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.btn_demo_mode_ui_test.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
