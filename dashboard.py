@@ -68,6 +68,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         
         self.setting_ip.ipSelected.connect(self.on_ip_selected)
         self.setting_ip.ipSelected.connect(self.setup_modbus_manager.ip_connect)
+        self.setting_ip.tpSelected.connect(self.on_tp_selected)
+        self.setting_ip.tpSelected.connect(self.setup_modbus_manager.tp_update)
+        self.setting_ip.spSelected.connect(self.on_sp_selected)
+        self.setting_ip.spSelected.connect(self.setup_modbus_manager.sp_update)
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
@@ -136,7 +140,15 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         
     def on_ip_selected(self, selected_ip):
         print("대시보드에서 수신한 IP:", selected_ip)
-        self.cur_ip = self.ip_display.setText(selected_ip) 
+        self.cur_ip = self.ip_display.setText(selected_ip)
+    
+    def on_tp_selected(self, selected_tp):
+        print("대시보드에서 수신한 TP:", selected_tp)
+        self.cur_tp = self.tp_display.setText(selected_tp)
+        
+    def on_sp_selected(self, selected_sp):
+        print("대시보드에서 수신한 SP:", selected_sp)
+        self.cur_sp = self.sp_display.setText(selected_sp) 
 
     # def on_current_checkbox_changed(self, state):
     #     if state == 2:

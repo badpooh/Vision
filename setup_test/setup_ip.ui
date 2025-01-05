@@ -197,7 +197,7 @@
      <string>T.P Select</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_tp_de">
+   <widget class="QPushButton" name="btn_tp_del">
     <property name="geometry">
      <rect>
       <x>420</x>
@@ -210,7 +210,7 @@
      <string>T.P Del</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_sp_de">
+   <widget class="QPushButton" name="btn_sp_del">
     <property name="geometry">
      <rect>
       <x>630</x>

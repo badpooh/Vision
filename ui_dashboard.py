@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(1518, 819)
         MainWindow.setMinimumSize(QSize(1280, 720))
         MainWindow.setStyleSheet(u"background-color: rgb(245, 250, 254);")
         self.centralwidget = QWidget(MainWindow)
@@ -167,13 +167,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addItem(self.horizontalSpacer, 1, 3, 1, 1)
 
-        self.touch_port_display = QLabel(self.condition_bar)
-        self.touch_port_display.setObjectName(u"touch_port_display")
-        self.touch_port_display.setMinimumSize(QSize(60, 30))
-        self.touch_port_display.setFrameShape(QFrame.Shape.WinPanel)
-        self.touch_port_display.setFrameShadow(QFrame.Shadow.Raised)
+        self.tp_display = QLabel(self.condition_bar)
+        self.tp_display.setObjectName(u"tp_display")
+        self.tp_display.setMinimumSize(QSize(60, 30))
+        self.tp_display.setFrameShape(QFrame.Shape.WinPanel)
+        self.tp_display.setFrameShadow(QFrame.Shadow.Raised)
 
-        self.gridLayout_4.addWidget(self.touch_port_display, 1, 5, 1, 1)
+        self.gridLayout_4.addWidget(self.tp_display, 1, 5, 1, 1)
 
         self.btn_setting = QPushButton(self.condition_bar)
         self.btn_setting.setObjectName(u"btn_setting")
@@ -246,13 +246,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.label_7, 0, 5, 1, 1)
 
-        self.label_8 = QLabel(self.condition_bar)
-        self.label_8.setObjectName(u"label_8")
-        self.label_8.setMinimumSize(QSize(60, 30))
-        self.label_8.setFrameShape(QFrame.Shape.WinPanel)
-        self.label_8.setFrameShadow(QFrame.Shadow.Raised)
+        self.sp_display = QLabel(self.condition_bar)
+        self.sp_display.setObjectName(u"sp_display")
+        self.sp_display.setMinimumSize(QSize(60, 30))
+        self.sp_display.setFrameShape(QFrame.Shape.WinPanel)
+        self.sp_display.setFrameShadow(QFrame.Shadow.Raised)
 
-        self.gridLayout_4.addWidget(self.label_8, 1, 6, 1, 1)
+        self.gridLayout_4.addWidget(self.sp_display, 1, 6, 1, 1)
 
         self.label_9 = QLabel(self.condition_bar)
         self.label_9.setObjectName(u"label_9")
@@ -661,14 +661,14 @@ class Ui_MainWindow(object):
         self.btn_setup_test_1.setText("")
         self.btn_frame_test_1.setText("")
         self.pushButton_6.setText("")
-        self.touch_port_display.setText("")
+        self.tp_display.setText("")
         self.btn_setting.setText(QCoreApplication.translate("MainWindow", u"Setting", None))
         self.btn_all_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.ip_display.setText("")
         self.btn_all_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"TCP/IP", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Touch Port", None))
-        self.label_8.setText("")
+        self.sp_display.setText("")
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"Setup Port", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Ethernet connect menu", None))
         self.label_2.setText("")

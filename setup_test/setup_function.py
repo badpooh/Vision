@@ -37,6 +37,12 @@ class SetupModbusManager:
         self.SERVER_IP = selected_ip
         self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
         self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+    
+    def tp_update(self, selected_tp):
+        self.TOUCH_PORT = selected_tp
+    
+    def sp_update(self, selected_sp):
+        self.SETUP_PORT = selected_sp
         
     def tcp_connect(self):
         if self.touch_client.connect() and self.setup_client.connect():
