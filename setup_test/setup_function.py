@@ -24,8 +24,8 @@ config_data = ConfigSetup()
 class SetupModbusManager:
 
     SERVER_IP = ''  # 장치 IP 주소
-    TOUCH_PORT = 5200  # 내부터치
-    SETUP_PORT = 502  # 설정
+    TOUCH_PORT = ''  # 내부터치
+    SETUP_PORT = ''  # 설정
 
     def __init__(self):
         self.is_connected = False
@@ -35,8 +35,15 @@ class SetupModbusManager:
     
     def ip_connect(self, selected_ip):
         self.SERVER_IP = selected_ip
-        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
-        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        if self.TOUCH_PORT:
+            self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
+        else:
+            print("TOUCH_PORT is None")
+        if self.SETUP_PORT:
+            self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+        else:
+            print("SETUP_PORT is None")
+            
     
     def tp_update(self, selected_tp):
         self.TOUCH_PORT = selected_tp
@@ -45,14 +52,17 @@ class SetupModbusManager:
         self.SETUP_PORT = selected_sp
         
     def tcp_connect(self):
-        if self.touch_client.connect() and self.setup_client.connect():
-            self.is_connected = True
-            print("is connected")
+        if self.touch_client and self.setup_client:
+            if self.touch_client.connect() and self.setup_client.connect():
+                self.is_connected = True
+                print("is connected")
+            else:
+                if not self.touch_client.connect():
+                    print("Failed to connect touch client")
+                if not self.setup_client.connect():
+                    print("Failed to connect setup client")
         else:
-            if not self.touch_client.connect():
-                print("Failed to connect touch client")
-            if not self.setup_client.connect():
-                print("Failed to connect setup client")
+          print("Cannot connect because one of the clients is None.")
 
     def check_connection(self):
         while self.is_connected:

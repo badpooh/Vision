@@ -179,7 +179,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.setup_modbus_manager.tcp_connect()
         
     def all_disconnect(self):
-        self.meter_setup_process.modbus_connect()
+        self.setup_modbus_manager.tcp_disconnect()
 
     def setup_connect(self):
         self.meter_setup_process.modbus_connect()

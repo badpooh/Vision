@@ -84,7 +84,7 @@ class SettingIP(QWidget, Ui_setup_ip):
 
 			elif row_type == 'sp':
 				sp_row_position = self.sp_list.rowCount()
-				self.tp_list.insertRow(sp_row_position)
+				self.sp_list.insertRow(sp_row_position)
 
 				sp_item = QTableWidgetItem(row_value)
 				sp_item.setTextAlignment(Qt.AlignCenter)
@@ -195,7 +195,7 @@ class SettingIP(QWidget, Ui_setup_ip):
 		item = self.sp_list.item(row, 0)
 		if item:
 			selected_sp = item.text()
-			print(f"선택된 TP: {selected_sp}")
+			print(f"선택된 SP: {selected_sp}")
 			self.spSelected.emit(selected_sp)
 	
 	def del_setup_port(self):
