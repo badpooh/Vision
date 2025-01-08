@@ -25,12 +25,12 @@ from demo_test.demo_config import ConfigTouch as ect
 
 config_data = ConfigSetup()
 
-SERVER_IP = '10.10.26.156'
+SERVER_IP = '10.10.26.159'
 
 
 class ModbusManager:
 
-    # SERVER_IP = '10.10.26.156'  # 장치 IP 주소
+    SERVER_IP = '10.10.26.159'  # 장치 IP 주소
     TOUCH_PORT = 5100  # 내부터치
     SETUP_PORT = 502  # 설정
 
@@ -505,7 +505,6 @@ class ModbusLabels:
             print(self.response.isError())
 
     def none_test_setting(self):
-        self.touch_manager.uitest_mode_start()
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]

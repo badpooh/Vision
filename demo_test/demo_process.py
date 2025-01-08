@@ -1474,7 +1474,7 @@ class DemoTest:
         self.modbus_label.demo_test_demand()
         self.interface.show_interface(130)
         reset_time = self.modbus_label.reset_max_min()
-        self.sp.ocr_curr_4phase(ec.demand_current.value, reset_time, base_save_path, test_mode=test_mode)
+        self.sp.ocr_curr_4phase_time(ec.demand_current.value, reset_time, base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
             return
@@ -1583,7 +1583,6 @@ class DemoTest:
         # self.demo_mea_anal_currunbal(base_save_path, test_mode)
 
     def demo_test_demand(self, base_save_path, test_mode):
-
         self.demo_meter_demand_curr(base_save_path, test_mode)
         if self.stop_event.is_set():
             print("Test stopped")

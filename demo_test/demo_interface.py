@@ -20,9 +20,9 @@ class InterfaceUI(QDialog):
       self.time_label = QLabel(f"남은 시간: {self.remaining_time}초", self)
       layout.addWidget(self.time_label)
       
-      # close_button = QPushButton("지금 닫기", self)
-      # close_button.clicked.connect(self.reject)
-      # layout.addWidget(close_button)
+      close_button = QPushButton("지금 닫기", self)
+      close_button.clicked.connect(self.reject)
+      layout.addWidget(close_button)
       
       self.timer = QTimer(self)
       self.timer.timeout.connect(self.update_countdown)
