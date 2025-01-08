@@ -26,13 +26,137 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1518, 819)
+        MainWindow.resize(1280, 720)
         MainWindow.setMinimumSize(QSize(1280, 720))
         MainWindow.setStyleSheet(u"background-color: rgb(245, 250, 254);")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
+        self.icon_name_widget = QWidget(self.centralwidget)
+        self.icon_name_widget.setObjectName(u"icon_name_widget")
+        self.icon_name_widget.setEnabled(True)
+        self.icon_name_widget.setMinimumSize(QSize(0, 0))
+        self.icon_name_widget.setStyleSheet(u"QWidget{\n"
+"	background-color: rgb(175, 221, 236);\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"	color:black;\n"
+"	text-align:left;\n"
+"	height:30px;\n"
+"	border:none;\n"
+"	padding-left:10px;\n"
+"	border-top-left-radius:10px;\n"
+"	border-bottom-left-radius:10px;\n"
+"	border-top-right-radius:10px;\n"
+"	border-bottom-right-radius:10px;\n"
+"}\n"
+"\n"
+"QPushButton:checked{\n"
+"	background-color:#F5FAFE;\n"
+"	font-weight:bold;\n"
+"}")
+        self.verticalLayout_4 = QVBoxLayout(self.icon_name_widget)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_4.setContentsMargins(-1, -1, 5, -1)
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.label_2 = QLabel(self.icon_name_widget)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setMinimumSize(QSize(40, 40))
+        self.label_2.setMaximumSize(QSize(40, 40))
+        self.label_2.setPixmap(QPixmap(u":/images/Rootech.png"))
+        self.label_2.setScaledContents(True)
+
+        self.horizontalLayout_3.addWidget(self.label_2)
+
+        self.label_3 = QLabel(self.icon_name_widget)
+        self.label_3.setObjectName(u"label_3")
+        font = QFont()
+        font.setFamilies([u"Segoe UI"])
+        font.setPointSize(12)
+        font.setBold(True)
+        self.label_3.setFont(font)
+
+        self.horizontalLayout_3.addWidget(self.label_3)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout_3)
+
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setSpacing(15)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(-1, 15, -1, -1)
+        self.pushButton_12 = QPushButton(self.icon_name_widget)
+        self.pushButton_12.setObjectName(u"pushButton_12")
+        icon = QIcon()
+        icon.addFile(u":/images/dashboard.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_12.setIcon(icon)
+        self.pushButton_12.setCheckable(True)
+        self.pushButton_12.setAutoExclusive(True)
+
+        self.verticalLayout_2.addWidget(self.pushButton_12)
+
+        self.btn_home_2 = QPushButton(self.icon_name_widget)
+        self.btn_home_2.setObjectName(u"btn_home_2")
+        icon1 = QIcon()
+        icon1.addFile(u":/images/home.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_home_2.setIcon(icon1)
+        self.btn_home_2.setCheckable(True)
+        self.btn_home_2.setAutoExclusive(True)
+
+        self.verticalLayout_2.addWidget(self.btn_home_2)
+
+        self.btn_ui_test_2 = QPushButton(self.icon_name_widget)
+        self.btn_ui_test_2.setObjectName(u"btn_ui_test_2")
+        icon2 = QIcon()
+        icon2.addFile(u":/images/brand_family.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_ui_test_2.setIcon(icon2)
+        self.btn_ui_test_2.setCheckable(True)
+        self.btn_ui_test_2.setAutoExclusive(True)
+
+        self.verticalLayout_2.addWidget(self.btn_ui_test_2)
+
+        self.btn_demo_test = QPushButton(self.icon_name_widget)
+        self.btn_demo_test.setObjectName(u"btn_demo_test")
+        icon3 = QIcon()
+        icon3.addFile(u":/images/computer.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_demo_test.setIcon(icon3)
+        self.btn_demo_test.setCheckable(True)
+        self.btn_demo_test.setAutoExclusive(True)
+
+        self.verticalLayout_2.addWidget(self.btn_demo_test)
+
+        self.btn_frame_test_2 = QPushButton(self.icon_name_widget)
+        self.btn_frame_test_2.setObjectName(u"btn_frame_test_2")
+        icon4 = QIcon()
+        icon4.addFile(u":/images/videocam.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_frame_test_2.setIcon(icon4)
+        self.btn_frame_test_2.setCheckable(True)
+        self.btn_frame_test_2.setAutoExclusive(True)
+
+        self.verticalLayout_2.addWidget(self.btn_frame_test_2)
+
+
+        self.verticalLayout_4.addLayout(self.verticalLayout_2)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 383, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_2)
+
+        self.pushButton_7 = QPushButton(self.icon_name_widget)
+        self.pushButton_7.setObjectName(u"pushButton_7")
+        icon5 = QIcon()
+        icon5.addFile(u":/images/logout.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_7.setIcon(icon5)
+        self.pushButton_7.setCheckable(True)
+
+        self.verticalLayout_4.addWidget(self.pushButton_7)
+
+
+        self.gridLayout.addWidget(self.icon_name_widget, 0, 1, 2, 1)
+
         self.icon_only_widget = QWidget(self.centralwidget)
         self.icon_only_widget.setObjectName(u"icon_only_widget")
         self.icon_only_widget.setMinimumSize(QSize(0, 0))
@@ -86,8 +210,6 @@ class Ui_MainWindow(object):
         self.verticalLayout.setContentsMargins(-1, 15, -1, -1)
         self.pushButton_3 = QPushButton(self.icon_only_widget)
         self.pushButton_3.setObjectName(u"pushButton_3")
-        icon = QIcon()
-        icon.addFile(u":/images/dashboard.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.pushButton_3.setIcon(icon)
         self.pushButton_3.setCheckable(True)
         self.pushButton_3.setAutoExclusive(True)
@@ -96,8 +218,6 @@ class Ui_MainWindow(object):
 
         self.btn_home_1 = QPushButton(self.icon_only_widget)
         self.btn_home_1.setObjectName(u"btn_home_1")
-        icon1 = QIcon()
-        icon1.addFile(u":/images/home.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_home_1.setIcon(icon1)
         self.btn_home_1.setCheckable(True)
         self.btn_home_1.setAutoExclusive(True)
@@ -106,8 +226,6 @@ class Ui_MainWindow(object):
 
         self.btn_ui_test_1 = QPushButton(self.icon_only_widget)
         self.btn_ui_test_1.setObjectName(u"btn_ui_test_1")
-        icon2 = QIcon()
-        icon2.addFile(u":/images/brand_family.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_ui_test_1.setIcon(icon2)
         self.btn_ui_test_1.setCheckable(True)
         self.btn_ui_test_1.setAutoExclusive(True)
@@ -116,8 +234,6 @@ class Ui_MainWindow(object):
 
         self.btn_setup_test_1 = QPushButton(self.icon_only_widget)
         self.btn_setup_test_1.setObjectName(u"btn_setup_test_1")
-        icon3 = QIcon()
-        icon3.addFile(u":/images/computer.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_setup_test_1.setIcon(icon3)
         self.btn_setup_test_1.setCheckable(True)
         self.btn_setup_test_1.setAutoExclusive(True)
@@ -126,8 +242,6 @@ class Ui_MainWindow(object):
 
         self.btn_frame_test_1 = QPushButton(self.icon_only_widget)
         self.btn_frame_test_1.setObjectName(u"btn_frame_test_1")
-        icon4 = QIcon()
-        icon4.addFile(u":/images/videocam.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_frame_test_1.setIcon(icon4)
         self.btn_frame_test_1.setCheckable(True)
         self.btn_frame_test_1.setAutoExclusive(True)
@@ -143,8 +257,6 @@ class Ui_MainWindow(object):
 
         self.pushButton_6 = QPushButton(self.icon_only_widget)
         self.pushButton_6.setObjectName(u"pushButton_6")
-        icon5 = QIcon()
-        icon5.addFile(u":/images/logout.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.pushButton_6.setIcon(icon5)
         self.pushButton_6.setCheckable(True)
 
@@ -271,118 +383,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.condition_bar, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
 
-        self.icon_name_widget = QWidget(self.centralwidget)
-        self.icon_name_widget.setObjectName(u"icon_name_widget")
-        self.icon_name_widget.setEnabled(True)
-        self.icon_name_widget.setMinimumSize(QSize(0, 0))
-        self.icon_name_widget.setStyleSheet(u"QWidget{\n"
-"	background-color: rgb(175, 221, 236);\n"
-"}\n"
-"\n"
-"QPushButton {\n"
-"	color:black;\n"
-"	text-align:left;\n"
-"	height:30px;\n"
-"	border:none;\n"
-"	padding-left:10px;\n"
-"	border-top-left-radius:10px;\n"
-"	border-bottom-left-radius:10px;\n"
-"	border-top-right-radius:10px;\n"
-"	border-bottom-right-radius:10px;\n"
-"}\n"
-"\n"
-"QPushButton:checked{\n"
-"	background-color:#F5FAFE;\n"
-"	font-weight:bold;\n"
-"}")
-        self.verticalLayout_4 = QVBoxLayout(self.icon_name_widget)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(-1, -1, 5, -1)
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.label_2 = QLabel(self.icon_name_widget)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setMinimumSize(QSize(40, 40))
-        self.label_2.setMaximumSize(QSize(40, 40))
-        self.label_2.setPixmap(QPixmap(u":/images/Rootech.png"))
-        self.label_2.setScaledContents(True)
-
-        self.horizontalLayout_3.addWidget(self.label_2)
-
-        self.label_3 = QLabel(self.icon_name_widget)
-        self.label_3.setObjectName(u"label_3")
-        font = QFont()
-        font.setFamilies([u"Segoe UI"])
-        font.setPointSize(12)
-        font.setBold(True)
-        self.label_3.setFont(font)
-
-        self.horizontalLayout_3.addWidget(self.label_3)
-
-
-        self.verticalLayout_4.addLayout(self.horizontalLayout_3)
-
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setSpacing(15)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(-1, 15, -1, -1)
-        self.pushButton_12 = QPushButton(self.icon_name_widget)
-        self.pushButton_12.setObjectName(u"pushButton_12")
-        self.pushButton_12.setIcon(icon)
-        self.pushButton_12.setCheckable(True)
-        self.pushButton_12.setAutoExclusive(True)
-
-        self.verticalLayout_2.addWidget(self.pushButton_12)
-
-        self.btn_home_2 = QPushButton(self.icon_name_widget)
-        self.btn_home_2.setObjectName(u"btn_home_2")
-        self.btn_home_2.setIcon(icon1)
-        self.btn_home_2.setCheckable(True)
-        self.btn_home_2.setAutoExclusive(True)
-
-        self.verticalLayout_2.addWidget(self.btn_home_2)
-
-        self.btn_ui_test_2 = QPushButton(self.icon_name_widget)
-        self.btn_ui_test_2.setObjectName(u"btn_ui_test_2")
-        self.btn_ui_test_2.setIcon(icon2)
-        self.btn_ui_test_2.setCheckable(True)
-        self.btn_ui_test_2.setAutoExclusive(True)
-
-        self.verticalLayout_2.addWidget(self.btn_ui_test_2)
-
-        self.btn_demo_test = QPushButton(self.icon_name_widget)
-        self.btn_demo_test.setObjectName(u"btn_demo_test")
-        self.btn_demo_test.setIcon(icon3)
-        self.btn_demo_test.setCheckable(True)
-        self.btn_demo_test.setAutoExclusive(True)
-
-        self.verticalLayout_2.addWidget(self.btn_demo_test)
-
-        self.btn_frame_test_2 = QPushButton(self.icon_name_widget)
-        self.btn_frame_test_2.setObjectName(u"btn_frame_test_2")
-        self.btn_frame_test_2.setIcon(icon4)
-        self.btn_frame_test_2.setCheckable(True)
-        self.btn_frame_test_2.setAutoExclusive(True)
-
-        self.verticalLayout_2.addWidget(self.btn_frame_test_2)
-
-
-        self.verticalLayout_4.addLayout(self.verticalLayout_2)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 383, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_4.addItem(self.verticalSpacer_2)
-
-        self.pushButton_7 = QPushButton(self.icon_name_widget)
-        self.pushButton_7.setObjectName(u"pushButton_7")
-        self.pushButton_7.setIcon(icon5)
-        self.pushButton_7.setCheckable(True)
-
-        self.verticalLayout_4.addWidget(self.pushButton_7)
-
-
-        self.gridLayout.addWidget(self.icon_name_widget, 0, 1, 2, 1)
-
         self.main_menu = QWidget(self.centralwidget)
         self.main_menu.setObjectName(u"main_menu")
         self.verticalLayout_5 = QVBoxLayout(self.main_menu)
@@ -407,22 +407,37 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.menu_widget = QWidget(self.ui_test_page)
         self.menu_widget.setObjectName(u"menu_widget")
-        self.menu_widget.setMinimumSize(QSize(1020, 50))
-        self.menu_widget.setMaximumSize(QSize(500, 100))
-        self.pushButton_2 = QPushButton(self.menu_widget)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(90, 10, 75, 24))
+        self.menu_widget.setMinimumSize(QSize(0, 50))
+        self.menu_widget.setMaximumSize(QSize(16777215, 16777215))
+        self.horizontalLayout_4 = QHBoxLayout(self.menu_widget)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.btn_test_start = QPushButton(self.menu_widget)
+        self.btn_test_start.setObjectName(u"btn_test_start")
+
+        self.horizontalLayout_4.addWidget(self.btn_test_start)
+
+        self.btn_test_stop = QPushButton(self.menu_widget)
+        self.btn_test_stop.setObjectName(u"btn_test_stop")
+
+        self.horizontalLayout_4.addWidget(self.btn_test_stop)
+
+        self.horizontalSpacer_2 = QSpacerItem(725, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+
         self.btn_add_tc = QPushButton(self.menu_widget)
         self.btn_add_tc.setObjectName(u"btn_add_tc")
-        self.btn_add_tc.setGeometry(QRect(10, 10, 75, 24))
+
+        self.horizontalLayout_4.addWidget(self.btn_add_tc)
+
 
         self.verticalLayout_6.addWidget(self.menu_widget)
 
         self.tc_widget = QWidget(self.ui_test_page)
         self.tc_widget.setObjectName(u"tc_widget")
         self.tc_widget.setMinimumSize(QSize(0, 500))
-        self.gridLayout_2 = QGridLayout(self.tc_widget)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.horizontalLayout = QHBoxLayout(self.tc_widget)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.tableWidget = QTableWidget(self.tc_widget)
         if (self.tableWidget.columnCount() < 3):
             self.tableWidget.setColumnCount(3)
@@ -449,7 +464,7 @@ class Ui_MainWindow(object):
         self.tableWidget.verticalHeader().setProperty(u"showSortIndicator", False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
 
-        self.gridLayout_2.addWidget(self.tableWidget, 0, 0, 1, 1)
+        self.horizontalLayout.addWidget(self.tableWidget)
 
 
         self.verticalLayout_6.addWidget(self.tc_widget)
@@ -654,6 +669,14 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.label_2.setText("")
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"ROOTECH", None))
+        self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"DASHBOARD", None))
+        self.btn_home_2.setText(QCoreApplication.translate("MainWindow", u"HOME", None))
+        self.btn_ui_test_2.setText(QCoreApplication.translate("MainWindow", u"UI TEST", None))
+        self.btn_demo_test.setText(QCoreApplication.translate("MainWindow", u"UI TEST (Demo Ver)", None))
+        self.btn_frame_test_2.setText(QCoreApplication.translate("MainWindow", u"FRAME TEST", None))
+        self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"Sign Out", None))
         self.label.setText("")
         self.pushButton_3.setText("")
         self.btn_home_1.setText("")
@@ -671,16 +694,9 @@ class Ui_MainWindow(object):
         self.sp_display.setText("")
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"Setup Port", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Ethernet connect menu", None))
-        self.label_2.setText("")
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"ROOTECH", None))
-        self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"DASHBOARD", None))
-        self.btn_home_2.setText(QCoreApplication.translate("MainWindow", u"HOME", None))
-        self.btn_ui_test_2.setText(QCoreApplication.translate("MainWindow", u"UI TEST", None))
-        self.btn_demo_test.setText(QCoreApplication.translate("MainWindow", u"UI TEST (Demo Ver)", None))
-        self.btn_frame_test_2.setText(QCoreApplication.translate("MainWindow", u"FRAME TEST", None))
-        self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"Sign Out", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"home", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.btn_test_start.setText(QCoreApplication.translate("MainWindow", u"START", None))
+        self.btn_test_stop.setText(QCoreApplication.translate("MainWindow", u"STOP", None))
         self.btn_add_tc.setText(QCoreApplication.translate("MainWindow", u"ADD TC", None))
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))

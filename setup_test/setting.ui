@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>838</width>
+    <height>769</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -36,8 +36,8 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>161</width>
-         <height>531</height>
+         <width>700</width>
+         <height>500</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -46,12 +46,12 @@
 }
 </string>
        </property>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="menu_voltage">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>20</y>
-          <width>111</width>
+          <width>130</width>
           <height>31</height>
          </rect>
         </property>
@@ -68,66 +68,66 @@
          <bool>false</bool>
         </property>
         <property name="default">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="flat">
          <bool>false</bool>
         </property>
        </widget>
-       <widget class="QWidget" name="widget_vol_checkBox" native="true">
+       <widget class="QWidget" name="vol_check_box" native="true">
         <property name="geometry">
          <rect>
-          <x>10</x>
+          <x>20</x>
           <y>50</y>
-          <width>114</width>
+          <width>110</width>
           <height>194</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QCheckBox" name="checkBox_0">
+          <widget class="QCheckBox" name="vol_all">
            <property name="text">
             <string>ALL</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_1">
+          <widget class="QCheckBox" name="vol_rms">
            <property name="text">
             <string>RMS</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_2">
+          <widget class="QCheckBox" name="vol_fund">
            <property name="text">
             <string>Fundamental</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_3">
+          <widget class="QCheckBox" name="vol_thd">
            <property name="text">
             <string>THD %</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_4">
+          <widget class="QCheckBox" name="vol_freq">
            <property name="text">
             <string>Frequency</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_5">
+          <widget class="QCheckBox" name="vol_residual">
            <property name="text">
             <string>Residual</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_6">
+          <widget class="QCheckBox" name="vol_sliding">
            <property name="text">
             <string>Sliding Ref.</string>
            </property>
@@ -135,26 +135,294 @@
          </item>
         </layout>
        </widget>
-      </widget>
-      <widget class="QWidget" name="widget_3" native="true">
-       <property name="geometry">
-        <rect>
-         <x>240</x>
-         <y>30</y>
-         <width>171</width>
-         <height>521</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QWidget" name="widget_4" native="true">
-       <property name="geometry">
-        <rect>
-         <x>490</x>
-         <y>40</y>
-         <width>181</width>
-         <height>501</height>
-        </rect>
-       </property>
+       <widget class="QPushButton" name="menu_current">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>20</y>
+          <width>130</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CURRENT ∨</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QWidget" name="curr_check_box" native="true">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>50</y>
+          <width>114</width>
+          <height>246</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QCheckBox" name="curr_all">
+           <property name="text">
+            <string>ALL</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_rms">
+           <property name="text">
+            <string>RMS</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_fund">
+           <property name="text">
+            <string>Fundamental</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_demand">
+           <property name="text">
+            <string>Demand</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_thd">
+           <property name="text">
+            <string>THD %</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_tdd">
+           <property name="text">
+            <string>TDD %</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_crest_factor">
+           <property name="text">
+            <string>Crest Factor</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_k_factor">
+           <property name="text">
+            <string>K-Factor</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="curr_residual">
+           <property name="text">
+            <string>Residual</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="menu_power">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>20</y>
+          <width>130</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>POWER ∨</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QWidget" name="pow_check_box" native="true">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>50</y>
+          <width>114</width>
+          <height>246</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QCheckBox" name="pow_all">
+           <property name="text">
+            <string>ALL</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="pow_p">
+           <property name="text">
+            <string>Active(P)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="pow_q">
+           <property name="text">
+            <string>Reactive(Q)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="pow_s">
+           <property name="text">
+            <string>Apparent(S)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="pow_pf">
+           <property name="text">
+            <string>PF</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="pow_demand">
+           <property name="text">
+            <string>Demand</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="pow_energy">
+           <property name="text">
+            <string>Energy</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="menu_current_3">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>20</y>
+          <width>130</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>ANALYSIS ∨</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QWidget" name="anal_check_box" native="true">
+        <property name="geometry">
+         <rect>
+          <x>410</x>
+          <y>50</y>
+          <width>114</width>
+          <height>246</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QCheckBox" name="anal_all">
+           <property name="text">
+            <string>ALL</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="anal_phasor">
+           <property name="text">
+            <string>Phasor</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="anal_harmonics">
+           <property name="text">
+            <string>Harmonics</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="anal_waveform">
+           <property name="text">
+            <string>Waveform</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="anal_vol_symm">
+           <property name="text">
+            <string>Volt.Symm.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="anal_vol_unbal">
+           <property name="text">
+            <string>Volt.Unbal.%</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="anal_curr_symm">
+           <property name="text">
+            <string>Curr.Symm.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="anal_curr_unbal">
+           <property name="text">
+            <string>Curr.Unbal.%</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -164,9 +432,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton</sender>
+   <sender>menu_voltage</sender>
    <signal>toggled(bool)</signal>
-   <receiver>widget_vol_checkBox</receiver>
+   <receiver>vol_check_box</receiver>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -180,4 +448,21 @@
    </hints>
   </connection>
  </connections>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>5</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>5</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
 </ui>

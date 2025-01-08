@@ -91,7 +91,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_demo_mode_ui_test_2.clicked.connect(self.demo_ui_test_stop)
         self.btn_demo_mode_ui_test_3.clicked.connect(self.none_ui_test_start)
         self.btn_demo_mode_ui_test_4.clicked.connect(self.none_ui_test_stop)
-        self.pushButton_2.clicked.connect(self.ocr_start)
+        self.btn_test_start.clicked.connect(self.test_start)
         self.debug_button.clicked.connect(self.debug_test)
         self.btn_setting.clicked.connect(self.ip_setting)
         self.btn_all_connect.clicked.connect(self.all_connect)
@@ -187,12 +187,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def setup_disconnect(self):
         self.modbus_manager.tcp_disconnect()
 
-    def setup_start(self):
-        self.meter_setup_process.setup_test001()
-
-    def setup_read(self):
-        self.meter_setup_process.read_setup_mapping()
-
     def select_webcam(self):
         self.webcam = WebCam()
 
@@ -201,9 +195,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def stop_webcam(self):
         self.webcam.stop_streaming()
-
-    def fixed_text_measurement(self):
-        self.meter_setup_process.static_text_measurement()
 
     def stop_callback(self):
         return self.stop_thread
@@ -307,50 +298,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.webcam.adjust_focus()
         self.lineEdit.clear()
 
-    def callback_ocr_list(self, tc_box_index, checkBox_contents):
-        print(f"Box {checkBox_contents} index: {tc_box_index}")
-        label_text = ", ".join(
-            checkBox_contents) if checkBox_contents else "데이터 없음"
+    def test_start(self):
+        pass
 
-        # box_list에서 올바른 라벨을 찾습니다.
-        for _, label, index, _, _ in self.box_list:
-            if index == tc_box_index:
-                label.setText(label_text)  # QLabel의 setText 메서드 호출
-                break
-
-    def callback_ocr_load(self, tc_box_index, image_files):
-        self.saved_image_files = image_files
-        self.images_loaded = bool(self.saved_image_files)
-
-        for _, label, index, label_load, _ in self.box_list:
-            if index == tc_box_index:
-                label_load.setText(
-                    "OCR OK" if self.images_loaded else "OCR NO")
-                break
-
-    def ocr_start(self):
-        if self.saved_image_files:
-            # print(self.saved_image_files)
-            self.ocr_results = self.ocr.img_ocr(self.saved_image_files)
-        # print(self.ocr_results)
-            self.ocr_judge(self.tc_box_index)
-
-    def ocr_judge(self, tc_box_index):
-        if 510 < float(self.ocr_results[0]) < 520:
-            self.judge = True
-            print("pass")
-        else:
-            self.judge = False
-            print("fail")
-
-        print("box_list:", self.box_list)
-        print("tc_box_index:", tc_box_index)
-        for _, label, index, _, label_judge in self.box_list:
-            print("Looping through box_list:", index)
-            if index + 1 == tc_box_index:
-                label_judge.setText("PASS" if self.judge else "FAIL")
-            print("Found matching index:", label_judge)
-            break
 
     def add_box_tc(self):
         row_position = self.tableWidget.rowCount()

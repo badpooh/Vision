@@ -13,7 +13,7 @@ class SettingWindow(QWidget, Ui_Form):
 		super().__init__()
 		self.setupUi(self)
 		self.setObjectName("My Setting")
-		self.widget_vol_checkBox.setHidden(True)
+		self.vol_check_box.setHidden(True)
 	
 	def open_new_window(self, row):
 		instance_qwidget = SettingWindow()
