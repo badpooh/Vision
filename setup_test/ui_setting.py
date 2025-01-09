@@ -190,13 +190,13 @@ class Ui_Form(object):
 
         self.verticalLayout_3.addWidget(self.pow_energy)
 
-        self.menu_current_3 = QPushButton(self.widget_2)
-        self.menu_current_3.setObjectName(u"menu_current_3")
-        self.menu_current_3.setGeometry(QRect(400, 20, 130, 31))
-        self.menu_current_3.setCheckable(True)
-        self.menu_current_3.setChecked(False)
-        self.menu_current_3.setAutoDefault(False)
-        self.menu_current_3.setFlat(False)
+        self.menu_analysis = QPushButton(self.widget_2)
+        self.menu_analysis.setObjectName(u"menu_analysis")
+        self.menu_analysis.setGeometry(QRect(400, 20, 130, 31))
+        self.menu_analysis.setCheckable(True)
+        self.menu_analysis.setChecked(False)
+        self.menu_analysis.setAutoDefault(False)
+        self.menu_analysis.setFlat(False)
         self.anal_check_box = QWidget(self.widget_2)
         self.anal_check_box.setObjectName(u"anal_check_box")
         self.anal_check_box.setGeometry(QRect(410, 50, 114, 246))
@@ -248,11 +248,14 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         self.menu_voltage.toggled.connect(self.vol_check_box.setHidden)
+        self.menu_current.toggled.connect(self.curr_check_box.setHidden)
+        self.menu_power.toggled.connect(self.pow_check_box.setHidden)
+        self.menu_analysis.toggled.connect(self.anal_check_box.setHidden)
 
         self.menu_voltage.setDefault(True)
         self.menu_current.setDefault(True)
         self.menu_power.setDefault(True)
-        self.menu_current_3.setDefault(True)
+        self.menu_analysis.setDefault(True)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -286,7 +289,7 @@ class Ui_Form(object):
         self.pow_pf.setText(QCoreApplication.translate("Form", u"PF", None))
         self.pow_demand.setText(QCoreApplication.translate("Form", u"Demand", None))
         self.pow_energy.setText(QCoreApplication.translate("Form", u"Energy", None))
-        self.menu_current_3.setText(QCoreApplication.translate("Form", u"ANALYSIS \u2228", None))
+        self.menu_analysis.setText(QCoreApplication.translate("Form", u"ANALYSIS \u2228", None))
         self.anal_all.setText(QCoreApplication.translate("Form", u"ALL", None))
         self.anal_phasor.setText(QCoreApplication.translate("Form", u"Phasor", None))
         self.anal_harmonics.setText(QCoreApplication.translate("Form", u"Harmonics", None))
