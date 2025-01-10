@@ -13,6 +13,9 @@ class SettingWindow(QWidget, Ui_Form):
 		super().__init__()
 		self.setupUi(self)
 		self.setObjectName("My Setting")
+		self.btn_apply.connect
+		self.btn_cancel.connect()
+		self.vol_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
    
 	def open_new_window(self, row):
 		instance_qwidget = SettingWindow()
@@ -20,6 +23,19 @@ class SettingWindow(QWidget, Ui_Form):
 		instance_qwidget.resize(600, 600)
 
 		return instance_qwidget
+	
+	def on_checkbox_changed(self, state, key):
+		self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
+		print(f"{key.capitalize()} checkbox {'checked' if state == 2 else 'unchecked'}")
+	
+	def apply(self):
+		self.checkbox_states = {
+            "voltage": False,
+            "current": False,
+            "power": False,
+            "analysis": False,
+            "demand": False,
+            }
 	
 class SettingIP(QWidget, Ui_setup_ip):
 	

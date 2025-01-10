@@ -85,49 +85,49 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QCheckBox" name="vol_all">
+          <widget class="QCheckBox" name="cb_vol_all">
            <property name="text">
             <string>ALL</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="vol_rms">
+          <widget class="QCheckBox" name="cb_vol_rms">
            <property name="text">
             <string>RMS</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="vol_fund">
+          <widget class="QCheckBox" name="cb_vol_fund">
            <property name="text">
             <string>Fundamental</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="vol_thd">
+          <widget class="QCheckBox" name="cb_vol_thd">
            <property name="text">
             <string>THD %</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="vol_freq">
+          <widget class="QCheckBox" name="cb_vol_freq">
            <property name="text">
             <string>Frequency</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="vol_residual">
+          <widget class="QCheckBox" name="cb_vol_residual">
            <property name="text">
             <string>Residual</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="vol_sliding">
+          <widget class="QCheckBox" name="cb_vol_sliding">
            <property name="text">
             <string>Sliding Ref.</string>
            </property>
@@ -422,6 +422,32 @@
           </widget>
          </item>
         </layout>
+       </widget>
+       <widget class="QPushButton" name="btn_apply">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>450</y>
+          <width>75</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Apply</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_cancel">
+        <property name="geometry">
+         <rect>
+          <x>605</x>
+          <y>450</y>
+          <width>75</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
+        </property>
        </widget>
       </widget>
      </widget>

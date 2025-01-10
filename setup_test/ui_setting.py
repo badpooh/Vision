@@ -51,40 +51,40 @@ class Ui_Form(object):
         self.vol_check_box.setGeometry(QRect(20, 50, 110, 194))
         self.verticalLayout = QVBoxLayout(self.vol_check_box)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.vol_all = QCheckBox(self.vol_check_box)
-        self.vol_all.setObjectName(u"vol_all")
+        self.cb_vol_all = QCheckBox(self.vol_check_box)
+        self.cb_vol_all.setObjectName(u"cb_vol_all")
 
-        self.verticalLayout.addWidget(self.vol_all)
+        self.verticalLayout.addWidget(self.cb_vol_all)
 
-        self.vol_rms = QCheckBox(self.vol_check_box)
-        self.vol_rms.setObjectName(u"vol_rms")
+        self.cb_vol_rms = QCheckBox(self.vol_check_box)
+        self.cb_vol_rms.setObjectName(u"cb_vol_rms")
 
-        self.verticalLayout.addWidget(self.vol_rms)
+        self.verticalLayout.addWidget(self.cb_vol_rms)
 
-        self.vol_fund = QCheckBox(self.vol_check_box)
-        self.vol_fund.setObjectName(u"vol_fund")
+        self.cb_vol_fund = QCheckBox(self.vol_check_box)
+        self.cb_vol_fund.setObjectName(u"cb_vol_fund")
 
-        self.verticalLayout.addWidget(self.vol_fund)
+        self.verticalLayout.addWidget(self.cb_vol_fund)
 
-        self.vol_thd = QCheckBox(self.vol_check_box)
-        self.vol_thd.setObjectName(u"vol_thd")
+        self.cb_vol_thd = QCheckBox(self.vol_check_box)
+        self.cb_vol_thd.setObjectName(u"cb_vol_thd")
 
-        self.verticalLayout.addWidget(self.vol_thd)
+        self.verticalLayout.addWidget(self.cb_vol_thd)
 
-        self.vol_freq = QCheckBox(self.vol_check_box)
-        self.vol_freq.setObjectName(u"vol_freq")
+        self.cb_vol_freq = QCheckBox(self.vol_check_box)
+        self.cb_vol_freq.setObjectName(u"cb_vol_freq")
 
-        self.verticalLayout.addWidget(self.vol_freq)
+        self.verticalLayout.addWidget(self.cb_vol_freq)
 
-        self.vol_residual = QCheckBox(self.vol_check_box)
-        self.vol_residual.setObjectName(u"vol_residual")
+        self.cb_vol_residual = QCheckBox(self.vol_check_box)
+        self.cb_vol_residual.setObjectName(u"cb_vol_residual")
 
-        self.verticalLayout.addWidget(self.vol_residual)
+        self.verticalLayout.addWidget(self.cb_vol_residual)
 
-        self.vol_sliding = QCheckBox(self.vol_check_box)
-        self.vol_sliding.setObjectName(u"vol_sliding")
+        self.cb_vol_sliding = QCheckBox(self.vol_check_box)
+        self.cb_vol_sliding.setObjectName(u"cb_vol_sliding")
 
-        self.verticalLayout.addWidget(self.vol_sliding)
+        self.verticalLayout.addWidget(self.cb_vol_sliding)
 
         self.menu_current = QPushButton(self.widget_2)
         self.menu_current.setObjectName(u"menu_current")
@@ -242,6 +242,12 @@ class Ui_Form(object):
 
         self.verticalLayout_4.addWidget(self.anal_curr_unbal)
 
+        self.btn_apply = QPushButton(self.widget_2)
+        self.btn_apply.setObjectName(u"btn_apply")
+        self.btn_apply.setGeometry(QRect(520, 450, 75, 24))
+        self.btn_cancel = QPushButton(self.widget_2)
+        self.btn_cancel.setObjectName(u"btn_cancel")
+        self.btn_cancel.setGeometry(QRect(605, 450, 75, 24))
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -264,13 +270,13 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.menu_voltage.setText(QCoreApplication.translate("Form", u"VOLTAGE \u2228", None))
-        self.vol_all.setText(QCoreApplication.translate("Form", u"ALL", None))
-        self.vol_rms.setText(QCoreApplication.translate("Form", u"RMS", None))
-        self.vol_fund.setText(QCoreApplication.translate("Form", u"Fundamental", None))
-        self.vol_thd.setText(QCoreApplication.translate("Form", u"THD %", None))
-        self.vol_freq.setText(QCoreApplication.translate("Form", u"Frequency", None))
-        self.vol_residual.setText(QCoreApplication.translate("Form", u"Residual", None))
-        self.vol_sliding.setText(QCoreApplication.translate("Form", u"Sliding Ref.", None))
+        self.cb_vol_all.setText(QCoreApplication.translate("Form", u"ALL", None))
+        self.cb_vol_rms.setText(QCoreApplication.translate("Form", u"RMS", None))
+        self.cb_vol_fund.setText(QCoreApplication.translate("Form", u"Fundamental", None))
+        self.cb_vol_thd.setText(QCoreApplication.translate("Form", u"THD %", None))
+        self.cb_vol_freq.setText(QCoreApplication.translate("Form", u"Frequency", None))
+        self.cb_vol_residual.setText(QCoreApplication.translate("Form", u"Residual", None))
+        self.cb_vol_sliding.setText(QCoreApplication.translate("Form", u"Sliding Ref.", None))
         self.menu_current.setText(QCoreApplication.translate("Form", u"CURRENT \u2228", None))
         self.curr_all.setText(QCoreApplication.translate("Form", u"ALL", None))
         self.curr_rms.setText(QCoreApplication.translate("Form", u"RMS", None))
@@ -298,5 +304,7 @@ class Ui_Form(object):
         self.anal_vol_unbal.setText(QCoreApplication.translate("Form", u"Volt.Unbal.%", None))
         self.anal_curr_symm.setText(QCoreApplication.translate("Form", u"Curr.Symm.", None))
         self.anal_curr_unbal.setText(QCoreApplication.translate("Form", u"Curr.Unbal.%", None))
+        self.btn_apply.setText(QCoreApplication.translate("Form", u"Apply", None))
+        self.btn_cancel.setText(QCoreApplication.translate("Form", u"Cancel", None))
     # retranslateUi
 
