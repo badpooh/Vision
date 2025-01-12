@@ -96,7 +96,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_setting.clicked.connect(self.ip_setting)
         self.btn_all_connect.clicked.connect(self.all_connect)
         self.btn_all_disconnect.clicked.connect(self.all_disconnect)
-        # self.input_ip.returnPressed.connect(self.input_ip_return_pressed)
 
         self.checkBox_voltage.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
         self.checkBox_current.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "current"))
@@ -200,10 +199,12 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         return self.stop_thread
     
     def on_cell_double_click(self, row, col):
-        if col == 0 or col == 1:
+        if col == 1:
             if row not in self.set_windows:
                 self.set_windows[row] = self.setting_window.open_new_window(row+1)
             self.set_windows[row].show()
+        else:
+            pass
 
     def demo_ui_test_start(self):
         # if self.modbus_manager.is_connected == True:
@@ -307,9 +308,18 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.tableWidget.insertRow(row_position)
 
         for col in range(3):
-            readonly_item = QTableWidgetItem()
-            readonly_item.setFlags(readonly_item.flags() & ~Qt.ItemIsEditable)
-            self.tableWidget.setItem(row_position, col, readonly_item)
+            if col == 0:
+                box_item = QTableWidgetItem()
+                box_item.setFlags(box_item.flags() | Qt.ItemIsEditable)
+                self.tableWidget.setItem(row_position, col, box_item)
+            elif col == 1:
+                box_item = QTableWidgetItem()
+                box_item.setFlags(box_item.flags() & ~Qt.ItemIsEditable)
+                self.tableWidget.setItem(row_position, col, box_item)
+            else:
+                box_item = QTableWidgetItem()
+                box_item.setFlags(box_item.flags() & ~Qt.ItemIsEditable)
+                self.tableWidget.setItem(row_position, col, box_item)
 
     def create_menu(self, tc_box_index):
         menu = QMenu()

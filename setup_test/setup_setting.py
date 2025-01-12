@@ -8,14 +8,31 @@ from setup_test.setup_db import IPDataBase
 
 
 class SettingWindow(QWidget, Ui_Form):
+    
+	tcSelected = Signal(str)
   
 	def __init__(self):
 		super().__init__()
 		self.setupUi(self)
 		self.setObjectName("My Setting")
-		self.btn_apply.connect
-		self.btn_cancel.connect()
-		self.vol_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
+		self.checkbox_states = {
+			"vol_all": False,
+			"vol_rms": False,
+			"vol_fund": False,
+			"vol_thd": False,
+			"vol_freq": False,
+			"vol_residual": False,
+			"vol_sliding": False,
+			}
+		self.btn_apply.clicked.connect(self.tc_apply)
+		self.btn_cancel.clicked.connect(self.close)
+		self.cb_vol_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_all"))
+		self.cb_vol_rms.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_rms"))
+		self.cb_vol_fund.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_fund"))
+		self.cb_vol_thd.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_thd"))
+		self.cb_vol_freq.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_freq"))
+		self.cb_vol_residual.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_residual"))
+		self.cb_vol_sliding.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_sliding"))
    
 	def open_new_window(self, row):
 		instance_qwidget = SettingWindow()
@@ -28,14 +45,13 @@ class SettingWindow(QWidget, Ui_Form):
 		self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
 		print(f"{key.capitalize()} checkbox {'checked' if state == 2 else 'unchecked'}")
 	
-	def apply(self):
-		self.checkbox_states = {
-            "voltage": False,
-            "current": False,
-            "power": False,
-            "analysis": False,
-            "demand": False,
-            }
+	def tc_apply(self):
+		selected_keys = [key for key, val in self.checkbox_states.items() if val is True]
+		if selected_keys:
+			self.tcSelected.emit(", ".join(selected_keys))
+			print(f"선택된 tc: {selected_keys}")
+		else:
+			print("선택된 항목이 없습니다.")
 	
 class SettingIP(QWidget, Ui_setup_ip):
 	

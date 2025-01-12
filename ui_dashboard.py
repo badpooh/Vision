@@ -430,6 +430,16 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.btn_add_tc)
 
+        self.btn_test_save = QPushButton(self.menu_widget)
+        self.btn_test_save.setObjectName(u"btn_test_save")
+
+        self.horizontalLayout_4.addWidget(self.btn_test_save)
+
+        self.btn_test_load = QPushButton(self.menu_widget)
+        self.btn_test_load.setObjectName(u"btn_test_load")
+
+        self.horizontalLayout_4.addWidget(self.btn_test_load)
+
 
         self.verticalLayout_6.addWidget(self.menu_widget)
 
@@ -698,6 +708,8 @@ class Ui_MainWindow(object):
         self.btn_test_start.setText(QCoreApplication.translate("MainWindow", u"START", None))
         self.btn_test_stop.setText(QCoreApplication.translate("MainWindow", u"STOP", None))
         self.btn_add_tc.setText(QCoreApplication.translate("MainWindow", u"ADD TC", None))
+        self.btn_test_save.setText(QCoreApplication.translate("MainWindow", u"SAVE", None))
+        self.btn_test_load.setText(QCoreApplication.translate("MainWindow", u"LOAD", None))
         self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
         self.btn_demo_mode_ui_test.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
