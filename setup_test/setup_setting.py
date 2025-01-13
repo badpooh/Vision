@@ -9,12 +9,13 @@ from setup_test.setup_db import IPDataBase
 
 class SettingWindow(QWidget, Ui_Form):
     
-	tcSelected = Signal(str)
+	tcSelected = Signal(int, str)
   
 	def __init__(self):
 		super().__init__()
 		self.setupUi(self)
 		self.setObjectName("My Setting")
+		self.current_row = None
 		self.checkbox_states = {
 			"vol_all": False,
 			"vol_rms": False,
@@ -38,7 +39,7 @@ class SettingWindow(QWidget, Ui_Form):
 		instance_qwidget = SettingWindow()
 		instance_qwidget.setWindowTitle(f"Setting {row}")
 		instance_qwidget.resize(600, 600)
-
+		instance_qwidget.current_row = row
 		return instance_qwidget
 	
 	def on_checkbox_changed(self, state, key):
@@ -48,8 +49,10 @@ class SettingWindow(QWidget, Ui_Form):
 	def tc_apply(self):
 		selected_keys = [key for key, val in self.checkbox_states.items() if val is True]
 		if selected_keys:
-			self.tcSelected.emit(", ".join(selected_keys))
-			print(f"선택된 tc: {selected_keys}")
+			text = ", ".join(selected_keys)
+			self.tcSelected.emit(self.current_row, text)
+			print(f"선택된 tc: {selected_keys}, row={self.current_row}")
+			self.close()
 		else:
 			print("선택된 항목이 없습니다.")
 	

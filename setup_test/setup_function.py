@@ -9,7 +9,6 @@ import time
 from pymodbus.client import ModbusTcpClient as ModbusClient
 import threading
 import shutil
-# import torch
 import os
 import pandas as pd
 from paddleocr import PaddleOCR
@@ -870,3 +869,61 @@ class Evaluation:
         df.to_csv(save_path, index=False)
         dest_image_path = os.path.join(os.path.dirname(save_path), file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
+
+class TestCaseManager:
+
+    def save_table_to_xml(self, filename):
+        """
+        self.tableWidget에 들어 있는 행/열 데이터를 XML 형태로 저장
+        filename: 저장할 XML 파일 경로
+        """
+        root = ET.Element("tableData")
+
+        row_count = self.tableWidget.rowCount()
+        col_count = self.tableWidget.columnCount()
+
+        for r in range(row_count):
+            # <row index="0"> ... </row>
+            row_elem = ET.SubElement(root, "row", index=str(r))
+            for c in range(col_count):
+                item = self.tableWidget.item(r, c)
+                text = item.text() if item else ""  # 아이템이 없는 셀도 있을 수 있음
+
+                # <cell col="1"> 내용 </cell>
+                cell_elem = ET.SubElement(row_elem, "cell", col=str(c))
+                cell_elem.text = text
+
+        # XML 트리를 파일에 저장
+        tree = ET.ElementTree(root)
+        tree.write(filename, encoding="utf-8", xml_declaration=True)
+        print(f"[INFO] 테이블 데이터가 '{filename}' 파일에 저장되었습니다.")
+
+    def load_table_from_xml(self, filename):
+        """
+        'filename'에서 XML 데이터를 읽어서 self.tableWidget에 반영
+        """
+        tree = ET.parse(filename)
+        root = tree.getroot()
+
+        # 기존 테이블 내용을 초기화 (원한다면 append도 가능)
+        self.tableWidget.setRowCount(0)
+
+        for row_elem in root.findall("row"):
+            r = int(row_elem.get("index"))
+            # row가 부족하면 늘려둔다
+            if r >= self.tableWidget.rowCount():
+                self.tableWidget.setRowCount(r + 1)
+
+            for cell_elem in row_elem.findall("cell"):
+                c = int(cell_elem.get("col"))
+                text = cell_elem.text if cell_elem.text else ""
+
+                # 열 수도 부족하면 늘려야 함(혹은 이미 columnCount가 충분하다면 패스)
+                if c >= self.tableWidget.columnCount():
+                    # 예: columnCount가 3 이상 필요할 수 있음
+                    self.tableWidget.setColumnCount(c + 1)
+
+                item = QTableWidgetItem(text)
+                self.tableWidget.setItem(r, c, item)
+
+        print(f"[INFO] '{filename}' 파일에서 테이블 데이터가 로드되었습니다.")
