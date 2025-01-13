@@ -16,6 +16,18 @@ class SettingWindow(QWidget, Ui_Form):
 		self.setupUi(self)
 		self.setObjectName("My Setting")
 		self.current_row = None
+		self.btn_menu_voltage.setChecked(True)
+		self.vol_check_box.setHidden(True)
+		self.btn_menu_current.setChecked(True)
+		self.curr_check_box.setHidden(True)
+		self.btn_menu_power.setChecked(True)
+		self.pow_check_box.setHidden(True)
+		self.btn_menu_analysis.setChecked(True)
+		self.anal_check_box.setHidden(True)
+		self.btn_menu_test_mode.setChecked(True)
+		self.tm_check_box.setHidden(True)
+		self.btn_menu_system.setChecked(True)
+		self.sys_check_box.setHidden(True)
 		self.checkbox_states = {
 			"vol_all": False,
 			"vol_rms": False,

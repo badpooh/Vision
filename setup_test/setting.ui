@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>838</width>
+    <width>837</width>
     <height>769</height>
    </rect>
   </property>
@@ -39,8 +39,8 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>700</width>
-         <height>500</height>
+         <width>746</width>
+         <height>551</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -49,294 +49,6 @@
 }
 </string>
        </property>
-       <widget class="QPushButton" name="menu_current">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>20</y>
-          <width>130</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>CURRENT ∨</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>true</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-       <widget class="QWidget" name="curr_check_box" native="true">
-        <property name="geometry">
-         <rect>
-          <x>150</x>
-          <y>50</y>
-          <width>114</width>
-          <height>246</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QCheckBox" name="curr_all">
-           <property name="text">
-            <string>ALL</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_rms">
-           <property name="text">
-            <string>RMS</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_fund">
-           <property name="text">
-            <string>Fundamental</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_demand">
-           <property name="text">
-            <string>Demand</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_thd">
-           <property name="text">
-            <string>THD %</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_tdd">
-           <property name="text">
-            <string>TDD %</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_crest_factor">
-           <property name="text">
-            <string>Crest Factor</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_k_factor">
-           <property name="text">
-            <string>K-Factor</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="curr_residual">
-           <property name="text">
-            <string>Residual</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QPushButton" name="menu_power">
-        <property name="geometry">
-         <rect>
-          <x>270</x>
-          <y>20</y>
-          <width>130</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>POWER ∨</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>true</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-       <widget class="QWidget" name="pow_check_box" native="true">
-        <property name="geometry">
-         <rect>
-          <x>280</x>
-          <y>50</y>
-          <width>114</width>
-          <height>246</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QCheckBox" name="pow_all">
-           <property name="text">
-            <string>ALL</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="pow_p">
-           <property name="text">
-            <string>Active(P)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="pow_q">
-           <property name="text">
-            <string>Reactive(Q)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="pow_s">
-           <property name="text">
-            <string>Apparent(S)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="pow_pf">
-           <property name="text">
-            <string>PF</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="pow_demand">
-           <property name="text">
-            <string>Demand</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="pow_energy">
-           <property name="text">
-            <string>Energy</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QPushButton" name="menu_analysis">
-        <property name="geometry">
-         <rect>
-          <x>400</x>
-          <y>20</y>
-          <width>130</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>ANALYSIS ∨</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>true</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-       <widget class="QWidget" name="anal_check_box" native="true">
-        <property name="geometry">
-         <rect>
-          <x>410</x>
-          <y>50</y>
-          <width>114</width>
-          <height>246</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QCheckBox" name="anal_all">
-           <property name="text">
-            <string>ALL</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="anal_phasor">
-           <property name="text">
-            <string>Phasor</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="anal_harmonics">
-           <property name="text">
-            <string>Harmonics</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="anal_waveform">
-           <property name="text">
-            <string>Waveform</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="anal_vol_symm">
-           <property name="text">
-            <string>Volt.Symm.</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="anal_vol_unbal">
-           <property name="text">
-            <string>Volt.Unbal.%</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="anal_curr_symm">
-           <property name="text">
-            <string>Curr.Symm.</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="anal_curr_unbal">
-           <property name="text">
-            <string>Curr.Unbal.%</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
        <widget class="QPushButton" name="btn_apply">
         <property name="geometry">
          <rect>
@@ -363,203 +75,790 @@
          <string>Cancel</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="menu_system">
-        <property name="geometry">
-         <rect>
-          <x>530</x>
-          <y>20</y>
-          <width>130</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>SYSTEM ∨</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>true</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-       <widget class="QWidget" name="sys_check_box" native="true">
-        <property name="geometry">
-         <rect>
-          <x>540</x>
-          <y>50</y>
-          <width>114</width>
-          <height>36</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
-         <item>
-          <widget class="QCheckBox" name="sys_al">
-           <property name="text">
-            <string>ALL</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="main_menu1" native="true">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>20</y>
-          <width>117</width>
-          <height>352</height>
+          <width>174</width>
+          <height>408</height>
          </rect>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_8">
-         <item>
-          <widget class="QPushButton" name="menu_voltage">
-           <property name="text">
-            <string>VOLTAGE ∨</string>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+        </property>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QWidget" name="sub_menu1" native="true">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgba(255, 255, 255, 0);
+</string>
            </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="default">
-            <bool>true</bool>
-           </property>
-           <property name="flat">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop">
-          <widget class="QWidget" name="vol_check_box" native="true">
-           <layout class="QVBoxLayout" name="verticalLayout">
+           <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QCheckBox" name="cb_vol_all">
-              <property name="text">
-               <string>ALL</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_vol_rms">
-              <property name="text">
-               <string>RMS</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_vol_fund">
-              <property name="text">
-               <string>Fundamental</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_vol_thd">
-              <property name="text">
-               <string>THD %</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_vol_freq">
-              <property name="text">
-               <string>Frequency</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_vol_residual">
-              <property name="text">
-               <string>Residual</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_vol_sliding">
-              <property name="text">
-               <string>Sliding Ref.</string>
-              </property>
-             </widget>
+             <layout class="QVBoxLayout" name="sub_box1">
+              <item>
+               <widget class="QPushButton" name="btn_menu_voltage">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>130</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton:checked {
+  background-color: #d0d0d0;
+}</string>
+                </property>
+                <property name="text">
+                 <string>VOLTAGE ∨</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+                <property name="default">
+                 <bool>true</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="vol_check_box" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout">
+                 <item>
+                  <widget class="QCheckBox" name="cb_vol_all">
+                   <property name="text">
+                    <string>ALL</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_vol_rms">
+                   <property name="text">
+                    <string>RMS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_vol_fund">
+                   <property name="text">
+                    <string>Fundamental</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_vol_thd">
+                   <property name="text">
+                    <string>THD %</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_vol_freq">
+                   <property name="text">
+                    <string>Frequency</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_vol_residual">
+                   <property name="text">
+                    <string>Residual</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_vol_sliding">
+                   <property name="text">
+                    <string>Sliding Ref.</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
          </item>
-         <item alignment="Qt::AlignmentFlag::AlignTop">
-          <widget class="QPushButton" name="menu_test_mode">
-           <property name="text">
-            <string>TEST MODE ∨</string>
+         <item row="1" column="0">
+          <widget class="QWidget" name="sub_menu2" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>120</width>
+             <height>0</height>
+            </size>
            </property>
-           <property name="checkable">
-            <bool>true</bool>
+           <property name="styleSheet">
+            <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
            </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="default">
-            <bool>true</bool>
-           </property>
-           <property name="flat">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignmentFlag::AlignTop">
-          <widget class="QWidget" name="tm_check_box" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_7">
+           <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QCheckBox" name="cb_tm_all">
-              <property name="text">
-               <string>ALL</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_tm_balance">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Balance</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cb_tm_noload">
-              <property name="text">
-               <string>No Load</string>
-              </property>
-             </widget>
+             <layout class="QVBoxLayout" name="sub_box2">
+              <item>
+               <widget class="QPushButton" name="btn_menu_test_mode">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>130</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>TEST MODE ∨</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+                <property name="default">
+                 <bool>true</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="tm_check_box" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <item>
+                  <widget class="QCheckBox" name="cb_tm_all">
+                   <property name="text">
+                    <string>ALL</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_tm_balance">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Balance</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_tm_noload">
+                   <property name="text">
+                    <string>No Load</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="main_menu2" native="true">
+        <property name="geometry">
+         <rect>
+          <x>145</x>
+          <y>20</y>
+          <width>174</width>
+          <height>296</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+
+</string>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QWidget" name="sub_menu3" native="true">
+           <property name="styleSheet">
+            <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_9">
+            <item>
+             <layout class="QVBoxLayout" name="sub_box3">
+              <item>
+               <widget class="QPushButton" name="btn_menu_current">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>130</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>CURRENT ∨</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+                <property name="default">
+                 <bool>true</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="curr_check_box" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_10">
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_all">
+                   <property name="text">
+                    <string>ALL</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_rms">
+                   <property name="text">
+                    <string>RMS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_fund">
+                   <property name="text">
+                    <string>Fundamental</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_demand">
+                   <property name="text">
+                    <string>Demand</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_thd">
+                   <property name="text">
+                    <string>THD %</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_tdd">
+                   <property name="text">
+                    <string>TDD %</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_cf">
+                   <property name="text">
+                    <string>Crest Factor</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_kf">
+                   <property name="text">
+                    <string>K-Factor</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_curr_residual">
+                   <property name="text">
+                    <string>Residual</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="main_menu3" native="true">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>20</y>
+          <width>174</width>
+          <height>296</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+
+</string>
+        </property>
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="0">
+          <widget class="QWidget" name="sub_menu4" native="true">
+           <property name="styleSheet">
+            <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_11">
+            <item>
+             <layout class="QVBoxLayout" name="sub_box4">
+              <item>
+               <widget class="QPushButton" name="btn_menu_power">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>130</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>POWER ∨</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+                <property name="default">
+                 <bool>true</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="pow_check_box" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_12">
+                 <item>
+                  <widget class="QCheckBox" name="cb_pow_all">
+                   <property name="text">
+                    <string>ALL</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_pow_p">
+                   <property name="text">
+                    <string>Active(P)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_pow_q">
+                   <property name="text">
+                    <string>Reactive(Q)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_pow_s">
+                   <property name="text">
+                    <string>Apparent(S)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_pow_pf">
+                   <property name="text">
+                    <string>PF</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_pow_demand">
+                   <property name="text">
+                    <string>Demand</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_pow_energy">
+                   <property name="text">
+                    <string>Energy</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="main_menu4" native="true">
+        <property name="geometry">
+         <rect>
+          <x>415</x>
+          <y>20</y>
+          <width>174</width>
+          <height>381</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+        </property>
+        <layout class="QFormLayout" name="formLayout_4">
+         <item row="0" column="0">
+          <widget class="QWidget" name="sub_menu5" native="true">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgba(255, 255, 255, 0);
+</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_13">
+            <item>
+             <layout class="QVBoxLayout" name="sub_box5">
+              <item>
+               <widget class="QPushButton" name="btn_menu_analysis">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>130</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>ANALYSIS ∨</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+                <property name="default">
+                 <bool>true</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="anal_check_box" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_all">
+                   <property name="text">
+                    <string>ALL</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_phasor">
+                   <property name="text">
+                    <string>Phasor</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_harmonics">
+                   <property name="text">
+                    <string>Harmonics</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_waveform">
+                   <property name="text">
+                    <string>Waveform</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_volt_sym">
+                   <property name="text">
+                    <string>Volt.Symm.</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_volt_unbal">
+                   <property name="text">
+                    <string>Volt.Unbal.%</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_curr_sym">
+                   <property name="text">
+                    <string>Curr.Symm.</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_anal_curr_unbal">
+                   <property name="text">
+                    <string>Curr.Unbal.%</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QWidget" name="sub_menu6" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>120</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QWidget{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <layout class="QVBoxLayout" name="sub_box6">
+              <item>
+               <widget class="QPushButton" name="btn_menu_system">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>130</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>SYSTEM ∨</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+                <property name="default">
+                 <bool>true</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="sys_check_box" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_15">
+                 <item>
+                  <widget class="QCheckBox" name="cb_sys_all">
+                   <property name="text">
+                    <string>ALL</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <zorder>main_menu2</zorder>
+       <zorder>btn_apply</zorder>
+       <zorder>btn_cancel</zorder>
+       <zorder>main_menu1</zorder>
+       <zorder>main_menu3</zorder>
+       <zorder>main_menu4</zorder>
       </widget>
      </widget>
     </item>
@@ -569,82 +868,98 @@
  <resources/>
  <connections>
   <connection>
-   <sender>menu_voltage</sender>
+   <sender>btn_menu_voltage</sender>
    <signal>toggled(bool)</signal>
    <receiver>vol_check_box</receiver>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>63</y>
+     <x>156</x>
+     <y>76</y>
     </hint>
     <hint type="destinationlabel">
-     <x>141</x>
-     <y>92</y>
+     <x>158</x>
+     <y>104</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>menu_current</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>curr_check_box</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>284</x>
-     <y>66</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>289</x>
-     <y>105</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>menu_power</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pow_check_box</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>418</x>
-     <y>61</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>422</x>
-     <y>129</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>menu_analysis</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>anal_check_box</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>551</x>
-     <y>65</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>550</x>
-     <y>98</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>menu_test_mode</sender>
+   <sender>btn_menu_test_mode</sender>
    <signal>toggled(bool)</signal>
    <receiver>tm_check_box</receiver>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>146</x>
-     <y>301</y>
+     <x>168</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>149</x>
-     <y>333</y>
+     <x>172</x>
+     <y>438</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_menu_current</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>curr_check_box</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>307</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>311</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_menu_power</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pow_check_box</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>436</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>438</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_menu_analysis</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>anal_check_box</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>587</x>
+     <y>89</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>586</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_menu_system</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sys_check_box</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>582</x>
+     <y>362</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>581</x>
+     <y>379</y>
     </hint>
    </hints>
   </connection>

@@ -15,14 +15,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QGridLayout, QPushButton,
-    QSizePolicy, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
+    QPushButton, QSizePolicy, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(838, 769)
+        Form.resize(837, 769)
         Form.setMinimumSize(QSize(800, 600))
         Form.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.gridLayoutWidget = QWidget(Form)
@@ -35,207 +35,58 @@ class Ui_Form(object):
         self.widget.setObjectName(u"widget")
         self.widget_2 = QWidget(self.widget)
         self.widget_2.setObjectName(u"widget_2")
-        self.widget_2.setGeometry(QRect(20, 20, 700, 500))
+        self.widget_2.setGeometry(QRect(20, 20, 746, 551))
         self.widget_2.setStyleSheet(u"QWidget{\n"
 "	background-color: rgb(255, 255, 255);\n"
 "}\n"
 "")
-        self.menu_current = QPushButton(self.widget_2)
-        self.menu_current.setObjectName(u"menu_current")
-        self.menu_current.setGeometry(QRect(140, 20, 130, 31))
-        self.menu_current.setCheckable(True)
-        self.menu_current.setChecked(False)
-        self.menu_current.setAutoDefault(False)
-        self.menu_current.setFlat(False)
-        self.curr_check_box = QWidget(self.widget_2)
-        self.curr_check_box.setObjectName(u"curr_check_box")
-        self.curr_check_box.setGeometry(QRect(150, 50, 114, 246))
-        self.verticalLayout_2 = QVBoxLayout(self.curr_check_box)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.curr_all = QCheckBox(self.curr_check_box)
-        self.curr_all.setObjectName(u"curr_all")
-
-        self.verticalLayout_2.addWidget(self.curr_all)
-
-        self.curr_rms = QCheckBox(self.curr_check_box)
-        self.curr_rms.setObjectName(u"curr_rms")
-
-        self.verticalLayout_2.addWidget(self.curr_rms)
-
-        self.curr_fund = QCheckBox(self.curr_check_box)
-        self.curr_fund.setObjectName(u"curr_fund")
-
-        self.verticalLayout_2.addWidget(self.curr_fund)
-
-        self.curr_demand = QCheckBox(self.curr_check_box)
-        self.curr_demand.setObjectName(u"curr_demand")
-
-        self.verticalLayout_2.addWidget(self.curr_demand)
-
-        self.curr_thd = QCheckBox(self.curr_check_box)
-        self.curr_thd.setObjectName(u"curr_thd")
-
-        self.verticalLayout_2.addWidget(self.curr_thd)
-
-        self.curr_tdd = QCheckBox(self.curr_check_box)
-        self.curr_tdd.setObjectName(u"curr_tdd")
-
-        self.verticalLayout_2.addWidget(self.curr_tdd)
-
-        self.curr_crest_factor = QCheckBox(self.curr_check_box)
-        self.curr_crest_factor.setObjectName(u"curr_crest_factor")
-
-        self.verticalLayout_2.addWidget(self.curr_crest_factor)
-
-        self.curr_k_factor = QCheckBox(self.curr_check_box)
-        self.curr_k_factor.setObjectName(u"curr_k_factor")
-
-        self.verticalLayout_2.addWidget(self.curr_k_factor)
-
-        self.curr_residual = QCheckBox(self.curr_check_box)
-        self.curr_residual.setObjectName(u"curr_residual")
-
-        self.verticalLayout_2.addWidget(self.curr_residual)
-
-        self.menu_power = QPushButton(self.widget_2)
-        self.menu_power.setObjectName(u"menu_power")
-        self.menu_power.setGeometry(QRect(270, 20, 130, 31))
-        self.menu_power.setCheckable(True)
-        self.menu_power.setChecked(False)
-        self.menu_power.setAutoDefault(False)
-        self.menu_power.setFlat(False)
-        self.pow_check_box = QWidget(self.widget_2)
-        self.pow_check_box.setObjectName(u"pow_check_box")
-        self.pow_check_box.setGeometry(QRect(280, 50, 114, 246))
-        self.verticalLayout_3 = QVBoxLayout(self.pow_check_box)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.pow_all = QCheckBox(self.pow_check_box)
-        self.pow_all.setObjectName(u"pow_all")
-
-        self.verticalLayout_3.addWidget(self.pow_all)
-
-        self.pow_p = QCheckBox(self.pow_check_box)
-        self.pow_p.setObjectName(u"pow_p")
-
-        self.verticalLayout_3.addWidget(self.pow_p)
-
-        self.pow_q = QCheckBox(self.pow_check_box)
-        self.pow_q.setObjectName(u"pow_q")
-
-        self.verticalLayout_3.addWidget(self.pow_q)
-
-        self.pow_s = QCheckBox(self.pow_check_box)
-        self.pow_s.setObjectName(u"pow_s")
-
-        self.verticalLayout_3.addWidget(self.pow_s)
-
-        self.pow_pf = QCheckBox(self.pow_check_box)
-        self.pow_pf.setObjectName(u"pow_pf")
-
-        self.verticalLayout_3.addWidget(self.pow_pf)
-
-        self.pow_demand = QCheckBox(self.pow_check_box)
-        self.pow_demand.setObjectName(u"pow_demand")
-
-        self.verticalLayout_3.addWidget(self.pow_demand)
-
-        self.pow_energy = QCheckBox(self.pow_check_box)
-        self.pow_energy.setObjectName(u"pow_energy")
-
-        self.verticalLayout_3.addWidget(self.pow_energy)
-
-        self.menu_analysis = QPushButton(self.widget_2)
-        self.menu_analysis.setObjectName(u"menu_analysis")
-        self.menu_analysis.setGeometry(QRect(400, 20, 130, 31))
-        self.menu_analysis.setCheckable(True)
-        self.menu_analysis.setChecked(False)
-        self.menu_analysis.setAutoDefault(False)
-        self.menu_analysis.setFlat(False)
-        self.anal_check_box = QWidget(self.widget_2)
-        self.anal_check_box.setObjectName(u"anal_check_box")
-        self.anal_check_box.setGeometry(QRect(410, 50, 114, 246))
-        self.verticalLayout_4 = QVBoxLayout(self.anal_check_box)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.anal_all = QCheckBox(self.anal_check_box)
-        self.anal_all.setObjectName(u"anal_all")
-
-        self.verticalLayout_4.addWidget(self.anal_all)
-
-        self.anal_phasor = QCheckBox(self.anal_check_box)
-        self.anal_phasor.setObjectName(u"anal_phasor")
-
-        self.verticalLayout_4.addWidget(self.anal_phasor)
-
-        self.anal_harmonics = QCheckBox(self.anal_check_box)
-        self.anal_harmonics.setObjectName(u"anal_harmonics")
-
-        self.verticalLayout_4.addWidget(self.anal_harmonics)
-
-        self.anal_waveform = QCheckBox(self.anal_check_box)
-        self.anal_waveform.setObjectName(u"anal_waveform")
-
-        self.verticalLayout_4.addWidget(self.anal_waveform)
-
-        self.anal_vol_symm = QCheckBox(self.anal_check_box)
-        self.anal_vol_symm.setObjectName(u"anal_vol_symm")
-
-        self.verticalLayout_4.addWidget(self.anal_vol_symm)
-
-        self.anal_vol_unbal = QCheckBox(self.anal_check_box)
-        self.anal_vol_unbal.setObjectName(u"anal_vol_unbal")
-
-        self.verticalLayout_4.addWidget(self.anal_vol_unbal)
-
-        self.anal_curr_symm = QCheckBox(self.anal_check_box)
-        self.anal_curr_symm.setObjectName(u"anal_curr_symm")
-
-        self.verticalLayout_4.addWidget(self.anal_curr_symm)
-
-        self.anal_curr_unbal = QCheckBox(self.anal_check_box)
-        self.anal_curr_unbal.setObjectName(u"anal_curr_unbal")
-
-        self.verticalLayout_4.addWidget(self.anal_curr_unbal)
-
         self.btn_apply = QPushButton(self.widget_2)
         self.btn_apply.setObjectName(u"btn_apply")
         self.btn_apply.setGeometry(QRect(520, 450, 75, 24))
         self.btn_cancel = QPushButton(self.widget_2)
         self.btn_cancel.setObjectName(u"btn_cancel")
         self.btn_cancel.setGeometry(QRect(605, 450, 75, 24))
-        self.menu_system = QPushButton(self.widget_2)
-        self.menu_system.setObjectName(u"menu_system")
-        self.menu_system.setGeometry(QRect(530, 20, 130, 31))
-        self.menu_system.setCheckable(True)
-        self.menu_system.setChecked(False)
-        self.menu_system.setAutoDefault(False)
-        self.menu_system.setFlat(False)
-        self.sys_check_box = QWidget(self.widget_2)
-        self.sys_check_box.setObjectName(u"sys_check_box")
-        self.sys_check_box.setGeometry(QRect(540, 50, 114, 36))
-        self.verticalLayout_5 = QVBoxLayout(self.sys_check_box)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.sys_al = QCheckBox(self.sys_check_box)
-        self.sys_al.setObjectName(u"sys_al")
+        self.main_menu1 = QWidget(self.widget_2)
+        self.main_menu1.setObjectName(u"main_menu1")
+        self.main_menu1.setGeometry(QRect(10, 20, 174, 408))
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.main_menu1.sizePolicy().hasHeightForWidth())
+        self.main_menu1.setSizePolicy(sizePolicy)
+        self.main_menu1.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.formLayout = QFormLayout(self.main_menu1)
+        self.formLayout.setObjectName(u"formLayout")
+        self.sub_menu1 = QWidget(self.main_menu1)
+        self.sub_menu1.setObjectName(u"sub_menu1")
+        self.sub_menu1.setStyleSheet(u"background-color: rgba(255, 255, 255, 0);\n"
+"")
+        self.verticalLayout_7 = QVBoxLayout(self.sub_menu1)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.sub_box1 = QVBoxLayout()
+        self.sub_box1.setObjectName(u"sub_box1")
+        self.btn_menu_voltage = QPushButton(self.sub_menu1)
+        self.btn_menu_voltage.setObjectName(u"btn_menu_voltage")
+        sizePolicy.setHeightForWidth(self.btn_menu_voltage.sizePolicy().hasHeightForWidth())
+        self.btn_menu_voltage.setSizePolicy(sizePolicy)
+        self.btn_menu_voltage.setMinimumSize(QSize(130, 24))
+        self.btn_menu_voltage.setMaximumSize(QSize(16777215, 24))
+        self.btn_menu_voltage.setStyleSheet(u"QPushButton:checked {\n"
+"    background-color: #d0d0d0;\n"
+"}")
+        self.btn_menu_voltage.setCheckable(True)
+        self.btn_menu_voltage.setChecked(False)
+        self.btn_menu_voltage.setAutoDefault(False)
+        self.btn_menu_voltage.setFlat(False)
 
-        self.verticalLayout_5.addWidget(self.sys_al)
+        self.sub_box1.addWidget(self.btn_menu_voltage)
 
-        self.widget1 = QWidget(self.widget_2)
-        self.widget1.setObjectName(u"widget1")
-        self.widget1.setGeometry(QRect(10, 20, 117, 352))
-        self.verticalLayout_8 = QVBoxLayout(self.widget1)
-        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.menu_voltage = QPushButton(self.widget1)
-        self.menu_voltage.setObjectName(u"menu_voltage")
-        self.menu_voltage.setCheckable(True)
-        self.menu_voltage.setChecked(False)
-        self.menu_voltage.setAutoDefault(False)
-        self.menu_voltage.setFlat(False)
-
-        self.verticalLayout_8.addWidget(self.menu_voltage)
-
-        self.vol_check_box = QWidget(self.widget1)
+        self.vol_check_box = QWidget(self.sub_menu1)
         self.vol_check_box.setObjectName(u"vol_check_box")
+        sizePolicy.setHeightForWidth(self.vol_check_box.sizePolicy().hasHeightForWidth())
+        self.vol_check_box.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(self.vol_check_box)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.cb_vol_all = QCheckBox(self.vol_check_box)
@@ -274,30 +125,47 @@ class Ui_Form(object):
         self.verticalLayout.addWidget(self.cb_vol_sliding)
 
 
-        self.verticalLayout_8.addWidget(self.vol_check_box, 0, Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignTop)
+        self.sub_box1.addWidget(self.vol_check_box)
 
-        self.menu_test_mode = QPushButton(self.widget1)
-        self.menu_test_mode.setObjectName(u"menu_test_mode")
-        self.menu_test_mode.setCheckable(True)
-        self.menu_test_mode.setChecked(False)
-        self.menu_test_mode.setAutoDefault(False)
-        self.menu_test_mode.setFlat(False)
 
-        self.verticalLayout_8.addWidget(self.menu_test_mode, 0, Qt.AlignmentFlag.AlignTop)
+        self.verticalLayout_7.addLayout(self.sub_box1)
 
-        self.tm_check_box = QWidget(self.widget1)
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.sub_menu1)
+
+        self.sub_menu2 = QWidget(self.main_menu1)
+        self.sub_menu2.setObjectName(u"sub_menu2")
+        self.sub_menu2.setMinimumSize(QSize(120, 0))
+        self.sub_menu2.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.verticalLayout_8 = QVBoxLayout(self.sub_menu2)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.sub_box2 = QVBoxLayout()
+        self.sub_box2.setObjectName(u"sub_box2")
+        self.btn_menu_test_mode = QPushButton(self.sub_menu2)
+        self.btn_menu_test_mode.setObjectName(u"btn_menu_test_mode")
+        sizePolicy.setHeightForWidth(self.btn_menu_test_mode.sizePolicy().hasHeightForWidth())
+        self.btn_menu_test_mode.setSizePolicy(sizePolicy)
+        self.btn_menu_test_mode.setMinimumSize(QSize(130, 24))
+        self.btn_menu_test_mode.setMaximumSize(QSize(16777215, 24))
+        self.btn_menu_test_mode.setCheckable(True)
+        self.btn_menu_test_mode.setChecked(False)
+        self.btn_menu_test_mode.setAutoDefault(False)
+        self.btn_menu_test_mode.setFlat(False)
+
+        self.sub_box2.addWidget(self.btn_menu_test_mode)
+
+        self.tm_check_box = QWidget(self.sub_menu2)
         self.tm_check_box.setObjectName(u"tm_check_box")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tm_check_box.sizePolicy().hasHeightForWidth())
         self.tm_check_box.setSizePolicy(sizePolicy)
-        self.verticalLayout_7 = QVBoxLayout(self.tm_check_box)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_6 = QVBoxLayout(self.tm_check_box)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.cb_tm_all = QCheckBox(self.tm_check_box)
         self.cb_tm_all.setObjectName(u"cb_tm_all")
 
-        self.verticalLayout_7.addWidget(self.cb_tm_all)
+        self.verticalLayout_6.addWidget(self.cb_tm_all)
 
         self.cb_tm_balance = QCheckBox(self.tm_check_box)
         self.cb_tm_balance.setObjectName(u"cb_tm_balance")
@@ -307,33 +175,359 @@ class Ui_Form(object):
         sizePolicy1.setHeightForWidth(self.cb_tm_balance.sizePolicy().hasHeightForWidth())
         self.cb_tm_balance.setSizePolicy(sizePolicy1)
 
-        self.verticalLayout_7.addWidget(self.cb_tm_balance)
+        self.verticalLayout_6.addWidget(self.cb_tm_balance)
 
         self.cb_tm_noload = QCheckBox(self.tm_check_box)
         self.cb_tm_noload.setObjectName(u"cb_tm_noload")
 
-        self.verticalLayout_7.addWidget(self.cb_tm_noload)
+        self.verticalLayout_6.addWidget(self.cb_tm_noload)
 
 
-        self.verticalLayout_8.addWidget(self.tm_check_box, 0, Qt.AlignmentFlag.AlignTop)
+        self.sub_box2.addWidget(self.tm_check_box)
 
+
+        self.verticalLayout_8.addLayout(self.sub_box2)
+
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.sub_menu2)
+
+        self.main_menu2 = QWidget(self.widget_2)
+        self.main_menu2.setObjectName(u"main_menu2")
+        self.main_menu2.setGeometry(QRect(145, 20, 174, 296))
+        sizePolicy.setHeightForWidth(self.main_menu2.sizePolicy().hasHeightForWidth())
+        self.main_menu2.setSizePolicy(sizePolicy)
+        self.main_menu2.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}\n"
+"\n"
+"\n"
+"")
+        self.formLayout_2 = QFormLayout(self.main_menu2)
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.sub_menu3 = QWidget(self.main_menu2)
+        self.sub_menu3.setObjectName(u"sub_menu3")
+        self.sub_menu3.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.verticalLayout_9 = QVBoxLayout(self.sub_menu3)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.sub_box3 = QVBoxLayout()
+        self.sub_box3.setObjectName(u"sub_box3")
+        self.btn_menu_current = QPushButton(self.sub_menu3)
+        self.btn_menu_current.setObjectName(u"btn_menu_current")
+        sizePolicy.setHeightForWidth(self.btn_menu_current.sizePolicy().hasHeightForWidth())
+        self.btn_menu_current.setSizePolicy(sizePolicy)
+        self.btn_menu_current.setMinimumSize(QSize(130, 24))
+        self.btn_menu_current.setMaximumSize(QSize(16777215, 24))
+        self.btn_menu_current.setCheckable(True)
+        self.btn_menu_current.setChecked(False)
+        self.btn_menu_current.setAutoDefault(False)
+        self.btn_menu_current.setFlat(False)
+
+        self.sub_box3.addWidget(self.btn_menu_current)
+
+        self.curr_check_box = QWidget(self.sub_menu3)
+        self.curr_check_box.setObjectName(u"curr_check_box")
+        sizePolicy.setHeightForWidth(self.curr_check_box.sizePolicy().hasHeightForWidth())
+        self.curr_check_box.setSizePolicy(sizePolicy)
+        self.verticalLayout_10 = QVBoxLayout(self.curr_check_box)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.cb_curr_all = QCheckBox(self.curr_check_box)
+        self.cb_curr_all.setObjectName(u"cb_curr_all")
+        self.cb_curr_all.setCheckable(True)
+        self.cb_curr_all.setChecked(False)
+
+        self.verticalLayout_10.addWidget(self.cb_curr_all)
+
+        self.cb_curr_rms = QCheckBox(self.curr_check_box)
+        self.cb_curr_rms.setObjectName(u"cb_curr_rms")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_rms)
+
+        self.cb_curr_fund = QCheckBox(self.curr_check_box)
+        self.cb_curr_fund.setObjectName(u"cb_curr_fund")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_fund)
+
+        self.cb_curr_demand = QCheckBox(self.curr_check_box)
+        self.cb_curr_demand.setObjectName(u"cb_curr_demand")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_demand)
+
+        self.cb_curr_thd = QCheckBox(self.curr_check_box)
+        self.cb_curr_thd.setObjectName(u"cb_curr_thd")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_thd)
+
+        self.cb_curr_tdd = QCheckBox(self.curr_check_box)
+        self.cb_curr_tdd.setObjectName(u"cb_curr_tdd")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_tdd)
+
+        self.cb_curr_cf = QCheckBox(self.curr_check_box)
+        self.cb_curr_cf.setObjectName(u"cb_curr_cf")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_cf)
+
+        self.cb_curr_kf = QCheckBox(self.curr_check_box)
+        self.cb_curr_kf.setObjectName(u"cb_curr_kf")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_kf)
+
+        self.cb_curr_residual = QCheckBox(self.curr_check_box)
+        self.cb_curr_residual.setObjectName(u"cb_curr_residual")
+
+        self.verticalLayout_10.addWidget(self.cb_curr_residual)
+
+
+        self.sub_box3.addWidget(self.curr_check_box)
+
+
+        self.verticalLayout_9.addLayout(self.sub_box3)
+
+
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.sub_menu3)
+
+        self.main_menu3 = QWidget(self.widget_2)
+        self.main_menu3.setObjectName(u"main_menu3")
+        self.main_menu3.setGeometry(QRect(280, 20, 174, 296))
+        sizePolicy.setHeightForWidth(self.main_menu3.sizePolicy().hasHeightForWidth())
+        self.main_menu3.setSizePolicy(sizePolicy)
+        self.main_menu3.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}\n"
+"\n"
+"\n"
+"")
+        self.formLayout_3 = QFormLayout(self.main_menu3)
+        self.formLayout_3.setObjectName(u"formLayout_3")
+        self.sub_menu4 = QWidget(self.main_menu3)
+        self.sub_menu4.setObjectName(u"sub_menu4")
+        self.sub_menu4.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.verticalLayout_11 = QVBoxLayout(self.sub_menu4)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.sub_box4 = QVBoxLayout()
+        self.sub_box4.setObjectName(u"sub_box4")
+        self.btn_menu_power = QPushButton(self.sub_menu4)
+        self.btn_menu_power.setObjectName(u"btn_menu_power")
+        sizePolicy.setHeightForWidth(self.btn_menu_power.sizePolicy().hasHeightForWidth())
+        self.btn_menu_power.setSizePolicy(sizePolicy)
+        self.btn_menu_power.setMinimumSize(QSize(130, 24))
+        self.btn_menu_power.setMaximumSize(QSize(16777215, 24))
+        self.btn_menu_power.setCheckable(True)
+        self.btn_menu_power.setChecked(False)
+        self.btn_menu_power.setAutoDefault(False)
+        self.btn_menu_power.setFlat(False)
+
+        self.sub_box4.addWidget(self.btn_menu_power)
+
+        self.pow_check_box = QWidget(self.sub_menu4)
+        self.pow_check_box.setObjectName(u"pow_check_box")
+        sizePolicy.setHeightForWidth(self.pow_check_box.sizePolicy().hasHeightForWidth())
+        self.pow_check_box.setSizePolicy(sizePolicy)
+        self.verticalLayout_12 = QVBoxLayout(self.pow_check_box)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.cb_pow_all = QCheckBox(self.pow_check_box)
+        self.cb_pow_all.setObjectName(u"cb_pow_all")
+        self.cb_pow_all.setCheckable(True)
+        self.cb_pow_all.setChecked(False)
+
+        self.verticalLayout_12.addWidget(self.cb_pow_all)
+
+        self.cb_pow_p = QCheckBox(self.pow_check_box)
+        self.cb_pow_p.setObjectName(u"cb_pow_p")
+
+        self.verticalLayout_12.addWidget(self.cb_pow_p)
+
+        self.cb_pow_q = QCheckBox(self.pow_check_box)
+        self.cb_pow_q.setObjectName(u"cb_pow_q")
+
+        self.verticalLayout_12.addWidget(self.cb_pow_q)
+
+        self.cb_pow_s = QCheckBox(self.pow_check_box)
+        self.cb_pow_s.setObjectName(u"cb_pow_s")
+
+        self.verticalLayout_12.addWidget(self.cb_pow_s)
+
+        self.cb_pow_pf = QCheckBox(self.pow_check_box)
+        self.cb_pow_pf.setObjectName(u"cb_pow_pf")
+
+        self.verticalLayout_12.addWidget(self.cb_pow_pf)
+
+        self.cb_pow_demand = QCheckBox(self.pow_check_box)
+        self.cb_pow_demand.setObjectName(u"cb_pow_demand")
+
+        self.verticalLayout_12.addWidget(self.cb_pow_demand)
+
+        self.cb_pow_energy = QCheckBox(self.pow_check_box)
+        self.cb_pow_energy.setObjectName(u"cb_pow_energy")
+
+        self.verticalLayout_12.addWidget(self.cb_pow_energy)
+
+
+        self.sub_box4.addWidget(self.pow_check_box)
+
+
+        self.verticalLayout_11.addLayout(self.sub_box4)
+
+
+        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.sub_menu4)
+
+        self.main_menu4 = QWidget(self.widget_2)
+        self.main_menu4.setObjectName(u"main_menu4")
+        self.main_menu4.setGeometry(QRect(415, 20, 174, 381))
+        sizePolicy.setHeightForWidth(self.main_menu4.sizePolicy().hasHeightForWidth())
+        self.main_menu4.setSizePolicy(sizePolicy)
+        self.main_menu4.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.formLayout_4 = QFormLayout(self.main_menu4)
+        self.formLayout_4.setObjectName(u"formLayout_4")
+        self.sub_menu5 = QWidget(self.main_menu4)
+        self.sub_menu5.setObjectName(u"sub_menu5")
+        self.sub_menu5.setStyleSheet(u"background-color: rgba(255, 255, 255, 0);\n"
+"")
+        self.verticalLayout_13 = QVBoxLayout(self.sub_menu5)
+        self.verticalLayout_13.setObjectName(u"verticalLayout_13")
+        self.sub_box5 = QVBoxLayout()
+        self.sub_box5.setObjectName(u"sub_box5")
+        self.btn_menu_analysis = QPushButton(self.sub_menu5)
+        self.btn_menu_analysis.setObjectName(u"btn_menu_analysis")
+        sizePolicy.setHeightForWidth(self.btn_menu_analysis.sizePolicy().hasHeightForWidth())
+        self.btn_menu_analysis.setSizePolicy(sizePolicy)
+        self.btn_menu_analysis.setMinimumSize(QSize(130, 24))
+        self.btn_menu_analysis.setMaximumSize(QSize(16777215, 24))
+        self.btn_menu_analysis.setCheckable(True)
+        self.btn_menu_analysis.setChecked(False)
+        self.btn_menu_analysis.setAutoDefault(False)
+        self.btn_menu_analysis.setFlat(False)
+
+        self.sub_box5.addWidget(self.btn_menu_analysis)
+
+        self.anal_check_box = QWidget(self.sub_menu5)
+        self.anal_check_box.setObjectName(u"anal_check_box")
+        sizePolicy.setHeightForWidth(self.anal_check_box.sizePolicy().hasHeightForWidth())
+        self.anal_check_box.setSizePolicy(sizePolicy)
+        self.verticalLayout_2 = QVBoxLayout(self.anal_check_box)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.cb_anal_all = QCheckBox(self.anal_check_box)
+        self.cb_anal_all.setObjectName(u"cb_anal_all")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_all)
+
+        self.cb_anal_phasor = QCheckBox(self.anal_check_box)
+        self.cb_anal_phasor.setObjectName(u"cb_anal_phasor")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_phasor)
+
+        self.cb_anal_harmonics = QCheckBox(self.anal_check_box)
+        self.cb_anal_harmonics.setObjectName(u"cb_anal_harmonics")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_harmonics)
+
+        self.cb_anal_waveform = QCheckBox(self.anal_check_box)
+        self.cb_anal_waveform.setObjectName(u"cb_anal_waveform")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_waveform)
+
+        self.cb_anal_volt_sym = QCheckBox(self.anal_check_box)
+        self.cb_anal_volt_sym.setObjectName(u"cb_anal_volt_sym")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_volt_sym)
+
+        self.cb_anal_volt_unbal = QCheckBox(self.anal_check_box)
+        self.cb_anal_volt_unbal.setObjectName(u"cb_anal_volt_unbal")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_volt_unbal)
+
+        self.cb_anal_curr_sym = QCheckBox(self.anal_check_box)
+        self.cb_anal_curr_sym.setObjectName(u"cb_anal_curr_sym")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_curr_sym)
+
+        self.cb_anal_curr_unbal = QCheckBox(self.anal_check_box)
+        self.cb_anal_curr_unbal.setObjectName(u"cb_anal_curr_unbal")
+
+        self.verticalLayout_2.addWidget(self.cb_anal_curr_unbal)
+
+
+        self.sub_box5.addWidget(self.anal_check_box)
+
+
+        self.verticalLayout_13.addLayout(self.sub_box5)
+
+
+        self.formLayout_4.setWidget(0, QFormLayout.LabelRole, self.sub_menu5)
+
+        self.sub_menu6 = QWidget(self.main_menu4)
+        self.sub_menu6.setObjectName(u"sub_menu6")
+        self.sub_menu6.setMinimumSize(QSize(120, 0))
+        self.sub_menu6.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.verticalLayout_14 = QVBoxLayout(self.sub_menu6)
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.sub_box6 = QVBoxLayout()
+        self.sub_box6.setObjectName(u"sub_box6")
+        self.btn_menu_system = QPushButton(self.sub_menu6)
+        self.btn_menu_system.setObjectName(u"btn_menu_system")
+        sizePolicy.setHeightForWidth(self.btn_menu_system.sizePolicy().hasHeightForWidth())
+        self.btn_menu_system.setSizePolicy(sizePolicy)
+        self.btn_menu_system.setMinimumSize(QSize(130, 24))
+        self.btn_menu_system.setMaximumSize(QSize(16777215, 24))
+        self.btn_menu_system.setCheckable(True)
+        self.btn_menu_system.setChecked(False)
+        self.btn_menu_system.setAutoDefault(False)
+        self.btn_menu_system.setFlat(False)
+
+        self.sub_box6.addWidget(self.btn_menu_system)
+
+        self.sys_check_box = QWidget(self.sub_menu6)
+        self.sys_check_box.setObjectName(u"sys_check_box")
+        sizePolicy.setHeightForWidth(self.sys_check_box.sizePolicy().hasHeightForWidth())
+        self.sys_check_box.setSizePolicy(sizePolicy)
+        self.verticalLayout_15 = QVBoxLayout(self.sys_check_box)
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.cb_sys_all = QCheckBox(self.sys_check_box)
+        self.cb_sys_all.setObjectName(u"cb_sys_all")
+
+        self.verticalLayout_15.addWidget(self.cb_sys_all)
+
+
+        self.sub_box6.addWidget(self.sys_check_box)
+
+
+        self.verticalLayout_14.addLayout(self.sub_box6)
+
+
+        self.formLayout_4.setWidget(1, QFormLayout.LabelRole, self.sub_menu6)
+
+        self.main_menu2.raise_()
+        self.btn_apply.raise_()
+        self.btn_cancel.raise_()
+        self.main_menu1.raise_()
+        self.main_menu3.raise_()
+        self.main_menu4.raise_()
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
 
         self.retranslateUi(Form)
-        self.menu_voltage.toggled.connect(self.vol_check_box.setHidden)
-        self.menu_current.toggled.connect(self.curr_check_box.setHidden)
-        self.menu_power.toggled.connect(self.pow_check_box.setHidden)
-        self.menu_analysis.toggled.connect(self.anal_check_box.setHidden)
-        self.menu_test_mode.toggled.connect(self.tm_check_box.setHidden)
+        self.btn_menu_voltage.toggled.connect(self.vol_check_box.setHidden)
+        self.btn_menu_test_mode.toggled.connect(self.tm_check_box.setHidden)
+        self.btn_menu_current.toggled.connect(self.curr_check_box.setHidden)
+        self.btn_menu_power.toggled.connect(self.pow_check_box.setHidden)
+        self.btn_menu_analysis.toggled.connect(self.anal_check_box.setHidden)
+        self.btn_menu_system.toggled.connect(self.sys_check_box.setHidden)
 
-        self.menu_current.setDefault(True)
-        self.menu_power.setDefault(True)
-        self.menu_analysis.setDefault(True)
-        self.menu_system.setDefault(True)
-        self.menu_voltage.setDefault(True)
-        self.menu_test_mode.setDefault(True)
+        self.btn_menu_voltage.setDefault(True)
+        self.btn_menu_test_mode.setDefault(True)
+        self.btn_menu_current.setDefault(True)
+        self.btn_menu_power.setDefault(True)
+        self.btn_menu_analysis.setDefault(True)
+        self.btn_menu_system.setDefault(True)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -341,38 +535,9 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.menu_current.setText(QCoreApplication.translate("Form", u"CURRENT \u2228", None))
-        self.curr_all.setText(QCoreApplication.translate("Form", u"ALL", None))
-        self.curr_rms.setText(QCoreApplication.translate("Form", u"RMS", None))
-        self.curr_fund.setText(QCoreApplication.translate("Form", u"Fundamental", None))
-        self.curr_demand.setText(QCoreApplication.translate("Form", u"Demand", None))
-        self.curr_thd.setText(QCoreApplication.translate("Form", u"THD %", None))
-        self.curr_tdd.setText(QCoreApplication.translate("Form", u"TDD %", None))
-        self.curr_crest_factor.setText(QCoreApplication.translate("Form", u"Crest Factor", None))
-        self.curr_k_factor.setText(QCoreApplication.translate("Form", u"K-Factor", None))
-        self.curr_residual.setText(QCoreApplication.translate("Form", u"Residual", None))
-        self.menu_power.setText(QCoreApplication.translate("Form", u"POWER \u2228", None))
-        self.pow_all.setText(QCoreApplication.translate("Form", u"ALL", None))
-        self.pow_p.setText(QCoreApplication.translate("Form", u"Active(P)", None))
-        self.pow_q.setText(QCoreApplication.translate("Form", u"Reactive(Q)", None))
-        self.pow_s.setText(QCoreApplication.translate("Form", u"Apparent(S)", None))
-        self.pow_pf.setText(QCoreApplication.translate("Form", u"PF", None))
-        self.pow_demand.setText(QCoreApplication.translate("Form", u"Demand", None))
-        self.pow_energy.setText(QCoreApplication.translate("Form", u"Energy", None))
-        self.menu_analysis.setText(QCoreApplication.translate("Form", u"ANALYSIS \u2228", None))
-        self.anal_all.setText(QCoreApplication.translate("Form", u"ALL", None))
-        self.anal_phasor.setText(QCoreApplication.translate("Form", u"Phasor", None))
-        self.anal_harmonics.setText(QCoreApplication.translate("Form", u"Harmonics", None))
-        self.anal_waveform.setText(QCoreApplication.translate("Form", u"Waveform", None))
-        self.anal_vol_symm.setText(QCoreApplication.translate("Form", u"Volt.Symm.", None))
-        self.anal_vol_unbal.setText(QCoreApplication.translate("Form", u"Volt.Unbal.%", None))
-        self.anal_curr_symm.setText(QCoreApplication.translate("Form", u"Curr.Symm.", None))
-        self.anal_curr_unbal.setText(QCoreApplication.translate("Form", u"Curr.Unbal.%", None))
         self.btn_apply.setText(QCoreApplication.translate("Form", u"Apply", None))
         self.btn_cancel.setText(QCoreApplication.translate("Form", u"Cancel", None))
-        self.menu_system.setText(QCoreApplication.translate("Form", u"SYSTEM \u2228", None))
-        self.sys_al.setText(QCoreApplication.translate("Form", u"ALL", None))
-        self.menu_voltage.setText(QCoreApplication.translate("Form", u"VOLTAGE \u2228", None))
+        self.btn_menu_voltage.setText(QCoreApplication.translate("Form", u"VOLTAGE \u2228", None))
         self.cb_vol_all.setText(QCoreApplication.translate("Form", u"ALL", None))
         self.cb_vol_rms.setText(QCoreApplication.translate("Form", u"RMS", None))
         self.cb_vol_fund.setText(QCoreApplication.translate("Form", u"Fundamental", None))
@@ -380,9 +545,38 @@ class Ui_Form(object):
         self.cb_vol_freq.setText(QCoreApplication.translate("Form", u"Frequency", None))
         self.cb_vol_residual.setText(QCoreApplication.translate("Form", u"Residual", None))
         self.cb_vol_sliding.setText(QCoreApplication.translate("Form", u"Sliding Ref.", None))
-        self.menu_test_mode.setText(QCoreApplication.translate("Form", u"TEST MODE \u2228", None))
+        self.btn_menu_test_mode.setText(QCoreApplication.translate("Form", u"TEST MODE \u2228", None))
         self.cb_tm_all.setText(QCoreApplication.translate("Form", u"ALL", None))
         self.cb_tm_balance.setText(QCoreApplication.translate("Form", u"Balance", None))
         self.cb_tm_noload.setText(QCoreApplication.translate("Form", u"No Load", None))
+        self.btn_menu_current.setText(QCoreApplication.translate("Form", u"CURRENT \u2228", None))
+        self.cb_curr_all.setText(QCoreApplication.translate("Form", u"ALL", None))
+        self.cb_curr_rms.setText(QCoreApplication.translate("Form", u"RMS", None))
+        self.cb_curr_fund.setText(QCoreApplication.translate("Form", u"Fundamental", None))
+        self.cb_curr_demand.setText(QCoreApplication.translate("Form", u"Demand", None))
+        self.cb_curr_thd.setText(QCoreApplication.translate("Form", u"THD %", None))
+        self.cb_curr_tdd.setText(QCoreApplication.translate("Form", u"TDD %", None))
+        self.cb_curr_cf.setText(QCoreApplication.translate("Form", u"Crest Factor", None))
+        self.cb_curr_kf.setText(QCoreApplication.translate("Form", u"K-Factor", None))
+        self.cb_curr_residual.setText(QCoreApplication.translate("Form", u"Residual", None))
+        self.btn_menu_power.setText(QCoreApplication.translate("Form", u"POWER \u2228", None))
+        self.cb_pow_all.setText(QCoreApplication.translate("Form", u"ALL", None))
+        self.cb_pow_p.setText(QCoreApplication.translate("Form", u"Active(P)", None))
+        self.cb_pow_q.setText(QCoreApplication.translate("Form", u"Reactive(Q)", None))
+        self.cb_pow_s.setText(QCoreApplication.translate("Form", u"Apparent(S)", None))
+        self.cb_pow_pf.setText(QCoreApplication.translate("Form", u"PF", None))
+        self.cb_pow_demand.setText(QCoreApplication.translate("Form", u"Demand", None))
+        self.cb_pow_energy.setText(QCoreApplication.translate("Form", u"Energy", None))
+        self.btn_menu_analysis.setText(QCoreApplication.translate("Form", u"ANALYSIS \u2228", None))
+        self.cb_anal_all.setText(QCoreApplication.translate("Form", u"ALL", None))
+        self.cb_anal_phasor.setText(QCoreApplication.translate("Form", u"Phasor", None))
+        self.cb_anal_harmonics.setText(QCoreApplication.translate("Form", u"Harmonics", None))
+        self.cb_anal_waveform.setText(QCoreApplication.translate("Form", u"Waveform", None))
+        self.cb_anal_volt_sym.setText(QCoreApplication.translate("Form", u"Volt.Symm.", None))
+        self.cb_anal_volt_unbal.setText(QCoreApplication.translate("Form", u"Volt.Unbal.%", None))
+        self.cb_anal_curr_sym.setText(QCoreApplication.translate("Form", u"Curr.Symm.", None))
+        self.cb_anal_curr_unbal.setText(QCoreApplication.translate("Form", u"Curr.Unbal.%", None))
+        self.btn_menu_system.setText(QCoreApplication.translate("Form", u"SYSTEM \u2228", None))
+        self.cb_sys_all.setText(QCoreApplication.translate("Form", u"ALL", None))
     # retranslateUi
 
