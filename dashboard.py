@@ -1,12 +1,14 @@
 from PySide6.QtGui import QIcon, QCursor, QTextCursor
-from PySide6.QtCore import QSize, Qt, QTimer, QObject, Signal, Slot
+from PySide6.QtCore import QSize, Qt, QObject, Signal, QThread
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QPushButton, QMenu, QMessageBox, QHeaderView, QTableWidgetItem
+from PySide6.QtWidgets import QMainWindow, QPushButton, QMenu, QMessageBox, QHeaderView, QTableWidgetItem, QFileDialog
 from resources_rc import *
 import sys
 import threading
 import os
 from datetime import datetime
+import time
+import xml.etree.ElementTree as ET
 
 from ui_dashboard import Ui_MainWindow
 from modules.ocr_setting import OcrSetting
@@ -91,7 +93,11 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_demo_mode_ui_test_2.clicked.connect(self.demo_ui_test_stop)
         self.btn_demo_mode_ui_test_3.clicked.connect(self.none_ui_test_start)
         self.btn_demo_mode_ui_test_4.clicked.connect(self.none_ui_test_stop)
+
         self.btn_test_start.clicked.connect(self.test_start)
+        self.btn_tc_save.clicked.connect(self.tc_save)
+        self.btn_tc_load.clicked.connect(self.tc_load)
+
         self.debug_button.clicked.connect(self.debug_test)
         self.btn_setting.clicked.connect(self.ip_setting)
         self.btn_all_connect.clicked.connect(self.all_connect)
@@ -198,14 +204,59 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def stop_callback(self):
         return self.stop_thread
     
+    def add_box_tc(self):
+        row_position = self.tableWidget.rowCount()
+        self.tableWidget.insertRow(row_position)
+
+        for col in range(3):
+            if col == 0:
+                box_item = QTableWidgetItem()
+                box_item.setFlags(box_item.flags() | Qt.ItemIsEditable)
+                self.tableWidget.setItem(row_position, col, box_item)
+            elif col == 1:
+                box_item = QTableWidgetItem()
+                box_item.setFlags(box_item.flags() & ~Qt.ItemIsEditable)
+                self.tableWidget.setItem(row_position, col, box_item)
+            else:
+                box_item = QTableWidgetItem()
+                box_item.setFlags(box_item.flags() & ~Qt.ItemIsEditable)
+                self.tableWidget.setItem(row_position, col, box_item)
+    
     def on_cell_double_click(self, row, col):
         if col == 1:
             if row not in self.set_windows:
-                self.set_windows[row] = self.setting_window.open_new_window(row+1)
+                self.set_windows[row] = self.setting_window.open_new_window(row)
+                self.set_windows[row].tcSelected.connect(self.on_tc_selected)
             self.set_windows[row].show()
         else:
             pass
+    
+    def on_tc_selected(self, row, text):
+        print(f"on_tc_selected: row={row}, text={text}")
+        item = QTableWidgetItem()
+        item.setText(text)
+        self.tableWidget.setItem(row, 1, item)
 
+    def tc_save(self):
+        filename, _ = QFileDialog.getSaveFileName(
+            parent=self,
+            caption="Save Table Data",
+            dir="",
+            filter="XML Files (*.xml);;All Files (*)"
+        )
+        if filename:  # 사용자가 파일을 선택했다면
+            self.save_table_to_xml(filename)
+    
+    def tc_load(self):
+        filename, _ = QFileDialog.getOpenFileName(
+            parent=self,
+            caption="Load Table Data",
+            dir="",
+            filter="XML Files (*.xml);;All Files (*)"
+        )
+        if filename:
+            self.load_table_from_xml(filename)
+        
     def demo_ui_test_start(self):
         # if self.modbus_manager.is_connected == True:
         self.stop_event.clear()
@@ -300,26 +351,32 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.lineEdit.clear()
 
     def test_start(self):
-        pass
+        """
+        START 버튼 -> Worker 스레드 시작
+        """
+        self.worker = TestWorker(self.tableWidget)
+        self.worker.progress.connect(self.on_progress)
+        self.worker.finished.connect(self.on_finished)
+        self.worker.start()  # run() 비동기 실행
 
+    def test_stop(self):
+        """
+        STOP 버튼 -> Worker 스레드에게 중단 요청
+        """
+        if hasattr(self, 'worker') and self.worker.isRunning():
+            self.worker.stop()
 
-    def add_box_tc(self):
-        row_position = self.tableWidget.rowCount()
-        self.tableWidget.insertRow(row_position)
+    def on_progress(self, row, content):
+        """
+        progress 시그널을 받으면, 현재 테스트 상황을 라벨 등에 표시할 수 있음
+        """
+        print(f"[Progress] {row}행, content={content} 테스트 중...")
 
-        for col in range(3):
-            if col == 0:
-                box_item = QTableWidgetItem()
-                box_item.setFlags(box_item.flags() | Qt.ItemIsEditable)
-                self.tableWidget.setItem(row_position, col, box_item)
-            elif col == 1:
-                box_item = QTableWidgetItem()
-                box_item.setFlags(box_item.flags() & ~Qt.ItemIsEditable)
-                self.tableWidget.setItem(row_position, col, box_item)
-            else:
-                box_item = QTableWidgetItem()
-                box_item.setFlags(box_item.flags() & ~Qt.ItemIsEditable)
-                self.tableWidget.setItem(row_position, col, box_item)
+    def on_finished(self):
+        """
+        모든 행 테스트 완료(또는 중단) 시 불리는 슬롯
+        """
+        print("테스트 스레드 종료/완료")
 
     def create_menu(self, tc_box_index):
         menu = QMenu()
@@ -341,6 +398,53 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             tc_box_index, callback=self.callback_ocr_list, load_callback=self.callback_ocr_load)
         ocr_setting.show()
         self.ocr_settings[tc_box_index] = ocr_setting
+    
+    def save_table_to_xml(self, filename):
+        root = ET.Element("tableData")
+
+        row_count = self.tableWidget.rowCount()
+        col_count = self.tableWidget.columnCount()
+
+        for r in range(row_count):
+            # <row index="0"> ... </row>
+            row_elem = ET.SubElement(root, "row", index=str(r))
+            for c in range(col_count):
+                item = self.tableWidget.item(r, c)
+                text = item.text() if item else ""  # 아이템이 없는 셀도 있을 수 있음
+
+                # <cell col="1"> 내용 </cell>
+                cell_elem = ET.SubElement(row_elem, "cell", col=str(c))
+                cell_elem.text = text
+
+        tree = ET.ElementTree(root)
+        tree.write(filename, encoding="utf-8", xml_declaration=True)
+        print(f"[INFO] 테이블 데이터가 '{filename}' 파일에 저장되었습니다.")
+
+    def load_table_from_xml(self, filename):
+        tree = ET.parse(filename)
+        root = tree.getroot()
+
+        self.tableWidget.setRowCount(0)
+
+        for row_elem in root.findall("row"):
+            r = int(row_elem.get("index"))
+            # row가 부족하면 늘려둔다
+            if r >= self.tableWidget.rowCount():
+                self.tableWidget.setRowCount(r + 1)
+
+            for cell_elem in row_elem.findall("cell"):
+                c = int(cell_elem.get("col"))
+                text = cell_elem.text if cell_elem.text else ""
+
+                # 열 수도 부족하면 늘려야 함(혹은 이미 columnCount가 충분하다면 패스)
+                if c >= self.tableWidget.columnCount():
+                    # 예: columnCount가 3 이상 필요할 수 있음
+                    self.tableWidget.setColumnCount(c + 1)
+
+                item = QTableWidgetItem(text)
+                self.tableWidget.setItem(r, c, item)
+
+        print(f"[INFO] '{filename}' 파일에서 테이블 데이터가 로드되었습니다.")
         
 class Alarm:
     
@@ -360,3 +464,52 @@ class EmittingStream(QObject):
 
     def flush(self):
         pass  # 필요한 경우 구현
+
+class TestWorker(QThread):
+    progress = Signal(int, str)   # (row, content) 진행 상황을 UI에 알리는 시그널
+    finished = Signal()           # 전체 테스트 끝나면 알리는 시그널
+
+    def __init__(self, tableWidget):
+        super().__init__()
+        self.tableWidget = tableWidget
+        self.stopRequested = False
+        self.stop_event = threading.Event()
+        self.meter_demo_test = DemoTest(self.stop_event)
+        self.test_map = {
+            "vol_all": self.meter_demo_test.demo_mea_vol_rms,
+        }
+
+
+    def run(self):
+        row_count = self.tableWidget.rowCount()
+        for row in range(row_count):
+            if self.stopRequested:
+                print("STOP이 눌려 테스트 중단.")
+                break
+
+            item = self.tableWidget.item(row, 1)
+            if not item:
+                continue
+            content = item.text()
+
+            self.progress.emit(row, content)
+
+            test_list = [x.strip() for x in content.split(",") if x.strip()]
+            if not test_list:
+                print("CONTENT가 비어있음")
+                return
+
+            for test_name in test_list:
+                if test_name in self.test_map:
+                    self.test_map[test_name]()  # 매핑된 함수 실행
+                else:
+                    self.run_unknown_test(test_name)
+
+            # 실제 테스트 (여기서는 2초 대기라고 가정)
+            time.sleep(2)
+
+        # 모든 테스트 혹은 중단 지점
+        self.finished.emit()
+
+    def stop(self):
+        self.stopRequested = True

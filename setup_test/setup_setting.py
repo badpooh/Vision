@@ -29,6 +29,9 @@ class SettingWindow(QWidget, Ui_Form):
 		self.btn_menu_system.setChecked(True)
 		self.sys_check_box.setHidden(True)
 		self.checkbox_states = {
+			"tm_all": False,
+			"tm_balance": False,
+			"tm_noload": False,
 			"vol_all": False,
 			"vol_rms": False,
 			"vol_fund": False,
@@ -36,9 +39,37 @@ class SettingWindow(QWidget, Ui_Form):
 			"vol_freq": False,
 			"vol_residual": False,
 			"vol_sliding": False,
+			"curr_all": False,
+			"curr_rms": False,
+			"curr_fund": False,
+			"curr_demand": False,
+			"curr_thd": False,
+			"curr_tdd": False,
+			"curr_cf": False,
+			"curr_kf": False,
+			"curr_residual": False,
+			"pow_all": False,
+			"pow_p": False,
+			"pow_q": False,
+			"pow_s": False,
+			"pow_pf": False,
+			"pow_demand": False,
+			"pow_energy": False,
+			"anal_all": False,
+			"anal_phasor": False,
+			"anal_harmonics": False,
+			"anal_waveform": False,
+			"anal_volt_sym": False,
+			"anal_volt_unbal": False,
+			"anal_curr_sym": False,
+			"anal_curr_unbal": False,
+			"sys_all": False,
 			}
 		self.btn_apply.clicked.connect(self.tc_apply)
 		self.btn_cancel.clicked.connect(self.close)
+		self.cb_tm_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "tm_all"))
+		self.cb_tm_balance.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "tm_balance"))
+		self.cb_tm_noload.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "tm_noload"))
 		self.cb_vol_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_all"))
 		self.cb_vol_rms.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_rms"))
 		self.cb_vol_fund.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_fund"))
@@ -46,6 +77,31 @@ class SettingWindow(QWidget, Ui_Form):
 		self.cb_vol_freq.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_freq"))
 		self.cb_vol_residual.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_residual"))
 		self.cb_vol_sliding.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "vol_sliding"))
+		self.cb_curr_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_all"))
+		self.cb_curr_rms.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_rms"))
+		self.cb_curr_fund.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_fund"))
+		self.cb_curr_demand.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_demand"))
+		self.cb_curr_thd.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_thd"))
+		self.cb_curr_tdd.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_tdd"))
+		self.cb_curr_cf.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_cf"))
+		self.cb_curr_kf.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_kf"))
+		self.cb_curr_residual.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "curr_residual"))
+		self.cb_pow_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "pow_all"))
+		self.cb_pow_p.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "pow_p"))
+		self.cb_pow_q.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "pow_q"))
+		self.cb_pow_s.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "pow_s"))
+		self.cb_pow_pf.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "pow_pf"))
+		self.cb_pow_demand.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "pow_demand"))
+		self.cb_pow_energy.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "pow_energy"))
+		self.cb_anal_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_all"))
+		self.cb_anal_phasor.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_phasor"))
+		self.cb_anal_harmonics.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_harmonics"))
+		self.cb_anal_waveform.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_waveform"))
+		self.cb_anal_volt_sym.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_volt_sym"))
+		self.cb_anal_volt_unbal.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_volt_unbal"))
+		self.cb_anal_curr_unbal.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_curr_sym"))
+		self.cb_anal_curr_unbal.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_curr_unbal"))
+		self.cb_sys_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "sys_all"))
    
 	def open_new_window(self, row):
 		instance_qwidget = SettingWindow()
@@ -57,6 +113,121 @@ class SettingWindow(QWidget, Ui_Form):
 	def on_checkbox_changed(self, state, key):
 		self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
 		print(f"{key.capitalize()} checkbox {'checked' if state == 2 else 'unchecked'}")
+
+		if key == "tm_all":
+			if state == 2:
+				self.cb_tm_balance.setChecked(False)
+				self.cb_tm_noload.setChecked(False)
+
+				self.cb_tm_balance.setEnabled(False)
+				self.cb_tm_noload.setEnabled(False)
+			else:
+				self.cb_tm_balance.setEnabled(True)
+				self.cb_tm_noload.setEnabled(True)
+
+		elif key == "vol_all":
+			if state == 2:
+				self.cb_vol_rms.setChecked(False)
+				self.cb_vol_fund.setChecked(False)
+				self.cb_vol_thd.setChecked(False)
+				self.cb_vol_freq.setChecked(False)
+				self.cb_vol_residual.setChecked(False)
+				self.cb_vol_sliding.setChecked(False)
+
+				self.cb_vol_rms.setEnabled(False)
+				self.cb_vol_fund.setEnabled(False)
+				self.cb_vol_thd.setEnabled(False)
+				self.cb_vol_freq.setEnabled(False)
+				self.cb_vol_residual.setEnabled(False)
+				self.cb_vol_sliding.setEnabled(False)
+			else: 
+				self.cb_vol_rms.setEnabled(True)
+				self.cb_vol_fund.setEnabled(True)
+				self.cb_vol_thd.setEnabled(True)
+				self.cb_vol_freq.setEnabled(True)
+				self.cb_vol_residual.setEnabled(True)
+				self.cb_vol_sliding.setEnabled(True)
+
+		elif key == "curr_all":
+			if state == 2:
+				self.cb_curr_rms.setChecked(False)
+				self.cb_curr_fund.setChecked(False)
+				self.cb_curr_demand.setChecked(False)
+				self.cb_curr_thd.setChecked(False)
+				self.cb_curr_tdd.setChecked(False)
+				self.cb_curr_cf.setChecked(False)
+				self.cb_curr_kf.setChecked(False)
+				self.cb_curr_residual.setChecked(False)
+
+				self.cb_curr_rms.setEnabled(False)
+				self.cb_curr_fund.setEnabled(False)
+				self.cb_curr_demand.setEnabled(False)
+				self.cb_curr_thd.setEnabled(False)
+				self.cb_curr_tdd.setEnabled(False)
+				self.cb_curr_cf.setEnabled(False)
+				self.cb_curr_kf.setEnabled(False)
+				self.cb_curr_residual.setEnabled(False)
+			else: 
+				self.cb_curr_rms.setEnabled(True)
+				self.cb_curr_fund.setEnabled(True)
+				self.cb_curr_demand.setEnabled(True)
+				self.cb_curr_thd.setEnabled(True)
+				self.cb_curr_tdd.setEnabled(True)
+				self.cb_curr_cf.setEnabled(True)
+				self.cb_curr_kf.setEnabled(True)
+				self.cb_curr_residual.setEnabled(True)
+		
+		elif key == "pow_all":
+			if state == 2:
+				self.cb_pow_p.setChecked(False)
+				self.cb_pow_q.setChecked(False)
+				self.cb_pow_s.setChecked(False)
+				self.cb_pow_pf.setChecked(False)
+				self.cb_pow_demand.setChecked(False)
+				self.cb_pow_energy.setChecked(False)
+
+				self.cb_pow_p.setEnabled(False)
+				self.cb_pow_q.setEnabled(False)
+				self.cb_pow_s.setEnabled(False)
+				self.cb_pow_pf.setEnabled(False)
+				self.cb_pow_demand.setEnabled(False)
+				self.cb_pow_energy.setEnabled(False)
+			else:
+				self.cb_pow_p.setEnabled(True)
+				self.cb_pow_q.setEnabled(True)
+				self.cb_pow_s.setEnabled(True)
+				self.cb_pow_pf.setEnabled(True)
+				self.cb_pow_demand.setEnabled(True)
+				self.cb_pow_energy.setEnabled(True)
+		
+		elif key == "anal_all":
+			if state == 2:
+				self.cb_anal_phasor.setChecked(False)
+				self.cb_anal_harmonics.setChecked(False)
+				self.cb_anal_waveform.setChecked(False)
+				self.cb_anal_volt_sym.setChecked(False)
+				self.cb_anal_volt_unbal.setChecked(False)
+				self.cb_anal_curr_sym.setChecked(False)
+				self.cb_anal_curr_unbal.setChecked(False)
+
+				self.cb_anal_phasor.setEnabled(False)
+				self.cb_anal_harmonics.setEnabled(False)
+				self.cb_anal_waveform.setEnabled(False)
+				self.cb_anal_volt_sym.setEnabled(False)
+				self.cb_anal_volt_unbal.setEnabled(False)
+				self.cb_anal_curr_sym.setEnabled(False)
+				self.cb_anal_curr_unbal.setEnabled(False)
+			else:
+				self.cb_anal_phasor.setEnabled(True)
+				self.cb_anal_harmonics.setEnabled(True)
+				self.cb_anal_waveform.setEnabled(True)
+				self.cb_anal_volt_sym.setEnabled(True)
+				self.cb_anal_volt_unbal.setEnabled(True)
+				self.cb_anal_curr_sym.setEnabled(True)
+				self.cb_anal_curr_unbal.setEnabled(True)
+
+		else:
+			pass
 	
 	def tc_apply(self):
 		selected_keys = [key for key, val in self.checkbox_states.items() if val is True]

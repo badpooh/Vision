@@ -11,11 +11,13 @@ import threading
 import shutil
 import os
 import pandas as pd
+from itertools import chain
 from paddleocr import PaddleOCR
 
 from setup_test.setup_config import ConfigSetup
 from setup_test.setup_config import ConfigTextRef as ec
 from setup_test.setup_config import ConfigROI as ecr
+from setup_test.setup_config import ConfigTouch as ect
 
 config_data = ConfigSetup()
 
@@ -95,70 +97,70 @@ class TouchManager:
         self.client_check = self.mobus_manager.touch_client
         self.coords_touch = config_data.touch_data()
         self.coords_color = config_data.color_detection_data()
-        self.coords_TA = config_data.touch_address_data()
 
     def touch_write(self, address, value, delay=0.6):
         attempt = 0
+        # print("Touching", end='', flush=True)
         while attempt < 2:
             self.client_check.write_register(address, value)
             read_value = self.client_check.read_holding_registers(address)
             time.sleep(delay)
-
             if read_value == value:
+                print("\nTouched")
                 return
             else:
                 attempt += 1
-        print(f"Failed to write value {value} to address {address}. Read back {read_value} instead.")
+                # print(".", end='', flush=True) 
+        # print(f"Failed to write value {value} to address {
+        #       address}. Read back {read_value} instead.")
 
     def uitest_mode_start(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["ui_test_mode"], 1)
+            self.touch_write(ect.touch_addr_ui_test_mode.value, 1)
         else:
             print("client Error")
 
     def screenshot(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["screen_capture"], self.hex_value)
+            self.touch_write(ect.touch_addr_screen_capture.value, self.hex_value)
         else:
             print("client Error")
 
     def menu_touch(self, menu_key):
         if self.client_check:
-            data_view_x, data_view_y = self.coords_touch[menu_key]
-            self.touch_write(self.coords_TA["pos_x"], data_view_x)
-            self.touch_write(self.coords_TA["pos_y"], data_view_y)
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+            data_view_x, data_view_y = menu_key
+            self.touch_write(ect.touch_addr_pos_x.value, data_view_x)
+            self.touch_write(ect.touch_addr_pos_y.value, data_view_y)
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
         else:
             print("Menu Touch Error")
 
     def btn_popup_touch(self, btn_popup_key):
         if self.client_check:
             btn_x, btn_y = self.coords_touch[btn_popup_key]
-            self.touch_write(self.coords_TA["pos_x"], btn_x)
-            self.touch_write(self.coords_TA["pos_y"], btn_y)
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(ect.touch_addr_pos_x.value, btn_x)
+            self.touch_write(ect.touch_addr_pos_y.value, btn_y)
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
             self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+                ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
         else:
             print("Button Popup Touch Error")
 
     def number_1_touch(self, number_key):
         if self.client_check:
             number_x, number_y = self.coords_touch[number_key]
-            self.touch_write(self.coords_TA["pos_x"], number_x)
-            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(ect.touch_addr_pos_x.value, number_x)
+            self.touch_write(ect.touch_addr_pos_y.value, number_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+                ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
         else:
@@ -167,19 +169,17 @@ class TouchManager:
     def number_2_touch(self, number_key1, number_key2):
         if self.client_check:
             number_x, number_y = self.coords_touch[number_key1]
-            self.touch_write(self.coords_TA["pos_x"], number_x)
-            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(ect.touch_addr_pos_x.value, number_x)
+            self.touch_write(ect.touch_addr_pos_y.value, number_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             number_a, number_b = self.coords_touch[number_key2]
-            self.touch_write(self.coords_TA["pos_x"], number_a)
-            self.touch_write(self.coords_TA["pos_y"], number_b)
+            self.touch_write(ect.touch_addr_pos_x.value, number_a)
+            self.touch_write(ect.touch_addr_pos_y.value, number_b)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
-            self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
         else:
@@ -188,24 +188,23 @@ class TouchManager:
     def number_3_touch(self, number_key1, number_key2, number_key3):
         if self.client_check:
             number_x, number_y = self.coords_touch[number_key1]
-            self.touch_write(self.coords_TA["pos_x"], number_x)
-            self.touch_write(self.coords_TA["pos_y"], number_y)
+            self.touch_write(ect.touch_addr_pos_x.value, number_x)
+            self.touch_write(ect.touch_addr_pos_y.value, number_y)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             number_a, number_b = self.coords_touch[number_key2]
-            self.touch_write(self.coords_TA["pos_x"], number_a)
-            self.touch_write(self.coords_TA["pos_y"], number_b)
+            self.touch_write(ect.touch_addr_pos_x.value, number_a)
+            self.touch_write(ect.touch_addr_pos_y.value, number_b)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
             number_c, number_d = self.coords_touch[number_key3]
-            self.touch_write(self.coords_TA["pos_x"], number_c)
-            self.touch_write(self.coords_TA["pos_y"], number_d)
+            self.touch_write(ect.touch_addr_pos_x.value, number_c)
+            self.touch_write(ect.touch_addr_pos_y.value, number_d)
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
             self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_popup_enter"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_popup_enter"][1])
+                ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
             self.touch_write(self.coords_TA["touch_mode"], 1)
             self.touch_write(self.coords_TA["touch_mode"], 0)
         else:
@@ -213,69 +212,41 @@ class TouchManager:
 
     def btn_apply_touch(self):
         if self.client_check:
-            self.touch_write(
-                self.coords_TA["pos_x"], self.coords_touch["btn_apply"][0])
-            self.touch_write(
-                self.coords_TA["pos_y"], self.coords_touch["btn_apply"][1])
-            self.touch_write(self.coords_TA["touch_mode"], 1)
-            self.touch_write(self.coords_TA["touch_mode"], 0)
+            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_apply"][0])
+            self.touch_write(ect.touch_addr_pos_y.value, self.coords_touch["btn_apply"][1])
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_setup(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 0)
-            self.touch_write(self.coords_TA["setup_button_bit"], 2)
+            self.touch_write(ect.touch_addr_setup_button.value, 0)
+            self.touch_write(ect.touch_addr_setup_button_bit.value, 2)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_meter(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 0)
-            self.touch_write(self.coords_TA["setup_button_bit"], 64)
+            self.touch_write(ect.touch_addr_setup_button.value, 0)
+            self.touch_write(ect.touch_addr_setup_button_bit.value, 64)
         else:
             print("Button Apply Touch Error")
 
     def btn_front_home(self):
         if self.client_check:
-            self.touch_write(self.coords_TA["setup_button"], 0)
-            self.touch_write(self.coords_TA["setup_button_bit"], 1)
+            self.touch_write(ect.touch_addr_setup_button.value, 0)
+            self.touch_write(ect.touch_addr_setup_button_bit.value, 1)
         else:
             print("Button Apply Touch Error")
 
 class OCRManager:
 
-    rois = config_data.roi_params()
-
-    def __init__(self):
-        pass
-        # self.use_gpu = torch.cuda.is_available()
-
-    ########################## 이미지 커팅 기본 method ##########################
-
-    def image_cut(self, image, height_ratio_start, height_ratio_end, width_ratio_start, width_ratio_end):
-        height, width = image.shape[:2]
-        cropped_image = image[int(height*height_ratio_start):int(height*height_ratio_end),
-                              int(width*width_ratio_start):int(width*width_ratio_end)]
-        resized_image = cv2.resize(
-            cropped_image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-
-        ### 이미지 필터 ###
-        # gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        # _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
-        # alpha = 10.0 # Contrast control
-        # beta = -100 # Brightness control
-        # adjusted_image = cv2.convertScaleAbs(binary_image, alpha=alpha, beta=beta)
-        # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
-        # morph_image = cv2.morphologyEx(adjusted_image, cv2.MORPH_CLOSE, kernel)
-        # denoised_image = cv2.fastNlMeansDenoising(morph_image, None, 30, 7, 21)
-
-        # 이미지 블러 처리 및 선명하게 만들기
-        blurred_image = cv2.GaussianBlur(resized_image, (0, 0), 3)
-        sharpened_image = cv2.addWeighted(
-            resized_image, 1.5, blurred_image, -0.5, 0)
-        return sharpened_image
-    ####################################################
+    def __init__(self, n=3):
+        self.n = n
+        self.config = ConfigSetup(n=self.n)
+        self.rois = self.config.roi_params()
+        self.phasor_condition = 0
 
     def color_detection(self, image, color_data):
         x, y, w, h, R, G, B = color_data
@@ -285,49 +256,228 @@ class OCRManager:
         target_color = np.array([R, G, B])
         color_difference = np.linalg.norm(average_color - target_color)
         return color_difference
+    
+    def update_n(self, new_n):
+        self.n = new_n
+        self.config.update_n(new_n)
+        self.rois = self.config.roi_params()
+        # print(f"n 값이 {new_n}으로 변경되었습니다.")
+
+    def update_phasor_condition(self, new_c):
+        self.phasor_condition = new_c
 
     def ocr_basic(self, image, roi_keys):
-        # 이미지 읽기 및 전처리
         image = cv2.imread(image)
         if image is None:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
-        
-        resized_image = cv2.resize(image, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
-        gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 30, 30, 7, 21)
-        
-        # OCR 객체 초기화
-        ocr = PaddleOCR(use_angle_cls=False, lang='en', use_space_char=True, show_log=False)  
-        
+
+        ocr = PaddleOCR(use_gpu=False, use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
+
         ocr_results = {}
         for roi_key in roi_keys:
+            # 이미지 처리
+            if self.phasor_condition == 0:
+                self.update_n(3)
+                resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
+                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
+            
+            elif self.phasor_condition == 1:
+                self.update_n(3)
+                sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+
+            else:
+                print(f"Error {self.phasor_condition}")
+
+
             if roi_key in self.rois:
+                extracted_texts = []
+                low_confidence_texts = []
                 x, y, w, h = self.rois[roi_key]
-                roi_image = gray_image[y:y+h, x:x+w]
-                
-                # ROI 이미지 표시 (디버깅용)
-                # cv2.imshow('ROI Image', roi_image)
+                roi_image = sharpened_image[y:y+h, x:x+w]
+
+                # cv2.imshow("test", roi_image)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
                 
-                # OCR 수행
                 text_results = ocr.ocr(roi_image, cls=False)
+                original_results = []
                 
+                # text_results를 평탄화
                 if text_results:
-                    extracted_texts = ' '.join(
-                        ['empty' if line is None else ' '.join([text[1][0] if text is not None else 'empty' for text in line])
-                        for line in text_results])
+                    text_results_filtered = [tr for tr in text_results if tr is not None]
+                    if text_results_filtered:
+                        flat_text_results = list(chain.from_iterable(text_results_filtered))
+                        for result in flat_text_results:
+                            coords, (text, confidence) = result
+                            text = text.strip()
+                            confidence = float(confidence)
+                            original_results.append((coords, text, confidence))
+                            # 신뢰도 검사
+                            if confidence >= 0.975:
+                                pass
+                                # extracted_texts.append(text)
+                            else:
+                                low_confidence_texts.append((coords, text, confidence))
+                    else:
+                        flat_text_results = []
+                        extracted_texts.append("empty")
                 else:
-                    extracted_texts = "empty"
-                ocr_results[roi_key] = extracted_texts
-   
+                    print("text_results error")
+
+                height, width = roi_image.shape[:2]
+                margin = 5
+                # 신뢰도 낮은 텍스트 처리
+                for coords, text, conf in low_confidence_texts:
+                    max_retries = 3
+                    retry_count = 0
+                    success = False
+
+                    print(f"ROI '{roi_key}'에서 신뢰도 98% 미만의 텍스트:")
+                    print(f" - '{text}' (신뢰도: {conf * 100:.2f}%)")
+                    # coords를 사용하여 해당 텍스트 영역 이미지 추출
+                    x_min = max(0, int(min([pt[0] for pt in coords])) - margin)
+                    x_max = min(width, int(max([pt[0] for pt in coords])) + margin)
+                    y_min = max(0, int(min([pt[1] for pt in coords])) - margin)
+                    y_max = min(height, int(max([pt[1] for pt in coords])) + margin)
+                    text_roi = roi_image[y_min:y_max, x_min:x_max]
+
+                    # 이미지 전처리 및 OCR 재시도
+                    if text_roi.size == 0:
+                        continue  # 유효하지 않은 영역은 건너뜁니다
+                    while retry_count < max_retries and not success:
+                        char_image = text_roi.copy()
+                        ### 일반 텍스트 영역 / 97% 초과가 되지않으면 바로 실행
+                        if retry_count == 0 and self.phasor_condition == 0:
+                            self.update_n(4)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+                        
+                        ### 그림 영역 / 97% 초과가 되지않으면 바로 실행 (Phasor와 같은 A, B, C 주위에 색박스로 된 부분)
+                        elif retry_count == 0 and self.phasor_condition == 1:
+                            self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            sharpening_kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                            char_image = cv2.filter2D(char_image, -1, sharpening_kernel)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 100, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            edges = cv2.Canny(thresh_char, 50, 150)
+                            char_image = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+                        
+                        ### 일반 텍스트 영역 재시도 2번째
+                        elif retry_count == 1 and self.phasor_condition == 0:
+                            self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 150, 255, cv2.THRESH_BINARY)
+                            clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(9, 9))
+                            enhanced_char = clahe.apply(thresh_char)
+                            char_image = cv2.cvtColor(enhanced_char, cv2.COLOR_GRAY2BGR)
+
+                        ### 그림 영역 재시도 2번째
+                        elif retry_count == 1 and self.phasor_condition == 1:
+                            self.update_n(4)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+
+                        ### 일반 텍스트 영역 재시도 3번째
+                        elif retry_count > 1 and self.phasor_condition == 0:
+                            self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_LANCZOS4)
+                            char_image = cv2.Canny(char_image, 0, 200)
+                            kernel = np.array([
+                                                [-1, -1, -1, -1, -1],
+                                                [-1,  1,  1,  1, -1],
+                                                [-1,  1,  5,  1, -1],
+                                                [-1,  1,  1,  1, -1],
+                                                [-1, -1, -1, -1, -1]], dtype=np.float32)
+                            char_image = cv2.filter2D(char_image, -1, kernel)
+
+                        elif retry_count > 1 and self.phasor_condition == 1:
+                            self.update_n(4)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                            kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                            char_image = cv2.filter2D(char_image, -1, kernel2)
+                            gray_char = cv2.cvtColor(char_image, cv2.COLOR_BGR2GRAY)
+                            _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
+
+                        # cv2.imshow("test2", char_image)
+                        # cv2.waitKey(0)
+                        # cv2.destroyAllWindows()
+
+                        retry_result = ocr.ocr(char_image, cls=False)
+                        print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
+                        if retry_result and retry_result[0]:
+                            flat_retry_result = list(chain.from_iterable(retry_result))
+                            for res in flat_retry_result:
+                                new_coords, (new_text, new_confidence) = res
+                                new_text = new_text.strip()
+                                new_confidence = float(new_confidence)
+
+                                if new_confidence >= 0.94 or new_text.lower() == "c" or ((new_text.upper() == "V0" or new_text.upper() == "U0") and new_confidence >= 0.85):
+                                    # original_results에서 해당 좌표를 찾아 업데이트
+                                    for i, (orig_coords, orig_text, orig_conf) in enumerate(original_results):
+                                        if orig_coords == coords:
+                                            combined_text = self.merge_texts(orig_text, new_text, orig_coords, new_coords)
+                                            original_results[i] = (orig_coords, combined_text, new_confidence)
+                                            success = True
+                                            break
+                                    success = True
+                                    break
+                        else:
+                            print("재시도 후에도 텍스트를 인식하지 못했습니다.")
+                        retry_count += 1
+                
+                extracted_texts = [text for coords, text, conf in original_results]
+                extracted_texts = ' '.join(extracted_texts)
+                extracted_texts = self.handle_special_cases(extracted_texts)
+                if extracted_texts:
+                    ocr_results[roi_key] = extracted_texts
+            else:
+                print(f"{roi_key}가 self.rois에 존재하지 않습니다.")
+
         for roi_key, text in ocr_results.items():
-            print(f'ROI {roi_key}: {text}')
-        
+            print(f'{roi_key}: {text}')
+
         # 유효한 텍스트만 리스트로 반환
         ocr_results_list = [text for text in ocr_results.values() if text]
         return ocr_results_list
+
+    def merge_texts(self, orig_text, new_text, orig_coords, new_coords):
+        if len(new_text) < len(orig_text):
+            if new_coords[0][0] > orig_coords[0][0]:
+                return orig_text[:len(orig_text)-len(new_text)] + new_text
+            else:    
+                return new_text + orig_text[len(new_text):]
+        else:
+            return new_text
+
+    def handle_special_cases(self, text):
+        words = text.strip().split()
+        processed_words = []
+        for i, word in enumerate(words):
+            if word == 'V':
+                has_word_before = (i > 0)
+                has_word_after = (i < len(words) - 1)
+                if has_word_before and has_word_after:
+                    # 앞뒤로 단어가 있는 경우 'V'를 제외
+                    print(f"예외 처리: '{word}'를 결과에서 제외")
+                    continue  # 'V'를 결과에서 제외하고 다음 단어로 이동
+            processed_words.append(word)
+        return ' '.join(processed_words)
 
 class ModbusLabels:
 
@@ -475,53 +625,9 @@ class Evaluation:
     rois = config_data.roi_params()
 
     def __init__(self):
-        self.labels = config_data.match_m_setup_labels()
-        self.pop_params = config_data.match_pop_labels()
         self.m_home, self.m_setup = config_data.match_m_setup_labels()
 
-    def eval_static_text(self, ocr_results_1, right_key):
-
-        right_list = self.pop_params[right_key]
-        ocr_right_1 = right_list
-
-        right_list_1 = [text.strip() for text in ocr_right_1]
-        ocr_list_1 = [result.strip() for result in ocr_results_1]
-
-        leave_ocr_all = [
-            result for result in ocr_list_1 if result not in right_list_1]
-        leave_right_all = [
-            text for text in right_list_1 if text not in ocr_list_1]
-
-        ocr_error = leave_ocr_all
-        right_error = leave_right_all
-
-        # OCR 결과와 매칭되지 않아 남은 단어
-        print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
-        print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
-
-        return ocr_error, right_error
-
-    def eval_variable_text(self, ocr_results_1, right_list):
-
-        ocr_right_1 = right_list
-
-        right_list_1 = [text.strip() for text in ocr_right_1]
-        ocr_list_1 = [result.strip() for result in ocr_results_1]
-
-        leave_ocr_all = [
-            result for result in ocr_list_1 if result not in right_list_1]
-        leave_right_all = [
-            text for text in right_list_1 if text not in ocr_list_1]
-
-        ocr_error = leave_ocr_all
-        right_error = leave_right_all
-
-        # OCR 결과와 매칭되지 않아 남은 단어
-        print(f"OCR 결과와 매칭되지 않는 단어들: {ocr_error}")
-        print(f"\n정답 중 OCR 결과와 매칭되지 않는 단어들: {right_error}")
-
-        return ocr_error, right_error
-
+    ### With Demo Balance ###
     def eval_demo_test(self, ocr_res, right_key, ocr_res_meas=None, image_path=None, img_result=None):
         self.meas_error = False
         self.condition_met = False
@@ -529,19 +635,20 @@ class Evaluation:
         
         image = cv2.imread(image_path)
 
-        ocr_right = self.m_home[right_key]
+        ocr_right = right_key
 
         right_list = ' '.join(text.strip() for text in ocr_right).split()
         ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
 
-        right_set = set(right_list)
-        ocr_rt_set = set(ocr_rt_list)
+        right_counter = Counter(right_list)
+        ocr_rt_counter = Counter(ocr_rt_list)
 
-        self.ocr_error = list(ocr_rt_set - right_set)
-        right_error = list(right_set - ocr_rt_set)
+        self.ocr_error = list((ocr_rt_counter - right_counter).elements())
+        right_error = list((right_counter - ocr_rt_counter).elements())
 
         def check_results(values, limits, ocr_meas_subset):
             self.condition_met = True
+            meas_results = []
 
             if isinstance(ocr_meas_subset, (float, int)):
                 results = {values[0]: str(ocr_meas_subset)}
@@ -564,174 +671,433 @@ class Evaluation:
                 text_matches = [lim for lim in limits if isinstance(lim, str)]
                 if any(text_match == value for text_match in text_matches):
                     print(f"{name or 'empty'} = {value} (PASS by text match)")
+                    meas_results.append(f"{name or 'empty'} = {value} (PASS by text)")
                     
                 elif numeric_value is not None and len(limits) >= 3 and isinstance(limits[0], (int, float)):
                     if limits[0] <= numeric_value <= limits[1] and limits[2] == unit:
                         print(f"{name} = {numeric_value}{unit} (PASS)")
+                        meas_results.append(f"{numeric_value}{unit} (PASS)")
                     else:
                         print(f"{name} = {value} (FAIL)")
+                        meas_results.append(f"{value} (FAIL)")
                         self.meas_error = True
                 else:
                     print(f"{name} = {value} (FAIL)")
+                    meas_results.append(f"{value} (FAIL)")
                     self.meas_error = True
+            return meas_results
+        
+        all_meas_results = []
 
         if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["rms_voltage_L_L"]) <= 10:
-                check_results(['AB', 'BC', 'CA', 'Aver'],
-                              (180, 200, "V"), ocr_res_meas[:5])
-            elif self.ocr_manager.color_detection(image, color_data["rms_voltage_L_N"]) <= 10:
-                check_results(['A', 'B', 'C', 'Aver'],
-                              (100, 120, "V"), ocr_res_meas[:5])
+            if self.ocr_manager.color_detection(image, ecr.color_rms_vol_ll.value) <= 10:
+                all_meas_results.extend(check_results(["AB", "BC", "CA", "Aver"], (180, 200, "V"), ocr_res_meas[:5]))
+            elif self.ocr_manager.color_detection(image, ecr.color_rms_vol_ln.value) <= 10:
+                all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (100, 120, "V"), ocr_res_meas[:5]))
+            else:
+                print("RMS Voltage missed")
+
+        elif "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_main_menu_vol.value) <= 10: 
+                if self.ocr_manager.color_detection(image, ecr.color_vol_thd_ll.value) <= 10:
+                    all_meas_results.extend(check_results(["AB", "BC", "CA"], (2.0, 4.0, "%"), ocr_res_meas[:4]))
+                elif self.ocr_manager.color_detection(image, ecr.color_vol_thd_ln.value) <= 10:
+                    all_meas_results.extend(check_results(["A", "B", "C"], (3.0, 4.0, "%"), ocr_res_meas[:4]))
+                else:
+                    print("Total Harmonic missed")
+
+        elif "Frequency" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["Freq"], (59, 61, "Hz"), ocr_res_meas[:1]))
+
+        elif "Residual Voltage" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["RMS", "Fund."], (0, 10, "V"), ocr_res_meas[:2]))
+
+        elif "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A %", "B %", "C %", "Aver %"], (45, 55, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (2, 3, "A"), ocr_res_meas[4:]))
+
+        elif "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_main_menu_curr.value) <= 10: 
+                all_meas_results.extend(check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3]))
+
+        elif "Total Demand" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (1, 2.5, "%"), ocr_res_meas[:3]))
+
+        elif "Crest Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (1.3, 1.6, ""), ocr_res_meas[:3]))
+
+        elif "K-Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (1.2, 1.5, ""), ocr_res_meas[:3]))
+
+        elif "Residual Current" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["RMS"], (70, 100, "mA"), ocr_res_meas[:1]))
+            all_meas_results.extend(check_results(["RMS"], (20, 40, "mA"), ocr_res_meas[1:2]))
+            
+        elif "Active Power" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A %", "B %", "C %", "Total %"], (40, 50, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (230, 240, "W"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (705, 715, "W"), ocr_res_meas[7:8]))
+            
+        elif "Reactive Power" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (130, 145, "VAR"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (400, 420, "VAR"), ocr_res_meas[7:8]))
+            
+        elif "Apparent Power" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(['A', 'B', 'C', 'Total'],(45, 55, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8]))
+            
+        elif "Power Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "Lag"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Total"], (0.860, 0.870, ""), ocr_res_meas[4:8]))
+            
+        elif "Phasor" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_phasor_vll.value) <= 10:
+                all_meas_results.extend(check_results(["AB", "BC", "CA"], (180, 195, "V" or "v"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6]))
+                all_meas_results.extend(check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7]))
+                all_meas_results.extend(check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8]))
+                all_meas_results.extend(check_results(["CA_angle"], (145, 155, ""), ocr_res_meas[8:9]))
+                all_meas_results.extend(check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10]))
+                all_meas_results.extend(check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11]))
+                all_meas_results.extend(check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12]))
+                all_meas_results.extend(check_results([ecir.img_ref_phasor_all_vll.value], (0.98, 1, ""), img_result[0]))
+                all_meas_results.extend(check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3]))
+                
+            elif self.ocr_manager.color_detection(image, ecr.color_phasor_vln.value) <= 10:
+                all_meas_results.extend(check_results(["A", "B", "C"], (100, 120, "V" or "v"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6]))
+                all_meas_results.extend(check_results(["A_angle"], (-0.2, 5, ""), ocr_res_meas[6:7]))
+                all_meas_results.extend(check_results(["B_angle"], (-125, -115, ""), ocr_res_meas[7:8]))
+                all_meas_results.extend(check_results(["C_angle"], (115, 125, ""), ocr_res_meas[8:9]))
+                all_meas_results.extend(check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10]))
+                all_meas_results.extend(check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11]))
+                all_meas_results.extend(check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12]))
+                all_meas_results.extend(check_results([ecir.img_ref_phasor_all_vln.value], (0.98, 1, ""), img_result[0]))
+                all_meas_results.extend(check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3]))
+                
             else:
                 print("demo test evaluation error")
 
-        if self.ocr_manager.color_detection(image, color_data["mea_voltage"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
-                check_results(['AB', 'BC', 'CA'], (2.0, 4.0, "%"), ocr_res_meas[:4])
-            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
-                check_results(['A', 'B', 'C'], (3.0, 4.0, "%"),
-                              ocr_res_meas[:4])
-            else:
-                print("demo test evaluation error")
-
-        if "Frequency" in ''.join(ocr_res[0]):
-            check_results(['Freq'], (59, 61, "Hz"), ocr_res_meas[:1])
-
-        if "Residual Voltage" in ''.join(ocr_res[0]):
-            check_results(["RMS", "Fund."], (0, 10, "V"), ocr_res_meas[:2])
-
-        if "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Aver%'], (45, 55, "%"), ocr_res_meas[:4])
-            check_results(['A', 'B', 'C', 'Aver'], (2, 3, "A"), ocr_res_meas[4:])
-
-        if self.ocr_manager.color_detection(image, color_data["mea_current"]) <= 10 and "Total Harmonic" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (0, 3.0, "%"), ocr_res_meas[:3])
-
-        if "Total Demand" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1, 2.5, "%"), ocr_res_meas[:3])
-
-        if "Crest Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.3, 1.6, ""), ocr_res_meas[:3])
-
-        if "K-Factor" in ''.join(ocr_res[0]):
-            check_results(["A", "B", "C"], (1.2, 1.5, ""), ocr_res_meas[:3])
-
-        if "Residual Current" in ''.join(ocr_res[0]):
-            check_results(["RMS"], (70, 100, "mA"), ocr_res_meas[:1])
-            check_results(["RMS"], (20, 40, "mA"), ocr_res_meas[1:2])
-            
-        if "Active Power" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(40, 50, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C"], (230, 240, "W"), ocr_res_meas[4:7])
-            check_results(["Total"], (705, 715, "W"), ocr_res_meas[7:8])
-            
-        if "Reactive Power" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(20, 30, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C"], (130, 145, "VAR"), ocr_res_meas[4:7])
-            check_results(["Total"], (400, 420, "VAR"), ocr_res_meas[7:8])
-            
-        if "Apparent Power" in ''.join(ocr_res[0]):
-            check_results(['A', 'B', 'C', 'Total'],(45, 55, "%"), ocr_res_meas[:4])
-            check_results(["A", "B", "C"], (270, 280, "VA"), ocr_res_meas[4:7])
-            check_results(["Total"], (810, 830, "VA"), ocr_res_meas[7:8])
-            
-        if "Power Factor" in ''.join(ocr_res[0]):
-            check_results(['A%', 'B%', 'C%', 'Total%'],(45, 55, "Lag"), ocr_res_meas[:4])
-            check_results(["A", "B", "C", "Total"], (0.860, 0.870, ""), ocr_res_meas[4:8])
-
-        if "Phasor" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["phasor_VLL"]) <= 10:
-                check_results(["AB", "BC", "CA"], (180, 195, "v"), ocr_res_meas[:3])
-                check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
-                check_results(["AB_angle"], (25, 35, ""), ocr_res_meas[6:7])
-                check_results(["BC_angle"], (-95, -85, ""), ocr_res_meas[7:8])
-                check_results(["CA_angle"], (145, 155, ""), ocr_res_meas[8:9])
-                check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
-                check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
-                check_results(["Phasor_image"], (0.98, 1, ""), img_result[0])
-                check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
-            elif self.ocr_manager.color_detection(image, color_data["phasor_VLN"]) <= 10:
-                check_results(["A", "B", "C"], (100, 120, "v"), ocr_res_meas[:3])
-                check_results(["A_Curr", "B_Curr", "C_Curr"], (2, 3, "A"), ocr_res_meas[3:6])
-                check_results(["A_angle"], (-0.2, 5, ""), ocr_res_meas[6:7])
-                check_results(["B_angle"], (-125, -115, ""), ocr_res_meas[7:8])
-                check_results(["C_angle"], (115, 125, ""), ocr_res_meas[8:9])
-                check_results(["A_angle_cur"], (-35, -25, ""), ocr_res_meas[9:10])
-                check_results(["B_angle_cur"], (-155, -145, ""), ocr_res_meas[10:11])
-                check_results(["C_angle_cur"], (85, 95, ""), ocr_res_meas[11:12])
-                check_results(["Phasor_image"], (0.98, 1, ""), img_result[0])
-                check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3])
-            else:
-                print("demo test evaluation error")
-
-        if "Harmonics" in ''.join(ocr_res[0]):
+        elif "Harmonics" in ''.join(ocr_res[0]):
             if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
                 if img_result == 1 or img_result == 0:
-                    check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (2, 5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v" or "V"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
                 elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
-                    check_results(["harmonic_%_img"], (0.95, 1, ""), img_result)
-                # elif "Text" in ''.join(ocr_res[1]):
-                #     check_text(ocr_res[1])
-                else:
-                    check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3])
-                    check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6])
-                    check_results(["harmonic_image"], (0.9, 1, ""), img_result)
-
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (2, 5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v" or "V"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                elif "Text" in ''.join(ocr_res[1]):
+                    all_meas_results.extend("PASS?")
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (3.0, 4.0, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
             else:
                 if img_result == 1 or img_result == 0:
-                    check_results(["harmonics_img_detect"], (1, 1, ""), img_result)
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (1, 1, ""), img_result))  
                 elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
-                    check_results(["harmonic_%_img"], (0.95, 1, ""), img_result)
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.95, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (2, 5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (100, 120, "v" or "V"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
                 else:
-                    check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3])
-                    check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6])
-                    check_results(["harmonic_image"], (0.98, 1, ""), img_result)
-
-        if "Waveform" in ''.join(ocr_res[0]):
+                    all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (1.5, 2.5, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (2, 3, "A"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.98, 1, ""), img_result))
+                    
+        elif "Waveform" in ''.join(ocr_res[0]):
             if 0 < img_result < 1:
-                check_results(["waveform_image"], (0.945, 1, ""), img_result)
+                all_meas_results.extend(check_results(["waveform_image"], (0.945, 1, ""), img_result))
             else:
-                check_results(["waveform_img_detect"], (1, 1, ""), img_result)
-
-        
-        if "Volt. Symm. Component" in ''.join(ocr_res[0]):
-            if self.ocr_manager.color_detection(image, color_data["vol_thd_L_L"]) <= 10:
-                check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
-                check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
-                check_results(['V1', 'V2'], (180, 200, "V" or "v"), ocr_res_meas[2:3])
-                check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
-            elif self.ocr_manager.color_detection(image, color_data["vol_thd_L_N"]) <= 10:
-                check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1])
-                check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2])
-                check_results(['V1', 'V2'], (100, 110, "V" or "v"), ocr_res_meas[2:3])
-                check_results(['V1', 'V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4])
+                all_meas_results.extend(check_results(["waveform_img_detect"], (1, 1, ""), img_result))
                 
-        if "Voltage Unbalance" in ''.join(ocr_res[0]):
-            check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[0:4])
-            check_results(['NEMA LL', 'NEMA LN', "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8])
+        elif "Volt. Symm. Component" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ll.value) <= 10:
+                all_meas_results.extend(check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1]))
+                all_meas_results.extend(check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2]))
+                all_meas_results.extend(check_results(['V1'], (180, 200, "V" or "v"), ocr_res_meas[2:3]))
+                all_meas_results.extend(check_results(['V2'], (0, 1, "V" or "v"), ocr_res_meas[3:4]))
+            elif self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ll.value) <= 10:
+                all_meas_results.extend(check_results(['V1'], (180, 200, "V1"), ocr_res_meas[0:1]))
+                all_meas_results.extend(check_results(['V2'], (180, 200, "V2"), ocr_res_meas[1:2]))
+                all_meas_results.extend(check_results(['V0'], (180, 200, "V0"), ocr_res_meas[2:3]))
+                all_meas_results.extend(check_results(['V1'], (100, 110, "V" or "v"), ocr_res_meas[3:4]))
+                all_meas_results.extend(check_results(['V2'], (0, 2, "V" or "v"), ocr_res_meas[4:5]))
+                all_meas_results.extend(check_results(['V0'], (0, 1, "V" or "v"), ocr_res_meas[5:6]))
+                
+        elif "Voltage Unbalance" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["NEMA LL"], (0, 1, "LL"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["NEMA LN"], (0, 1, "LN"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["U2"], (0, 1, "U2"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results(["U0"], (0, 1, "U0"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["NEMA LL", "NEMA LN", "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8]))
             
-        if "Curr. Symm. Component" in ''.join(ocr_res[0]):
-            check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1])
-            check_results(["I1"], (0, 1, "l2"), ocr_res_meas[1:2])
-            check_results(["I1"], (0, 1, "l0"), ocr_res_meas[2:3])
-            check_results(["I1", "I2", "I0"], (2, 3), ocr_res_meas[3:4])
-            check_results(["I1", "I2", "I0"], (0, 0.1), ocr_res_meas[4:5])
-            check_results(["I1", "I2", "I0"], (0, 0.1), ocr_res_meas[5:6])
+        elif "Curr. Symm. Component" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["I2"], (0, 1, "l2"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["I0"], (0, 1, "l0"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results(["I1"], (2, 3, "A"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["I2"], (0, 0.1, "A"), ocr_res_meas[4:5]))
+            all_meas_results.extend(check_results(["I0"], (0, 0.1, "A"), ocr_res_meas[5:6]))
             
-        if "Current Unbalance" in ''.join(ocr_res[0]):
-            check_results([""], (0, 1, "empty"), ocr_res_meas[0:1])
-            check_results(["U2"], (0, 1, "U2"), ocr_res_meas[1:2])
-            check_results(["U0"], (0, 1, "U0"), ocr_res_meas[2:3])
-            check_results(["", "U2", "U0"], (0, 1, "%"), ocr_res_meas[3:6])
-
-        if not self.condition_met:
+        elif "Current Unbalance" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results([""], (0, 1, "empty"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["U2"], (0, 1, "U2"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["U0"], (0, 1, "U0"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results([""], (0, 1, "%"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["U2"], (0, 1, "%"), ocr_res_meas[4:5]))
+            all_meas_results.extend(check_results(["U0"], (0, 0.5, "%"), ocr_res_meas[5:6]))
+            
+        elif "Demand Currnet" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A%", "B%", "C%", "Aver%"], (40, 60, "%"), ocr_res_meas[0:5]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (4, 6, "A"), ocr_res_meas[5:9]))
+        
+        elif not self.condition_met:
             print("Nothing matching word")
 
         print(f"OCR - 정답: {self.ocr_error}")
         print(f"정답 - OCR: {right_error}")
 
-        return self.ocr_error, right_error, self.meas_error, ocr_res
+        return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results,
+
+    ### No source, No Demo ###
+    def eval_none_test(self, ocr_res, right_key, ocr_res_meas=None, image_path=None, img_result=None):
+        self.meas_error = False
+        self.condition_met = False
+        color_data = config_data.color_detection_data()
+        
+        image = cv2.imread(image_path)
+
+        right_list = ' '.join(text.strip() for text in right_key).split()
+        ocr_rt_list = ' '.join(result.strip() for result in ocr_res).split()
+
+        right_counter = Counter(right_list)
+        ocr_rt_counter = Counter(ocr_rt_list)
+
+        self.ocr_error = list((ocr_rt_counter - right_counter).elements())
+        right_error = list((right_counter - ocr_rt_counter).elements())
+
+        def check_results(values, limits, ocr_meas_subset):
+            self.condition_met = True
+            meas_results = []
+
+            if isinstance(ocr_meas_subset, (float, int)):
+                results = {values[0]: str(ocr_meas_subset)}
+            elif isinstance(ocr_meas_subset, list):
+                results = {name: str(value) for name, value in zip(values, ocr_meas_subset)}
+            else:
+                print("Unexpected ocr_meas_subset type.")
+                return
+
+            for name, value in results.items():
+                match = re.match(r"([-+]?\d+\.?\d*)\s*(\D*)", value)
+                if match:
+                    numeric_value = float(match.group(1))  # 숫자 부분
+                    unit = match.group(2)  # 단위 부분 (예: V)
+                else:
+                    numeric_value = None
+                    unit = value.strip()
+
+                    # 텍스트 정답을 처리하는 로직 추가
+                text_matches = [lim for lim in limits if isinstance(lim, str)]
+                if any(text_match == value for text_match in text_matches):
+                    print(f"{name or 'empty'} = {value} (PASS by text match)")
+                    meas_results.append(f"{name or 'empty'} = {value} (PASS by text)")
+                    
+                elif numeric_value is not None and len(limits) >= 3 and isinstance(limits[0], (int, float)):
+                    if limits[0] <= numeric_value <= limits[1] and limits[2] == unit:
+                        print(f"{name} = {numeric_value}{unit} (PASS)")
+                        meas_results.append(f"{numeric_value}{unit} (PASS)")
+                    else:
+                        print(f"{name} = {value} (FAIL)")
+                        meas_results.append(f"{value} (FAIL)")
+                        self.meas_error = True
+                else:
+                    print(f"{name} = {value} (FAIL)")
+                    meas_results.append(f"{value} (FAIL)")
+                    self.meas_error = True
+            return meas_results
+        
+        all_meas_results = []
+
+        if "RMS Voltage" in ''.join(ocr_res[0]) or "Fund. Volt." in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_rms_vol_ll.value) <= 10:
+                all_meas_results.extend(check_results(["AB", "BC", "CA", "Aver"], (0, 0, "V"), ocr_res_meas[:5]))
+            elif self.ocr_manager.color_detection(image, ecr.color_rms_vol_ln.value) <= 10:
+                all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (0, 0, "V"), ocr_res_meas[:5]))
+            else:
+                print("RMS Voltage missed")
+
+        elif "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_main_menu_vol.value) <= 10: 
+                if self.ocr_manager.color_detection(image, ecr.color_vol_thd_ll.value) <= 10:
+                    all_meas_results.extend(check_results(["AB", "BC", "CA"], (0, 0, "%"), ocr_res_meas[:4]))
+                elif self.ocr_manager.color_detection(image, ecr.color_vol_thd_ln.value) <= 10:
+                    all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, "%"), ocr_res_meas[:4]))
+                else:
+                    print("Total Harmonic missed")
+
+        elif "Frequency" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["Freq"], (0, 0, "Hz"), ocr_res_meas[:1]))
+
+        elif "Residual Voltage" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["RMS", "Fund."], (0, 0, "V"), ocr_res_meas[:2]))
+
+        elif "RMS Current" in ''.join(ocr_res[0]) or "Fundamental Current" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A %", "B %", "C %", "Aver %"], (0, 0, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (0, 0, "A"), ocr_res_meas[4:]))
+
+        elif "Total Harmonic" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_main_menu_curr.value) <= 10: 
+                all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, "%"), ocr_res_meas[:3]))
+
+        elif "Total Demand" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, "%"), ocr_res_meas[:3]))
+
+        elif "Crest Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, ""), ocr_res_meas[:3]))
+
+        elif "K-Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, ""), ocr_res_meas[:3]))
+
+        elif "Residual Current" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["RMS"], (0, 0, "A"), ocr_res_meas[:1]))
+            all_meas_results.extend(check_results(["RMS"], (0, 0, "A"), ocr_res_meas[1:2]))
+            
+        elif "Active Power" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A %", "B %", "C %", "Total %"], (0, 0, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, "kW"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (0, 0, "kW"), ocr_res_meas[7:8]))
+            
+        elif "Reactive Power" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(['A%', 'B%', 'C%', 'Total%'],(0, 0, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, "kVAR"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (0, 0, "kVAR"), ocr_res_meas[7:8]))
+            
+        elif "Apparent Power" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(['A', 'B', 'C', 'Total'],(0, 0, "%"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, "kVA"), ocr_res_meas[4:7]))
+            all_meas_results.extend(check_results(["Total"], (0, 0, "kVA"), ocr_res_meas[7:8]))
+            
+        elif "Power Factor" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(['A%', 'B%', 'C%', 'Total%'],(0, 0, "No Load"), ocr_res_meas[:4]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Total"], (1, 1, ""), ocr_res_meas[4:8]))
+            
+        elif "Phasor" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_phasor_vll.value) <= 10:
+                all_meas_results.extend(check_results(["AB", "BC", "CA"], (0, 0, "V"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (0, 0, "A"), ocr_res_meas[3:6]))
+                all_meas_results.extend(check_results(["AB_angle"], (0, 0, ""), ocr_res_meas[6:7]))
+                all_meas_results.extend(check_results(["BC_angle"], (0, 0, ""), ocr_res_meas[7:8]))
+                all_meas_results.extend(check_results(["CA_angle"], (0, 0, ""), ocr_res_meas[8:9]))
+                all_meas_results.extend(check_results(["A_angle_cur"], (0, 0, ""), ocr_res_meas[9:10]))
+                all_meas_results.extend(check_results(["B_angle_cur"], (0, 0, ""), ocr_res_meas[10:11]))
+                all_meas_results.extend(check_results(["C_angle_cur"], (0, 0, ""), ocr_res_meas[11:12]))
+                all_meas_results.extend(check_results([ecir.img_ref_phasor_all_vll_none.value], (0.99, 1, ""), img_result[0]))
+                all_meas_results.extend(check_results(["angle_image_1", "angle_image_2"], (0.99, 1, ""), img_result[1:3]))
+                
+            elif self.ocr_manager.color_detection(image, ecr.color_phasor_vln.value) <= 10:
+                all_meas_results.extend(check_results(["A", "B", "C"], (0, 0, "V"), ocr_res_meas[:3]))
+                all_meas_results.extend(check_results(["A_Curr", "B_Curr", "C_Curr"], (0, 0, "A"), ocr_res_meas[3:6]))
+                all_meas_results.extend(check_results(["A_angle"], (0, 0, ""), ocr_res_meas[6:7]))
+                all_meas_results.extend(check_results(["B_angle"], (0, 0, ""), ocr_res_meas[7:8]))
+                all_meas_results.extend(check_results(["C_angle"], (0, 0, ""), ocr_res_meas[8:9]))
+                all_meas_results.extend(check_results(["A_angle_cur"], (0, 0, ""), ocr_res_meas[9:10]))
+                all_meas_results.extend(check_results(["B_angle_cur"], (0, 0, ""), ocr_res_meas[10:11]))
+                all_meas_results.extend(check_results(["C_angle_cur"], (0, 0, ""), ocr_res_meas[11:12]))
+                all_meas_results.extend(check_results([ecir.img_ref_phasor_all_vln_none.value], (0.99, 1, ""), img_result[0]))
+                all_meas_results.extend(check_results(["angle_image_1", "angle_image_2"], (0, 1, ""), img_result[1:3]))
+                
+            else:
+                print("demo test evaluation error")
+
+        elif "Harmonics" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_harmonics_vol.value) <= 10:
+                if img_result is not None:
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (0, 0, "v"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.9, 1, ""), img_result))
+                    all_meas_results.extend(check_results(["VOL_A_THD", "VOL_B_THD", "VOL_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
+                    all_meas_results.extend(check_results(["VOL_A_Fund", "VOL_B_Fund", "VOL_C_Fund"], (0, 0, "v"), ocr_res_meas[3:6]))
+                    all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                elif "Text" in ''.join(ocr_res[1]):
+                    print(ocr_res_meas)
+                    all_meas_results.extend(check_results(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], (0, 0, ""), ocr_res_meas[0:10]))
+                    print("test")
+            else:
+                if img_result is not None:
+                    all_meas_results.extend(check_results(["harmonics_img_detect"], (0.9, 1, ""), img_result))  
+                    # all_meas_results.extend(check_results(["CURR_A_THD", "CURR_B_THD", "CURR_C_THD"], (0, 0, "%"), ocr_res_meas[:3]))
+                    # all_meas_results.extend(check_results(["CURR_A_Fund", "CURR_B_Fund", "CURR_C_Fund"], (0, 0, "A"), ocr_res_meas[3:6]))
+                    # all_meas_results.extend(check_results(["harmonic_image"], (0.9, 1, ""), img_result))
+                elif "[%]Fund" in ''.join(ocr_res[1]) or "[%]RMS" in ''.join(ocr_res[1]):
+                    all_meas_results.extend(check_results(["harmonic_%_img"], (0.9, 1, ""), img_result))
+                elif "Text" in ''.join(ocr_res[1]):
+                    all_meas_results.extend("PASS?")
+            
+                    
+        elif "Waveform" in ''.join(ocr_res[0]):
+            if 0 < img_result < 1:
+                all_meas_results.extend(check_results(["waveform_image"], (0.945, 1, ""), img_result))
+            else:
+                all_meas_results.extend(check_results(["waveform_img_detect"], (1, 1, ""), img_result))
+                
+        elif "Volt. Symm. Component" in ''.join(ocr_res[0]):
+            if self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ll.value) <= 10:
+                all_meas_results.extend(check_results(['V1'], (0, 0, "V1"), ocr_res_meas[0:1]))
+                all_meas_results.extend(check_results(['V2'], (0, 0, "V2"), ocr_res_meas[1:2]))
+                all_meas_results.extend(check_results(['V1'], (0, 0, "V" or "v"), ocr_res_meas[2:3]))
+                all_meas_results.extend(check_results(['V2'], (0, 0, "V" or "v"), ocr_res_meas[3:4]))
+            elif self.ocr_manager.color_detection(image, ecr.color_symm_thd_vol_ln.value) <= 10:
+                all_meas_results.extend(check_results(['V1'], (0, 0, "V1"), ocr_res_meas[0:1]))
+                all_meas_results.extend(check_results(['V2'], (0, 0, "V2"), ocr_res_meas[1:2]))
+                all_meas_results.extend(check_results(['V0'], (0, 0, "V0"), ocr_res_meas[2:3]))
+                all_meas_results.extend(check_results(['V1'], (0, 0, "V" or "v"), ocr_res_meas[3:4]))
+                all_meas_results.extend(check_results(['V2'], (0, 0, "V" or "v"), ocr_res_meas[4:5]))
+                all_meas_results.extend(check_results(['V0'], (0, 0, "V" or "v"), ocr_res_meas[5:6]))
+                
+        elif "Voltage Unbalance" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["NEMA LL"], (0, 0, "LL"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["NEMA LN"], (0, 0, "LN"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["U2"], (0, 0, "U2"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results(["U0"], (0, 0, "U0"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["NEMA LL", "NEMA LN", "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8]))
+            
+        elif "Curr. Symm. Component" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["I1"], (0, 0, "l1"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["I2"], (0, 0, "l2"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["I0"], (0, 0, "l0"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results(["I1"], (0, 0, "A"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["I2"], (0, 0, "A"), ocr_res_meas[4:5]))
+            all_meas_results.extend(check_results(["I0"], (0, 0, "A"), ocr_res_meas[5:6]))
+            
+        elif "Current Unbalance" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results([""], (0, 0, "empty"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["U2"], (0, 0, "U2"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["U0"], (0, 0, "U0"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results([""], (0, 0, "%"), ocr_res_meas[3:4]))
+            all_meas_results.extend(check_results(["U2"], (0, 0, "%"), ocr_res_meas[4:5]))
+            all_meas_results.extend(check_results(["U0"], (0, 0, "%"), ocr_res_meas[5:6]))
+        
+        elif "Demand Currnet" in ''.join(ocr_res[0]):
+            all_meas_results.extend(check_results(["A%", "B%", "C%", "Aver%"], (0, 0, "%"), ocr_res_meas[0:5]))
+            all_meas_results.extend(check_results(["A", "B", "C", "Aver"], (0, 0, "A"), ocr_res_meas[5:9]))
+            
+        elif not self.condition_met:
+            print("Nothing matching word")
+
+        print(f"OCR - 정답: {self.ocr_error}")
+        print(f"정답 - OCR: {right_error}")
+
+        return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
     def check_text(self, ocr_results):
         results = []
@@ -777,9 +1143,9 @@ class Evaluation:
         x, y, w, h, R, G, B = color_data
         cut_img = image[y:y+h, x:x+w]
 
-        cv2.imshow('Image', cut_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow('Image', cut_img)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
         
         target_color = np.array([B, G, R])
         diff = np.abs(cut_img - target_color)
@@ -801,62 +1167,108 @@ class Evaluation:
         if np.any(match):
             print(f"{target_color} (FAIL)")
             result = 0
+            csv_result = f"{target_color} FAIL"
         else:
             print(f"{target_color} (PASS)")
             result = 1
-        return result
+            csv_result = f"{target_color} PASS"
+        return result, csv_result
 
-
-    def check_time_diff(self, time_images, reset_time):
+    def check_time_diff(self, image, roi_keys, reset_time, test_mode):
         self.reset_time = reset_time
         if not self.reset_time:
             self.reset_time = datetime.now()
 
+        ocr_results_time = self.ocr_manager.ocr_basic(image, roi_keys)
+
+         # 유효한 텍스트만 리스트로 반환
+        time_images = [text for text in ocr_results_time if text]
+
         time_format = "%Y-%m-%d %H:%M:%S"
-        results = []
+        time_results = []
         for time_str in time_images:
             try:
                 image_time = datetime.strptime(time_str, time_format)
-                time_diff = abs(
-                    (image_time - self.reset_time).total_seconds())
-                if time_diff <= 5 * 60:
-                    print(f"{time_str} (PASS)")
-                    results.append(f"{time_str} (PASS)")
+                image_time = image_time.replace(tzinfo=timezone.utc)
+                time_diff = abs((image_time - self.reset_time).total_seconds())
+                if test_mode == "Demo":
+                    if time_diff <= 120:
+                        print(f"{time_str} (PASS)")
+                        time_results.append(f"{time_str} (PASS)")
+                    else:
+                        print(f"{time_str} / {time_diff} seconds (FAIL)")
+                        time_results.append(f"{time_str} / {time_diff} seconds (FAIL)")
                 else:
-                    print(f"{time_str} / {time_diff} seconds (FAIL)")
-                    results.append(f"{time_str} / {time_diff} seconds (FAIL)")      
+                    if time_diff <= 5:
+                        print(f"{time_str} (PASS)")
+                        time_results.append(f"{time_str} (PASS)")
+                    else:
+                        print(f"{time_str} / {time_diff} seconds (FAIL)")
+                        time_results.append(f"{time_str} / {time_diff} seconds (FAIL)")
             except ValueError as e:
                 print(f"Time format error for {time_str}: {e}")
-                results.append(f"Time format error for {time_str}: {e}")
-        return results
+                time_results.append(f"{time_str} / format error (FAIL)")
+        return time_results
 
-    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None):
+
+    def save_csv(self, ocr_img, ocr_error, right_error, meas_error=False, ocr_img_meas=None, ocr_img_time=None, time_results=None, img_path=None, img_result=None, base_save_path=None, all_meas_results=None, invalid_elements=None):
         ocr_img_meas = ocr_img_meas if ocr_img_meas is not None else []
-        ocr_img_time = ocr_img_time if ocr_img_time is not None else []
+        # ocr_img_time = ocr_img_time if ocr_img_time is not None else []
         time_results = time_results if time_results is not None else []
         img_result = [img_result]
 
-        num_entries = max(len(ocr_img), len(ocr_img_meas), len(ocr_img_time), len(img_result))
+        if invalid_elements is None:
+            invalid_elements = []
+
+        if ocr_img_meas == bool:
+            ocr_img_meas = []
+            num_entries = max(len(ocr_img), len(ocr_img_meas)+1, len(time_results)+1, len(img_result)+1)
+        else:
+            num_entries = max(len(ocr_img), len(ocr_img_meas)+1, len(time_results)+1, len(img_result)+1)
 
         overall_result = "PASS"
         if ocr_error or right_error or meas_error:
             overall_result = "FAIL"
         if any("FAIL" in result for result in time_results):
             overall_result = "FAIL"
-
-        csv_results = {
+        
+        if all_meas_results is not None:
+            measurement_results = [f"{meas}" for meas in all_meas_results]
+            if len(measurement_results) < num_entries:
+                measurement_results = [None] + measurement_results + [None] * (num_entries - len(measurement_results) - 1)
+            
+            csv_results = {
             "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
-            "Measurement": ocr_img_meas + [None] * (num_entries - len(ocr_img_meas)),
-            "OCR-Right": [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-1),
-            "Right-OCR": [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-1),
-            f"Time Stemp ({self.reset_time})": time_results + [None] * (num_entries - len(time_results)),
-            "Img Match": img_result + [None] * (num_entries-len(img_result)),
-        }
+            "Measurement": measurement_results,
+            "OCR-Right": [None] + [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-2),
+            "Right-OCR": [None] + [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-2),
+            f"Time Stamp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
+            "Img Match": [None] + img_result + [None] * (num_entries-len(img_result)-1),
+            "H.Text": [None] + invalid_elements + [None] * (num_entries-len(img_result)-1),
+            }
+        
+        else:
+            csv_results = {
+            "Main View": ocr_img + [None] * (num_entries - len(ocr_img)),
+            "OCR-Right": [None] + [f"{ocr_error} ({'FAIL' if ocr_error else 'PASS'})"] + [""]* (num_entries-2),
+            "Right-OCR": [None] + [f"{right_error} ({'FAIL' if right_error else 'PASS'})"] + [""]* (num_entries-2),
+            f"Time Stemp ({self.reset_time})": [None] + time_results + [None] * (num_entries - len(time_results)-1),
+            "Img Match": [None] + img_result + [None] * (num_entries-len(img_result)-1),
+            "H.Text": [None] + invalid_elements + [None] * (num_entries-len(img_result)-1),
+            }
+        
+        
+        # Ensure all columns have the same length
+        for key in csv_results:
+            csv_results[key] = csv_results[key][:num_entries]
+            if len(csv_results[key]) < num_entries:
+                csv_results[key].extend([None] * (num_entries - len(csv_results[key])))
 
         df = pd.DataFrame(csv_results)
-        
+
+        # Saving the CSV
         file_name_with_extension = os.path.basename(img_path)
-        ip_to_remove = "10.10.26.159_"
+        ip_to_remove = f"{SERVER_IP}_"
         if file_name_with_extension.startswith(ip_to_remove):
             file_name_without_ip = file_name_with_extension[len(ip_to_remove):]
         else:
@@ -864,66 +1276,46 @@ class Evaluation:
 
         image_file_name = os.path.splitext(file_name_without_ip)[0]
         
-        save_path = os.path.expanduser(f"./csvtest/{overall_result}_ocr_{image_file_name}.csv")
+        save_path = os.path.join(base_save_path, f"{overall_result}_ocr_{image_file_name}.csv")
 
         df.to_csv(save_path, index=False)
-        dest_image_path = os.path.join(os.path.dirname(save_path), file_name_without_ip)
+        dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
 
-class TestCaseManager:
+    def count_csv_and_failures(self, folder_path):
+        csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+        total_csv_files = len(csv_files)
 
-    def save_table_to_xml(self, filename):
-        """
-        self.tableWidget에 들어 있는 행/열 데이터를 XML 형태로 저장
-        filename: 저장할 XML 파일 경로
-        """
-        root = ET.Element("tableData")
+        fail_count = sum(1 for f in csv_files if 'FAIL' in f)
 
-        row_count = self.tableWidget.rowCount()
-        col_count = self.tableWidget.columnCount()
+        return total_csv_files, fail_count
+    
+    def validate_ocr(self, ocr_img):     
+        def is_float(value):
+            try:
+                float(value)
+                return True
+            except ValueError:
+                return False
+        def process_text(text):
+            elements = text.split()
+            numbers = []
+            invalid_elements = []
 
-        for r in range(row_count):
-            # <row index="0"> ... </row>
-            row_elem = ET.SubElement(root, "row", index=str(r))
-            for c in range(col_count):
-                item = self.tableWidget.item(r, c)
-                text = item.text() if item else ""  # 아이템이 없는 셀도 있을 수 있음
+            for elem in elements:
+                if is_float(elem):
+                    numbers.append(float(elem))
+                else:
+                    invalid_elements.append(elem)
+            return numbers, invalid_elements
 
-                # <cell col="1"> 내용 </cell>
-                cell_elem = ET.SubElement(row_elem, "cell", col=str(c))
-                cell_elem.text = text
-
-        # XML 트리를 파일에 저장
-        tree = ET.ElementTree(root)
-        tree.write(filename, encoding="utf-8", xml_declaration=True)
-        print(f"[INFO] 테이블 데이터가 '{filename}' 파일에 저장되었습니다.")
-
-    def load_table_from_xml(self, filename):
-        """
-        'filename'에서 XML 데이터를 읽어서 self.tableWidget에 반영
-        """
-        tree = ET.parse(filename)
-        root = tree.getroot()
-
-        # 기존 테이블 내용을 초기화 (원한다면 append도 가능)
-        self.tableWidget.setRowCount(0)
-
-        for row_elem in root.findall("row"):
-            r = int(row_elem.get("index"))
-            # row가 부족하면 늘려둔다
-            if r >= self.tableWidget.rowCount():
-                self.tableWidget.setRowCount(r + 1)
-
-            for cell_elem in row_elem.findall("cell"):
-                c = int(cell_elem.get("col"))
-                text = cell_elem.text if cell_elem.text else ""
-
-                # 열 수도 부족하면 늘려야 함(혹은 이미 columnCount가 충분하다면 패스)
-                if c >= self.tableWidget.columnCount():
-                    # 예: columnCount가 3 이상 필요할 수 있음
-                    self.tableWidget.setColumnCount(c + 1)
-
-                item = QTableWidgetItem(text)
-                self.tableWidget.setItem(r, c, item)
-
-        print(f"[INFO] '{filename}' 파일에서 테이블 데이터가 로드되었습니다.")
+        for result in ocr_img:
+            numbers, invalid_elements = process_text(result)
+            
+            if invalid_elements:
+                print(f"FAIL: {invalid_elements}")
+            else:
+                print("PASS")
+            
+            print(f"추출된 숫자: {numbers}")
+        return invalid_elements
