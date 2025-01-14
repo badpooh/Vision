@@ -475,8 +475,14 @@ class TestWorker(QThread):
         self.stopRequested = False
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        base_save_path = os.path.expanduser(f"./results/{current_time}/")
+        os.makedirs(base_save_path, exist_ok=True)
+        test_mode = "None"
+        self.meter_demo_test.none_test_start()
         self.test_map = {
-            "vol_all": self.meter_demo_test.demo_mea_vol_rms,
+            
+            "vol_all": self.meter_demo_test.demo_mea_vol_rms(base_save_path, test_mode),
         }
 
 
@@ -498,6 +504,7 @@ class TestWorker(QThread):
             if not test_list:
                 print("CONTENT가 비어있음")
                 return
+            
 
             for test_name in test_list:
                 if test_name in self.test_map:
