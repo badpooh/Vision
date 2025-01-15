@@ -14,11 +14,9 @@ from demo_test.demo_config import ConfigTouch as ect
 
 from demo_test.demo_interface import Interface
 
-
 image_directory = r"\\10.10.20.30\screenshot"
 
 ocr_func = OCRManager()
-
 
 class DemoProcess:
 
@@ -40,11 +38,11 @@ class DemoProcess:
     def modbus_discon(self):
         self.modbus_manager.tcp_disconnect()
 
-    def load_image_file(self):
+    def load_image_file(self, search_pattern):
         self.now = datetime.now()
         self.file_time_diff = {}
 
-        for file_path in glob.glob(self.search_pattern, recursive=True):
+        for file_path in glob.glob(search_pattern, recursive=True):
             creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
             time_diff = abs((self.now - creation_time).total_seconds())
             self.file_time_diff[file_path] = time_diff
@@ -95,14 +93,14 @@ class DemoProcess:
 
         return ocr_res
 
-    def ocr_4phase(self, ref, base_save_path, test_mode):  # A,B,C,Aver ###
+    def ocr_4phase(self, ref, base_save_path, test_mode, search_pattern):  # A,B,C,Aver ###
         """
         Args:
             ref (str): The OCR type to be selected for evaluation.
         Returns:
             None
         """
-        image_path = self.load_image_file()
+        image_path = self.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca, ecroi.aver]
         roi_keys_meas = [ecroi.a_meas, ecroi.b_meas, ecroi.c_meas, ecroi.aver_meas]
         ocr_ref = ref
@@ -307,7 +305,7 @@ class DemoTest:
         print(self.reset_time)
         return self.reset_time
 
-    def demo_mea_vol_rms(self, base_save_path, test_mode):
+    def demo_mea_vol_rms(self, base_save_path, test_mode, search_pattern):
 
         ## L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
@@ -316,7 +314,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         self.touch_manager.menu_touch(ect.touch_meas_ll.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ecroi.title_view.value, base_save_path, test_mode)
+        self.sp.ocr_4phase(ecroi.title_view.value, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
             print("Test stopped")
             return

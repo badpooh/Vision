@@ -24,6 +24,8 @@ from setup_test.setup_db import IPDataBase
 
 from frame_test.webcam_function import WebCam
 
+image_directory = r"\\10.10.20.30\screenshot"
+
 class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
@@ -146,6 +148,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def on_ip_selected(self, selected_ip):
         print("대시보드에서 수신한 IP:", selected_ip)
         self.cur_ip = self.ip_display.setText(selected_ip)
+        return selected_ip
     
     def on_tp_selected(self, selected_tp):
         print("대시보드에서 수신한 TP:", selected_tp)
@@ -478,11 +481,11 @@ class TestWorker(QThread):
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         base_save_path = os.path.expanduser(f"./results/{current_time}/")
         os.makedirs(base_save_path, exist_ok=True)
+        search_pattern = os.path.join(image_directory, './**/*{selected_ip}*.png')
         test_mode = "None"
         self.meter_demo_test.none_test_start()
         self.test_map = {
-            
-            "vol_all": self.meter_demo_test.demo_mea_vol_rms(base_save_path, test_mode),
+            "vol_all": self.meter_demo_test.demo_mea_vol_rms(base_save_path, test_mode, search_pattern),
         }
 
 
