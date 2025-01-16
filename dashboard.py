@@ -50,6 +50,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             }
         self.thread = False
         self.stop_thread = False
+        self.selected_ip = ''
         self.ocr = ImgOCR()
         self.modbus_manager = ModbusManager()
         self.setup_modbus_manager = SetupModbusManager()
@@ -146,9 +147,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         print(f"{key.capitalize()} checkbox {'checked' if state == 2 else 'unchecked'}")
         
     def on_ip_selected(self, selected_ip):
-        print("대시보드에서 수신한 IP:", selected_ip)
-        self.cur_ip = self.ip_display.setText(selected_ip)
-        return selected_ip
+        self.selected_ip = selected_ip
+        print("대시보드에서 수신한 IP:", self.selected_ip)
+        self.cur_ip = self.ip_display.setText(self.selected_ip)
+        return self.selected_ip
     
     def on_tp_selected(self, selected_tp):
         print("대시보드에서 수신한 TP:", selected_tp)
@@ -354,31 +356,19 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.lineEdit.clear()
 
     def test_start(self):
-        """
-        START 버튼 -> Worker 스레드 시작
-        """
-        self.worker = TestWorker(self.tableWidget)
+        self.worker = TestWorker(self.tableWidget, self)
         self.worker.progress.connect(self.on_progress)
         self.worker.finished.connect(self.on_finished)
         self.worker.start()  # run() 비동기 실행
 
     def test_stop(self):
-        """
-        STOP 버튼 -> Worker 스레드에게 중단 요청
-        """
         if hasattr(self, 'worker') and self.worker.isRunning():
             self.worker.stop()
 
     def on_progress(self, row, content):
-        """
-        progress 시그널을 받으면, 현재 테스트 상황을 라벨 등에 표시할 수 있음
-        """
         print(f"[Progress] {row}행, content={content} 테스트 중...")
 
     def on_finished(self):
-        """
-        모든 행 테스트 완료(또는 중단) 시 불리는 슬롯
-        """
         print("테스트 스레드 종료/완료")
 
     def create_menu(self, tc_box_index):
@@ -472,21 +462,44 @@ class TestWorker(QThread):
     progress = Signal(int, str)   # (row, content) 진행 상황을 UI에 알리는 시그널
     finished = Signal()           # 전체 테스트 끝나면 알리는 시그널
 
-    def __init__(self, tableWidget):
+    def __init__(self, tableWidget, dashboard_instance: MyDashBoard):
         super().__init__()
         self.tableWidget = tableWidget
         self.stopRequested = False
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
+        self.test_mode_setting = ModbusLabels()
+        self.dashboard = dashboard_instance
+
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         base_save_path = os.path.expanduser(f"./results/{current_time}/")
         os.makedirs(base_save_path, exist_ok=True)
-        search_pattern = os.path.join(image_directory, './**/*{selected_ip}*.png')
-        test_mode = "None"
+        self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
         self.meter_demo_test.none_test_start()
         self.test_map = {
-            "vol_all": self.meter_demo_test.demo_mea_vol_rms(base_save_path, test_mode, search_pattern),
+            "tm_all": print("not yet"),
+            "tm_balance": lambda: self.store_test_mode(),
+            "vol_all": lambda: self.meter_demo_test.demo_mea_vol_all(base_save_path, self.test_mode, self.search_pattern),
+            # "vol_rms": self.meter_demo_test.demo_mea_vol_rms(base_save_path, test_mode, self.search_pattern),
+            # "vol_fund": self.meter_demo_test.demo_mea_vol_fund(base_save_path, test_mode, self.search_pattern),
+            # "vol_thd": self.meter_demo_test.demo_mea_vol_thd(base_save_path, test_mode, self.search_pattern),
+            # "vol_freq": self.meter_demo_test.demo_mea_vol_freq(base_save_path, test_mode, self.search_pattern),
+            # "vol_residual": self.meter_demo_test.demo_mea_vol_residual(base_save_path, test_mode, self.search_pattern),
+            # # "vol_sliding": self.meter_demo_test.demo_mea_vol_sliding(base_save_path, test_mode, self.search_pattern),
+            # "curr_all": self.meter_demo_test.demo_mea_curr_all(base_save_path, test_mode, self.search_pattern),
+            # "curr_rms": self.meter_demo_test.demo_mea_curr_rms(base_save_path, test_mode, self.search_pattern),
+            # "curr_fund": self.meter_demo_test.demo_mea_curr_fund(base_save_path, test_mode, self.search_pattern),
+            # "curr_demand": self.meter_demo_test.demo_mea_curr_demand(base_save_path, test_mode, self.search_pattern),
+            # "curr_thd": self.meter_demo_test.demo_mea_curr_thd(base_save_path, test_mode, self.search_pattern),
+            # "curr_tdd": self.meter_demo_test.demo_mea_curr_tdd(base_save_path, test_mode, self.search_pattern),
+            # "curr_cf": self.meter_demo_test.demo_mea_curr_cf(base_save_path, test_mode, self.search_pattern),
+            # "curr_kf": self.meter_demo_test.demo_mea_curr_kf(base_save_path, test_mode, self.search_pattern),
+            # "curr_residual": self.meter_demo_test.demo_mea_curr_residual(base_save_path, test_mode, self.search_pattern),
         }
+    def store_test_mode(self):
+        """실제로 tm_balance 테스트를 실행해 self.test_mode를 세팅"""
+        self.test_mode = self.test_mode_setting.demo_test_setting()
+        print(f"tm_balance done. test_mode={self.test_mode}")
 
 
     def run(self):
@@ -514,9 +527,6 @@ class TestWorker(QThread):
                     self.test_map[test_name]()  # 매핑된 함수 실행
                 else:
                     self.run_unknown_test(test_name)
-
-            # 실제 테스트 (여기서는 2초 대기라고 가정)
-            time.sleep(2)
 
         # 모든 테스트 혹은 중단 지점
         self.finished.emit()

@@ -471,6 +471,7 @@ class ModbusLabels:
         pass
 
     def demo_test_setting(self):
+        test_mode = "Demo"
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]
@@ -503,8 +504,10 @@ class ModbusLabels:
             print("Done")
         else:
             print(self.response.isError())
+        return test_mode
 
     def none_test_setting(self):
+        test_mode = "None"
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]
@@ -518,6 +521,7 @@ class ModbusLabels:
             self.response = self.modbus_manager.setup_client.write_register(4000, 0)
             self.response = self.modbus_manager.setup_client.write_register(4001, 1)
             print("Done")
+        return test_mode
     
     def reset_max_min(self):
         self.touch_manager.uitest_mode_start()
