@@ -243,15 +243,18 @@ class DemoTest:
     modbus_manager = ModbusManager()
     # ocr_func = OCRManager()
     modbus_label = ModbusLabels()
-    evaluation = Evaluation()
+    # evaluation = Evaluation()
     sp = DemoProcess()
     interface = Interface()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
 
-    def __init__(self, stop_event):
+    def __init__(self, stop_event, score_callback=None):
+        self.evaluation = Evaluation()
         self.stop_event = stop_event
+        self.score_callback = score_callback
+        self.vol_rms_score = None
         
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
@@ -368,6 +371,13 @@ class DemoTest:
         if self.stop_event.is_set():
             print("Test stopped")
             return
+        
+        folder_path = base_save_path          
+        self.vol_rms_score = self.evaluation.count_csv_and_failures(folder_path)
+
+        # 콜백이 등록되어 있으면, 점수를 콜백으로 전달
+        if self.score_callback:
+            self.score_callback(self.vol_rms_score)
 
         print("Voltage_RMS_Done")
 
@@ -1494,7 +1504,7 @@ class DemoTest:
         print("----------------DEMO TEST START----------------")
 
     def none_test_start(self):
-        self.modbus_label.none_test_setting()
+        self.modbus_label.noload_test_setting()
         print("----------------NONE TEST START----------------")
         
     def demo_test_voltage(self, base_save_path, test_mode):

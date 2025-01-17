@@ -506,7 +506,7 @@ class ModbusLabels:
             print(self.response.isError())
         return test_mode
 
-    def none_test_setting(self):
+    def noload_test_setting(self):
         test_mode = "None"
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
@@ -1262,7 +1262,8 @@ class Evaluation:
         shutil.copy(img_path, dest_image_path)
 
     def count_csv_and_failures(self, folder_path):
-        csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+        voltage_rms = 'M_H_VO_RMS.csv'
+        csv_files = [f for f in os.listdir(folder_path) if f.endswith(voltage_rms)]
         total_csv_files = len(csv_files)
 
         fail_count = sum(1 for f in csv_files if 'FAIL' in f)

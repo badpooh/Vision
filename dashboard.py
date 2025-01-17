@@ -242,6 +242,12 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         item.setText(text)
         self.tableWidget.setItem(row, 1, item)
 
+    def on_tc_score(self, row, text):
+        print(f"on_tc_selected: row={row}, text={text}")
+        item = QTableWidgetItem()
+        item.setText(text)
+        self.tableWidget.setItem(row, 2, item)
+
     def tc_save(self):
         filename, _ = QFileDialog.getSaveFileName(
             parent=self,
@@ -360,6 +366,21 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.worker.progress.connect(self.on_progress)
         self.worker.finished.connect(self.on_finished)
         self.worker.start()  # run() 비동기 실행
+        def vol_rms_score_callback(score):
+            # 예를 들어 row=2, col=2 위치에 표시한다고 가정
+            row, col = 2, 2
+            text = str(score)  # 예: "2/10" 같은 값
+            item = QTableWidgetItem(text)
+            self.tableWidget.setItem(row, col, item)
+            print(f"[Dashboard] score={text} displayed at row={row}, col={col}")
+
+        # DemoProcess 생성 시, 콜백 함수를 전달
+        self.demo_process = DemoProcess(
+            evaluation=self.evaluation,
+            stop_event=self.stop_event,
+            score_callback=vol_rms_score_callback
+        )
+
 
     def test_stop(self):
         if hasattr(self, 'worker') and self.worker.isRunning():
@@ -478,29 +499,32 @@ class TestWorker(QThread):
         self.meter_demo_test.none_test_start()
         self.test_map = {
             "tm_all": print("not yet"),
-            "tm_balance": lambda: self.store_test_mode(),
+            "tm_balance": lambda: self.demo_test_mode(),
+            "tm_noload": lambda: self.noload_test_mode(),
             "vol_all": lambda: self.meter_demo_test.demo_mea_vol_all(base_save_path, self.test_mode, self.search_pattern),
-            # "vol_rms": self.meter_demo_test.demo_mea_vol_rms(base_save_path, test_mode, self.search_pattern),
-            # "vol_fund": self.meter_demo_test.demo_mea_vol_fund(base_save_path, test_mode, self.search_pattern),
-            # "vol_thd": self.meter_demo_test.demo_mea_vol_thd(base_save_path, test_mode, self.search_pattern),
-            # "vol_freq": self.meter_demo_test.demo_mea_vol_freq(base_save_path, test_mode, self.search_pattern),
-            # "vol_residual": self.meter_demo_test.demo_mea_vol_residual(base_save_path, test_mode, self.search_pattern),
-            # # "vol_sliding": self.meter_demo_test.demo_mea_vol_sliding(base_save_path, test_mode, self.search_pattern),
-            # "curr_all": self.meter_demo_test.demo_mea_curr_all(base_save_path, test_mode, self.search_pattern),
-            # "curr_rms": self.meter_demo_test.demo_mea_curr_rms(base_save_path, test_mode, self.search_pattern),
-            # "curr_fund": self.meter_demo_test.demo_mea_curr_fund(base_save_path, test_mode, self.search_pattern),
-            # "curr_demand": self.meter_demo_test.demo_mea_curr_demand(base_save_path, test_mode, self.search_pattern),
-            # "curr_thd": self.meter_demo_test.demo_mea_curr_thd(base_save_path, test_mode, self.search_pattern),
-            # "curr_tdd": self.meter_demo_test.demo_mea_curr_tdd(base_save_path, test_mode, self.search_pattern),
-            # "curr_cf": self.meter_demo_test.demo_mea_curr_cf(base_save_path, test_mode, self.search_pattern),
-            # "curr_kf": self.meter_demo_test.demo_mea_curr_kf(base_save_path, test_mode, self.search_pattern),
-            # "curr_residual": self.meter_demo_test.demo_mea_curr_residual(base_save_path, test_mode, self.search_pattern),
+            "vol_rms": lambda: self.meter_demo_test.demo_mea_vol_rms(base_save_path, self.test_mode, self.search_pattern),
+            "vol_fund": lambda: self.meter_demo_test.demo_mea_vol_fund(base_save_path, self.test_mode, self.search_pattern),
+            "vol_thd": lambda: self.meter_demo_test.demo_mea_vol_thd(base_save_path, self.test_mode, self.search_pattern),
+            "vol_freq": lambda: self.meter_demo_test.demo_mea_vol_freq(base_save_path, self.test_mode, self.search_pattern),
+            "vol_residual": lambda: self.meter_demo_test.demo_mea_vol_residual(base_save_path, self.test_mode, self.search_pattern),
+            "vol_sliding": lambda: self.meter_demo_test.demo_mea_vol_sliding(base_save_path, self.test_mode, self.search_pattern),
+            "curr_all": lambda: self.meter_demo_test.demo_mea_curr_all(base_save_path, self.test_mode, self.search_pattern),
+            "curr_rms": lambda: self.meter_demo_test.demo_mea_curr_rms(base_save_path, self.test_mode, self.search_pattern),
+            "curr_fund": lambda: self.meter_demo_test.demo_mea_curr_fund(base_save_path, self.test_mode, self.search_pattern),
+            "curr_demand": lambda: self.meter_demo_test.demo_mea_curr_demand(base_save_path, self.test_mode, self.search_pattern),
+            "curr_thd": lambda: self.meter_demo_test.demo_mea_curr_thd(base_save_path, self.test_mode, self.search_pattern),
+            "curr_tdd": lambda: self.meter_demo_test.demo_mea_curr_tdd(base_save_path, self.test_mode, self.search_pattern),
+            "curr_cf": lambda: self.meter_demo_test.demo_mea_curr_cf(base_save_path, self.test_mode, self.search_pattern),
+            "curr_kf": lambda: self.meter_demo_test.demo_mea_curr_kf(base_save_path, self.test_mode, self.search_pattern),
+            "curr_residual": lambda: self.meter_demo_test.demo_mea_curr_residual(base_save_path, self.test_mode, self.search_pattern),
         }
-    def store_test_mode(self):
-        """실제로 tm_balance 테스트를 실행해 self.test_mode를 세팅"""
+    def demo_test_mode(self):
         self.test_mode = self.test_mode_setting.demo_test_setting()
         print(f"tm_balance done. test_mode={self.test_mode}")
 
+    def noload_test_mode(self):
+        self.test_mode = self.test_mode_setting.noload_test_setting()
+        print(f"tm_balance done. test_mode={self.test_mode}")
 
     def run(self):
         row_count = self.tableWidget.rowCount()
