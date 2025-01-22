@@ -23,14 +23,33 @@ class DemoProcess:
     touch_manager = TouchManager()
     modbus_manager = ModbusManager()
     evaluation = Evaluation()
-    search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
+    search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
     now = datetime.now()
     file_time_diff = {}
+    
 
-    def __init__(self):
+    def __init__(self, score_callback=None):
         self.coords_touch = self.touch_manager.coords_touch
         self.coords_color = self.touch_manager.coords_color
         self.test_mode = ""
+        self.score_callback = score_callback
+        self.demo_test = None
+
+    def get_demo_test_instance(self):
+        # DemoTest 인스턴스가 없으면 생성
+        if self.demo_test is None:
+            self.demo_test = DemoTest(score_callback=self.score_callback, stop_event=None)
+        return self.demo_test
+
+    def demo_test_by_name(self, test_name, base_save_path, test_mode, search_pattern):
+        demo_test = self.get_demo_test_instance()
+
+        if test_name == "vol_rms":
+            demo_test.demo_mea_vol_rms(base_save_path, test_mode, search_pattern)
+        elif test_name == "vol_fund":
+            demo_test.demo_mea_vol_fund(base_save_path, test_mode, search_pattern)
+        else:
+            print(f"Unknown test name: {test_name}")
         
     def modbus_connect(self):
         self.modbus_manager.start_monitoring()
@@ -254,7 +273,6 @@ class DemoTest:
         self.evaluation = Evaluation()
         self.stop_event = stop_event
         self.score_callback = score_callback
-        self.vol_rms_score = None
         
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
@@ -316,6 +334,7 @@ class DemoTest:
         self.demo_mea_vol_residual(base_save_path, test_mode, search_pattern)
 
     def demo_mea_vol_rms(self, base_save_path, test_mode, search_pattern):
+        start_time = self.modbus_label.device_current_time()
 
         ## L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
@@ -325,63 +344,66 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_meas_ll.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(ecroi.title_view.value, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
         ### L-L min 검사 ###
-        reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(ect.touch_min.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # reset_time = self.modbus_label.reset_max_min()
+        # self.touch_manager.menu_touch(ect.touch_min.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-L max 검사 ###
-        self.touch_manager.menu_touch(ect.touch_max.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-L max 검사 ###
+        # self.touch_manager.menu_touch(ect.touch_max.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase_time(ec.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-N 만 검사 ###
-        self.touch_manager.menu_touch(ect.touch_max.value)
-        self.touch_manager.menu_touch(ect.touch_meas_ln.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ec.rms_vol_ln.value, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-N 만 검사 ###
+        # self.touch_manager.menu_touch(ect.touch_max.value)
+        # self.touch_manager.menu_touch(ect.touch_meas_ln.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase(ec.rms_vol_ln.value, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-N min 검사 ###
-        reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(ect.touch_min.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-N min 검사 ###
+        # reset_time = self.modbus_label.reset_max_min()
+        # self.touch_manager.menu_touch(ect.touch_min.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-N max 검사 ###
-        self.touch_manager.menu_touch(ect.touch_max.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-N max 검사 ###
+        # self.touch_manager.menu_touch(ect.touch_max.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase_time(ec.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
         
-        folder_path = base_save_path          
-        self.vol_rms_score = self.evaluation.count_csv_and_failures(folder_path)
+        end_time = self.modbus_label.device_current_time()
+        folder_path = base_save_path
+        total_csv_files, fail_count = self.evaluation.count_csv_and_failures(folder_path, start_time, end_time)
 
-        # 콜백이 등록되어 있으면, 점수를 콜백으로 전달
+        # 콜백으로 점수 전달
         if self.score_callback:
-            self.score_callback(self.vol_rms_score)
-
-        print("Voltage_RMS_Done")
+            score = f"{fail_count}/{total_csv_files}"
+            self.score_callback(score)
+        else:
+            print("Score callback is not set")
 
     def demo_mea_vol_fund(self, base_save_path, test_mode, search_pattern):
+        start_time = self.modbus_label.device_current_time()
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -390,52 +412,66 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_meas_ll.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(ec.fund_vol_ll.value, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
         ### L-L min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(ect.touch_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-L max 검사 ###
-        self.touch_manager.menu_touch(ect.touch_max.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-L max 검사 ###
+        # self.touch_manager.menu_touch(ect.touch_max.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase_time(ec.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-N 만 검사 ###
-        self.touch_manager.menu_touch(ect.touch_max.value)
-        self.touch_manager.menu_touch(ect.touch_meas_ln.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase(ec.fund_vol_ln.value, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-N 만 검사 ###
+        # self.touch_manager.menu_touch(ect.touch_max.value)
+        # self.touch_manager.menu_touch(ect.touch_meas_ln.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase(ec.fund_vol_ln.value, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-N min 검사 ###
-        reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(ect.touch_min.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-N min 검사 ###
+        # reset_time = self.modbus_label.reset_max_min()
+        # self.touch_manager.menu_touch(ect.touch_min.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
 
-        ### L-N max 검사 ###
-        self.touch_manager.menu_touch(ect.touch_max.value)
-        self.touch_manager.screenshot()
-        self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
-        if self.stop_event.is_set():
-            print("Test stopped")
-            return
+        # ### L-N max 검사 ###
+        # self.touch_manager.menu_touch(ect.touch_max.value)
+        # self.touch_manager.screenshot()
+        # self.sp.ocr_4phase_time(ec.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
+        # if self.stop_event.is_set():
+        #     print("Test stopped")
+        #     return
+        
+        end_time = self.modbus_label.device_current_time()
+        folder_path = base_save_path
+        total_csv_files, fail_count = self.evaluation.count_csv_and_failures(folder_path, start_time, end_time)
+
+        # 콜백으로 점수 전달
+        if self.score_callback:
+            score = f"{fail_count}/{total_csv_files}"
+            self.score_callback(score)
+        else:
+            print("Score callback is not set")
+
+        print(start_time)
+        print(end_time)
 
         print("Voltage_Fund_Done")
 

@@ -64,7 +64,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.setting_window = SettingWindow()
         self.setting_ip = SettingIP()
         
-        self.tableWidget.setHorizontalHeaderLabels(["TITLE", "CONTENT", "RESULT"])
+        self.tableWidget.setHorizontalHeaderLabels(["TITLE", "CONTENT", "RESULT (FAIL/TOTAL)"])
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QHeaderView.Fixed)
@@ -366,20 +366,33 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.worker.progress.connect(self.on_progress)
         self.worker.finished.connect(self.on_finished)
         self.worker.start()  # run() 비동기 실행
-        def vol_rms_score_callback(score):
-            # 예를 들어 row=2, col=2 위치에 표시한다고 가정
-            row, col = 2, 2
-            text = str(score)  # 예: "2/10" 같은 값
-            item = QTableWidgetItem(text)
-            self.tableWidget.setItem(row, col, item)
-            print(f"[Dashboard] score={text} displayed at row={row}, col={col}")
 
-        # DemoProcess 생성 시, 콜백 함수를 전달
-        self.demo_process = DemoProcess(
-            evaluation=self.evaluation,
-            stop_event=self.stop_event,
-            score_callback=vol_rms_score_callback
-        )
+    # def test_start(self):
+    #     # 테스트 시작 시 각 행의 테스트 실행
+    #     for row in range(self.tableWidget.rowCount()):
+    #         content_item = self.tableWidget.item(row, 1)  # CONTENT 열
+    #         if content_item:
+    #             test_name = content_item.text()
+    #             if test_name:  # 콘텐츠가 존재하면 테스트 실행
+    #                 self.run_test_for_row(row, test_name)
+
+    def run_test_for_row(self, row, test_name):
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        base_save_path = os.path.expanduser(f"./results/{current_time}/")
+        os.makedirs(base_save_path, exist_ok=True)
+        test_mode = ""
+
+        # Callback 설정
+        def result_callback(score):
+            # 행의 RESULT 열에 결과 표시
+            result_item = QTableWidgetItem(score)
+            result_item.setTextAlignment(Qt.AlignCenter)
+            self.tableWidget.setItem(row, 2, result_item)
+
+        # DemoProcess 생성 및 실행
+        self.search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
+        demo_process = DemoProcess(score_callback=result_callback)
+        demo_process.demo_test_by_name(test_name, base_save_path, test_mode, self.search_pattern)
 
 
     def test_stop(self):
@@ -480,44 +493,54 @@ class EmittingStream(QObject):
         pass  # 필요한 경우 구현
 
 class TestWorker(QThread):
-    progress = Signal(int, str)   # (row, content) 진행 상황을 UI에 알리는 시그널
-    finished = Signal()           # 전체 테스트 끝나면 알리는 시그널
+    progress = Signal(int, str)  # (row, content) 진행 상황
+    finished = Signal()          # 전체 테스트 완료 신호
 
     def __init__(self, tableWidget, dashboard_instance: MyDashBoard):
         super().__init__()
         self.tableWidget = tableWidget
+        self.dashboard = dashboard_instance
         self.stopRequested = False
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
-        self.test_mode_setting = ModbusLabels()
-        self.dashboard = dashboard_instance
-
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        base_save_path = os.path.expanduser(f"./results/{current_time}/")
-        os.makedirs(base_save_path, exist_ok=True)
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
+        self.test_mode = "None"  # test_mode 값을 저장
+        self.test_mode_setting = ModbusLabels()
+        self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.base_save_path = os.path.expanduser(f"./results/{self.current_time}/")
+        os.makedirs(self.base_save_path, exist_ok=True)
         self.meter_demo_test.none_test_start()
         self.test_map = {
             "tm_all": print("not yet"),
             "tm_balance": lambda: self.demo_test_mode(),
             "tm_noload": lambda: self.noload_test_mode(),
-            "vol_all": lambda: self.meter_demo_test.demo_mea_vol_all(base_save_path, self.test_mode, self.search_pattern),
-            "vol_rms": lambda: self.meter_demo_test.demo_mea_vol_rms(base_save_path, self.test_mode, self.search_pattern),
-            "vol_fund": lambda: self.meter_demo_test.demo_mea_vol_fund(base_save_path, self.test_mode, self.search_pattern),
-            "vol_thd": lambda: self.meter_demo_test.demo_mea_vol_thd(base_save_path, self.test_mode, self.search_pattern),
-            "vol_freq": lambda: self.meter_demo_test.demo_mea_vol_freq(base_save_path, self.test_mode, self.search_pattern),
-            "vol_residual": lambda: self.meter_demo_test.demo_mea_vol_residual(base_save_path, self.test_mode, self.search_pattern),
-            "vol_sliding": lambda: self.meter_demo_test.demo_mea_vol_sliding(base_save_path, self.test_mode, self.search_pattern),
-            "curr_all": lambda: self.meter_demo_test.demo_mea_curr_all(base_save_path, self.test_mode, self.search_pattern),
-            "curr_rms": lambda: self.meter_demo_test.demo_mea_curr_rms(base_save_path, self.test_mode, self.search_pattern),
-            "curr_fund": lambda: self.meter_demo_test.demo_mea_curr_fund(base_save_path, self.test_mode, self.search_pattern),
-            "curr_demand": lambda: self.meter_demo_test.demo_mea_curr_demand(base_save_path, self.test_mode, self.search_pattern),
-            "curr_thd": lambda: self.meter_demo_test.demo_mea_curr_thd(base_save_path, self.test_mode, self.search_pattern),
-            "curr_tdd": lambda: self.meter_demo_test.demo_mea_curr_tdd(base_save_path, self.test_mode, self.search_pattern),
-            "curr_cf": lambda: self.meter_demo_test.demo_mea_curr_cf(base_save_path, self.test_mode, self.search_pattern),
-            "curr_kf": lambda: self.meter_demo_test.demo_mea_curr_kf(base_save_path, self.test_mode, self.search_pattern),
-            "curr_residual": lambda: self.meter_demo_test.demo_mea_curr_residual(base_save_path, self.test_mode, self.search_pattern),
+            "vol_all": lambda: self.meter_demo_test.demo_mea_vol_all(self.base_save_path, self.test_mode, self.search_pattern),
+            "vol_rms": lambda: self.meter_demo_test.demo_mea_vol_rms(self.base_save_path, self.test_mode, self.search_pattern),
+            "vol_fund": lambda: self.meter_demo_test.demo_mea_vol_fund(self.base_save_path, self.test_mode, self.search_pattern),
+            "vol_thd": lambda: self.meter_demo_test.demo_mea_vol_thd(self.base_save_path, self.test_mode, self.search_pattern),
+            "vol_freq": lambda: self.meter_demo_test.demo_mea_vol_freq(self.base_save_path, self.test_mode, self.search_pattern),
+            "vol_residual": lambda: self.meter_demo_test.demo_mea_vol_residual(self.base_save_path, self.test_mode, self.search_pattern),
+            "vol_sliding": lambda: self.meter_demo_test.demo_mea_vol_sliding(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_all": lambda: self.meter_demo_test.demo_mea_curr_all(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_rms": lambda: self.meter_demo_test.demo_mea_curr_rms(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_fund": lambda: self.meter_demo_test.demo_mea_curr_fund(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_demand": lambda: self.meter_demo_test.demo_mea_curr_demand(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_thd": lambda: self.meter_demo_test.demo_mea_curr_thd(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_tdd": lambda: self.meter_demo_test.demo_mea_curr_tdd(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_cf": lambda: self.meter_demo_test.demo_mea_curr_cf(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_kf": lambda: self.meter_demo_test.demo_mea_curr_kf(self.base_save_path, self.test_mode, self.search_pattern),
+            "curr_residual": lambda: self.meter_demo_test.demo_mea_curr_residual(self.base_save_path, self.test_mode, self.search_pattern),
         }
+
+        def result_callback(score, row):
+            # 행의 RESULT 열에 결과 표시
+            result_item = QTableWidgetItem(score)
+            result_item.setTextAlignment(Qt.AlignCenter)
+            self.tableWidget.setItem(row, 2, result_item)
+
+        self.result_callback = result_callback 
+        
+
     def demo_test_mode(self):
         self.test_mode = self.test_mode_setting.demo_test_setting()
         print(f"tm_balance done. test_mode={self.test_mode}")
@@ -528,32 +551,38 @@ class TestWorker(QThread):
 
     def run(self):
         row_count = self.tableWidget.rowCount()
+
         for row in range(row_count):
             if self.stopRequested:
                 print("STOP이 눌려 테스트 중단.")
                 break
 
-            item = self.tableWidget.item(row, 1)
-            if not item:
+            content_item = self.tableWidget.item(row, 1)  # CONTENT 열
+            if not content_item:
                 continue
-            content = item.text()
 
-            self.progress.emit(row, content)
+            content = content_item.text()
+            self.progress.emit(row, content)  # 진행 상태 업데이트
 
             test_list = [x.strip() for x in content.split(",") if x.strip()]
             if not test_list:
                 print("CONTENT가 비어있음")
-                return
-            
+                continue
 
+            # DemoProcess 생성 및 실행
+            demo_process = DemoProcess(
+                score_callback=lambda score: self.result_callback(score, row)
+            )
             for test_name in test_list:
-                if test_name in self.test_map:
-                    self.test_map[test_name]()  # 매핑된 함수 실행
-                else:
-                    self.run_unknown_test(test_name)
+                demo_process.demo_test_by_name(
+                    test_name, self.base_save_path, self.test_mode, self.search_pattern
+                )
 
-        # 모든 테스트 혹은 중단 지점
+        # 모든 테스트 완료
         self.finished.emit()
-
+        
     def stop(self):
         self.stopRequested = True
+
+
+

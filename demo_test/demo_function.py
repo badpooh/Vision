@@ -523,6 +523,17 @@ class ModbusLabels:
             print("Done")
         return test_mode
     
+    def device_current_time(self):
+        self.response = self.modbus_manager.setup_client.read_holding_registers(3060, 3)
+        high_word = self.modbus_manager.setup_client.read_holding_registers(3061, 1).registers[0]
+        low_word = self.modbus_manager.setup_client.read_holding_registers(3062, 1).registers[0]
+        unix_timestamp = (high_word << 16) | low_word
+
+        utc_time = datetime.fromtimestamp(unix_timestamp, tz=timezone.utc)
+        kst_time = utc_time + timedelta(minutes=540)
+        device_current_time = kst_time
+        return device_current_time
+
     def reset_max_min(self):
         self.touch_manager.uitest_mode_start()
         values_control = [2300, 0, 1600, 1]
@@ -596,7 +607,6 @@ class ModbusLabels:
             
         return demand_reset_time
         
-
 class Evaluation:
 
     reset_time = None
@@ -1261,16 +1271,39 @@ class Evaluation:
         dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
 
-    def count_csv_and_failures(self, folder_path):
-        voltage_rms = 'M_H_VO_RMS.csv'
-        csv_files = [f for f in os.listdir(folder_path) if f.endswith(voltage_rms)]
-        total_csv_files = len(csv_files)
+    def count_csv_and_failures(self, folder_path, start_time, end_time):
+        end_file = '.csv'
+        csv_files = [f for f in os.listdir(folder_path) if f.endswith(end_file)]
 
-        fail_count = sum(1 for f in csv_files if 'FAIL' in f)
+        total_csv_files = 0
+        fail_count = 0
+
+        for file_name in csv_files:
+            try:
+                parts = file_name.split('_')
+                # 날짜와 시간 부분 추출
+                date_part = parts[2]  # '2025-01-22'
+                time_part = "_".join(parts[3:6])  # '17_08_41'
+                file_time_str = f"{date_part}_{time_part}"  # '2025-01-22_17_08_41'
+                file_time = datetime.strptime(file_time_str, "%Y-%m-%d_%H_%M_%S")
+
+                # start_time과 end_time의 타임존 정보 제거
+                start_time_naive = start_time.replace(tzinfo=None)
+                end_time_naive = end_time.replace(tzinfo=None)
+
+                # 시간 범위 체크
+                if start_time_naive <= file_time <= end_time_naive:
+                    total_csv_files += 1
+                    if 'FAIL' in file_name.upper():
+                        fail_count += 1
+
+            except (IndexError, ValueError):
+                print(f"[DEBUG] 파일 이름 분리 결과: {file_name.split('_')}")
+                print(f"[WARN] 파일 이름에서 시간을 추출할 수 없습니다: {file_name}")
 
         return total_csv_files, fail_count
     
-    def validate_ocr(self, ocr_img):     
+    def validate_ocr(self, ocr_img):
         def is_float(value):
             try:
                 float(value)

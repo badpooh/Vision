@@ -1,7 +1,6 @@
-def solution(n):
-    for i in range[int(n)]:
-        if i%2 == 0:
-            even = i
-    answer = sum(even)
-    return answer
-solution(10)
+from demo_test.demo_function import ModbusLabels
+
+
+modbus_label = ModbusLabels()
+time = modbus_label.device_current_time()
+print(time)
