@@ -501,13 +501,13 @@ class ModbusLabels:
             self.response = self.modbus_manager.setup_client.write_register(4002, 0)
             self.response = self.modbus_manager.setup_client.write_register(4000, 1)
             self.response = self.modbus_manager.setup_client.write_register(4001, 1)
-            print("Done")
+            print("Demo mode setting Done")
         else:
             print(self.response.isError())
         return test_mode
 
     def noload_test_setting(self):
-        test_mode = "None"
+        test_mode = "NoLoad"
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]
@@ -520,7 +520,7 @@ class ModbusLabels:
                 time.sleep(0.6)
             self.response = self.modbus_manager.setup_client.write_register(4000, 0)
             self.response = self.modbus_manager.setup_client.write_register(4001, 1)
-            print("Done")
+            print("Noload Demo mode setting Done")
         return test_mode
     
     def device_current_time(self):

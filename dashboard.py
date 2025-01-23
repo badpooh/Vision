@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 import time
 import xml.etree.ElementTree as ET
+from functools import partial
 
 from ui_dashboard import Ui_MainWindow
 from modules.ocr_setting import OcrSetting
@@ -367,34 +368,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.worker.finished.connect(self.on_finished)
         self.worker.start()  # run() 비동기 실행
 
-    # def test_start(self):
-    #     # 테스트 시작 시 각 행의 테스트 실행
-    #     for row in range(self.tableWidget.rowCount()):
-    #         content_item = self.tableWidget.item(row, 1)  # CONTENT 열
-    #         if content_item:
-    #             test_name = content_item.text()
-    #             if test_name:  # 콘텐츠가 존재하면 테스트 실행
-    #                 self.run_test_for_row(row, test_name)
-
-    def run_test_for_row(self, row, test_name):
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        base_save_path = os.path.expanduser(f"./results/{current_time}/")
-        os.makedirs(base_save_path, exist_ok=True)
-        test_mode = ""
-
-        # Callback 설정
-        def result_callback(score):
-            # 행의 RESULT 열에 결과 표시
-            result_item = QTableWidgetItem(score)
-            result_item.setTextAlignment(Qt.AlignCenter)
-            self.tableWidget.setItem(row, 2, result_item)
-
-        # DemoProcess 생성 및 실행
-        self.search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
-        demo_process = DemoProcess(score_callback=result_callback)
-        demo_process.demo_test_by_name(test_name, base_save_path, test_mode, self.search_pattern)
-
-
     def test_stop(self):
         if hasattr(self, 'worker') and self.worker.isRunning():
             self.worker.stop()
@@ -472,25 +445,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
                 self.tableWidget.setItem(r, c, item)
 
         print(f"[INFO] '{filename}' 파일에서 테이블 데이터가 로드되었습니다.")
-        
-class Alarm:
-    
-    def show_connection_error(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Warning)
-        msg.setWindowTitle("Connection Error")
-        msg.setText("장치와 미연결 상태")
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()
-        
-class EmittingStream(QObject):
-    text_written = Signal(str)
-
-    def write(self, text):
-        self.text_written.emit(str(text))
-
-    def flush(self):
-        pass  # 필요한 경우 구현
 
 class TestWorker(QThread):
     progress = Signal(int, str)  # (row, content) 진행 상황
@@ -504,16 +458,15 @@ class TestWorker(QThread):
         self.stop_event = threading.Event()
         self.meter_demo_test = DemoTest(self.stop_event)
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
-        self.test_mode = "None"  # test_mode 값을 저장
+        self.test_mode = None
         self.test_mode_setting = ModbusLabels()
         self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.base_save_path = os.path.expanduser(f"./results/{self.current_time}/")
         os.makedirs(self.base_save_path, exist_ok=True)
-        self.meter_demo_test.none_test_start()
         self.test_map = {
-            "tm_all": print("not yet"),
-            "tm_balance": lambda: self.demo_test_mode(),
-            "tm_noload": lambda: self.noload_test_mode(),
+            "tm_all": lambda: print("not yet"),
+            "tm_balance": partial(self.execute_test_mode, self.meter_demo_test.demo_test_mode),
+            "tm_noload": partial(self.execute_test_mode, self.meter_demo_test.noload_test_mode),
             "vol_all": lambda: self.meter_demo_test.demo_mea_vol_all(self.base_save_path, self.test_mode, self.search_pattern),
             "vol_rms": lambda: self.meter_demo_test.demo_mea_vol_rms(self.base_save_path, self.test_mode, self.search_pattern),
             "vol_fund": lambda: self.meter_demo_test.demo_mea_vol_fund(self.base_save_path, self.test_mode, self.search_pattern),
@@ -539,15 +492,10 @@ class TestWorker(QThread):
             self.tableWidget.setItem(row, 2, result_item)
 
         self.result_callback = result_callback 
-        
-
-    def demo_test_mode(self):
-        self.test_mode = self.test_mode_setting.demo_test_setting()
-        print(f"tm_balance done. test_mode={self.test_mode}")
-
-    def noload_test_mode(self):
-        self.test_mode = self.test_mode_setting.noload_test_setting()
-        print(f"tm_balance done. test_mode={self.test_mode}")
+    
+    def execute_test_mode(self, mode_function):
+        self.test_mode = mode_function()
+        return self.test_mode
 
     def run(self):
         row_count = self.tableWidget.rowCount()
@@ -570,19 +518,44 @@ class TestWorker(QThread):
                 continue
 
             # DemoProcess 생성 및 실행
+            
             demo_process = DemoProcess(
                 score_callback=lambda score: self.result_callback(score, row)
             )
             for test_name in test_list:
-                demo_process.demo_test_by_name(
-                    test_name, self.base_save_path, self.test_mode, self.search_pattern
-                )
+                if test_name == "tm_balance":
+                    # 이미 self.test_mode가 None이면 새로 세팅, 아니면 유지
+                    self.execute_test_mode(self.meter_demo_test.demo_test_mode)
+                    
+                elif test_name == "tm_noload":
+                 self.execute_test_mode(self.meter_demo_test.noload_test_mode)
 
+            demo_process.demo_test_by_name(
+                        test_name, self.base_save_path, self.test_mode, self.search_pattern
+                    )
+        
+              
         # 모든 테스트 완료
         self.finished.emit()
         
     def stop(self):
         self.stopRequested = True
 
+class Alarm:
+    
+    def show_connection_error(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setWindowTitle("Connection Error")
+        msg.setText("장치와 미연결 상태")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
+        
+class EmittingStream(QObject):
+    text_written = Signal(str)
 
+    def write(self, text):
+        self.text_written.emit(str(text))
 
+    def flush(self):
+        pass  # 필요한 경우 구현

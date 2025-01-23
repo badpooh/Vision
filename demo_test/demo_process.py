@@ -31,7 +31,7 @@ class DemoProcess:
     def __init__(self, score_callback=None):
         self.coords_touch = self.touch_manager.coords_touch
         self.coords_color = self.touch_manager.coords_color
-        self.test_mode = ""
+        self.test_mode = None
         self.score_callback = score_callback
         self.demo_test = None
 
@@ -40,11 +40,16 @@ class DemoProcess:
         if self.demo_test is None:
             self.demo_test = DemoTest(score_callback=self.score_callback, stop_event=None)
         return self.demo_test
+    
 
     def demo_test_by_name(self, test_name, base_save_path, test_mode, search_pattern):
         demo_test = self.get_demo_test_instance()
 
-        if test_name == "vol_rms":
+        if test_name.strip().lower() == "tm_balance":
+            demo_test.demo_test_mode()
+        elif test_name.strip().lower() == "tm_noload":
+            demo_test.noload_test_mode()
+        elif test_name == "vol_rms":
             demo_test.demo_mea_vol_rms(base_save_path, test_mode, search_pattern)
         elif test_name == "vol_fund":
             demo_test.demo_mea_vol_fund(base_save_path, test_mode, search_pattern)
@@ -75,7 +80,7 @@ class DemoProcess:
 
         return self.latest_image_path
 
-    def ocr_process(self, image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys=None, reset_time=None, base_save_path=None, test_mode=""):
+    def ocr_process(self, image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys=None, reset_time=None, base_save_path=None, test_mode=None):
         """
         Args:
             image_path (str): The path to the image file.
@@ -89,6 +94,7 @@ class DemoProcess:
             None
         """
         self.test_mode = test_mode
+        ocr_res = None
         ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         if self.test_mode == "Demo":
@@ -99,7 +105,7 @@ class DemoProcess:
             else:
                 self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, img_path=image_path, base_save_path=base_save_path, all_meas_results=all_meas_results)
 
-        elif self.test_mode == "None":
+        elif self.test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys is not None:
                 time_results = self.evaluation.check_time_diff(image=image_path, roi_keys=time_keys, reset_time=reset_time, test_mode=test_mode)
@@ -216,7 +222,7 @@ class DemoProcess:
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, all_meas_results=all_meas_results, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path, image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, ocr_img_meas, all_meas_results=all_meas_results, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         else :
@@ -232,7 +238,7 @@ class DemoProcess:
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=csv_result, base_save_path=base_save_path)
-        if test_mode == "None":
+        if test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=csv_result, base_save_path=base_save_path)
         else :
@@ -250,7 +256,7 @@ class DemoProcess:
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
-        if test_mode == "None":
+        if test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         else :
@@ -273,6 +279,16 @@ class DemoTest:
         self.evaluation = Evaluation()
         self.stop_event = stop_event
         self.score_callback = score_callback
+
+    def demo_test_mode(self):
+        self.test_mode = self.modbus_label.demo_test_setting()
+        print(f"test_mode={self.test_mode}")
+        return self.test_mode
+    
+    def noload_test_mode(self):
+        self.test_mode = self.modbus_label.noload_test_setting()
+        print(f"test_mode={self.test_mode}")
+        return self.test_mode
         
     def mea_demo_mode(self):
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
@@ -335,7 +351,7 @@ class DemoTest:
 
     def demo_mea_vol_rms(self, base_save_path, test_mode, search_pattern):
         start_time = self.modbus_label.device_current_time()
-
+    
         ## L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -924,7 +940,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_side_menu_1.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vll_none.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -934,7 +950,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_all_vln_none.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -945,7 +961,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vll_none.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -955,7 +971,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_vol_vln_none.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -967,7 +983,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vll_none.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -977,7 +993,7 @@ class DemoTest:
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_curr_vln_none.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -986,7 +1002,7 @@ class DemoTest:
         ### nothing vll ###
         self.touch_manager.menu_touch(ect.touch_analysis_curr.value)
         self.touch_manager.menu_touch(ect.touch_phasor_vll.value)
-        if test_mode == "Demo" or test_mode == "None":
+        if test_mode == "Demo" or test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vll.value, ref=ec.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
             print("Test stopped")
@@ -994,7 +1010,7 @@ class DemoTest:
 
         ### nothing vln ###
         self.touch_manager.menu_touch(ect.touch_phasor_vln.value)
-        if test_mode == "Demo" or test_mode == "None":
+        if test_mode == "Demo" or test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=ecir.img_ref_phasor_na_vln.value, ref=ec.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
         ocr_func.update_phasor_condition(0)
         if self.stop_event.is_set():
@@ -1023,7 +1039,7 @@ class DemoTest:
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_vol_3p4w.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_vol_3p4w_none.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
             self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
@@ -1041,7 +1057,7 @@ class DemoTest:
         if test_mode == "Demo":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_curr.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_graph_img_cut, ecir.img_ref_harmonics_curr_none.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
@@ -1139,7 +1155,7 @@ class DemoTest:
         if test_mode == "Demo":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_fund.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_fund_none.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
@@ -1178,7 +1194,7 @@ class DemoTest:
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_vol_rms_none.value)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
@@ -1217,7 +1233,7 @@ class DemoTest:
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_fund_none.value)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
@@ -1254,7 +1270,7 @@ class DemoTest:
         image_results = self.evaluation.img_match(image_path, ecroi.harmonics_chart_img_cut, ecir.img_ref_harmonics_curr_rms_none.value)
         if test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
         if self.stop_event.is_set():
@@ -1304,7 +1320,7 @@ class DemoTest:
             validate_ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
             invalid_elements = self.evaluation.validate_ocr(validate_ocr_results)
             self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, img_path=image_path,base_save_path=base_save_path, invalid_elements=invalid_elements)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, ocr_img_meas, image_path=image_path)
             self.evaluation.save_csv(ocr_img=ocr_img, ocr_error=ocr_error, right_error=right_error, meas_error=meas_error, ocr_img_meas=ocr_img_meas, img_path=image_path,base_save_path=base_save_path)
         
@@ -1327,7 +1343,7 @@ class DemoTest:
         if test_mode == "Demo":
             image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
-        elif test_mode == "None":
+        elif test_mode == "NoLoad":
             image_results = self.evaluation.img_match(image_path, ecroi.waveform_all_img_cut, ecir.img_ref_waveform_all_none.value)
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_none_test(ocr_img, ocr_ref, image_path=image_path, img_result=image_results)
         self.evaluation.save_csv(ocr_img, ocr_error, right_error, meas_error, img_path=image_path, img_result=image_results, base_save_path=base_save_path)
