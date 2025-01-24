@@ -40,8 +40,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.tc_box_index = 0
         self.ocr_settings = {}
         self.set_windows = {}
-        self.label_load_text = "OCR NO"
-        self.label_judge_text = ""
         self.checkbox_states = {
             "voltage": False,
             "current": False,
