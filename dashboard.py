@@ -12,8 +12,6 @@ import xml.etree.ElementTree as ET
 from functools import partial
 
 from ui_dashboard import Ui_MainWindow
-from modules.ocr_setting import OcrSetting
-from modules.ocr_process import ImgOCR
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
 from demo_test.demo_function import ModbusManager, ModbusLabels, TouchManager, Evaluation
@@ -50,7 +48,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.thread = False
         self.stop_thread = False
         self.selected_ip = ''
-        self.ocr = ImgOCR()
         self.modbus_manager = ModbusManager()
         self.setup_modbus_manager = SetupModbusManager()
         self.meter_setup_process = DemoProcess()
