@@ -14,6 +14,8 @@ import pandas as pd
 from itertools import chain
 from paddleocr import PaddleOCR
 
+from function.func_connection import ConnectionManager
+
 from setup_test.setup_config import ConfigSetup
 from setup_test.setup_config import ConfigTextRef as ec
 from setup_test.setup_config import ConfigROI as ecr
@@ -22,75 +24,77 @@ from setup_test.setup_config import ConfigTouch as ect
 config_data = ConfigSetup()
 
 
-class SetupModbusManager:
+# class SetupModbusManager:
 
-    SERVER_IP = ''  # 장치 IP 주소
-    TOUCH_PORT = ''  # 내부터치
-    SETUP_PORT = ''  # 설정
+#     SERVER_IP = ''  # 장치 IP 주소
+#     TOUCH_PORT = ''  # 내부터치
+#     SETUP_PORT = ''  # 설정
 
-    def __init__(self):
-        self.SERVER_IP = ''  # 장치 IP 주소
-        self.TOUCH_PORT = ''  # 내부터치
-        self.SETUP_PORT = ''  # 설정
-        self.is_connected = False
-        self.touch_client = None
-        self.setup_client = None
+#     def __init__(self):
+#         self.SERVER_IP = ''  # 장치 IP 주소
+#         self.TOUCH_PORT = ''  # 내부터치
+#         self.SETUP_PORT = ''  # 설정
+#         self.is_connected = False
+#         self.touch_client = None
+#         self.setup_client = None
     
-    def ip_connect(self, selected_ip):
-        self.SERVER_IP = selected_ip
-        print(f"IP set to: {self.SERVER_IP}")
+#     def ip_connect(self, selected_ip):
+#         self.SERVER_IP = selected_ip
+#         print(f"IP set to: {self.SERVER_IP}")
             
-    def tp_update(self, selected_tp):
-        self.TOUCH_PORT = selected_tp
+#     def tp_update(self, selected_tp):
+#         self.TOUCH_PORT = selected_tp
     
-    def sp_update(self, selected_sp):
-        self.SETUP_PORT = selected_sp
+#     def sp_update(self, selected_sp):
+#         self.SETUP_PORT = selected_sp
         
-    def tcp_connect(self):
-        if not self.SERVER_IP or not self.TOUCH_PORT or not self.SETUP_PORT:
-            print("Cannot connect: IP or PORT is missing.")
-            return
+#     def tcp_connect(self):
+#         if not self.SERVER_IP or not self.TOUCH_PORT or not self.SETUP_PORT:
+#             print("Cannot connect: IP or PORT is missing.")
+#             return
         
-        self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
-        self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
+#         self.touch_client = ModbusClient(self.SERVER_IP, port=self.TOUCH_PORT)
+#         self.setup_client = ModbusClient(self.SERVER_IP, port=self.SETUP_PORT)
 
-        touch_ok = self.touch_client.connect()
-        setup_ok = self.setup_client.connect()
+#         touch_ok = self.touch_client.connect()
+#         setup_ok = self.setup_client.connect()
 
-        if touch_ok and setup_ok:
-            self.is_connected = True
-            print("is connected")
-        else:
-            if not touch_ok:
-                print("Failed to connect touch_client")
-            if not setup_ok:
-                print("Failed to connect setup_client")
+#         if touch_ok and setup_ok:
+#             self.is_connected = True
+#             print("is connected")
+#         else:
+#             if not touch_ok:
+#                 print("Failed to connect touch_client")
+#             if not setup_ok:
+#                 print("Failed to connect setup_client")
 
-    def check_connection(self):
-        while self.is_connected:
-            if not self.touch_client.is_socket_open():
-                print("Touch client disconnected, reconnecting...")
-                if self.touch_client.connect():
-                    print("touch_client connected")
-            if not self.setup_client.is_socket_open():
-                print("Setup client disconnected, reconnecting...")
-                if self.setup_client.connect():
-                    print("setup_client connected")
-            time.sleep(1)
+#     def check_connection(self):
+#         while self.is_connected:
+#             if not self.touch_client.is_socket_open():
+#                 print("Touch client disconnected, reconnecting...")
+#                 if self.touch_client.connect():
+#                     print("touch_client connected")
+#             if not self.setup_client.is_socket_open():
+#                 print("Setup client disconnected, reconnecting...")
+#                 if self.setup_client.connect():
+#                     print("setup_client connected")
+#             time.sleep(1)
 
-    def start_monitoring(self):
-        self.tcp_connect()
-        threading.Thread(target=self.check_connection, daemon=True).start()
+#     def start_monitoring(self):
+#         self.tcp_connect()
+#         threading.Thread(target=self.check_connection, daemon=True).start()
 
-    def tcp_disconnect(self):
-        self.touch_client.close()
-        self.setup_client.close()
-        self.is_connected = False
-        print("is disconnected")
+#     def tcp_disconnect(self):
+#         self.touch_client.close()
+#         self.setup_client.close()
+#         self.is_connected = False
+#         print("is disconnected")
 
 class TouchManager:
 
-    mobus_manager = SetupModbusManager()
+    # mobus_manager = SetupModbusManager()
+    mobus_manager = ConnectionManager()
+
     hex_value = int("A5A5", 16)
 
     def __init__(self):

@@ -16,10 +16,11 @@ from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
 from demo_test.demo_function import ModbusManager, ModbusLabels, TouchManager, Evaluation
 
-from setup_test.setup_function import SetupModbusManager
 from setup_test.setup_setting import SettingWindow
 from setup_test.setup_setting import SettingIP
 from setup_test.setup_db import IPDataBase
+
+from function.func_connection import ConnectionManager
 
 from frame_test.webcam_function import WebCam
 
@@ -49,7 +50,8 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.stop_thread = False
         self.selected_ip = ''
         self.modbus_manager = ModbusManager()
-        self.setup_modbus_manager = SetupModbusManager()
+        # self.setup_modbus_manager = SetupModbusManager()
+        self.setup_modbus_manager = ConnectionManager()
         self.meter_setup_process = DemoProcess()
         self.modbus_labels = ModbusLabels()
         self.touch_manager = TouchManager()
@@ -82,32 +84,18 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_demo_test.clicked.connect(self.switch_to_setupTestPage)
         self.btn_frame_test_1.clicked.connect(self.switch_to_frameTestPage)
         self.btn_frame_test_2.clicked.connect(self.switch_to_frameTestPage)
-        self.btn_connect.clicked.connect(self.setup_connect)
-        self.btn_disconnect.clicked.connect(self.setup_disconnect)
         self.btn_select_webcam.clicked.connect(self.select_webcam)
         self.btn_start_webcam.clicked.connect(self.start_webcam)
         self.btn_stop_webcam.clicked.connect(self.stop_webcam)
         self.lineEdit.returnPressed.connect(self.set_focus)
-        self.btn_demo_mode_ui_test.clicked.connect(self.demo_ui_test_start)
-        self.btn_demo_mode_ui_test_2.clicked.connect(self.demo_ui_test_stop)
-        self.btn_demo_mode_ui_test_3.clicked.connect(self.none_ui_test_start)
-        self.btn_demo_mode_ui_test_4.clicked.connect(self.none_ui_test_stop)
 
         self.btn_test_start.clicked.connect(self.test_start)
         self.btn_tc_save.clicked.connect(self.tc_save)
         self.btn_tc_load.clicked.connect(self.tc_load)
 
-        self.debug_button.clicked.connect(self.debug_test)
         self.btn_setting.clicked.connect(self.ip_setting)
         self.btn_all_connect.clicked.connect(self.all_connect)
         self.btn_all_disconnect.clicked.connect(self.all_disconnect)
-
-        self.checkBox_voltage.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "voltage"))
-        self.checkBox_current.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "current"))
-        self.checkBox_power.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "power"))
-        self.checkBox_analysis.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "analysis"))
-        self.checkBox_demand.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "demand"))
-
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
         self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)

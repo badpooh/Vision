@@ -25,8 +25,6 @@ from demo_test.demo_config import ConfigTouch as ect
 
 config_data = ConfigSetup()
 
-SERVER_IP = '10.10.26.159'
-
 class TouchManager:
 
     mobus_manager = ModbusManager()

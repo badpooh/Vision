@@ -15,11 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QGridLayout,
-    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
-    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
-    QStackedWidget, QTableWidget, QTableWidgetItem, QTextEdit,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+    QHeaderView, QLabel, QLineEdit, QMainWindow,
+    QPushButton, QSizePolicy, QSpacerItem, QStackedWidget,
+    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
@@ -485,134 +484,6 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.ui_test_page)
         self.setup_test_page = QWidget()
         self.setup_test_page.setObjectName(u"setup_test_page")
-        self.btn_connect = QPushButton(self.setup_test_page)
-        self.btn_connect.setObjectName(u"btn_connect")
-        self.btn_connect.setGeometry(QRect(190, 30, 101, 31))
-        self.btn_connect.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
-        self.btn_connect.setAutoDefault(False)
-        self.btn_connect.setFlat(False)
-        self.btn_disconnect = QPushButton(self.setup_test_page)
-        self.btn_disconnect.setObjectName(u"btn_disconnect")
-        self.btn_disconnect.setGeometry(QRect(310, 30, 91, 31))
-        self.btn_disconnect.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
-        self.line = QFrame(self.setup_test_page)
-        self.line.setObjectName(u"line")
-        self.line.setGeometry(QRect(10, 80, 1151, 16))
-        font2 = QFont()
-        font2.setBold(False)
-        self.line.setFont(font2)
-        self.line.setFrameShape(QFrame.Shape.HLine)
-        self.line.setFrameShadow(QFrame.Shadow.Sunken)
-        self.btn_demo_mode_ui_test = QPushButton(self.setup_test_page)
-        self.btn_demo_mode_ui_test.setObjectName(u"btn_demo_mode_ui_test")
-        self.btn_demo_mode_ui_test.setGeometry(QRect(190, 110, 121, 41))
-        self.btn_demo_mode_ui_test.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
-        self.checkBox_voltage = QCheckBox(self.setup_test_page)
-        self.checkBox_voltage.setObjectName(u"checkBox_voltage")
-        self.checkBox_voltage.setGeometry(QRect(20, 120, 79, 20))
-        self.checkBox_current = QCheckBox(self.setup_test_page)
-        self.checkBox_current.setObjectName(u"checkBox_current")
-        self.checkBox_current.setGeometry(QRect(20, 160, 79, 20))
-        self.checkBox_power = QCheckBox(self.setup_test_page)
-        self.checkBox_power.setObjectName(u"checkBox_power")
-        self.checkBox_power.setGeometry(QRect(20, 200, 79, 20))
-        self.checkBox_analysis = QCheckBox(self.setup_test_page)
-        self.checkBox_analysis.setObjectName(u"checkBox_analysis")
-        self.checkBox_analysis.setGeometry(QRect(20, 240, 79, 20))
-        self.debug_button = QPushButton(self.setup_test_page)
-        self.debug_button.setObjectName(u"debug_button")
-        self.debug_button.setGeometry(QRect(1000, 630, 141, 51))
-        self.btn_demo_mode_ui_test_2 = QPushButton(self.setup_test_page)
-        self.btn_demo_mode_ui_test_2.setObjectName(u"btn_demo_mode_ui_test_2")
-        self.btn_demo_mode_ui_test_2.setGeometry(QRect(190, 170, 121, 41))
-        self.btn_demo_mode_ui_test_2.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
-        self.input_ip = QLineEdit(self.setup_test_page)
-        self.input_ip.setObjectName(u"input_ip")
-        self.input_ip.setGeometry(QRect(10, 30, 151, 31))
-        font3 = QFont()
-        font3.setPointSize(12)
-        self.input_ip.setFont(font3)
-        self.score = QLabel(self.setup_test_page)
-        self.score.setObjectName(u"score")
-        self.score.setGeometry(QRect(370, 150, 131, 81))
-        font4 = QFont()
-        font4.setPointSize(25)
-        self.score.setFont(font4)
-        self.score.setFrameShape(QFrame.Shape.Box)
-        self.score.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.score.setWordWrap(False)
-        self.score_label = QLabel(self.setup_test_page)
-        self.score_label.setObjectName(u"score_label")
-        self.score_label.setGeometry(QRect(380, 120, 121, 16))
-        self.checkBox_demand = QCheckBox(self.setup_test_page)
-        self.checkBox_demand.setObjectName(u"checkBox_demand")
-        self.checkBox_demand.setGeometry(QRect(20, 280, 79, 20))
-        self.log = QTextEdit(self.setup_test_page)
-        self.log.setObjectName(u"log")
-        self.log.setGeometry(QRect(610, 100, 551, 501))
-        self.log.setReadOnly(True)
-        self.btn_demo_mode_ui_test_3 = QPushButton(self.setup_test_page)
-        self.btn_demo_mode_ui_test_3.setObjectName(u"btn_demo_mode_ui_test_3")
-        self.btn_demo_mode_ui_test_3.setGeometry(QRect(190, 230, 121, 41))
-        self.btn_demo_mode_ui_test_3.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
-        self.btn_demo_mode_ui_test_4 = QPushButton(self.setup_test_page)
-        self.btn_demo_mode_ui_test_4.setObjectName(u"btn_demo_mode_ui_test_4")
-        self.btn_demo_mode_ui_test_4.setGeometry(QRect(190, 290, 121, 41))
-        self.btn_demo_mode_ui_test_4.setStyleSheet(u"QPushButton {\n"
-"        border: 1px solid #8f8f91;\n"
-"        border-radius: 5px;\n"
-"        background-color: #f0f0f0;\n"
-"        padding: 5px;\n"
-"    }\n"
-"\n"
-"QPushButton:pressed {\n"
-"        background-color: #d0d0d0;\n"
-"    }")
         self.stackedWidget.addWidget(self.setup_test_page)
         self.frame_test_page = QWidget()
         self.frame_test_page.setObjectName(u"frame_test_page")
@@ -684,7 +555,7 @@ class Ui_MainWindow(object):
         self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"DASHBOARD", None))
         self.btn_home_2.setText(QCoreApplication.translate("MainWindow", u"HOME", None))
         self.btn_ui_test_2.setText(QCoreApplication.translate("MainWindow", u"UI TEST", None))
-        self.btn_demo_test.setText(QCoreApplication.translate("MainWindow", u"UI TEST (Demo Ver)", None))
+        self.btn_demo_test.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.btn_frame_test_2.setText(QCoreApplication.translate("MainWindow", u"FRAME TEST", None))
         self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"Sign Out", None))
         self.label.setText("")
@@ -710,26 +581,6 @@ class Ui_MainWindow(object):
         self.btn_add_tc.setText(QCoreApplication.translate("MainWindow", u"ADD TC", None))
         self.btn_tc_save.setText(QCoreApplication.translate("MainWindow", u"SAVE", None))
         self.btn_tc_load.setText(QCoreApplication.translate("MainWindow", u"LOAD", None))
-        self.btn_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
-        self.btn_disconnect.setText(QCoreApplication.translate("MainWindow", u"Disconnect", None))
-        self.btn_demo_mode_ui_test.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
-"UI TEST START ", None))
-        self.checkBox_voltage.setText(QCoreApplication.translate("MainWindow", u"VOLTAGE", None))
-        self.checkBox_current.setText(QCoreApplication.translate("MainWindow", u"CURRENT", None))
-        self.checkBox_power.setText(QCoreApplication.translate("MainWindow", u"POWER", None))
-        self.checkBox_analysis.setText(QCoreApplication.translate("MainWindow", u"ANALYSIS", None))
-        self.debug_button.setText(QCoreApplication.translate("MainWindow", u"Debug Button", None))
-        self.btn_demo_mode_ui_test_2.setText(QCoreApplication.translate("MainWindow", u"Demo Mode \n"
-"UI TEST STOP", None))
-        self.input_ip.setInputMask("")
-        self.input_ip.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter IP address", None))
-        self.score.setText("")
-        self.score_label.setText(QCoreApplication.translate("MainWindow", u"RESULT (FAIL/TOTAL)", None))
-        self.checkBox_demand.setText(QCoreApplication.translate("MainWindow", u"DEMAND", None))
-        self.btn_demo_mode_ui_test_3.setText(QCoreApplication.translate("MainWindow", u"None  \n"
-"UI TEST START ", None))
-        self.btn_demo_mode_ui_test_4.setText(QCoreApplication.translate("MainWindow", u"None \n"
-"UI TEST STOP", None))
         self.btn_select_webcam.setText(QCoreApplication.translate("MainWindow", u"Select WebCam", None))
         self.btn_start_webcam.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.btn_stop_webcam.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
