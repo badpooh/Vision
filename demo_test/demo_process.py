@@ -3,10 +3,13 @@ import numpy as np
 import os
 import glob
 from datetime import datetime
-import time
-import re
 
-from demo_test.demo_function import TouchManager, ModbusManager, OCRManager, Evaluation, ModbusLabels
+from function.func_connection import ConnectionManager
+from function.func_evaluation import Evaluation
+from function.func_ocr import OCRManager
+from function.func_touch import TouchManager
+from function.func_modbus import ModbusLabels
+
 from demo_test.demo_config import ConfigTextRef as ec
 from demo_test.demo_config import ConfigImgRef as ecir
 from demo_test.demo_config import ConfigROI as ecroi
@@ -21,7 +24,7 @@ ocr_func = OCRManager()
 class DemoProcess:
 
     touch_manager = TouchManager()
-    modbus_manager = ModbusManager()
+    connect_manager = ConnectionManager()
     evaluation = Evaluation()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.159*.png')
     now = datetime.now()
@@ -29,8 +32,6 @@ class DemoProcess:
     
 
     def __init__(self, score_callback=None):
-        self.coords_touch = self.touch_manager.coords_touch
-        self.coords_color = self.touch_manager.coords_color
         self.test_mode = None
         self.score_callback = score_callback
         self.demo_test = None
@@ -57,10 +58,10 @@ class DemoProcess:
             print(f"Unknown test name: {test_name}")
         
     def modbus_connect(self):
-        self.modbus_manager.start_monitoring()
+        self.connect_manager.start_monitoring()
 
     def modbus_discon(self):
-        self.modbus_manager.tcp_disconnect()
+        self.connect_manager.tcp_disconnect()
 
     def load_image_file(self, search_pattern):
         self.now = datetime.now()
@@ -265,7 +266,7 @@ class DemoProcess:
 class DemoTest:
 
     touch_manager = TouchManager()
-    modbus_manager = ModbusManager()
+    modbus_manager = ConnectionManager()
     # ocr_func = OCRManager()
     modbus_label = ModbusLabels()
     # evaluation = Evaluation()

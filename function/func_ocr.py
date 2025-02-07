@@ -10,22 +10,13 @@ import threading
 from paddleocr import PaddleOCR
 from itertools import chain
 
-from demo_test.demo_config import ConfigSetup
-from demo_test.demo_config import ConfigTextRef as ec
-from demo_test.demo_config import ConfigROI as ecr
-from demo_test.demo_config import ConfigImgRef as ecir
-from demo_test.demo_config import ConfigModbusMap as ecm
-from demo_test.demo_config import ConfigTouch as ect
-
-config_data = ConfigSetup()
-
-SERVER_IP = '10.10.26.159'
+from config.config_roi import Configs
 
 class OCRManager:
 
     def __init__(self, n=3):
         self.n = n
-        self.config = ConfigSetup(n=self.n)
+        self.config = Configs(n=self.n)
         self.rois = self.config.roi_params()
         self.phasor_condition = 0
 

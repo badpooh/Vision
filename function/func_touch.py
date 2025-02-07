@@ -1,43 +1,20 @@
-from os import error
-import re
-import threading
 import time
-import numpy as np
-import cv2
-from datetime import datetime, timezone, timedelta
 import time
-from pymodbus.client import ModbusTcpClient as ModbusClient
-import threading
-import shutil
-# import torch
-import os
-import pandas as pd
-from paddleocr import PaddleOCR
-from collections import Counter
-from itertools import chain
 
-from demo_test.demo_config import ConfigSetup
-from demo_test.demo_config import ConfigTextRef as ec
-from demo_test.demo_config import ConfigROI as ecr
-from demo_test.demo_config import ConfigImgRef as ecir
-from demo_test.demo_config import ConfigModbusMap as ecm
-from demo_test.demo_config import ConfigTouch as ect
-
-config_data = ConfigSetup()
+from function.func_connection import ConnectionManager
+from config.config_touch import ConfigTouch as ect
 
 class TouchManager:
 
-    mobus_manager = ModbusManager()
+    connect_manager = ConnectionManager()
     hex_value = int("A5A5", 16)
 
+    ### 위치 주소등등 수정할 사항 존재 ###
     def __init__(self):
-        self.client_check = self.mobus_manager.touch_client
-        self.coords_touch = config_data.touch_data()
-        self.coords_color = config_data.color_detection_data()
+        self.client_check = self.connect_manager.touch_client
 
     def touch_write(self, address, value, delay=0.6):
         attempt = 0
-        # print("Touching", end='', flush=True)
         while attempt < 2:
             self.client_check.write_register(address, value)
             read_value = self.client_check.read_holding_registers(address)
@@ -47,9 +24,6 @@ class TouchManager:
                 return
             else:
                 attempt += 1
-                # print(".", end='', flush=True) 
-        # print(f"Failed to write value {value} to address {
-        #       address}. Read back {read_value} instead.")
 
     def uitest_mode_start(self):
         if self.client_check:
@@ -75,14 +49,14 @@ class TouchManager:
 
     def btn_popup_touch(self, btn_popup_key):
         if self.client_check:
-            btn_x, btn_y = self.coords_touch[btn_popup_key]
+            btn_x, btn_y = self.config_touch[btn_popup_key]
             self.touch_write(ect.touch_addr_pos_x.value, btn_x)
             self.touch_write(ect.touch_addr_pos_y.value, btn_y)
             self.touch_write(ect.touch_addr_touch_mode.value, 1)
             self.touch_write(ect.touch_addr_touch_mode.value, 0)
-            self.touch_write(ect.touch_addr_pos_x.value, self.coords_touch["btn_popup_enter"][0])
+            self.touch_write(ect.touch_addr_pos_x.value, self.config_touch["btn_popup_enter"][0])
             self.touch_write(
-                ect.touch_addr_pos_y.value, self.coords_touch["btn_popup_enter"][1])
+                ect.touch_addr_pos_y.value, self.config_touch["btn_popup_enter"][1])
             self.touch_write(ect.touch_addr_touch_mode.value, 1)
             self.touch_write(ect.touch_addr_touch_mode.value, 0)
         else:

@@ -49,6 +49,10 @@ class ConfigTouch(Enum):
     touch_harmonics_sub_rms = [230, 330]
     touch_harmonics_sub_graph = [360, 240]
     touch_harmonics_sub_text = [360, 285]
+
+    ### popup button ####
+    touch_btn_popup_enter = [340, 415],
+    touch_btn_popup_cancel = [450, 430],
     
     ### touch 동작관련 address ###
     touch_addr_ui_test_mode = 57100
@@ -58,3 +62,54 @@ class ConfigTouch(Enum):
     touch_addr_screen_capture = 57101
     touch_addr_setup_button_bit = 57120
     touch_addr_setup_button = 57121
+
+
+def touch_data(self):
+        coordinates = {
+            "data_view_1": [320, 210],
+            "data_view_2": [620, 210],
+            "data_view_3": [320, 280],
+            "data_view_4": [620, 280],
+            "data_view_5": [320, 360],
+            "data_view_6": [620, 360],
+            "data_view_7": [320, 430],
+            "data_view_8": [620, 430],
+            "btn_apply": [620, 150],
+            "btn_cancel": [720, 150],
+            "btn_popup_1": [400, 110],
+            "btn_popup_2": [400, 160],
+            "btn_popup_3": [400, 215],
+            "btn_popup_4": [400, 265],
+            "btn_popup_5": [400, 315],
+            
+            "btn_number_1": [310, 200],
+            "btn_number_2": [370, 200],
+            "btn_number_3": [430, 200],
+            "btn_number_4": [310, 255],
+            "btn_number_5": [370, 255],
+            "btn_number_6": [430, 255],
+            "btn_number_7": [310, 310],
+            "btn_number_8": [370, 310],
+            "btn_number_9": [430, 310],
+            "btn_number_0": [310, 370],
+            "btn_number_dot": [370, 370],
+            "btn_number_back": [490, 225],
+            "btn_number_clear": [485, 340],
+            "btn_num_pw_1": [255, 230],
+            "btn_num_pw_2": [315, 230],
+            "btn_num_pw_3": [370, 230],
+            "btn_num_pw_4": [430, 230],
+            "btn_num_pw_5": [485, 230],
+            "btn_num_pw_6": [255, 290],
+            "btn_num_pw_7": [315, 290],
+            "btn_num_pw_8": [370, 290],
+            "btn_num_pw_9": [430, 290],
+            "btn_num_pw_0": [485, 290],
+            "btn_num_pw_enter": [340, 345],
+            "btn_testmode_1": [270, 100],
+            "btn_testmode_2": [270, 160],
+            "infinite": [490, 125],
+            "cauiton_confirm": [340, 330],
+            "cauiton_cancel": [450, 330],
+        }
+        return coordinates

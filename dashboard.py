@@ -51,7 +51,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.selected_ip = ''
         self.modbus_manager = ModbusManager()
         # self.setup_modbus_manager = SetupModbusManager()
-        self.setup_modbus_manager = ConnectionManager()
+        self.connect_manager = ConnectionManager()
         self.meter_setup_process = DemoProcess()
         self.modbus_labels = ModbusLabels()
         self.touch_manager = TouchManager()
@@ -70,11 +70,11 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.tableWidget.setColumnWidth(2, 250)
         
         self.setting_ip.ipSelected.connect(self.on_ip_selected)
-        self.setting_ip.ipSelected.connect(self.setup_modbus_manager.ip_connect)
+        self.setting_ip.ipSelected.connect(self.connect_manager.ip_connect)
         self.setting_ip.tpSelected.connect(self.on_tp_selected)
-        self.setting_ip.tpSelected.connect(self.setup_modbus_manager.tp_update)
+        self.setting_ip.tpSelected.connect(self.connect_manager.tp_update)
         self.setting_ip.spSelected.connect(self.on_sp_selected)
-        self.setting_ip.spSelected.connect(self.setup_modbus_manager.sp_update)
+        self.setting_ip.spSelected.connect(self.connect_manager.sp_update)
 
         self.btn_home_1.clicked.connect(self.switch_to_homePage)
         self.btn_home_2.clicked.connect(self.switch_to_homePage)
@@ -170,10 +170,10 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.setting_ip.open_ip_window()
         
     def all_connect(self):
-        self.setup_modbus_manager.tcp_connect()
+        self.connect_manager.tcp_connect()
         
     def all_disconnect(self):
-        self.setup_modbus_manager.tcp_disconnect()
+        self.connect_manager.tcp_disconnect()
 
     def setup_connect(self):
         self.meter_setup_process.modbus_connect()
