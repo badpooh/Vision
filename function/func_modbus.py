@@ -10,9 +10,10 @@ from config.config_map import ConfigModbusMap as ecm
 class ModbusLabels:
 
     touch_manager = TouchManager()
-    connect_manager = ConnectionManager()
+    # connect_manager = ConnectionManager()
 
     def __init__(self):
+        self.connect_manager = ConnectionManager()
         pass
 
     def demo_test_setting(self):
@@ -20,7 +21,7 @@ class ModbusLabels:
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]
-        if self.connect_manager.setup_client:
+        if self.connect_manager.setup_client is not None: 
             for value in values:
                 self.response = self.connect_manager.setup_client.write_register(ecm.addr_setup_lock.value, value)
                 time.sleep(0.6)
@@ -48,7 +49,8 @@ class ModbusLabels:
             self.response = self.connect_manager.setup_client.write_register(4001, 1)
             print("Demo mode setting Done")
         else:
-            print(self.response.isError())
+            # print(self.response.isError())
+            print("setup_client가 연결되어 있지 않습니다.")
         return test_mode
 
     def noload_test_setting(self):
