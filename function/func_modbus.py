@@ -14,7 +14,6 @@ class ModbusLabels:
 
     def __init__(self):
         self.connect_manager = ConnectionManager()
-        pass
 
     def demo_test_setting(self):
         test_mode = "Demo"

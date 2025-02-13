@@ -4,13 +4,22 @@ import time
 
 class ConnectionManager:
 
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(ConnectionManager, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        self.SERVER_IP = ''  # 장치 IP 주소
-        self.TOUCH_PORT = ''  # 내부터치
-        self.SETUP_PORT = ''  # 설정
-        self.is_connected = False
-        self.touch_client = None
-        self.setup_client = None
+        if not hasattr(self, 'initialized'):
+            self.SERVER_IP = None  # 장치 IP 주소
+            self.TOUCH_PORT = None  # 터치 포트
+            self.SETUP_PORT = None  # 설정 포트
+            self.is_connected = False
+            self.touch_client = None
+            self.setup_client = None
+            self.initialized = True
     
     def ip_connect(self, selected_ip):
         self.SERVER_IP = selected_ip
