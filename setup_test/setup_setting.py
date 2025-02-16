@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QVBoxLayout, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QWidget, QTableWidgetItem, QTableWidget, QHeaderView
 from PySide6.QtGui import QRegularExpressionValidator
-from PySide6.QtCore import QRegularExpression, Qt, Signal
+from PySide6.QtCore import QRegularExpression, Qt, Signal, QEvent
 
 from setup_test.ui_setting import Ui_Form
 from setup_test.ui_setup_ip import Ui_setup_ip
@@ -654,7 +654,35 @@ class SettingIP(QWidget, Ui_setup_ip):
 		self.db = IPDataBase()
 		
 		self.load_ips()
-			
+
+		self.ip_list.viewport().installEventFilter(self)
+		self.tp_list.viewport().installEventFilter(self)
+		self.sp_list.viewport().installEventFilter(self)
+
+	def eventFilter(self, source, event):
+		if event.type() == QEvent.MouseButtonPress:
+			# 1) ip_list 영역에서 발생한 클릭인지
+			if source is self.ip_list.viewport():
+				item = self.ip_list.itemAt(event.pos())
+				if item is None:
+					# 빈 공간 클릭 시 선택 해제
+					self.ip_list.clearSelection()
+					self.ipSelected.emit("")
+			# 2) tp_list 영역에서 발생한 클릭인지
+			elif source is self.tp_list.viewport():
+				item = self.tp_list.itemAt(event.pos())
+				if item is None:
+					self.tp_list.clearSelection()
+					self.tpSelected.emit("")
+			# 3) sp_list 영역에서 발생한 클릭인지
+			elif source is self.sp_list.viewport():
+				item = self.sp_list.itemAt(event.pos())
+				if item is None:
+					self.sp_list.clearSelection()
+					self.spSelected.emit("")
+
+		return super().eventFilter(source, event)
+
 	def open_ip_window(self):
 		self.show()
 		
@@ -810,3 +838,4 @@ class SettingIP(QWidget, Ui_setup_ip):
 			selected_sp = item.text()
 			self.db.delete_ip(selected_sp)
 			self.sp_list.removeRow(row)
+    

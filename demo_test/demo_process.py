@@ -37,7 +37,6 @@ class DemoProcess:
         self.demo_test = None
 
     def get_demo_test_instance(self):
-        # DemoTest 인스턴스가 없으면 생성
         if self.demo_test is None:
             self.demo_test = DemoTest(score_callback=self.score_callback, stop_event=None)
         return self.demo_test
@@ -57,11 +56,11 @@ class DemoProcess:
         else:
             print(f"Unknown test name: {test_name}")
         
-    def modbus_connect(self):
-        self.connect_manager.start_monitoring()
+    # def modbus_connect(self):
+    #     self.connect_manager.start_monitoring()
 
-    def modbus_discon(self):
-        self.connect_manager.tcp_disconnect()
+    # def modbus_discon(self):
+    #     self.connect_manager.tcp_disconnect()
 
     def load_image_file(self, search_pattern):
         self.now = datetime.now()

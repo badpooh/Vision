@@ -98,33 +98,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_all_disconnect.clicked.connect(self.all_disconnect)
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
-        self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)
-        
-        # self.original_stdout = sys.stdout
-        # self.original_stderr = sys.stderr
-        # sys.stdout = EmittingStream()
-        # sys.stdout.text_written.connect(self.write_log)
-        # sys.stderr = EmittingStream()
-        # sys.stderr.text_written.connect(self.write_log)
-        
-    # def input_ip_return_pressed(self):
-    #     self.device_ip_address = self.input_ip.text()
-    #     self.modbus_manager.set_server_ip(self.device_ip_address)
-    #     self.modbus_labels.update_clients()
-    #     self.input_ip.setStyleSheet("background-color: lightgray;")
-    #     QTimer.singleShot(2000, lambda: self.input_ip.setStyleSheet("background-color: white;"))
-
-    # @Slot(str)
-    # def write_log(self, text):
-    #     self.log.moveCursor(QTextCursor.End)
-    #     self.log.insertPlainText(text)
-    #     self.log.moveCursor(QTextCursor.End)
-
-    # def closeEvent(self, event):
-    #     # 프로그램 종료 시 stdout과 stderr 복원
-    #     sys.stdout = self.original_stdout
-    #     sys.stderr = self.original_stderr
-    #     event.accept()            
+        self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)          
 
     def on_checkbox_changed(self, state, key):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
@@ -143,16 +117,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
     def on_sp_selected(self, selected_sp):
         print("대시보드에서 수신한 SP:", selected_sp)
         self.cur_sp = self.sp_display.setText(selected_sp) 
-
-    # def on_current_checkbox_changed(self, state):
-    #     if state == 2:
-    #         self.current_checked = True
-    #         print("Voltage checkbox checked")
-    #     elif state == 0:
-    #         self.current_checked = False
-    #         print("Voltage checkbox unchecked")
-    #     else:
-    #         print(f"Unknown state: {state}")
 
     def switch_to_homePage(self):
         self.stackedWidget.setCurrentIndex(0)
@@ -375,12 +339,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def actionCMC_clicked(self):
         print("CMC clicked")
-
-    def open_ocr_setting(self, tc_box_index):
-        ocr_setting = OcrSetting(
-            tc_box_index, callback=self.callback_ocr_list, load_callback=self.callback_ocr_load)
-        ocr_setting.show()
-        self.ocr_settings[tc_box_index] = ocr_setting
     
     def save_table_to_xml(self, filename):
         root = ET.Element("tableData")
