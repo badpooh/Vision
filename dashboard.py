@@ -14,7 +14,6 @@ from functools import partial
 from ui_dashboard import Ui_MainWindow
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
-from demo_test.demo_function import ModbusManager, ModbusLabels, TouchManager, Evaluation
 
 from setup_test.setup_setting import SettingWindow
 from setup_test.setup_setting import SettingIP
@@ -49,16 +48,9 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.thread = False
         self.stop_thread = False
         self.selected_ip = ''
-        self.modbus_manager = ModbusManager()
-        # self.setup_modbus_manager = SetupModbusManager()
         self.connect_manager = ConnectionManager()
         self.meter_setup_process = DemoProcess()
-        self.modbus_labels = ModbusLabels()
-        self.touch_manager = TouchManager()
-        self.evaluation = Evaluation()
         self.alarm = Alarm()
-        self.stop_event = threading.Event()
-        self.meter_demo_test = DemoTest(self.stop_event)
         self.setting_window = SettingWindow()
         self.setting_ip = SettingIP()
         
@@ -90,6 +82,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.lineEdit.returnPressed.connect(self.set_focus)
 
         self.btn_test_start.clicked.connect(self.test_start)
+        self.btn_test_stop.clicked.connect(self.test_stop)
         self.btn_tc_save.clicked.connect(self.tc_save)
         self.btn_tc_load.clicked.connect(self.tc_load)
 
@@ -138,12 +131,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         
     def all_disconnect(self):
         self.connect_manager.tcp_disconnect()
-
-    def setup_connect(self):
-        self.meter_setup_process.modbus_connect()
-
-    def setup_disconnect(self):
-        self.modbus_manager.tcp_disconnect()
 
     def select_webcam(self):
         self.webcam = WebCam()
@@ -215,88 +202,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         )
         if filename:
             self.load_table_from_xml(filename)
-        
-    def demo_ui_test_start(self):
-        # if self.modbus_manager.is_connected == True:
-        self.stop_event.clear()
-        self.thread = threading.Thread(target=self.demo_ui_test, daemon=True)
-        self.thread.start()
-        # else:
-        #     self.alarm.show_connection_error()
-            
-    def demo_ui_test_stop(self):
-        self.stop_event.set()
-        if self.thread is not None:
-            self.thread.join()
-
-    def demo_ui_test(self):
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        base_save_path = os.path.expanduser(f"./results/{current_time}/")
-        os.makedirs(base_save_path, exist_ok=True)
-        test_mode = "Demo"
-        self.meter_demo_test.demo_test_start()
-        if self.checkbox_states["voltage"]:
-            self.meter_demo_test.demo_test_voltage(base_save_path, test_mode)
-            print("Voltage_DemoTest_Done")
-        if self.checkbox_states["current"]:
-            self.meter_demo_test.demo_test_current(base_save_path, test_mode)
-            print("Current_DemoTest_Done")
-        if self.checkbox_states["power"]:
-            self.meter_demo_test.demo_test_power(base_save_path, test_mode)
-            print("Power_DemoTest_Done")
-        if self.checkbox_states["analysis"]:
-            self.meter_demo_test.demo_test_analysis(base_save_path, test_mode)
-            print("Analysis_DemoTest_Done")
-        if self.checkbox_states["demand"]:
-            self.meter_demo_test.demo_test_demand(base_save_path, test_mode)
-            print("Demand_DemoTest_Done")
-        else:
-            print("Done or Nothing to execute")
-        total_csv_files, fail_count = self.evaluation.count_csv_and_failures(base_save_path)
-        self.score.setText(f"{fail_count}/{total_csv_files}")
-
-    def none_ui_test_start(self):
-        # if self.modbus_manager.is_connected == True:
-        self.stop_event.clear()
-        self.thread = threading.Thread(target=self.none_ui_test, daemon=True)
-        print("None UI TEST Start")
-        self.thread.start()
-        # else:
-        #     self.alarm.show_connection_error()
-            
-    def none_ui_test_stop(self):
-        self.stop_event.set()
-        if self.thread is not None:
-            self.thread.join()
-
-    def none_ui_test(self):
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        base_save_path = os.path.expanduser(f"./results/{current_time}/")
-        os.makedirs(base_save_path, exist_ok=True)
-        test_mode = "None"
-        self.meter_demo_test.none_test_start()
-        if self.checkbox_states["voltage"]:
-            self.meter_demo_test.demo_test_voltage(base_save_path, test_mode)
-            print("Voltage_DemoTest_Done")
-        if self.checkbox_states["current"]:
-            self.meter_demo_test.demo_test_current(base_save_path, test_mode)
-            print("Current_DemoTest_Done")
-        if self.checkbox_states["power"]:
-            self.meter_demo_test.demo_test_power(base_save_path, test_mode)
-            print("Power_DemoTest_Done")
-        if self.checkbox_states["analysis"]:
-            self.meter_demo_test.demo_test_analysis(base_save_path, test_mode)
-            print("Analysis_DemoTest_Done")
-        if self.checkbox_states["demand"]:
-            self.meter_demo_test.demo_test_demand(base_save_path, test_mode)
-            print("Demand_DemoTest_Done")
-        else:
-            print("Done or Nothing to execute")
-        total_csv_files, fail_count = self.evaluation.count_csv_and_failures(base_save_path)
-        self.score.setText(f"{fail_count}/{total_csv_files}")
-
-    def debug_test(self):
-        self.meter_demo_test.testcode01()
 
     def set_focus(self):
         try:
@@ -323,22 +228,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         print(f"[Progress] {row}행, content={content} 테스트 중...")
 
     def on_finished(self):
-        print("테스트 스레드 종료/완료")
-
-    def create_menu(self, tc_box_index):
-        menu = QMenu()
-        actionCMC = menu.addAction("CMC")
-        actionOCR = menu.addAction("OCR")
-
-        actionCMC.triggered.connect(self.actionCMC_clicked)
-        actionOCR.triggered.connect(
-            lambda: self.open_ocr_setting(tc_box_index))
-
-        # 메뉴를 보이게 함
-        menu.exec_(QCursor.pos())
-
-    def actionCMC_clicked(self):
-        print("CMC clicked")
+        print("테스트 스레드 종료/완료, worker id:", id(self.worker))
     
     def save_table_to_xml(self, filename):
         root = ET.Element("tableData")
@@ -396,11 +286,9 @@ class TestWorker(QThread):
         self.tableWidget = tableWidget
         self.dashboard = dashboard_instance
         self.stopRequested = False
-        self.stop_event = threading.Event()
-        self.meter_demo_test = DemoTest(self.stop_event)
+        self.meter_demo_test = DemoTest()
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
         self.test_mode = None
-        self.test_mode_setting = ModbusLabels()
         self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.base_save_path = os.path.expanduser(f"./results/{self.current_time}/")
         os.makedirs(self.base_save_path, exist_ok=True)
@@ -427,7 +315,6 @@ class TestWorker(QThread):
         }
 
         def result_callback(score, row):
-            # 행의 RESULT 열에 결과 표시
             result_item = QTableWidgetItem(score)
             result_item.setTextAlignment(Qt.AlignCenter)
             self.tableWidget.setItem(row, 2, result_item)
@@ -458,10 +345,9 @@ class TestWorker(QThread):
                 print("CONTENT가 비어있음")
                 continue
 
-            # DemoProcess 생성 및 실행
-            
             demo_process = DemoProcess(
-                score_callback=lambda score: self.result_callback(score, row)
+                score_callback = lambda score: self.result_callback(score, row),
+                stop_callback = lambda: self.stopRequested
             )
             for test_name in test_list:
                 if test_name == "tm_balance":
@@ -469,15 +355,12 @@ class TestWorker(QThread):
                     self.execute_test_mode(self.meter_demo_test.demo_test_mode)
                     
                 elif test_name == "tm_noload":
-                 self.execute_test_mode(self.meter_demo_test.noload_test_mode)
+                    self.execute_test_mode(self.meter_demo_test.noload_test_mode)
 
             demo_process.demo_test_by_name(
                         test_name, self.base_save_path, self.test_mode, self.search_pattern
                     )
-        
-              
-        # 모든 테스트 완료
-        self.finished.emit()
+        # self.finished.emit()
         
     def stop(self):
         self.stopRequested = True

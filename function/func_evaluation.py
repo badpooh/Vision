@@ -8,9 +8,11 @@ import pandas as pd
 from collections import Counter
 
 from function.func_ocr import OCRManager
+from function.func_connection import ConnectionManager
+
 from config.config_roi import Configs
 from config.config_color import ConfigColor as cc
-from config.config_ref import ConfigRef as cr
+from config.config_ref import ConfigImgRef as cr
 
 class Evaluation:
 
@@ -18,6 +20,7 @@ class Evaluation:
     ocr_manager = OCRManager()
     config_data = Configs()
     rois = config_data.roi_params()
+    connect_manager = ConnectionManager()
 
     def __init__(self):
         pass
@@ -661,7 +664,7 @@ class Evaluation:
 
         # Saving the CSV
         file_name_with_extension = os.path.basename(img_path)
-        ip_to_remove = f"{SERVER_IP}_"
+        ip_to_remove = f"{self.connect_manager.SERVER_IP}_"
         if file_name_with_extension.startswith(ip_to_remove):
             file_name_without_ip = file_name_with_extension[len(ip_to_remove):]
         else:

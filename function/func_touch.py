@@ -9,15 +9,14 @@ class TouchManager:
     connect_manager = ConnectionManager()
     hex_value = int("A5A5", 16)
 
-    ### 위치 주소등등 수정할 사항 존재 ###
     def __init__(self):
-        self.client_check = self.connect_manager.touch_client
+        pass
 
     def touch_write(self, address, value, delay=0.6):
         attempt = 0
         while attempt < 2:
-            self.client_check.write_register(address, value)
-            read_value = self.client_check.read_holding_registers(address)
+            self.connect_manager.touch_client.write_register(address, value)
+            read_value = self.connect_manager.touch_client.read_holding_registers(address)
             time.sleep(delay)
             if read_value == value:
                 print("\nTouched")
@@ -26,19 +25,19 @@ class TouchManager:
                 attempt += 1
 
     def uitest_mode_start(self):
-        if self.client_check:
+        if self.connect_manager.touch_client:
             self.touch_write(ect.touch_addr_ui_test_mode.value, 1)
         else:
             print("client Error")
 
     def screenshot(self):
-        if self.client_check:
+        if self.connect_manager.touch_client:
             self.touch_write(ect.touch_addr_screen_capture.value, self.hex_value)
         else:
             print("client Error")
 
     def menu_touch(self, menu_key):
-        if self.client_check:
+        if self.connect_manager.touch_client:
             data_view_x, data_view_y = menu_key
             self.touch_write(ect.touch_addr_pos_x.value, data_view_x)
             self.touch_write(ect.touch_addr_pos_y.value, data_view_y)
@@ -48,7 +47,7 @@ class TouchManager:
             print("Menu Touch Error")
 
     def btn_popup_touch(self, btn_popup_key):
-        if self.client_check:
+        if self.connect_manager.touch_client:
             btn_x, btn_y = self.config_touch[btn_popup_key]
             self.touch_write(ect.touch_addr_pos_x.value, btn_x)
             self.touch_write(ect.touch_addr_pos_y.value, btn_y)
@@ -131,22 +130,22 @@ class TouchManager:
             print("Button Apply Touch Error")
 
     def btn_front_setup(self):
-        if self.client_check:
+        if self.connect_manager.touch_client:
             self.touch_write(ect.touch_addr_setup_button.value, 0)
             self.touch_write(ect.touch_addr_setup_button_bit.value, 2)
         else:
-            print("Button Apply Touch Error")
+            print("Front setup button is clicked Error")
 
     def btn_front_meter(self):
-        if self.client_check:
+        if self.connect_manager.touch_client:
             self.touch_write(ect.touch_addr_setup_button.value, 0)
             self.touch_write(ect.touch_addr_setup_button_bit.value, 64)
         else:
-            print("Button Apply Touch Error")
+            print("Front meter button is clicked Error")
 
     def btn_front_home(self):
-        if self.client_check:
+        if self.connect_manager.touch_client:
             self.touch_write(ect.touch_addr_setup_button.value, 0)
             self.touch_write(ect.touch_addr_setup_button_bit.value, 1)
         else:
-            print("Button Apply Touch Error")
+            print("Front home button is clicked Error")
