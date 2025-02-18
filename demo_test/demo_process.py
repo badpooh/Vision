@@ -258,9 +258,7 @@ class DemoTest:
 
     touch_manager = TouchManager()
     modbus_manager = ConnectionManager()
-    # ocr_func = OCRManager()
     modbus_label = ModbusLabels()
-    # evaluation = Evaluation()
     sp = DemoProcess()
     interface = Interface()
     search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
@@ -358,7 +356,7 @@ class DemoTest:
 
         ## L-L min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -366,7 +364,7 @@ class DemoTest:
             return
 
         ### L-L max 검사 ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -374,8 +372,8 @@ class DemoTest:
             return
 
         ### L-N 만 검사 ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
-        self.touch_manager.menu_touch(cft.touch_meas_ln.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_ln.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(cftr.rms_vol_ln.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -384,7 +382,7 @@ class DemoTest:
 
         ### L-N min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -392,7 +390,7 @@ class DemoTest:
             return
 
         ### L-N max 검사 ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -417,55 +415,55 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_1.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_2.value)
-        self.touch_manager.menu_touch(cft.touch_meas_ll.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_ll.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(cftr.fund_vol_ll.value, base_save_path, test_mode, search_pattern)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
 
         ### L-L min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
 
-        # ### L-L max 검사 ###
-        # self.touch_manager.menu_touch(cft.touch_max.value)
-        # self.touch_manager.screenshot()
-        # self.sp.ocr_4phase_time(cftr.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        ### L-L max 검사 ###
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
+        self.touch_manager.screenshot()
+        self.sp.ocr_4phase_time(cftr.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
 
-        # ### L-N 만 검사 ###
-        # self.touch_manager.menu_touch(cft.touch_max.value)
-        # self.touch_manager.menu_touch(cft.touch_meas_ln.value)
-        # self.touch_manager.screenshot()
-        # self.sp.ocr_4phase(cftr.fund_vol_ln.value, base_save_path, test_mode, search_pattern)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        ### L-N 만 검사 ###
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_ln.value)
+        self.touch_manager.screenshot()
+        self.sp.ocr_4phase(cftr.fund_vol_ln.value, base_save_path, test_mode, search_pattern)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
 
-        # ### L-N min 검사 ###
-        # reset_time = self.modbus_label.reset_max_min()
-        # self.touch_manager.menu_touch(cft.touch_min.value)
-        # self.touch_manager.screenshot()
-        # self.sp.ocr_4phase_time(cftr.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        ### L-N min 검사 ###
+        reset_time = self.modbus_label.reset_max_min()
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
+        self.touch_manager.screenshot()
+        self.sp.ocr_4phase_time(cftr.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
 
-        # ### L-N max 검사 ###
-        # self.touch_manager.menu_touch(cft.touch_max.value)
-        # self.touch_manager.screenshot()
-        # self.sp.ocr_4phase_time(cftr.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
-        # if self.stop_event.is_set():
-        #     print("Test stopped")
-        #     return
+        ### L-N max 검사 ###
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
+        self.touch_manager.screenshot()
+        self.sp.ocr_4phase_time(cftr.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
+        if self.stop_event.is_set():
+            print("Test stopped")
+            return
         
         end_time = self.modbus_label.device_current_time()
         folder_path = base_save_path
@@ -489,7 +487,7 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_1.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_3.value)
-        self.touch_manager.menu_touch(cft.touch_thd_ll.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_thd_ll.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.thd_vol_ll.value, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -498,7 +496,7 @@ class DemoTest:
 
         ### L-L max 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.thd_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -506,8 +504,8 @@ class DemoTest:
             return
 
         ### L-N 만 검사 ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
-        self.touch_manager.menu_touch(cft.touch_thd_ln.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_thd_ln.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.thd_vol_ln.value, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -516,7 +514,7 @@ class DemoTest:
 
         ### L-N max 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.thd_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -542,7 +540,7 @@ class DemoTest:
 
         ### 주파수 Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab]
@@ -556,7 +554,7 @@ class DemoTest:
             return
 
         ### 주파수 Max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab]
@@ -588,7 +586,7 @@ class DemoTest:
 
         ### 잔류전압 Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -602,7 +600,7 @@ class DemoTest:
             return
 
         ### 잔류전압 Max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -634,7 +632,7 @@ class DemoTest:
 
         ### Current Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.rms_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -642,7 +640,7 @@ class DemoTest:
             return
 
         ### Current Max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.rms_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -663,7 +661,7 @@ class DemoTest:
 
         ### Current Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.fund_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -671,7 +669,7 @@ class DemoTest:
             return
 
         ### Current Max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.fund_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -692,7 +690,7 @@ class DemoTest:
 
         ### Current thd Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.thd_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -713,7 +711,7 @@ class DemoTest:
 
         ### Current tdd Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.tdd_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -734,7 +732,7 @@ class DemoTest:
 
         ### Current crest factor Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.cf_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -755,7 +753,7 @@ class DemoTest:
 
         ### Current k-factor Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.kf_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_event.is_set():
@@ -780,7 +778,7 @@ class DemoTest:
 
         ### Current residual Min###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -794,7 +792,7 @@ class DemoTest:
             return
 
         ### Current residual Max###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -821,7 +819,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -829,7 +827,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -850,7 +848,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -858,7 +856,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -879,7 +877,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -887,7 +885,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -908,7 +906,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_min.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -916,7 +914,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode)
         if self.stop_event.is_set():
@@ -1404,7 +1402,7 @@ class DemoTest:
 
         ### LL Max###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -1417,8 +1415,8 @@ class DemoTest:
             return
 
         ### LN ###
-        self.touch_manager.menu_touch(cft.touch_max.value)
-        self.touch_manager.menu_touch(cft.touch_thd_ln.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_thd_ln.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1431,7 +1429,7 @@ class DemoTest:
 
         ### LN Max###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1457,7 +1455,7 @@ class DemoTest:
 
         ### vol unbalance max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.unbal_vol.value, reset_time, base_save_path, test_mode=test_mode)
         if self.stop_event.is_set():
@@ -1483,7 +1481,7 @@ class DemoTest:
 
         ### symm max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1515,7 +1513,7 @@ class DemoTest:
 
         ### symm max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.menu_touch(cft.touch_max.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]

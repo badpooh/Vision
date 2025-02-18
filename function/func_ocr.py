@@ -1,12 +1,5 @@
-from os import error
-import re
-import threading
-import time
 import numpy as np
 import cv2
-import time
-from pymodbus.client import ModbusTcpClient as ModbusClient
-import threading
 from paddleocr import PaddleOCR
 from itertools import chain
 
