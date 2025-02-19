@@ -357,9 +357,10 @@ class TestWorker(QThread):
                 elif test_name == "tm_noload":
                     self.execute_test_mode(self.meter_demo_test.noload_test_mode)
 
-            demo_process.demo_test_by_name(
-                        test_name, self.base_save_path, self.test_mode, self.search_pattern
-                    )
+                else :
+                    demo_process.demo_test_by_name(
+                            test_name, self.base_save_path, self.test_mode, self.search_pattern
+                        )
         # self.finished.emit()
         
     def stop(self):

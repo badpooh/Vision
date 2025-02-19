@@ -47,12 +47,18 @@ class DemoProcess:
             demo_test.demo_test_mode()
         elif test_name.strip().lower() == "tm_noload":
             demo_test.noload_test_mode()
-        elif test_name == "vol_rms":
-            demo_test.demo_mea_vol_rms(base_save_path, test_mode, search_pattern)
-        elif test_name == "vol_fund":
-            demo_test.demo_mea_vol_fund(base_save_path, test_mode, search_pattern)
+        
+        if test_mode == "Demo" or "NoLoad":
+            if test_name == "vol_all":
+                demo_test.demo_mea_vol_all(base_save_path, test_mode, search_pattern)
+            elif test_name == "vol_rms":
+                demo_test.demo_mea_vol_rms(base_save_path, test_mode, search_pattern)
+            elif test_name == "vol_fund":
+                demo_test.demo_mea_vol_fund(base_save_path, test_mode, search_pattern)
+            else:
+                print(f"Unknown test name: {test_name}")
         else:
-            print(f"Unknown test name: {test_name}")
+            print("demo_test_by_name Error")
 
     def load_image_file(self, search_pattern):
         self.now = datetime.now()
@@ -261,7 +267,7 @@ class DemoTest:
     modbus_label = ModbusLabels()
     sp = DemoProcess()
     interface = Interface()
-    search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
+    # search_pattern = os.path.join(image_directory, './**/*10.10.26.156*.png')
     now = datetime.now()
     file_time_diff = {}
 
