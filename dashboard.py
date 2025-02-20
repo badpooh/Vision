@@ -3,11 +3,8 @@ from PySide6.QtCore import QSize, Qt, QObject, Signal, QThread
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QPushButton, QMenu, QMessageBox, QHeaderView, QTableWidgetItem, QFileDialog
 from resources_rc import *
-import sys
-import threading
 import os
 from datetime import datetime
-import time
 import xml.etree.ElementTree as ET
 from functools import partial
 
@@ -181,6 +178,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         print(f"on_tc_selected: row={row}, text={text}")
         item = QTableWidgetItem()
         item.setText(text)
+        item.setTextAlignment(Qt.AlignCenter)
         self.tableWidget.setItem(row, 2, item)
 
     def tc_save(self):
@@ -345,6 +343,8 @@ class TestWorker(QThread):
                 print("CONTENT가 비어있음")
                 continue
 
+            row_start_time = self.meter_demo_test.modbus_label.device_current_time()
+
             demo_process = DemoProcess(
                 score_callback = lambda score: self.result_callback(score, row),
                 stop_callback = lambda: self.stopRequested
@@ -361,6 +361,18 @@ class TestWorker(QThread):
                     demo_process.demo_test_by_name(
                             test_name, self.base_save_path, self.test_mode, self.search_pattern
                         )
+            if test_name == "tm_balance" or "tm_noload":
+                result = "Test Mode Start"
+                self.dashboard.on_tc_score(row, result)
+            else:
+                row_end_time = self.meter_demo_test.modbus_label.device_current_time()
+
+                total_csv_files, fail_count = self.meter_demo_test.evaluation.count_csv_and_failures(
+                    self.base_save_path, row_start_time, row_end_time
+                )
+                final_score = f"{fail_count}/{total_csv_files}"
+                self.dashboard.on_tc_score(row, final_score)
+        
         # self.finished.emit()
         
     def stop(self):
