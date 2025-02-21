@@ -92,6 +92,22 @@ class DemoProcess:
                 pass
             elif test_name == "pow_energy":
                 pass
+            elif test_name == "anal_all":
+                demo_test.demo_mea_anal_all(base_save_path, test_mode, search_pattern)
+            elif test_name == "anal_phasor":
+                demo_test.demo_mea_anal_phasor(base_save_path, test_mode, search_pattern)
+            elif test_name == "anal_harmonics":
+                demo_test.demo_mea_anal_harmonics(base_save_path, test_mode, search_pattern)
+            elif test_name == "anal_waveform":
+                demo_test.demo_mea_anal_waveform(base_save_path, test_mode, search_pattern)
+            elif test_name == "anal_volt_sym":
+                demo_test.demo_mea_anal_voltsym(base_save_path, test_mode, search_pattern)
+            elif test_name == "anal_volt_unbal":
+                demo_test.demo_mea_anal_voltunbal(base_save_path, test_mode, search_pattern)
+            elif test_name == "anal_curr_sym":
+                demo_test.demo_mea_anal_cursym(base_save_path, test_mode, search_pattern)
+            elif test_name == "anal_curr_unbal":
+                demo_test.demo_mea_anal_currunbal(base_save_path, test_mode, search_pattern)
             else:
                 print(f"Unknown test name: {test_name}")
         else:
@@ -240,9 +256,9 @@ class DemoProcess:
         ocr_ref = ref
         self.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode)
 
-    def ocr_phaosr_process(self, img_ref, ref, img_cut1, img_cut2, img_cut3, base_save_path, test_mode):
+    def ocr_phaosr_process(self, img_ref, ref, img_cut1, img_cut2, img_cut3, base_save_path, test_mode, search_pattern):
         self.touch_manager.screenshot()
-        image_path = self.load_image_file()
+        image_path = self.load_image_file(search_pattern)
         roi_keys = [ecroi.phasor_title, ecroi.phasor_title_2, ecroi.phasor_vl_vn, ecroi.phasor_voltage, ecroi.phasor_a_c_vol, ecroi.phasor_current, ecroi.phasor_a_c_cur]
         roi_keys_meas = [ecroi.phasor_a_meas, ecroi.phasor_b_meas, ecroi.phasor_c_meas, ecroi.phasor_a_meas_cur, ecroi.phasor_b_meas_cur, ecroi.phasor_c_meas_cur,
                         ecroi.phasor_a_angle, ecroi.phasor_b_angle, ecroi.phasor_c_angle, ecroi.phasor_a_angle_cur, ecroi.phasor_b_angle_cur, ecroi.phasor_c_angle_cur]
@@ -263,9 +279,9 @@ class DemoProcess:
         else :
             print("ocr phasor process error")
 
-    def ocr_graph_detection(self, roi_keys, ocr_ref, roi_keys_meas, value, base_save_path, test_mode):
+    def ocr_graph_detection(self, roi_keys, ocr_ref, roi_keys_meas, value, base_save_path, test_mode, search_pattern):
         self.touch_manager.screenshot()
-        image_path = self.load_image_file()
+        image_path = self.load_image_file(search_pattern)
         ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
         image_results, csv_result = self.evaluation.img_detection(image_path, value, 2)
@@ -279,9 +295,9 @@ class DemoProcess:
         else :
             print("ocr phasor process error")
 
-    def ocr_waveform_detection(self, roi_keys, ocr_ref, value, base_save_path, test_mode):
+    def ocr_waveform_detection(self, roi_keys, ocr_ref, value, base_save_path, test_mode, search_pattern):
         self.touch_manager.screenshot()
-        image_path = self.load_image_file()
+        image_path = self.load_image_file(search_pattern)
         roi_keys = roi_keys
         ocr_ref = ocr_ref
         ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
@@ -846,14 +862,14 @@ class DemoTest:
         self.demo_mea_pow_apparent(base_save_path, test_mode, search_pattern)
         self.demo_mea_pow_pf(base_save_path, test_mode, search_pattern)
 
-    def demo_mea_pow_active(self, base_save_path, test_mode):
+    def demo_mea_pow_active(self, base_save_path, test_mode, search_pattern):
         ### active power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_3.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_1.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(cftr.active.value, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase(cftr.active.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -862,7 +878,7 @@ class DemoTest:
         reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -870,19 +886,19 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
         
-    def demo_mea_pow_reactive(self, base_save_path, test_mode):
+    def demo_mea_pow_reactive(self, base_save_path, test_mode, search_pattern):
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_3.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_2.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(cftr.reactive.value, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase(cftr.reactive.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -891,7 +907,7 @@ class DemoTest:
         reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -899,19 +915,19 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
     
-    def demo_mea_pow_apparent(self, base_save_path, test_mode):
+    def demo_mea_pow_apparent(self, base_save_path, test_mode, search_pattern):
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_3.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_3.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(cftr.apparent.value, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase(cftr.apparent.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -920,7 +936,7 @@ class DemoTest:
         reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -928,19 +944,19 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
         
-    def demo_mea_pow_pf(self, base_save_path, test_mode):
+    def demo_mea_pow_pf(self, base_save_path, test_mode, search_pattern):
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_3.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_4.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(cftr.pf.value, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase(cftr.pf.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -949,7 +965,7 @@ class DemoTest:
         reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(cft.touch_toggle_min.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -957,7 +973,7 @@ class DemoTest:
         ### power max ###
         self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -971,7 +987,7 @@ class DemoTest:
         self.demo_mea_anal_cursym(base_save_path, test_mode, search_pattern)
         self.demo_mea_anal_currunbal(base_save_path, test_mode, search_pattern)
     
-    def demo_mea_anal_phasor(self, base_save_path, test_mode):
+    def demo_mea_anal_phasor(self, base_save_path, test_mode, search_pattern):
         ocr_func.update_phasor_condition(1)
         ### voltage+current vll ###
         self.touch_manager.btn_front_meter()
@@ -979,85 +995,85 @@ class DemoTest:
         self.touch_manager.menu_touch(cft.touch_main_menu_4.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_1.value)
         if test_mode == "Demo":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vll_none.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vll_none.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
         
         ## voltage+current vln ###
-        self.touch_manager.menu_touch(cft.touch_phasor_vln.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_phasor_vln.value)
         if test_mode == "Demo":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vln_none.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vln_none.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### voltage vll ###
-        self.touch_manager.menu_touch(cft.touch_analysis_curr.value)
-        self.touch_manager.menu_touch(cft.touch_phasor_vll.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_curr.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_phasor_vll.value)
         if test_mode == "Demo":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vll_none.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vll_none.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### voltage vln ###
-        self.touch_manager.menu_touch(cft.touch_phasor_vln.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_phasor_vln.value)
         if test_mode == "Demo":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vln_none.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vln_none.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### current vll ###
-        self.touch_manager.menu_touch(cft.touch_analysis_curr.value)
-        self.touch_manager.menu_touch(cft.touch_analysis_vol.value)
-        self.touch_manager.menu_touch(cft.touch_phasor_vll.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_curr.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_vol.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_phasor_vll.value)
         if test_mode == "Demo":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vll_none.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vll_none.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### current vln ###
-        self.touch_manager.menu_touch(cft.touch_phasor_vln.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_phasor_vln.value)
         if test_mode == "Demo":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vln_none.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vln_none.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### nothing vll ###
-        self.touch_manager.menu_touch(cft.touch_analysis_curr.value)
-        self.touch_manager.menu_touch(cft.touch_phasor_vll.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_curr.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_phasor_vll.value)
         if test_mode == "Demo" or test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_na_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_na_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### nothing vln ###
-        self.touch_manager.menu_touch(cft.touch_phasor_vln.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_phasor_vln.value)
         if test_mode == "Demo" or test_mode == "NoLoad":
-            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_na_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode)
+            self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_na_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         ocr_func.update_phasor_condition(0)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
         
-    def demo_mea_anal_harmonics(self, base_save_path, test_mode):
+    def demo_mea_anal_harmonics(self, base_save_path, test_mode, search_pattern):
         self.test_mode = test_mode
         ocr_func.update_phasor_condition(1)
         roi_keys = [ecroi.harmonics_title, ecroi.harmonics_sub_title_1, ecroi.harmonics_sub_title_2, ecroi.harmonics_sub_title_3,
@@ -1070,7 +1086,7 @@ class DemoTest:
         self.touch_manager.menu_touch(cft.touch_main_menu_4.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_2.value)
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
+        image_path = self.sp.load_image_file(search_pattern)
         ocr_ref = cftr.harmonics_vol_3p4w.value
         ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
@@ -1087,9 +1103,9 @@ class DemoTest:
             return
 
         ### current ###
-        self.touch_manager.menu_touch(cft.touch_analysis_curr.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_curr.value)
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
+        image_path = self.sp.load_image_file(search_pattern)
         ocr_ref = cftr.harmonics_curr.value
         ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
         ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
@@ -1105,77 +1121,77 @@ class DemoTest:
             return
 
         ### vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.menu_touch(cft.touch_analysis_vol.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.harmonics_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_vol.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.sp.ocr_graph_detection([ecroi.harmonics_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### vol_b-phase X ###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### vol_c-phase X ###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### curr_a-phase X ###
-        self.touch_manager.menu_touch(cft.touch_analysis_curr.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_curr.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### curr_b-phase X ###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### curr_c-phase X ###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### fund(v체크박스) 버튼 후 vol_a ~ curr_c 반복 ###
-        self.touch_manager.menu_touch(cft.touch_analysis_vol.value)
-        self.touch_manager.menu_touch(cft.touch_harmonics_fund.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
-        self.touch_manager.menu_touch(cft.touch_analysis_curr.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_harmonics_fund.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_vol.value)
+        self.touch_manager.menu_touch(cft.touch_harmonics_sub_fund.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_curr.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_harmonics_sub_fund.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1184,7 +1200,7 @@ class DemoTest:
         ### voltage [%]fund ###
         self.touch_manager.menu_touch(cft.touch_main_menu_4.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_2.value)
-        self.touch_manager.menu_touch(cft.touch_harmonics_submenu_1.value)
+        self.touch_manager.menu_touch(cft.touch_harmonics_sub_v.value)
         self.touch_manager.menu_touch(cft.touch_harmonics_sub_fund.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1203,27 +1219,27 @@ class DemoTest:
             return
         
         ### [%]Fund 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### voltage [%]RMS ###
-        self.touch_manager.menu_touch(cft.touch_harmonics_submenu_1.value)
+        self.touch_manager.menu_touch(cft.touch_harmonics_sub_v.value)
         self.touch_manager.menu_touch(cft.touch_harmonics_sub_rms.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1241,29 +1257,29 @@ class DemoTest:
             return
         
         ### [%]RMS 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
-        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
+        self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
         
 
         ### current [%]Fund ###
-        self.touch_manager.menu_touch(cft.touch_analysis_curr.value)
-        self.touch_manager.menu_touch(cft.touch_harmonics_submenu_1.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_analysis_curr.value)
+        self.touch_manager.menu_touch(cft.touch_harmonics_sub_v.value)
         self.touch_manager.menu_touch(cft.touch_harmonics_sub_fund.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1280,27 +1296,27 @@ class DemoTest:
             return
         
         ### [%]Fund 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### current [%]RMS ###
-        self.touch_manager.menu_touch(cft.touch_harmonics_submenu_1.value)
+        self.touch_manager.menu_touch(cft.touch_harmonics_sub_v.value)
         self.touch_manager.menu_touch(cft.touch_harmonics_sub_rms.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -1317,27 +1333,27 @@ class DemoTest:
             return
         
         ### [%]RMS 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         ocr_func.update_phasor_condition(0)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
-    def demo_meter_harmonics_text(self, base_save_path, test_mode):
+    def demo_meter_harmonics_text(self, base_save_path, test_mode, search_pattern):
         ### voltage ### -> 추후 구현
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1346,7 +1362,7 @@ class DemoTest:
         self.touch_manager.menu_touch(cft.touch_harmonics_submenu_2.value)
         self.touch_manager.menu_touch(cft.touch_harmonics_sub_text.value)
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
+        image_path = self.sp.load_image_file(search_pattern)
         image_path = r"C:\Users\jscho\Desktop\123.png"
         roi_key = [ecroi.harmonics_title, ecroi.harmonics_text_sub_title, ecroi.harmonics_text_sub_abc, ecroi.harmonics_text_number_title_1]
         roi_keys = [ecroi.harmonics_text_number_title_1]
@@ -1367,7 +1383,7 @@ class DemoTest:
             print("test_stop")
             return
         
-    def demo_mea_anal_waveform(self, base_save_path, test_mode):
+    def demo_mea_anal_waveform(self, base_save_path, test_mode, search_pattern):
         ocr_func.update_phasor_condition(1)
         ### waveform basic ###
         self.touch_manager.btn_front_meter()
@@ -1375,7 +1391,7 @@ class DemoTest:
         self.touch_manager.menu_touch(cft.touch_main_menu_4.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_3.value)
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
+        image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.waveform_title]
         ocr_ref = cftr.waveform_3p4w.value
         ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
@@ -1391,21 +1407,21 @@ class DemoTest:
             return
 
         ### waveform curr_c-phase X ###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_c.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_waveform_detection(roi_keys=[ecroi.waveform_title], ocr_ref=cftr.waveform_3p4w.value, value=ecroi.color_waveform_curr_c.value, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_b_c-phase X ###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_b.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_b.value, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_a_b_c-phase X ###
-        self.touch_manager.menu_touch(cft.touch_wave_curr_a.value)
+        self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_a.value, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
@@ -1433,14 +1449,14 @@ class DemoTest:
             print("test_stop")
             return
 
-    def demo_mea_anal_voltsym(self, base_save_path, test_mode):
+    def demo_mea_anal_voltsym(self, base_save_path, test_mode, search_pattern):
         ### LL ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_4.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_4.value)
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
+        image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.a_meas, ecroi.b_meas]
         ocr_ref = cftr.symm_vol_ll.value

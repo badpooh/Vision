@@ -310,6 +310,22 @@ class TestWorker(QThread):
             "curr_cf": lambda: self.meter_demo_test.demo_mea_curr_cf(self.base_save_path, self.test_mode, self.search_pattern),
             "curr_kf": lambda: self.meter_demo_test.demo_mea_curr_kf(self.base_save_path, self.test_mode, self.search_pattern),
             "curr_residual": lambda: self.meter_demo_test.demo_mea_curr_residual(self.base_save_path, self.test_mode, self.search_pattern),
+            "pow_all": lambda: self.meter_demo_test.demo_mea_pow_all(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "pow_p": lambda: self.meter_demo_test.demo_mea_pow_active(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "pow_q": lambda: self.meter_demo_test.demo_mea_pow_reactive(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "pow_s": lambda: self.meter_demo_test.demo_mea_pow_apparent(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "pow_pf": lambda: self.meter_demo_test.demo_mea_pow_pf(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "pow_demand": lambda: self.meter_demo_test.demo_mea_pow_demand(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "pow_energy": lambda: self.meter_demo_test.demo_mea_pow_energy(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "anal_all": lambda: self.meter_demo_test.demo_mea_anal_all(self.base_save_path, self.test_mode, self.search_pattern),
+            "anal_phasor": lambda: self.meter_demo_test.demo_mea_anal_phasor(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "anal_harmonics": lambda: self.meter_demo_test.demo_mea_anal_harmonics(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "anal_waveform": lambda: self.meter_demo_test.demo_mea_anal_waveform(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "anal_volt_sym": lambda: self.meter_demo_test.demo_mea_anal_voltsym(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "anal_volt_unbal": lambda: self.meter_demo_test.demo_mea_anal_voltunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "anal_curr_sym": lambda: self.meter_demo_test.demo_mea_anal_cursym(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+            "anal_curr_unbal": lambda: self.meter_demo_test.demo_mea_anal_currunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
+
         }
 
         def result_callback(score, row):
@@ -361,7 +377,7 @@ class TestWorker(QThread):
                     demo_process.demo_test_by_name(
                             test_name, self.base_save_path, self.test_mode, self.search_pattern
                         )
-            if test_name == "tm_balance" or "tm_noload":
+            if test_name in ["tm_balance", "tm_noload"]:
                 result = "Test Mode Start"
                 self.dashboard.on_tc_score(row, result)
             else:
