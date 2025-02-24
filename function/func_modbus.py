@@ -25,7 +25,7 @@ class ModbusLabels:
                 self.response = self.connect_manager.setup_client.write_register(ecm.addr_setup_lock.value, value)
                 time.sleep(0.6)
             vol_value_32bit = 1900
-            high_word = (vol_value_32bit >> 16) & 0xFFFF  # 상위 16비트
+            high_word = (vol_value_32bit >> 16) & 0xFFFF
             low_word = vol_value_32bit & 0xFFFF
             self.response = self.connect_manager.setup_client.read_holding_registers(6000, 100)
             self.response = self.connect_manager.setup_client.read_holding_registers(6100, 100)
@@ -73,6 +73,9 @@ class ModbusLabels:
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]
+        value_32bit = 1900
+        high_word = (value_32bit >> 16) & 0xFFFF
+        low_word = value_32bit & 0xFFFF
         if self.connect_manager.setup_client:
             for value in values:
                 self.connect_manager.setup_client.write_register(ecm.addr_setup_lock.value, value)
@@ -80,10 +83,14 @@ class ModbusLabels:
             for value_control in values_control:
                 self.connect_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
                 time.sleep(0.6)
-            print("setup initializtation")
+            
             self.connect_manager.setup_client.read_holding_registers(6000, 1)
-            self.response = self.connect_manager.setup_client.write_register(ecm.addr_meas_wiring.value, 0)
-            self.connect_manager.setup_client.write_register(ecm.addr_meas_reference_voltage.value, 1900)
+            self.connect_manager.setup_client.write_register(ecm.addr_wiring.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_reference_voltage.value, [high_word, low_word])
+            self.connect_manager.setup_client.write_register(ecm.addr_vt_primary_ll_voltage.value, [high_word, low_word])
+            self.connect_manager.setup_client.write_register(ecm.addr_vt_secondary_ll_voltage.value, [high_word, low_word])
+            self.connect_manager.setup_client.write_register(ecm.addr_min_measured_secondary_ln_voltage.value, 5)
+            self.connect_manager.setup_client.write_register(ecm.addr_reference_voltage_mode.value, 0)
             self.connect_manager.setup_client.write_register(6000, 1)
         print(self.response)
     

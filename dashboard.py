@@ -18,6 +18,7 @@ from setup_test.setup_setting import SettingIP
 from setup_test.setup_db import IPDataBase
 
 from function.func_connection import ConnectionManager
+from function.func_process import TestProcess
 
 from frame_test.webcam_function import WebCam
 
@@ -363,10 +364,15 @@ class TestWorker(QThread):
 
             row_start_time = self.meter_demo_test.modbus_label.device_current_time()
 
-            demo_process = DemoProcess(
+            test_process = TestProcess(
                 score_callback = lambda score: self.result_callback(score, row),
                 stop_callback = lambda: self.stopRequested
             )
+
+            # demo_process = DemoProcess(
+            #     score_callback = lambda score: self.result_callback(score, row),
+            #     stop_callback = lambda: self.stopRequested
+            # )
             for test_name in test_list:
                 if test_name == "tm_balance":
                     # 이미 self.test_mode가 None이면 새로 세팅, 아니면 유지
@@ -376,7 +382,7 @@ class TestWorker(QThread):
                     self.execute_test_mode(self.meter_demo_test.noload_test_mode)
 
                 else :
-                    demo_process.demo_test_by_name(
+                    test_process.test_by_name(
                             test_name, self.base_save_path, self.test_mode, self.search_pattern
                         )
             if test_name in ["tm_balance", "tm_noload"]:
