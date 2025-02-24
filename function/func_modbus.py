@@ -69,6 +69,24 @@ class ModbusLabels:
             print("Noload Demo mode setting Done")
         return test_mode
     
+    def setup_initialization(self):
+        self.touch_manager.uitest_mode_start()
+        values = [2300, 0, 700, 1]
+        values_control = [2300, 0, 1600, 1]
+        if self.connect_manager.setup_client:
+            for value in values:
+                self.connect_manager.setup_client.write_register(ecm.addr_setup_lock.value, value)
+                time.sleep(0.6)
+            for value_control in values_control:
+                self.connect_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
+                time.sleep(0.6)
+            print("setup initializtation")
+            self.connect_manager.setup_client.read_holding_registers(6000, 1)
+            self.response = self.connect_manager.setup_client.write_register(ecm.addr_meas_wiring.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_meas_reference_voltage.value, 1900)
+            self.connect_manager.setup_client.write_register(6000, 1)
+        print(self.response)
+    
     def device_current_time(self):
         self.response = self.connect_manager.setup_client.read_holding_registers(3060, 3)
         high_word = self.connect_manager.setup_client.read_holding_registers(3061, 1).registers[0]

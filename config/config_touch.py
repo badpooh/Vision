@@ -18,6 +18,15 @@ class ConfigTouch(Enum):
     touch_side_menu_7 = [80, 405]
     touch_side_menu_8 = [80, 450]
 
+    touch_data_view_1 = [320, 210]
+    touch_data_view_2 = [620, 210]
+    touch_data_view_3 = [320, 280]
+    touch_data_view_4 = [620, 280]
+    touch_data_view_5 = [320, 360]
+    touch_data_view_6 = [620, 360]
+    touch_data_view_7 = [320, 430]
+    touch_data_view_8 = [620, 430]
+
     touch_toggle_ll = [410, 150]
     touch_toggle_ln = [510, 150]
     touch_toggle_thd_ll = [520, 150]
@@ -115,14 +124,7 @@ class ConfigTouch123(Enum):
 
 def touch_data(self):
         coordinates = {
-            "data_view_1": [320, 210],
-            "data_view_2": [620, 210],
-            "data_view_3": [320, 280],
-            "data_view_4": [620, 280],
-            "data_view_5": [320, 360],
-            "data_view_6": [620, 360],
-            "data_view_7": [320, 430],
-            "data_view_8": [620, 430],
+            
             "btn_apply": [620, 150],
             "btn_cancel": [720, 150],
             "btn_popup_1": [400, 110],

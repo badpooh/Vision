@@ -8,12 +8,12 @@ from function.func_evaluation import Evaluation
 from function.func_ocr import OCRManager
 from function.func_touch import TouchManager
 from function.func_modbus import ModbusLabels
+from setup_test.setup_process import SetupTest
 
 from config.config_roi import ConfigROI as ecroi
 from config.config_ref import ConfigTextRef as cftr
 from config.config_ref import ConfigImgRef as cfir
 from config.config_touch import ConfigTouch as cft
-
 
 from demo_test.demo_interface import Interface
 
@@ -33,14 +33,21 @@ class DemoProcess:
         self.score_callback = score_callback
         self.stop_callback = stop_callback 
         self.demo_test = None
+        self.setup_test = None
 
     def get_demo_test_instance(self):
         if self.demo_test is None:
             self.demo_test = DemoTest(score_callback=self.score_callback, stop_callback=self.stop_callback)
         return self.demo_test
     
+    def get_setup_test_instance(self):
+        if self.setup_test is None:
+            self.setup_test = SetupTest()
+        return self.setup_test
+    
     def demo_test_by_name(self, test_name, base_save_path, test_mode, search_pattern):
         demo_test = self.get_demo_test_instance()
+        setup_test = self.get_setup_test_instance()
 
         if test_name.strip().lower() == "tm_balance":
             demo_test.demo_test_mode()
@@ -108,6 +115,8 @@ class DemoProcess:
                 demo_test.demo_mea_anal_cursym(base_save_path, test_mode, search_pattern)
             elif test_name == "anal_curr_unbal":
                 demo_test.demo_mea_anal_currunbal(base_save_path, test_mode, search_pattern)
+            elif test_name == "mea_vol":
+                setup_test.setup_mea_vol()
             else:
                 print(f"Unknown test name: {test_name}")
         else:
@@ -1359,7 +1368,7 @@ class DemoTest:
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_4.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_2.value)
-        self.touch_manager.menu_touch(cft.touch_harmonics_submenu_2.value)
+        self.touch_manager.menu_touch(cft.touch_dropdown_harmonics_2.value)
         self.touch_manager.menu_touch(cft.touch_harmonics_sub_text.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
@@ -1408,42 +1417,42 @@ class DemoTest:
 
         ### waveform curr_c-phase X ###
         self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_c.value)
-        self.sp.ocr_waveform_detection(roi_keys=[ecroi.waveform_title], ocr_ref=cftr.waveform_3p4w.value, value=ecroi.color_waveform_curr_c.value, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_waveform_detection(roi_keys=[ecroi.waveform_title], ocr_ref=cftr.waveform_3p4w.value, value=ecroi.color_waveform_curr_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_b_c-phase X ###
         self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_b.value)
-        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_b.value, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_a_b_c-phase X ###
         self.touch_manager.menu_touch(cft.touch_toggle_waveform_curr_a.value)
-        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_a.value, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_all_vol_c-phase X ###
         self.touch_manager.menu_touch(cft.touch_wave_vol_c.value)
-        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_c.value, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_all_vol_b_c-phase X ###
         self.touch_manager.menu_touch(cft.touch_wave_vol_b.value)
-        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_b.value, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_all_vol_all-phase X ###
         self.touch_manager.menu_touch(cft.touch_wave_vol_a.value)
-        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         ocr_func.update_phasor_condition(0)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
@@ -1460,7 +1469,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.a_meas, ecroi.b_meas]
         ocr_ref = cftr.symm_vol_ll.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1474,7 +1483,7 @@ class DemoTest:
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.a_meas, ecroi.b_meas]
         ocr_ref = cftr.symm_vol_ll.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1487,7 +1496,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c, ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         ocr_ref = cftr.symm_vol_ln.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1501,19 +1510,19 @@ class DemoTest:
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c, ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         ocr_ref = cftr.symm_vol_ln.value
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp]
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
-    def demo_mea_anal_voltunbal(self, base_save_path, test_mode):
+    def demo_mea_anal_voltunbal(self, base_save_path, test_mode, search_pattern):
         ### vol unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
         self.touch_manager.menu_touch(cft.touch_main_menu_4.value)
         self.touch_manager.menu_touch(cft.touch_side_menu_5.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase(cftr.unbal_vol.value, base_save_path, test_mode=test_mode)
+        self.sp.ocr_curr_4phase(cftr.unbal_vol.value, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1522,12 +1531,12 @@ class DemoTest:
         reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.menu_touch(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
-        self.sp.ocr_curr_4phase_time(cftr.unbal_vol.value, reset_time, base_save_path, test_mode=test_mode)
+        self.sp.ocr_curr_4phase_time(cftr.unbal_vol.value, reset_time, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
-    def demo_mea_anal_cursym(self, base_save_path, test_mode):
+    def demo_mea_anal_cursym(self, base_save_path, test_mode, search_pattern):
         ### symm ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1539,7 +1548,7 @@ class DemoTest:
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         ocr_ref = cftr.symm_curr.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1554,12 +1563,12 @@ class DemoTest:
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp, ecroi.c_time_stamp]
         ocr_ref = cftr.symm_curr.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
-    def demo_mea_anal_currunbal(self, base_save_path, test_mode):
+    def demo_mea_anal_currunbal(self, base_save_path, test_mode, search_pattern):
         ### current unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
@@ -1571,7 +1580,7 @@ class DemoTest:
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         ocr_ref = cftr.unbal_curr.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1586,7 +1595,7 @@ class DemoTest:
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp, ecroi.c_time_stamp]
         ocr_ref = cftr.unbal_curr.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1606,101 +1615,6 @@ class DemoTest:
             print("test_stop")
             return
         
-    def demo_test_voltage(self, base_save_path, test_mode):
-        self.demo_mea_vol_rms(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_vol_fund(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_vol_thd(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_vol_freq(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_vol_residual(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        
-    def demo_test_current(self, base_save_path, test_mode):
-        self.demo_mea_curr_rms(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_curr_fund(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_curr_thd(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_curr_tdd(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_curr_cf(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_curr_kf(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_curr_residual(base_save_path, test_mode)
-        
-    def demo_test_power(self, base_save_path, test_mode):
-        self.demo_mea_pow_active(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_pow_reactive(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_pow_apparent(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        self.demo_mea_pow_pf(base_save_path, test_mode)
-        
-    def demo_test_analysis(self, base_save_path, test_mode):
-        # self.demo_mea_anal_phasor(base_save_path, test_mode)
-        # if self.stop_callback and self.stop_callback():
-        #     print("test_stop")
-        #     return
-        self.demo_mea_anal_harmonics(base_save_path, test_mode)
-        if self.stop_callback and self.stop_callback():
-            print("test_stop")
-            return
-        # self.demo_meter_harmonics_text(base_save_path, test_mode)
-        # if self.stop_callback and self.stop_callback():
-        #     print("test_stop")
-        #     return
-        # self.demo_mea_anal_waveform(base_save_path, test_mode)
-        # if self.stop_callback and self.stop_callback():
-        #     print("test_stop")
-        #     return
-        # self.demo_mea_anal_voltsym(base_save_path, test_mode)
-        # if self.stop_callback and self.stop_callback():
-        #     print("test_stop")
-        #     return
-        # self.demo_mea_anal_voltunbal(base_save_path, test_mode)
-        # if self.stop_callback and self.stop_callback():
-        #     print("test_stop")
-        #     return
-        # self.demo_mea_anal_cursym(base_save_path, test_mode)
-        # if self.stop_callback and self.stop_callback():
-        #     print("test_stop")
-        #     return
-        # self.demo_mea_anal_currunbal(base_save_path, test_mode)
-
     def demo_test_demand(self, base_save_path, test_mode):
         self.demo_mea_curr_demand(base_save_path, test_mode)
         if self.stop_callback and self.stop_callback():

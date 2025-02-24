@@ -64,6 +64,7 @@ class SettingWindow(QWidget, Ui_Form):
 			"anal_curr_sym": False,
 			"anal_curr_unbal": False,
 			"sys_all": False,
+			"mea_vol": False,
 			}
 		self.btn_apply.clicked.connect(self.tc_apply)
 		self.btn_cancel.clicked.connect(self.close)
@@ -102,6 +103,7 @@ class SettingWindow(QWidget, Ui_Form):
 		self.cb_anal_curr_unbal.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_curr_sym"))
 		self.cb_anal_curr_unbal.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "anal_curr_unbal"))
 		self.cb_sys_all.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "sys_all"))
+		self.mea_vol.stateChanged.connect(lambda state: self.on_checkbox_changed(state, "mea_vol"))
    
 	def open_new_window(self, row):
 		instance_qwidget = SettingWindow()

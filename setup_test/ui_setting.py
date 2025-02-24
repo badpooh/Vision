@@ -74,7 +74,7 @@ class Ui_Form(object):
         self.btn_menu_voltage.setMinimumSize(QSize(130, 24))
         self.btn_menu_voltage.setMaximumSize(QSize(16777215, 24))
         self.btn_menu_voltage.setStyleSheet(u"QPushButton:checked {\n"
-"    background-color: #d0d0d0;\n"
+"  background-color: #d0d0d0;\n"
 "}")
         self.btn_menu_voltage.setCheckable(True)
         self.btn_menu_voltage.setChecked(False)
@@ -504,12 +504,66 @@ class Ui_Form(object):
 
         self.formLayout_4.setWidget(1, QFormLayout.LabelRole, self.sub_menu6)
 
+        self.sub_menu7 = QWidget(self.widget_2)
+        self.sub_menu7.setObjectName(u"sub_menu7")
+        self.sub_menu7.setGeometry(QRect(590, 35, 150, 140))
+        self.sub_menu7.setMinimumSize(QSize(120, 0))
+        self.sub_menu7.setStyleSheet(u"QWidget{\n"
+"	background-color: rgba(255, 255, 255, 0);\n"
+"}")
+        self.verticalLayout_16 = QVBoxLayout(self.sub_menu7)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.sub_box6_2 = QVBoxLayout()
+        self.sub_box6_2.setObjectName(u"sub_box6_2")
+        self.btn_menu_setup_test = QPushButton(self.sub_menu7)
+        self.btn_menu_setup_test.setObjectName(u"btn_menu_setup_test")
+        sizePolicy.setHeightForWidth(self.btn_menu_setup_test.sizePolicy().hasHeightForWidth())
+        self.btn_menu_setup_test.setSizePolicy(sizePolicy)
+        self.btn_menu_setup_test.setMinimumSize(QSize(130, 24))
+        self.btn_menu_setup_test.setMaximumSize(QSize(16777215, 24))
+        self.btn_menu_setup_test.setCheckable(True)
+        self.btn_menu_setup_test.setChecked(False)
+        self.btn_menu_setup_test.setAutoDefault(False)
+        self.btn_menu_setup_test.setFlat(False)
+
+        self.sub_box6_2.addWidget(self.btn_menu_setup_test)
+
+        self.setup_check_box = QWidget(self.sub_menu7)
+        self.setup_check_box.setObjectName(u"setup_check_box")
+        sizePolicy.setHeightForWidth(self.setup_check_box.sizePolicy().hasHeightForWidth())
+        self.setup_check_box.setSizePolicy(sizePolicy)
+        self.verticalLayout_17 = QVBoxLayout(self.setup_check_box)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
+        self.mea_vol = QCheckBox(self.setup_check_box)
+        self.mea_vol.setObjectName(u"mea_vol")
+
+        self.verticalLayout_17.addWidget(self.mea_vol)
+
+        self.etc1 = QCheckBox(self.setup_check_box)
+        self.etc1.setObjectName(u"etc1")
+        sizePolicy1.setHeightForWidth(self.etc1.sizePolicy().hasHeightForWidth())
+        self.etc1.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_17.addWidget(self.etc1)
+
+        self.etc2 = QCheckBox(self.setup_check_box)
+        self.etc2.setObjectName(u"etc2")
+
+        self.verticalLayout_17.addWidget(self.etc2)
+
+
+        self.sub_box6_2.addWidget(self.setup_check_box)
+
+
+        self.verticalLayout_16.addLayout(self.sub_box6_2)
+
         self.main_menu2.raise_()
         self.btn_apply.raise_()
         self.btn_cancel.raise_()
         self.main_menu1.raise_()
         self.main_menu3.raise_()
         self.main_menu4.raise_()
+        self.sub_menu7.raise_()
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -528,6 +582,7 @@ class Ui_Form(object):
         self.btn_menu_power.setDefault(True)
         self.btn_menu_analysis.setDefault(True)
         self.btn_menu_system.setDefault(True)
+        self.btn_menu_setup_test.setDefault(True)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -578,5 +633,9 @@ class Ui_Form(object):
         self.cb_anal_curr_unbal.setText(QCoreApplication.translate("Form", u"Curr.Unbal.%", None))
         self.btn_menu_system.setText(QCoreApplication.translate("Form", u"SYSTEM \u2228", None))
         self.cb_sys_all.setText(QCoreApplication.translate("Form", u"ALL", None))
+        self.btn_menu_setup_test.setText(QCoreApplication.translate("Form", u"SETUP TEST \u2228", None))
+        self.mea_vol.setText(QCoreApplication.translate("Form", u"mea_vol", None))
+        self.etc1.setText(QCoreApplication.translate("Form", u"Balance", None))
+        self.etc2.setText(QCoreApplication.translate("Form", u"No Load", None))
     # retranslateUi
 

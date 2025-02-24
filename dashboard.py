@@ -11,6 +11,7 @@ from functools import partial
 from ui_dashboard import Ui_MainWindow
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
+from setup_test.setup_process import SetupTest
 
 from setup_test.setup_setting import SettingWindow
 from setup_test.setup_setting import SettingIP
@@ -285,6 +286,7 @@ class TestWorker(QThread):
         self.dashboard = dashboard_instance
         self.stopRequested = False
         self.meter_demo_test = DemoTest()
+        self.meter_setup_test = SetupTest()
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
         self.test_mode = None
         self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -325,7 +327,7 @@ class TestWorker(QThread):
             "anal_volt_unbal": lambda: self.meter_demo_test.demo_mea_anal_voltunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
             "anal_curr_sym": lambda: self.meter_demo_test.demo_mea_anal_cursym(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
             "anal_curr_unbal": lambda: self.meter_demo_test.demo_mea_anal_currunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-
+            "mea_vol": lambda: self.meter_setup_test.setup_mea_vol(),
         }
 
         def result_callback(score, row):
