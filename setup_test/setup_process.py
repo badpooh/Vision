@@ -17,9 +17,9 @@ class SetupTest:
 		pass
 
 	def setup_mea_vol(self):
-		self.touch_manager.btn_front_meter()
-		self.touch_manager.btn_front_setup()
-		self.touch_manager.menu_touch(cft.touch_main_menu_1.value)
-		self.touch_manager.menu_touch(cft.touch_side_menu_1.value)
-		self.touch_manager.menu_touch(cft.touch_data_view_1.value)
+		# self.touch_manager.btn_front_meter()
+		# self.touch_manager.btn_front_setup()
+		# self.touch_manager.menu_touch(cft.touch_main_menu_1.value)
+		# self.touch_manager.menu_touch(cft.touch_side_menu_1.value)
+		# self.touch_manager.menu_touch(cft.touch_data_view_1.value)
 		self.modbus_label.setup_initialization()

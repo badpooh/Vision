@@ -73,9 +73,10 @@ class ModbusLabels:
         self.touch_manager.uitest_mode_start()
         values = [2300, 0, 700, 1]
         values_control = [2300, 0, 1600, 1]
-        value_32bit = 1900
-        high_word = (value_32bit >> 16) & 0xFFFF
-        low_word = value_32bit & 0xFFFF
+
+        def value_32bit(value):
+            return (value >> 16) & 0xFFFF, value & 0xFFFF
+
         if self.connect_manager.setup_client:
             for value in values:
                 self.connect_manager.setup_client.write_register(ecm.addr_setup_lock.value, value)
@@ -84,15 +85,74 @@ class ModbusLabels:
                 self.connect_manager.setup_client.write_register(ecm.addr_control_lock.value, value_control)
                 time.sleep(0.6)
             
-            self.connect_manager.setup_client.read_holding_registers(6000, 1)
+            ### measurement setup ###
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_setup_access.value, 1)
             self.connect_manager.setup_client.write_register(ecm.addr_wiring.value, 0)
-            self.connect_manager.setup_client.write_register(ecm.addr_reference_voltage.value, [high_word, low_word])
-            self.connect_manager.setup_client.write_register(ecm.addr_vt_primary_ll_voltage.value, [high_word, low_word])
-            self.connect_manager.setup_client.write_register(ecm.addr_vt_secondary_ll_voltage.value, [high_word, low_word])
+            self.connect_manager.setup_client.write_registers(ecm.addr_reference_voltage.value, [*value_32bit(1900)])
+            self.connect_manager.setup_client.write_registers(ecm.addr_vt_primary_ll_voltage.value, [*value_32bit(1900)])
+            self.connect_manager.setup_client.write_register(ecm.addr_vt_secondary_ll_voltage.value, 1900)
             self.connect_manager.setup_client.write_register(ecm.addr_min_measured_secondary_ln_voltage.value, 5)
             self.connect_manager.setup_client.write_register(ecm.addr_reference_voltage_mode.value, 0)
-            self.connect_manager.setup_client.write_register(6000, 1)
-        print(self.response)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_reference_voltage_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_reference_voltage_type.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_reference_voltage_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_rotating_sequence.value, 1)
+            self.connect_manager.setup_client.write_registers(ecm.addr_ct_primary_current.value, [*value_32bit(50)])
+            self.connect_manager.setup_client.write_register(ecm.addr_ct_secondary_current.value, 50)
+            self.connect_manager.setup_client.write_registers(ecm.addr_reference_current.value, [*value_32bit(50)])
+            self.connect_manager.setup_client.write_register(ecm.addr_min_measured_current.value, 5)
+            self.connect_manager.setup_client.write_register(ecm.addr_tdd_reference.value, 1)
+            self.connect_manager.setup_client.write_registers(ecm.addr_nominal_tdd_current.value, [*value_32bit(0)])
+            self.connect_manager.setup_client.write_register(ecm.addr_sub_interval_time.value, 15)
+            self.connect_manager.setup_client.write_register(ecm.addr_num_of_sub_interval.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_demand_power_type.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_demand_sync_mode.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_thermal_response_index.value, 90)
+            self.connect_manager.setup_client.write_register(ecm.addr_phase_power_calculation.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_total_power_calculation.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_pf_sign.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_pf_value_at_no_load.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_reactive_power_sign.value, 1)
+
+            self.connect_manager.setup_client.write_register(ecm.addr_setup_access.value, 1)
+
+            ### meter event setup ###
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_dip_setup_access.value, 1)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_3phase_dip_setup_access.value, 1)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_swell_setup_access.value, 1)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_semi_event_setup_access.value, 1)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_itic_event_setup_access.value, 1)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_iec_event_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_dip.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_dip_threshold.value, 900)
+            self.connect_manager.setup_client.write_register(ecm.addr_dip_hysteresis.value, 20)
+            self.connect_manager.setup_client.write_register(ecm.addr_3phase_dip.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_dip_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_3phase_dip_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_swell.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_swell_threshold.value, 1100)
+            self.connect_manager.setup_client.write_register(ecm.addr_swell_hysteresis.value, 20)
+            self.connect_manager.setup_client.write_register(ecm.addr_swell_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_semi.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_semi_event_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_itic.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_itic_event_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_iec.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_iec_event_setup_access.value, 1)
+
+            ### meter network setup ###
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_dhcp_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_dhcp.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_dhcp_setup_access.value, 1)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_rs485_map_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_device_address.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_bit_rate.value, 3)
+            self.connect_manager.setup_client.write_register(ecm.addr_parity.value, 2)
+            self.connect_manager.setup_client.write_register(ecm.addr_stop_bit.value, 0)
+            self.connect_manager.setup_client.write_register(ecm.addr_rs485_map_setup_access.value, 1)
+            self.connect_manager.setup_client.read_holding_registers(ecm.addr_modbus_timeout_setup_access.value, 1)
+            self.connect_manager.setup_client.write_register(ecm.addr_modbus_timeout.value, 600)
+            self.connect_manager.setup_client.write_register(ecm.addr_modbus_timeout_setup_access.value, 1)
     
     def device_current_time(self):
         self.response = self.connect_manager.setup_client.read_holding_registers(3060, 3)
