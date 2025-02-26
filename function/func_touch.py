@@ -36,7 +36,23 @@ class TouchManager:
         else:
             print("client Error")
 
-    def menu_touch(self, menu_key):
+    def touch_password(self):
+        if self.connect_manager.touch_client:
+            number0_x = 485
+            number0_y = 290
+            enter_x = 340
+            enter_y = 350
+            for i in range(4):
+                self.touch_write(ect.touch_addr_pos_x.value, number0_x)
+                self.touch_write(ect.touch_addr_pos_y.value, number0_y)
+                self.touch_write(ect.touch_addr_touch_mode.value, 1)
+                self.touch_write(ect.touch_addr_touch_mode.value, 0)
+            self.touch_write(ect.touch_addr_pos_x.value, enter_x)
+            self.touch_write(ect.touch_addr_pos_y.value, enter_y)
+            self.touch_write(ect.touch_addr_touch_mode.value, 1)
+            self.touch_write(ect.touch_addr_touch_mode.value, 0)
+
+    def touch_menu(self, menu_key):
         if self.connect_manager.touch_client:
             data_view_x, data_view_y = menu_key
             self.touch_write(ect.touch_addr_pos_x.value, data_view_x)

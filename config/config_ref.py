@@ -1,6 +1,7 @@
 from enum import Enum
 
 class ConfigTextRef(Enum):
+    ### measuremnet ###
     rms_vol_ll =  ["RMS Voltage L-L L-N Min Max", "AB", "BC", "CA", "Average"]
     rms_vol_ln = ["RMS Voltage L-L L-N Min Max", "A", "B", "C", "Average"]
     fund_vol_ll = ["Fund. Volt. L-L L-N Min Max", "AB", "BC", "CA", "Average"]
@@ -35,6 +36,9 @@ class ConfigTextRef(Enum):
     unbal_curr = ["Current Unbalance Max", "NEMA", "Negative- Sequence", "Zero- Sequence"]
     demand_current = ["Demand Current Peak", "A", "B", "C", "Average"]
     harmonics_text = ["Harmonics", "Voltage", "Current", "[v]", "Text", "A", "B", "C"]
+
+    ### setup ###
+    wiring = ["Wye", "Delta"]
 
 class ConfigImgRef(Enum):
     img_ref_phasor_all_vll = r".\image_ref\11.img_ref_phasor_all_vll.png"

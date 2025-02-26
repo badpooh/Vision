@@ -71,6 +71,9 @@ class ConfigROI(Enum):
     harmonics_fund_b = "harmonics_fund_b"
     harmonics_fund_c = "harmonics_fund_c"
 
+    s_wiring_1 = ["Wiring"]
+    s_wiring_2 = ["Wye", "Delta"]
+
 
     
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
@@ -222,6 +225,9 @@ class Configs():
             ConfigROI.harmonics_chart_img_cut: [250, 260, 495, 214],
             ConfigROI.harmonics_text_number_title_1: [n*x for x in [175, 237, 30, 225]],
             ConfigROI.harmonics_text_number_meas_1: [n*x for x in [206, 238, 67, 232]],
-            ConfigROI.harmonics_text_chart_img_cut_3: [n*x for x in [170, 389, 610, 240]]
+            ConfigROI.harmonics_text_chart_img_cut_3: [n*x for x in [170, 389, 610, 240]],
+
+            ConfigROI.s_wiring_1: [n*x for x in [175, 182, 298, 34]],
+            ConfigROI.s_wiring_2: [n*x for x in [175, 216, 298, 35]],
         }
         return params

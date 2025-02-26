@@ -60,59 +60,18 @@ class ConfigTouch(Enum):
     touch_harmonics_sub_text = [360, 285]
 
     ### popup button ####
-    touch_btn_popup_enter = [340, 415],
-    touch_btn_popup_cancel = [450, 430],
+    touch_btn_apply = [620, 150]
+    touch_btn_cancel = [720, 150]
+    touch_btn_popup_enter = [340, 425]
+    touch_btn_popup_cancel = [450, 425]
+    touch_btn_popup_1 = [400, 110]
+    touch_btn_popup_2 = [400, 160]
+    touch_btn_popup_3 = [400, 215]
+    touch_btn_popup_4 = [400, 265]
+    touch_btn_popup_5 = [400, 315]
+   
     
     ### touch 동작관련 address ###
-    touch_addr_ui_test_mode = 57100
-    touch_addr_pos_x = 57110
-    touch_addr_pos_y = 57111
-    touch_addr_touch_mode = 57112
-    touch_addr_screen_capture = 57101
-    touch_addr_setup_button_bit = 57120
-    touch_addr_setup_button = 57121
-
-class ConfigTouch123(Enum):
-    touch_main_menu_1 = [100, 85]
-    touch_main_menu_2 = [260, 85]
-    touch_main_menu_3 = [390, 85]
-    touch_main_menu_4 = [560, 85]
-    touch_main_menu_5 = [720, 85]
-    touch_side_menu_1 = [80, 135]
-    touch_side_menu_2 = [80, 180]
-    touch_side_menu_3 = [80, 225]
-    touch_side_menu_4 = [80, 270]
-    touch_side_menu_5 = [80, 315]
-    touch_side_menu_6 = [80, 360]
-    touch_side_menu_7 = [80, 405]
-    touch_side_menu_8 = [80, 450]
-
-    touch_meas_ll = [410, 150]
-    touch_meas_ln = [510, 150]
-    touch_thd_ll = [520, 150]
-    touch_thd_ln = [620, 150]
-    touch_max = [720, 150]
-    touch_min = [620, 150]
-    touch_phasor_vll = [620, 210]
-    touch_phasor_vln = [720, 210]
-    touch_analysis_vol = [590, 150]
-    touch_analysis_curr = [720, 150]
-    touch_harmonics_fund = [510, 200]
-    touch_harmonics_submenu_1 = [230, 200]
-    touch_harmonics_submenu_2 = [360, 200]
-    touch_wave_curr_a = [620, 200]
-    touch_wave_curr_b = [680, 200]
-    touch_wave_curr_c = [740, 200]
-    touch_wave_vol_a = [360, 200]
-    touch_wave_vol_b = [430, 200]
-    touch_wave_vol_c = [490, 200]
-    touch_harmonics_sub_v = [230, 240]
-    touch_harmonics_sub_fund = [230, 285]
-    touch_harmonics_sub_rms = [230, 330]
-    touch_harmonics_sub_graph = [360, 240]
-    touch_harmonics_sub_text = [360, 285]
-    
-    #touch_address
     touch_addr_ui_test_mode = 57100
     touch_addr_pos_x = 57110
     touch_addr_pos_y = 57111
@@ -125,13 +84,8 @@ class ConfigTouch123(Enum):
 def touch_data(self):
         coordinates = {
             
-            "btn_apply": [620, 150],
-            "btn_cancel": [720, 150],
-            "btn_popup_1": [400, 110],
-            "btn_popup_2": [400, 160],
-            "btn_popup_3": [400, 215],
-            "btn_popup_4": [400, 265],
-            "btn_popup_5": [400, 315],
+            
+            
             
             "btn_number_1": [310, 200],
             "btn_number_2": [370, 200],

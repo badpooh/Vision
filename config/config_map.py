@@ -6,7 +6,7 @@ class ConfigModbusMap(Enum):
 
     ### measurement setup ###
     ### UINT16 ###
-    addr_setup_access = 6000
+    addr_measurement_setup_access = 6000
     addr_wiring = 6001
     addr_vt_secondary_ll_voltage = 6007
     addr_min_measured_secondary_ln_voltage = 6008
@@ -27,8 +27,8 @@ class ConfigModbusMap(Enum):
     addr_default_frequency = 6038
     addr_max_harmonic_order = 6039
     addr_rotating_sequence = 6040
-    addr_reference_voltage_setup_access = 6050
-    addr_reference_voltage_type = 6051
+    addr_sliding_reference_voltage_setup_access = 6050
+    addr_sliding_reference_voltage_type = 6051
     ### UINT32 ###
     addr_reference_voltage = 6003
     addr_vt_primary_ll_voltage = 6005
@@ -120,3 +120,15 @@ class ConfigModbusMap(Enum):
     
     addr_setup_lock = 2900
     addr_control_lock = 2901
+
+class ConfigInitialValue(Enum):
+    initial_setup_values = {
+    ConfigModbusMap.addr_wiring: 0,
+    ConfigModbusMap.addr_reference_voltage: 1900,
+    ConfigModbusMap.addr_vt_primary_ll_voltage: 1900,
+    ConfigModbusMap.addr_vt_secondary_ll_voltage: 1900,
+    ConfigModbusMap.addr_min_measured_secondary_ln_voltage: 5,
+    ConfigModbusMap.addr_reference_voltage_mode: 0,
+    ConfigModbusMap.addr_sliding_reference_voltage_type: 0,
+    ConfigModbusMap.addr_rotating_sequence: 1,
+}
