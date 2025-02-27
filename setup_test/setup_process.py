@@ -44,19 +44,22 @@ class SetupTest:
 
 	# 	return ocr_res
 
-	def setup_mea_vol(self):
-		self.touch_manager.btn_front_meter()
-		self.touch_manager.btn_front_setup()
-		self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-		self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
-		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
-		self.touch_manager.touch_password()
-		self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
-		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+	def setup_mea_vol(self, search_pattern):
+		# self.touch_manager.uitest_mode_start()
+		self.modbus_label.setup_initialization()
+		# self.touch_manager.btn_front_meter()
+		# self.touch_manager.btn_front_setup()
+		# self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
+		# self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+		# self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		# self.touch_manager.touch_password()
+		# self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
+		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
 		self.touch_manager.screenshot()
-		image_path = self.eval_manager.load_image_file()
+		image_path = self.eval_manager.load_image_file(search_pattern)
 		roi_keys = [cr.s_wiring_1, cr.s_wiring_2]
 		ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-		target_result, modbus_result, accurasm_result = self.eval_manager.eval_setup_test(ocr_res=ocr_results)
+		target_result = self.eval_manager.eval_setup_test(ocr_res=ocr_results)
+		print(target_result)
 

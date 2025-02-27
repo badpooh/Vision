@@ -745,6 +745,13 @@ QPushButton:pressed {
                  </widget>
                 </item>
                 <item>
+                 <widget class="QPushButton" name="btn_del_tc">
+                  <property name="text">
+                   <string>DEL TC</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QPushButton" name="btn_tc_save">
                   <property name="text">
                    <string>SAVE</string>

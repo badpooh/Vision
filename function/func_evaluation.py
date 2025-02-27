@@ -518,48 +518,64 @@ class Evaluation:
     
     def eval_setup_test(self, ocr_res, sm_res=None):
         self.modbus_condition = False
-        
+
         all_meas_results = []
 
-        if "Wiring" in ''.join(ocr_res[0]):
-            self.connect_manager.setup_client.read_holding_registers(ecm.addr_measurement_setup_access.value, 1)
-            current_wiring = self.connect_manager.setup_client.read_holding_registers(ecm.addr_wiring.value, 1)
-            if ocr_res[1] == "Wye":
-                if current_wiring == 0:
+        ocr_list = ' '.join(result.strip() for result in ocr_res).split()
+
+        if "Wiring" in ''.join(ocr_list[0]):
+            self.connect_manager.setup_client.read_holding_registers(*ecm.addr_measurement_setup_access.value)
+            current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm.addr_wiring.value)
+            if ocr_list[1] == "Wye":
+                if current_wiring.registers[0] == 0:
                     setup_result = ["Device = Wye", "Modbus = 0", "AccuraSM = Wye"]
                 else:
-                    print("ocr_res[1] error")
-            elif ocr_res[1] == "Delta":
-                if current_wiring == 1:
+                    setup_result = ["Wiring error: expected Wye"]
+            elif ocr_list[1] == "Delta":
+                if current_wiring.registers[0] == 1:
                     setup_result = ["Device = Delta", "Modbus = 1", "AccuraSM = Delta"]
                 else:
-                    print("ocr_res[1] error")
+                    setup_result = ["Wiring error: expected Delta"]
+            else:
+                setup_result = ["Unknown wiring mode"]
         else:
+            setup_result = ["Unknown first part"]
             print("ocr_res[0] error")
 
-        # 나머지 레지스터의 값은 초기값과 동일해야 한다.
-        # 예를 들어, 각 주소별로 읽은 값과 저장한 초기값을 비교:
         evaluation_results = {}
-        for addr, expected in civ.initial_setup_values.items():
-            current_value = self.connect_manager.setup_client.read_holding_registers(addr, 1)
-            # 만약 값이 리스트(예: 32비트 값 분리 결과)라면 비교 방법을 적절히 조정
-            if current_value != expected:
-                evaluation_results[addr] = {"expected": expected, "current": current_value}
-        
-        # 예시 출력
+
+        for modbus_enum, expected in civ.initial_setup_values.value.items():
+            address, words = modbus_enum.value
+            response = self.connect_manager.setup_client.read_holding_registers(address, words)
+            if words is None:
+                continue
+            elif words == 1:
+                current_value = response.registers[0]
+            elif words == 2:
+                high = response.registers[0]
+                low = response.registers[1]
+                current_value = (high << 16) | low
+            else:
+                current_value = None
+            
+            if expected is not None:
+                if current_value != expected:
+                    # 다르면 결과에 기록
+                    evaluation_results[modbus_enum] = {
+                        "expected": expected,
+                        "current": current_value
+                    }
+
         if evaluation_results:
             print("변경되지 말아야 할 레지스터 중 차이가 발견되었습니다:")
-            for addr, diff in evaluation_results.items():
-                print(f"주소 {addr}: 예상 {diff['expected']}, 실제 {diff['current']}")
+            for addr_enum, diff in evaluation_results.items():
+                print(f"주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}")
             self.meas_error = True
         else:
             print("모든 변경되지 말아야 할 레지스터가 정상입니다.")
+            self.meas_error = False
         
-        # 추가로 OCR 결과를 통한 평가도 포함할 수 있음.
-        print(f"OCR - 정답: {self.ocr_error}")
-        print(f"정답 - OCR: {right_error}")
-        
-        return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
+        return setup_result
     
     def check_text(self, ocr_results):
         results = []

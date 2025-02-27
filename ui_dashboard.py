@@ -429,6 +429,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.btn_add_tc)
 
+        self.btn_del_tc = QPushButton(self.menu_widget)
+        self.btn_del_tc.setObjectName(u"btn_del_tc")
+
+        self.horizontalLayout_4.addWidget(self.btn_del_tc)
+
         self.btn_tc_save = QPushButton(self.menu_widget)
         self.btn_tc_save.setObjectName(u"btn_tc_save")
 
@@ -579,6 +584,7 @@ class Ui_MainWindow(object):
         self.btn_test_start.setText(QCoreApplication.translate("MainWindow", u"START", None))
         self.btn_test_stop.setText(QCoreApplication.translate("MainWindow", u"STOP", None))
         self.btn_add_tc.setText(QCoreApplication.translate("MainWindow", u"ADD TC", None))
+        self.btn_del_tc.setText(QCoreApplication.translate("MainWindow", u"DEL TC", None))
         self.btn_tc_save.setText(QCoreApplication.translate("MainWindow", u"SAVE", None))
         self.btn_tc_load.setText(QCoreApplication.translate("MainWindow", u"LOAD", None))
         self.btn_select_webcam.setText(QCoreApplication.translate("MainWindow", u"Select WebCam", None))

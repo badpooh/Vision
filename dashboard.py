@@ -328,7 +328,7 @@ class TestWorker(QThread):
             "anal_volt_unbal": lambda: self.meter_demo_test.demo_mea_anal_voltunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
             "anal_curr_sym": lambda: self.meter_demo_test.demo_mea_anal_cursym(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
             "anal_curr_unbal": lambda: self.meter_demo_test.demo_mea_anal_currunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "mea_vol": lambda: self.meter_setup_test.setup_mea_vol(),
+            "mea_vol": lambda: self.meter_setup_test.setup_mea_vol(self.search_pattern),
         }
 
         def result_callback(score, row):

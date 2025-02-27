@@ -91,7 +91,7 @@ class TestProcess:
             elif test_name == "anal_curr_unbal":
                 demo_test.demo_mea_anal_currunbal(base_save_path, test_mode, search_pattern)
             elif test_name == "mea_vol":
-                setup_test.setup_mea_vol()
+                setup_test.setup_mea_vol(search_pattern)
             else:
                 print(f"Unknown test name: {test_name}")
         else:
