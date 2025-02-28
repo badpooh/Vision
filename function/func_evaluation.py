@@ -517,13 +517,13 @@ class Evaluation:
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
     def eval_setup_test(self, ocr_res, sm_res=None):
-        self.modbus_condition = False
-
-        all_meas_results = []
 
         ocr_list = ' '.join(result.strip() for result in ocr_res).split()
 
+        excluded_addresses = set()
+
         if "Wiring" in ''.join(ocr_list[0]):
+            excluded_addresses.add(ecm.addr_wiring)
             self.connect_manager.setup_client.read_holding_registers(*ecm.addr_measurement_setup_access.value)
             current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm.addr_wiring.value)
             if ocr_list[1] == "Wye":
@@ -545,6 +545,8 @@ class Evaluation:
         evaluation_results = {}
 
         for modbus_enum, expected in civ.initial_setup_values.value.items():
+            if modbus_enum in excluded_addresses:
+                continue
             address, words = modbus_enum.value
             response = self.connect_manager.setup_client.read_holding_registers(address, words)
             if words is None:
