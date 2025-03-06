@@ -1,5 +1,3 @@
-
-
 from function.func_ocr import OCRManager
 from function.func_touch import TouchManager
 from function.func_modbus import ModbusLabels
@@ -7,6 +5,9 @@ from function.func_evaluation import Evaluation
 
 from config.config_touch import ConfigTouch as cft
 from config.config_roi import ConfigROI as cr
+from config.config_map import ConfigModbusMap as ecm
+from config.config_map import ConfigInitialValue as civ
+from config.config_ref import SetupRef as sr
 
 image_directory = r"\\10.10.20.30\screenshot"
 ocr_func = OCRManager()
@@ -45,8 +46,8 @@ class SetupTest:
 	# 	return ocr_res
 
 	def setup_mea_vol(self, search_pattern):
-		# self.touch_manager.uitest_mode_start()
-		self.modbus_label.setup_initialization()
+		self.touch_manager.uitest_mode_start()
+		# self.modbus_label.setup_initialization()
 		# self.touch_manager.btn_front_meter()
 		# self.touch_manager.btn_front_setup()
 		# self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
@@ -60,6 +61,8 @@ class SetupTest:
 		image_path = self.eval_manager.load_image_file(search_pattern)
 		roi_keys = [cr.s_wiring_1, cr.s_wiring_2]
 		ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-		target_result = self.eval_manager.eval_setup_test(ocr_res=ocr_results)
+		except_addr = {ecm.addr_wiring}
+		setup_ref = sr.Wiring.value[0]
+		target_result = self.eval_manager.eval_setup_test(ocr_res=ocr_results, setup_ref=setup_ref, except_addr=except_addr)
 		print(target_result)
 

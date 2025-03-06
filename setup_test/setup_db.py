@@ -1,7 +1,11 @@
 import sqlite3
+import os
 
 class IPDataBase:
-    def __init__(self, db_path='ip_data.db'):
+    def __init__(self, db_path=None):
+        if db_path is None:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(current_dir, 'ip_data.db')
         self.conn = sqlite3.connect(db_path)
         self.create_table()
         

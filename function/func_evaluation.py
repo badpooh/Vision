@@ -516,28 +516,37 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
-    def eval_setup_test(self, ocr_res, sm_res=None):
+    def eval_setup_test(self, ocr_res, setup_ref,sm_res=None, except_addr=None):
+        """
+        ocr_res: OCR 결과 리스트
+        sm_res:  AccurSM 결과
+        except_addr: 검사에서 제외해야 할 ConfigModbusMap 멤버의 집합 (예: {ConfigModbusMap.addr_wiring, ...})
+        """
+
+        if except_addr is None:
+            except_addr = set()
 
         ocr_list = ' '.join(result.strip() for result in ocr_res).split()
 
-        excluded_addresses = set()
-
         if "Wiring" in ''.join(ocr_list[0]):
-            excluded_addresses.add(ecm.addr_wiring)
             self.connect_manager.setup_client.read_holding_registers(*ecm.addr_measurement_setup_access.value)
             current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm.addr_wiring.value)
-            if ocr_list[1] == "Wye":
-                if current_wiring.registers[0] == 0:
-                    setup_result = ["Device = Wye", "Modbus = 0", "AccuraSM = Wye"]
+            if setup_ref == "Wye":
+                if ocr_list[1] == "Wye":
+                    if current_wiring.registers[0] == 0:
+                        setup_result = ["Device = Wye", "Modbus = 0", "AccuraSM = Wye"]
+                    else:
+                        setup_result = ["Wiring modbus error"]
                 else:
-                    setup_result = ["Wiring error: expected Wye"]
-            elif ocr_list[1] == "Delta":
-                if current_wiring.registers[0] == 1:
-                    setup_result = ["Device = Delta", "Modbus = 1", "AccuraSM = Delta"]
+                    setup_result = ["Wiring device UI error"]
+            if setup_ref == "Delta":
+                if ocr_list[1] == "Delta":
+                    if current_wiring.registers[0] == 1:
+                        setup_result = ["Device = Delta", "Modbus = 1", "AccuraSM = Delta"]
+                    else:
+                        setup_result = ["Wiring modbus error"]
                 else:
-                    setup_result = ["Wiring error: expected Delta"]
-            else:
-                setup_result = ["Unknown wiring mode"]
+                    setup_result = ["Wiring device UI error"]
         else:
             setup_result = ["Unknown first part"]
             print("ocr_res[0] error")
@@ -545,10 +554,12 @@ class Evaluation:
         evaluation_results = {}
 
         for modbus_enum, expected in civ.initial_setup_values.value.items():
-            if modbus_enum in excluded_addresses:
+            if modbus_enum in except_addr:
                 continue
+
             address, words = modbus_enum.value
             response = self.connect_manager.setup_client.read_holding_registers(address, words)
+
             if words is None:
                 continue
             elif words == 1:
@@ -560,13 +571,11 @@ class Evaluation:
             else:
                 current_value = None
             
-            if expected is not None:
-                if current_value != expected:
-                    # 다르면 결과에 기록
-                    evaluation_results[modbus_enum] = {
-                        "expected": expected,
-                        "current": current_value
-                    }
+            if expected is not None and current_value != expected:
+                evaluation_results[modbus_enum] = {
+                    "expected": expected,
+                    "current": current_value
+                }
 
         if evaluation_results:
             print("변경되지 말아야 할 레지스터 중 차이가 발견되었습니다:")
@@ -578,6 +587,7 @@ class Evaluation:
             self.meas_error = False
         
         return setup_result
+
     
     def check_text(self, ocr_results):
         results = []
