@@ -534,22 +534,21 @@ class Evaluation:
             if setup_ref == "Wye":
                 if ocr_list[1] == "Wye":
                     if current_wiring.registers[0] == 0:
-                        setup_result = ["Device = Wye", "Modbus = 0", "AccuraSM = Wye"]
+                        setup_result = ['PASS', f'Device = {ocr_list[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
                     else:
-                        setup_result = ["Wiring modbus error"]
+                        setup_result = ['FAIL', "Wiring modbus error"]
                 else:
-                    setup_result = ["Wiring device UI error"]
+                    setup_result = ['FAIL', "Wiring device UI error"]
             if setup_ref == "Delta":
                 if ocr_list[1] == "Delta":
                     if current_wiring.registers[0] == 1:
-                        setup_result = ["Device = Delta", "Modbus = 1", "AccuraSM = Delta"]
+                        setup_result = ['PASS', f'Device = {ocr_list[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
                     else:
-                        setup_result = ["Wiring modbus error"]
+                        setup_result = ['FAIL', "Wiring modbus error"]
                 else:
-                    setup_result = ["Wiring device UI error"]
+                    setup_result = ['FAIL', "Wiring device UI error"]
         else:
-            setup_result = ["Unknown first part"]
-            print("ocr_res[0] error")
+            setup_result = ['FAIL', "Unknown first part"]
 
         evaluation_results = {}
 
@@ -580,13 +579,13 @@ class Evaluation:
         if evaluation_results:
             print("변경되지 말아야 할 레지스터 중 차이가 발견되었습니다:")
             for addr_enum, diff in evaluation_results.items():
+                modbus_results = f"FAIL, 주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}"
                 print(f"주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}")
-            self.meas_error = True
         else:
+            modbus_results = 'PASS'
             print("모든 변경되지 말아야 할 레지스터가 정상입니다.")
-            self.meas_error = False
         
-        return setup_result
+        return setup_result, modbus_results
 
     
     def check_text(self, ocr_results):
