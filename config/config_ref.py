@@ -69,7 +69,3 @@ class ConfigImgRef(Enum):
     img_ref_harmonics_curr_rms_none = r".\image_ref\26.img_ref_harmonics_curr_rms_none.png"
     img_ref_waveform_all = r".\image_ref\41.img_ref_waveform_all.png"
     img_ref_waveform_all_none = r".\image_ref\42.img_ref_waveform_all_none.png"
-
-class SetupRef(Enum):
-
-    Wiring = ['Wye', 'Delta']

@@ -81,7 +81,7 @@ class OCRManager:
                             confidence = float(confidence)
                             original_results.append((coords, text, confidence))
                             # 신뢰도 검사
-                            if confidence >= 0.975:
+                            if confidence >= 0.97:
                                 pass
                                 # extracted_texts.append(text)
                             else:

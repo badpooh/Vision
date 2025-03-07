@@ -19,6 +19,7 @@ from setup_test.setup_db import IPDataBase
 
 from function.func_connection import ConnectionManager
 from function.func_process import TestProcess
+from function.func_modbus import ModbusLabels
 
 from frame_test.webcam_function import WebCam
 
@@ -280,6 +281,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 class TestWorker(QThread):
     progress = Signal(int, str)  # (row, content) 진행 상황
     finished = Signal()          # 전체 테스트 완료 신호
+    modbus_label = ModbusLabels()
 
     def __init__(self, tableWidget, dashboard_instance: MyDashBoard):
         super().__init__()
@@ -291,7 +293,7 @@ class TestWorker(QThread):
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
         self.test_mode = None
         self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.base_save_path = os.path.expanduser(f"./results/{self.current_time}/")
+        self.base_save_path = os.path.expanduser(f"./vision/results/{self.current_time}/")
         os.makedirs(self.base_save_path, exist_ok=True)
         self.test_map = {
             "tm_all": lambda: print("not yet"),
@@ -328,7 +330,8 @@ class TestWorker(QThread):
             "anal_volt_unbal": lambda: self.meter_demo_test.demo_mea_anal_voltunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
             "anal_curr_sym": lambda: self.meter_demo_test.demo_mea_anal_cursym(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
             "anal_curr_unbal": lambda: self.meter_demo_test.demo_mea_anal_currunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "mea_vol": lambda: self.meter_setup_test.setup_mea_vol(self.search_pattern),
+            "setup_initialization": lambda: self.modbus_label.setup_initialization(),
+            "mea_vol": lambda: self.meter_setup_test.setup_meas_vol(self.base_save_path, self.search_pattern),
         }
 
         def result_callback(score, row):
@@ -369,10 +372,6 @@ class TestWorker(QThread):
                 stop_callback = lambda: self.stopRequested
             )
 
-            # demo_process = DemoProcess(
-            #     score_callback = lambda score: self.result_callback(score, row),
-            #     stop_callback = lambda: self.stopRequested
-            # )
             for test_name in test_list:
                 if test_name == "tm_balance":
                     # 이미 self.test_mode가 None이면 새로 세팅, 아니면 유지
@@ -381,12 +380,22 @@ class TestWorker(QThread):
                 elif test_name == "tm_noload":
                     self.execute_test_mode(self.meter_demo_test.noload_test_mode)
 
+                elif test_name == "setup_initialization":
+                    self.modbus_label.setup_initialization()
                 else :
                     test_process.test_by_name(
                             test_name, self.base_save_path, self.test_mode, self.search_pattern
                         )
-            if test_name in ["tm_balance", "tm_noload"]:
-                result = "Test Mode Start"
+            if test_name == 'tm_balance':
+                result = 'Test Mode Start(Balance)'
+                self.dashboard.on_tc_score(row, result)
+
+            elif test_name == 'tm_noload':
+                result = 'Test Mode Start(No Load)'
+                self.dashboard.on_tc_score(row, result)
+
+            elif test_name == 'setup_initialization':
+                result = "Setup Initializtion Complete"
                 self.dashboard.on_tc_score(row, result)
             else:
                 row_end_time = self.meter_demo_test.modbus_label.device_current_time()

@@ -73,6 +73,8 @@ class ConfigROI(Enum):
 
     s_wiring_1 = ["Wiring"]
     s_wiring_2 = ["Wye", "Delta"]
+    s_min_meas_sec_ln_vol_1 = ['Min. Meas. Secondary L-N Volt. [V]']
+    s_min_meas_sec_ln_vol_2 = ['0', '10']
 
 
     
@@ -229,5 +231,7 @@ class Configs():
 
             ConfigROI.s_wiring_1: [n*x for x in [175, 182, 298, 34]],
             ConfigROI.s_wiring_2: [n*x for x in [175, 216, 298, 35]],
+            ConfigROI.s_min_meas_sec_ln_vol_1: [n*x for x in [476, 182, 298, 34]],
+            ConfigROI.s_min_meas_sec_ln_vol_2: [n*x for x in [740, 216, 34, 35]],
         }
         return params

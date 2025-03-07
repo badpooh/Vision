@@ -69,6 +69,21 @@ class ConfigTouch(Enum):
     touch_btn_popup_3 = [400, 215]
     touch_btn_popup_4 = [400, 265]
     touch_btn_popup_5 = [400, 315]
+
+    ### popup number, enter/cancel 은 위 popup button와 공유
+    touch_btn_number_1 = [310, 200]
+    touch_btn_number_2 = [370, 200]
+    touch_btn_number_3 = [430, 200]
+    touch_btn_number_4 = [310, 255]
+    touch_btn_number_5 = [370, 255]
+    touch_btn_number_6 = [430, 255]
+    touch_btn_number_7 = [310, 310]
+    touch_btn_number_8 = [370, 310]
+    touch_btn_number_9 = [430, 310]
+    touch_btn_number_0 = [310, 370]
+    touch_btn_number_dot = [370, 370]
+    touch_btn_number_back = [490, 225]
+    touch_btn_number_clear = [485, 340]
    
     
     ### touch 동작관련 address ###
@@ -87,19 +102,7 @@ def touch_data(self):
             
             
             
-            "btn_number_1": [310, 200],
-            "btn_number_2": [370, 200],
-            "btn_number_3": [430, 200],
-            "btn_number_4": [310, 255],
-            "btn_number_5": [370, 255],
-            "btn_number_6": [430, 255],
-            "btn_number_7": [310, 310],
-            "btn_number_8": [370, 310],
-            "btn_number_9": [430, 310],
-            "btn_number_0": [310, 370],
-            "btn_number_dot": [370, 370],
-            "btn_number_back": [490, 225],
-            "btn_number_clear": [485, 340],
+            
             "btn_num_pw_1": [255, 230],
             "btn_num_pw_2": [315, 230],
             "btn_num_pw_3": [370, 230],

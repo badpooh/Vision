@@ -516,7 +516,7 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
-    def eval_setup_test(self, ocr_res, setup_ref,sm_res=None, except_addr=None):
+    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, sm_res=None, except_addr=None):
         """
         ocr_res: OCR 결과 리스트
         sm_res:  AccurSM 결과
@@ -526,29 +526,44 @@ class Evaluation:
         if except_addr is None:
             except_addr = set()
 
-        ocr_list = ' '.join(result.strip() for result in ocr_res).split()
 
-        if "Wiring" in ''.join(ocr_list[0]):
-            self.connect_manager.setup_client.read_holding_registers(*ecm.addr_measurement_setup_access.value)
-            current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm.addr_wiring.value)
-            if setup_ref == "Wye":
-                if ocr_list[1] == "Wye":
-                    if current_wiring.registers[0] == 0:
-                        setup_result = ['PASS', f'Device = {ocr_list[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
+        def check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1=None, setup_ref_title_2=None):
+            result_condition_1 = False
+            title = title
+            ecm_access_address = ecm_access_address
+            ecm_address = ecm_address
+            setup_ref_title_1 = setup_ref_title_1
+            setup_ref_title_2 = setup_ref_title_2
+            if title in ''.join(ocr_res[0]):
+                self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
+                current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm_address)
+                if setup_ref == setup_ref_title_1:
+                    if ocr_res[1] == setup_ref_title_1:
+                        if current_wiring.registers[0] == 0:
+                            setup_result = ['PASS', f'Device = {ocr_res[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
+                            result_condition_1 = True
+                        else:
+                            setup_result = ['FAIL', "Wiring modbus error"]
                     else:
-                        setup_result = ['FAIL', "Wiring modbus error"]
-                else:
-                    setup_result = ['FAIL', "Wiring device UI error"]
-            if setup_ref == "Delta":
-                if ocr_list[1] == "Delta":
-                    if current_wiring.registers[0] == 1:
-                        setup_result = ['PASS', f'Device = {ocr_list[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
+                        setup_result = ['FAIL', "Wiring device UI error"]
+                if setup_ref == setup_ref_title_2:
+                    if ocr_res[1] == setup_ref_title_2:
+                        if current_wiring.registers[0] == 1:
+                            setup_result = ['PASS', f'Device = {ocr_res[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
+                            result_condition_1 = True
+                        else:
+                            setup_result = ['FAIL', "Wiring modbus error"]
                     else:
-                        setup_result = ['FAIL', "Wiring modbus error"]
-                else:
-                    setup_result = ['FAIL', "Wiring device UI error"]
+                        setup_result = ['FAIL', "Wiring device UI error"]
+            else:
+                setup_result = ['FAIL', "Unknown first part"]
+
+            return setup_result, result_condition_1 
+        
+        if ocr_res:
+            setup_result, ressult_condition = check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2)
         else:
-            setup_result = ['FAIL', "Unknown first part"]
+            setup_result = ['OCR result is None']
 
         evaluation_results = {}
 
@@ -576,16 +591,20 @@ class Evaluation:
                     "current": current_value
                 }
 
+        result_condition_2 = False
         if evaluation_results:
             print("변경되지 말아야 할 레지스터 중 차이가 발견되었습니다:")
             for addr_enum, diff in evaluation_results.items():
-                modbus_results = f"FAIL, 주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}"
+                modbus_result = f"FAIL, 주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}"
                 print(f"주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}")
         else:
-            modbus_results = 'PASS'
+            modbus_result = 'PASS(others)'
+            result_condition_2 = True
             print("모든 변경되지 말아야 할 레지스터가 정상입니다.")
+
+        overall_result = 'PASS' if ressult_condition and result_condition_2 else 'FAIL'
         
-        return setup_result, modbus_results
+        return setup_result, modbus_result, overall_result
 
     
     def check_text(self, ocr_results):
@@ -767,6 +786,44 @@ class Evaluation:
         save_path = os.path.join(base_save_path, f"{overall_result}_ocr_{image_file_name}.csv")
 
         df.to_csv(save_path, index=False)
+        dest_image_path = os.path.join(base_save_path, file_name_without_ip)
+        shutil.copy(img_path, dest_image_path)
+
+    def setup_save_csv(self, setup_result, modbus_result, img_path, base_save_path, overall_result):
+        """
+        setup_result: list,  예) ['PASS', 'Device = Delta', 'Modbus = 1', 'AccuraSM = Wye']
+        modbus_result: str, 예) 'PASS'
+        img_path:   원본 이미지 파일 경로
+        base_save_path: CSV/이미지 저장할 폴더
+        overall_result: 최종 결과(예: 'PASS', 'FAIL' 등)를 파일명에 사용
+        """
+
+        setup_result_str = ', '.join(setup_result)
+        
+        extra_row = {
+            "Device Setup Result": setup_result_str,
+            "Device Other Modbus Result": modbus_result
+        }
+        df = pd.DataFrame([extra_row])
+
+        # 3) 파일명 가공
+        # 이미지 파일명에서 서버 IP부분을 제거
+        file_name_with_extension = os.path.basename(img_path)  # 예: "10.10.20.30_screenshot.png"
+        ip_to_remove = f"{self.connect_manager.SERVER_IP}_"    # 예: "10.10.20.30_"
+        if file_name_with_extension.startswith(ip_to_remove):
+            file_name_without_ip = file_name_with_extension[len(ip_to_remove):]
+        else:
+            file_name_without_ip = file_name_with_extension
+
+        # 확장자 제거
+        image_file_name = os.path.splitext(file_name_without_ip)[0]
+
+        # 최종 CSV 저장 경로
+        save_path = os.path.join(base_save_path, f"{overall_result}_ocr_{image_file_name}.csv")
+
+        # 4) CSV 저장
+        df.to_csv(save_path, index=False, encoding='utf-8-sig')
+
         dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
 
