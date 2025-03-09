@@ -91,6 +91,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_all_disconnect.clicked.connect(self.all_disconnect)
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
+        self.btn_del_tc.clicked.connect(self.del_box_tc)
         self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)          
 
     def on_checkbox_changed(self, state, key):
@@ -161,6 +162,15 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
                 box_item = QTableWidgetItem()
                 box_item.setFlags(box_item.flags() & ~Qt.ItemIsEditable)
                 self.tableWidget.setItem(row_position, col, box_item)
+
+    def del_box_tc(self):
+        selected_indexes = self.tableWidget.selectedIndexes()
+        if not selected_indexes:
+            return  # 선택된 셀이 없으면 종료
+
+        rows_to_delete = sorted({index.row() for index in selected_indexes}, reverse=True)
+        for row in rows_to_delete:
+            self.tableWidget.removeRow(row)
     
     def on_cell_double_click(self, row, col):
         if col == 1:
