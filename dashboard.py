@@ -11,8 +11,8 @@ from functools import partial
 from ui_dashboard import Ui_MainWindow
 from demo_test.demo_process import DemoProcess
 from demo_test.demo_process import DemoTest
-from setup_test.setup_process import SetupTest
 
+from setup_test.setup_process import SetupTest
 from setup_test.setup_setting import SettingWindow
 from setup_test.setup_setting import SettingIP
 from setup_test.setup_db import IPDataBase
@@ -20,6 +20,8 @@ from setup_test.setup_db import IPDataBase
 from function.func_connection import ConnectionManager
 from function.func_process import TestProcess
 from function.func_modbus import ModbusLabels
+
+from config.config_setting import SettingList as sl
 
 from frame_test.webcam_function import WebCam
 
@@ -38,13 +40,6 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.tc_box_index = 0
         self.ocr_settings = {}
         self.set_windows = {}
-        self.checkbox_states = {
-            "voltage": False,
-            "current": False,
-            "power": False,
-            "analysis": False,
-            "demand": False,
-            }
         self.thread = False
         self.stop_thread = False
         self.selected_ip = ''
@@ -309,40 +304,21 @@ class TestWorker(QThread):
             "tm_all": lambda: print("not yet"),
             "tm_balance": partial(self.execute_test_mode, self.meter_demo_test.demo_test_mode),
             "tm_noload": partial(self.execute_test_mode, self.meter_demo_test.noload_test_mode),
-            "vol_all": lambda: self.meter_demo_test.demo_mea_vol_all(self.base_save_path, self.test_mode, self.search_pattern),
-            "vol_rms": lambda: self.meter_demo_test.demo_mea_vol_rms(self.base_save_path, self.test_mode, self.search_pattern),
-            "vol_fund": lambda: self.meter_demo_test.demo_mea_vol_fund(self.base_save_path, self.test_mode, self.search_pattern),
-            "vol_thd": lambda: self.meter_demo_test.demo_mea_vol_thd(self.base_save_path, self.test_mode, self.search_pattern),
-            "vol_freq": lambda: self.meter_demo_test.demo_mea_vol_freq(self.base_save_path, self.test_mode, self.search_pattern),
-            "vol_residual": lambda: self.meter_demo_test.demo_mea_vol_residual(self.base_save_path, self.test_mode, self.search_pattern),
-            "vol_sliding": lambda: self.meter_demo_test.demo_mea_vol_sliding(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_all": lambda: self.meter_demo_test.demo_mea_curr_all(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_rms": lambda: self.meter_demo_test.demo_mea_curr_rms(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_fund": lambda: self.meter_demo_test.demo_mea_curr_fund(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_demand": lambda: self.meter_demo_test.demo_mea_curr_demand(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_thd": lambda: self.meter_demo_test.demo_mea_curr_thd(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_tdd": lambda: self.meter_demo_test.demo_mea_curr_tdd(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_cf": lambda: self.meter_demo_test.demo_mea_curr_cf(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_kf": lambda: self.meter_demo_test.demo_mea_curr_kf(self.base_save_path, self.test_mode, self.search_pattern),
-            "curr_residual": lambda: self.meter_demo_test.demo_mea_curr_residual(self.base_save_path, self.test_mode, self.search_pattern),
-            "pow_all": lambda: self.meter_demo_test.demo_mea_pow_all(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "pow_p": lambda: self.meter_demo_test.demo_mea_pow_active(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "pow_q": lambda: self.meter_demo_test.demo_mea_pow_reactive(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "pow_s": lambda: self.meter_demo_test.demo_mea_pow_apparent(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "pow_pf": lambda: self.meter_demo_test.demo_mea_pow_pf(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "pow_demand": lambda: self.meter_demo_test.demo_mea_pow_demand(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "pow_energy": lambda: self.meter_demo_test.demo_mea_pow_energy(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "anal_all": lambda: self.meter_demo_test.demo_mea_anal_all(self.base_save_path, self.test_mode, self.search_pattern),
-            "anal_phasor": lambda: self.meter_demo_test.demo_mea_anal_phasor(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "anal_harmonics": lambda: self.meter_demo_test.demo_mea_anal_harmonics(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "anal_waveform": lambda: self.meter_demo_test.demo_mea_anal_waveform(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "anal_volt_sym": lambda: self.meter_demo_test.demo_mea_anal_voltsym(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "anal_volt_unbal": lambda: self.meter_demo_test.demo_mea_anal_voltunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "anal_curr_sym": lambda: self.meter_demo_test.demo_mea_anal_cursym(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
-            "anal_curr_unbal": lambda: self.meter_demo_test.demo_mea_anal_currunbal(self.base_save_path, self.test_mode, self.test_mode, self.search_pattern),
             "setup_initialization": lambda: self.modbus_label.setup_initialization(),
-            "mea_vol": lambda: self.meter_setup_test.setup_meas_vol(self.base_save_path, self.search_pattern),
         }
+        for key, method_name in sl.DASHBORAD_TEST[0:31]:
+            test_method = getattr(self.meter_demo_test, method_name, None)
+            if callable(test_method):
+                self.test_map[key] = lambda tm=test_method: tm(self.base_save_path, self.test_mode, self.search_pattern)
+            else:
+                print(f"[WARNING] meter_demo_test에 '{method_name}' 메서드가 없습니다")
+        
+        for key, method_name in sl.DASHBORAD_TEST:
+            test_method = getattr(self.meter_demo_test, method_name, None)
+            if callable(test_method):
+                self.test_map[key] = lambda tm=test_method: tm(self.base_save_path, self.search_pattern)
+            else:
+                print(f"[WARNING] meter_demo_test에 '{method_name}' 메서드가 없습니다")
 
         def result_callback(score, row):
             result_item = QTableWidgetItem(score)

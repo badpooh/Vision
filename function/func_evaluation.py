@@ -526,7 +526,6 @@ class Evaluation:
         if except_addr is None:
             except_addr = set()
 
-
         def check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1=None, setup_ref_title_2=None):
             result_condition_1 = False
             title = title
