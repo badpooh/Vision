@@ -304,7 +304,7 @@ class TestWorker(QThread):
             "tm_all": lambda: print("not yet"),
             "tm_balance": partial(self.execute_test_mode, self.meter_demo_test.demo_test_mode),
             "tm_noload": partial(self.execute_test_mode, self.meter_demo_test.noload_test_mode),
-            "setup_initialization": lambda: self.modbus_label.setup_initialization(),
+            "m_s_initialize": lambda: self.modbus_label.setup_initialization(),
         }
         for key, method_name in sl.DASHBORAD_TEST[0:31]:
             test_method = getattr(self.meter_demo_test, method_name, None)
@@ -366,7 +366,7 @@ class TestWorker(QThread):
                 elif test_name == "tm_noload":
                     self.execute_test_mode(self.meter_demo_test.noload_test_mode)
 
-                elif test_name == "setup_initialization":
+                elif test_name == "m_s_initialize":
                     self.modbus_label.setup_initialization()
                 else :
                     test_process.test_by_name(
@@ -380,7 +380,7 @@ class TestWorker(QThread):
                 result = 'Test Mode Start(No Load)'
                 self.dashboard.on_tc_score(row, result)
 
-            elif test_name == 'setup_initialization':
+            elif test_name == 'm_s_initialize':
                 result = "Setup Initializtion Complete"
                 self.dashboard.on_tc_score(row, result)
             else:

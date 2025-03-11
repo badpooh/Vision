@@ -56,7 +56,6 @@ class OCRManager:
             else:
                 print(f"Error {self.phasor_condition}")
 
-
             if roi_key in self.rois:
                 extracted_texts = []
                 low_confidence_texts = []
@@ -81,7 +80,7 @@ class OCRManager:
                             confidence = float(confidence)
                             original_results.append((coords, text, confidence))
                             # 신뢰도 검사
-                            if confidence >= 0.97:
+                            if confidence >= 0.90:
                                 pass
                                 # extracted_texts.append(text)
                             else:

@@ -205,6 +205,31 @@ class ModbusLabels:
             self.connect_manager.setup_client.write_register(ecm.addr_buzzer_for_button.value[0], 1)
             self.connect_manager.setup_client.write_register(ecm.addr_lcd_buzzer_setup_access.value[0], 1)
     
+    def setup_target_initialize(self, access_addr, target_addr, bit16=None, bit32=None):
+        self.touch_manager.uitest_mode_start()
+        values = [2300, 0, 700, 1]
+        values_control = [2300, 0, 1600, 1]
+
+        def value_32bit(value):
+            return (value >> 16) & 0xFFFF, value & 0xFFFF
+
+        if self.connect_manager.setup_client:
+            for value in values:
+                self.connect_manager.setup_client.write_register(ecm.addr_setup_lock.value[0], value)
+                time.sleep(0.6)
+            for value_control in values_control:
+                self.connect_manager.setup_client.write_register(ecm.addr_control_lock.value[0], value_control)
+                time.sleep(0.6)
+            
+            ### measurement setup ###
+            address, words = target_addr.value
+            self.connect_manager.setup_client.read_holding_registers(*access_addr.value)
+            if words == 1:
+                self.connect_manager.setup_client.write_register(target_addr.value[0], bit16)
+            elif words == 2:
+                self.connect_manager.setup_client.write_registers(target_addr.value[0], [*value_32bit(bit32)])
+            self.connect_manager.setup_client.write_register(access_addr.value[0], 1)
+                                                                                                        
     def device_current_time(self):
         self.response = self.connect_manager.setup_client.read_holding_registers(3060, 3)
         high_word = self.connect_manager.setup_client.read_holding_registers(3061, 1).registers[0]

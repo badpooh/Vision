@@ -71,12 +71,22 @@ class ConfigROI(Enum):
     harmonics_fund_b = "harmonics_fund_b"
     harmonics_fund_c = "harmonics_fund_c"
 
+    ### for meter setup test
     s_wiring_1 = ["Wiring"]
     s_wiring_2 = ["Wye", "Delta"]
     s_min_meas_sec_ln_vol_1 = ['Min. Meas. Secondary L-N Volt. [V]']
     s_min_meas_sec_ln_vol_2 = ['0', '10']
-
-
+    s_vt_primary_ll_vol_1 = ['VT Primary L-L Voltage [V]']
+    s_vt_primary_ll_vol_2 = ['50', '999999']
+    s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
+    s_vt_secondary_ll_vol_2 = ['50', '220']
+    s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
+    s_primary_reference_vol_2 = ['Line-to-Line', 'Line-to-Neutral']
+    s_primary_reference_vol_3 = ['50', '999999']
+    s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
+    s_sliding_reference_vol_2 = ['Disable', 'Enable']
+    s_rotation_sequence_1 = ['Rotating Sequence']
+    s_rotation_sequence_2 = ['Positive', 'Negative']
     
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
     color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]
@@ -233,5 +243,13 @@ class Configs():
             ConfigROI.s_wiring_2: [n*x for x in [175, 216, 298, 35]],
             ConfigROI.s_min_meas_sec_ln_vol_1: [n*x for x in [476, 182, 298, 34]],
             ConfigROI.s_min_meas_sec_ln_vol_2: [n*x for x in [740, 216, 34, 35]],
+            ConfigROI.s_vt_primary_ll_vol_1 : [n*x for x in [175, 254, 298, 34]],
+            ConfigROI.s_vt_primary_ll_vol_2 : [n*x for x in [175, 288, 298, 35]],
+            ConfigROI.s_vt_secondary_ll_vol_1 : [n*x for x in [476, 254, 298, 34]],
+            ConfigROI.s_vt_secondary_ll_vol_2 : [n*x for x in [476, 288, 298, 35]],
+            ConfigROI.s_primary_reference_vol_1 : [n*x for x in [175, 326, 298, 34]],
+            ConfigROI.s_primary_reference_vol_2 : [n*x for x in [175, 360, 298, 35]],
+            ConfigROI.s_primary_reference_vol_3 : [n*x for x in [175, 360, 298, 35]],
+             
         }
         return params

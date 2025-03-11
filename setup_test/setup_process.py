@@ -76,28 +76,19 @@ class SetupTest:
 		self.touch_manager.touch_menu(cft.touch_btn_popup_1.value)
 		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
 		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		self.touch_manager.screenshot()
-		image_path = self.eval_manager.load_image_file(search_pattern)
 		roi_keys = [cr.s_wiring_1, cr.s_wiring_2]
-		except_addr = {ecm.addr_wiring}
+		except_addr = ecm.addr_wiring
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, reference_value=cr.s_wiring_2.value[0], compare_title=cr.s_wiring_1.value[0], access_address=ecm.addr_measurement_setup_access.value, target_address=ecm.addr_wiring.value, ref_title_1=cr.s_wiring_2.value[0], ref_title_2=cr.s_wiring_2.value[1])
-
 
 		### min.meas.secondary l-n volt 5-> 0
 		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
 		self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
 		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
 		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		self.touch_manager.screenshot()
-		image_path = self.eval_manager.load_image_file(search_pattern)
 		roi_keys = [cr.s_min_meas_sec_ln_vol_1, cr.s_min_meas_sec_ln_vol_2]
-		ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-		except_addr = {ecm.addr_min_measured_secondary_ln_voltage}
-		setup_ref = cr.s_min_meas_sec_ln_vol_2.value[0]
-		setup_result, modbus_result, overall_result = self.eval_manager.eval_setup_test(ocr_res=ocr_results, setup_ref=setup_ref, title=cr.s_min_meas_sec_ln_vol_1.value[0], ecm_access_address=ecm.addr_measurement_setup_access.value, ecm_address=ecm.addr_min_measured_secondary_ln_voltage.value, setup_ref_title_1=cr.s_min_meas_sec_ln_vol_2.value[0], setup_ref_title_2=cr.s_min_meas_sec_ln_vol_2.value[1], except_addr=except_addr)
-		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result)
-		time.sleep(0.5)
-
+		except_addr = ecm.addr_min_measured_secondary_ln_voltage
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, reference_value=cr.s_min_meas_sec_ln_vol_2.value[0], compare_title=cr.s_min_meas_sec_ln_vol_1.value[0], access_address=ecm.addr_measurement_setup_access.value, target_address=ecm.addr_min_measured_secondary_ln_voltage.value, ref_title_1=cr.s_min_meas_sec_ln_vol_2.value[0], ref_title_2=cr.s_min_meas_sec_ln_vol_2.value[1])
+		
 		### min.meas.secondary l-n volt 0-> 11
 		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
 		for i in range(2):
@@ -105,12 +96,32 @@ class SetupTest:
 		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
 		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
 		roi_keys = [cr.s_min_meas_sec_ln_vol_1, cr.s_min_meas_sec_ln_vol_2]
-		ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-		except_addr = {ecm.addr_min_measured_secondary_ln_voltage}
-		setup_ref = cr.s_min_meas_sec_ln_vol_2.value[0]
-		setup_result, modbus_result, overall_result = self.eval_manager.eval_setup_test(ocr_res=ocr_results, setup_ref=setup_ref, title=cr.s_min_meas_sec_ln_vol_1.value[0], ecm_access_address=ecm.addr_measurement_setup_access.value, ecm_address=ecm.addr_min_measured_secondary_ln_voltage.value, setup_ref_title_1=cr.s_min_meas_sec_ln_vol_2.value[0], setup_ref_title_2=cr.s_min_meas_sec_ln_vol_2.value[1], except_addr=except_addr)
-		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result)
-		time.sleep(0.5)
+		except_addr = ecm.addr_min_measured_secondary_ln_voltage
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, reference_value=cr.s_min_meas_sec_ln_vol_2.value[1], compare_title=cr.s_min_meas_sec_ln_vol_1.value[0], access_address=ecm.addr_measurement_setup_access.value, target_address=ecm.addr_min_measured_secondary_ln_voltage.value, ref_title_1=cr.s_min_meas_sec_ln_vol_2.value[0], ref_title_2=cr.s_min_meas_sec_ln_vol_2.value[1])
+		### min.meas.secondary l-n volt 초기화
+		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_min_measured_secondary_ln_voltage, bit16=5)
+
+		### VT Primary L-L Voltage 49
+		self.touch_manager.touch_menu(cft.touch_data_view_3.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_4.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_9.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cr.s_vt_primary_ll_vol_1, cr.s_vt_primary_ll_vol_2]
+		except_addr = ecm.addr_vt_primary_ll_voltage
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, reference_value=cr.s_vt_primary_ll_vol_2.value[0], compare_title=cr.s_vt_primary_ll_vol_1.value[0], access_address=ecm.addr_measurement_setup_access.value, target_address=ecm.addr_vt_primary_ll_voltage.value, ref_title_1=cr.s_vt_primary_ll_vol_2.value[0], ref_title_2=cr.s_vt_primary_ll_vol_2.value[1])
+
+		### VT Primary L-L Voltage 1000000
+		self.touch_manager.touch_menu(cft.touch_data_view_3.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_1.value)
+		for i in range(6):
+			self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cr.s_vt_primary_ll_vol_1, cr.s_vt_primary_ll_vol_2]
+		except_addr = ecm.addr_vt_primary_ll_voltage
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, reference_value=cr.s_vt_primary_ll_vol_2.value[1], compare_title=cr.s_vt_primary_ll_vol_1.value[0], access_address=ecm.addr_measurement_setup_access.value, target_address=ecm.addr_vt_primary_ll_voltage.value, ref_title_1=cr.s_vt_primary_ll_vol_2.value[0], ref_title_2=cr.s_vt_primary_ll_vol_2.value[1])
+
 
 
 
