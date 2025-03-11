@@ -34,7 +34,6 @@ class SetupTest:
 			target_address (tuple): 실제 체크할 주소 (예: ecm.addr_wiring.value → (6001, 1))
 			ref_title_1 (str): 추가 비교에 사용될 텍스트 1 (예: cr.s_wiring_2.value[0])
 			ref_title_2 (str): 추가 비교에 사용될 텍스트 2 (예: cr.s_wiring_2.value[1])
-
 		Returns:
 			None
 		"""
