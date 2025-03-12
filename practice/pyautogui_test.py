@@ -2,22 +2,11 @@ import cv2
 import numpy as np
 import pyautogui
 import time
-from PIL import ImageGrab
-from functools import partial
-
-
 
 def opencv_find_and_click():
     template_path = r'C:\rootech\AutoProgram\image_test\naver.png'
     # 1) 화면 전체 스크린샷
-
-    
-    # screenshot = pyautogui.screenshot()
-    
-    ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
-    
-
-    screenshot = ImageGrab.grab()
+    screenshot = pyautogui.screenshot()
     screenshot = np.array(screenshot)  # Pillow → np array (RGB)
     screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)  # BGR로 변환
 
@@ -42,13 +31,17 @@ def opencv_find_and_click():
 
         # 4) 마우스 클릭
         pyautogui.moveTo(center_x, center_y, duration=0.5)
-        pyautogui.click()
-
-        # 5) 부분 스크린샷
         time.sleep(1)
         box_width, box_height = w, h
         screenshot_region = pyautogui.screenshot(region=(top_left[0], top_left[1], box_width, box_height))
-        screenshot_region.save("check_after_click.png")
+        screenshot_region.save("check_b4_click.png")
+        pyautogui.click()
+
+        # 5) 부분 스크린샷
+        # time.sleep(1)
+        # box_width, box_height = w, h
+        # screenshot_region = pyautogui.screenshot(region=(top_left[0], top_left[1], box_width, box_height))
+        
 
         print("템플릿 매칭 성공, 클릭 완료!")
     else:
