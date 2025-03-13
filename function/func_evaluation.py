@@ -535,7 +535,7 @@ class Evaluation:
             setup_ref_title_2 = setup_ref_title_2
             if title in ''.join(ocr_res[0]):
                 self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
-                current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm_address)
+                current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm_address.value)
                 if setup_ref == setup_ref_title_1:
                     if ocr_res[1] == setup_ref_title_1:
                         if current_wiring.registers[0] == 0:
@@ -557,7 +557,7 @@ class Evaluation:
             else:
                 setup_result = ['FAIL', "Unknown first part"]
 
-            return setup_result, result_condition_1 
+            return setup_result, result_condition_1
         
         if ocr_res:
             setup_result, ressult_condition = check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2)
@@ -591,10 +591,12 @@ class Evaluation:
                 }
 
         result_condition_2 = False
+        modbus_result = []
         if evaluation_results:
             print("변경되지 말아야 할 레지스터 중 차이가 발견되었습니다:")
             for addr_enum, diff in evaluation_results.items():
-                modbus_result = f"FAIL, 주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}"
+                meassage = f"FAIL, 주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}"
+                modbus_result.append(meassage)
                 print(f"주소 {addr_enum.value}: 예상 {diff['expected']}, 실제 {diff['current']}")
         else:
             modbus_result = 'PASS(others)'
@@ -605,7 +607,6 @@ class Evaluation:
         
         return setup_result, modbus_result, overall_result
 
-    
     def check_text(self, ocr_results):
         results = []
         
@@ -796,7 +797,6 @@ class Evaluation:
         base_save_path: CSV/이미지 저장할 폴더
         overall_result: 최종 결과(예: 'PASS', 'FAIL' 등)를 파일명에 사용
         """
-
         setup_result_str = ', '.join(setup_result)
         
         extra_row = {

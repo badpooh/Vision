@@ -84,6 +84,23 @@ class ConfigTouch(Enum):
     touch_btn_number_dot = [370, 370]
     touch_btn_number_back = [490, 225]
     touch_btn_number_clear = [485, 340]
+
+    ### Primary Reference Voltage popup
+    ### popup button enter, cancel 사용 가능
+    touch_btn_ref_ll = [330, 100]
+    touch_btn_ref_ln = [470, 100]
+    touch_btn_ref_num_1 = [285, 250]
+    touch_btn_ref_num_2 = [345, 250]
+    touch_btn_ref_num_3 = [400, 250]
+    touch_btn_ref_num_4 = [455, 250]
+    touch_btn_ref_num_5 = [285, 310]
+    touch_btn_ref_num_6 = [345, 310]
+    touch_btn_ref_num_7 = [400, 310]
+    touch_btn_ref_num_8 = [455, 310]
+    touch_btn_ref_num_9 = [285, 365]
+    touch_btn_ref_num_0 = [345, 365]
+
+
    
     
     ### touch 동작관련 address ###
@@ -98,22 +115,6 @@ class ConfigTouch(Enum):
 
 def touch_data(self):
         coordinates = {
-            
-            
-            
-            
-            
-            "btn_num_pw_1": [255, 230],
-            "btn_num_pw_2": [315, 230],
-            "btn_num_pw_3": [370, 230],
-            "btn_num_pw_4": [430, 230],
-            "btn_num_pw_5": [485, 230],
-            "btn_num_pw_6": [255, 290],
-            "btn_num_pw_7": [315, 290],
-            "btn_num_pw_8": [370, 290],
-            "btn_num_pw_9": [430, 290],
-            "btn_num_pw_0": [485, 290],
-            "btn_num_pw_enter": [340, 345],
             "btn_testmode_1": [270, 100],
             "btn_testmode_2": [270, 160],
             "infinite": [490, 125],

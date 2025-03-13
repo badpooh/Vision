@@ -228,6 +228,9 @@ class ModbusLabels:
                 self.connect_manager.setup_client.write_register(target_addr.value[0], bit16)
             elif words == 2:
                 self.connect_manager.setup_client.write_registers(target_addr.value[0], [*value_32bit(bit32)])
+            else:
+                print('words error?')
+                return
             self.connect_manager.setup_client.write_register(access_addr.value[0], 1)
                                                                                                         
     def device_current_time(self):
