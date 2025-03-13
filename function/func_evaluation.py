@@ -533,29 +533,71 @@ class Evaluation:
             ecm_address = ecm_address
             setup_ref_title_1 = setup_ref_title_1
             setup_ref_title_2 = setup_ref_title_2
+
+            address, words = ecm_address.value
+            
+            #     self.connect_manager.setup_client.write_registers(target_addr.value[0], [*value_32bit(bit32)])
+            # else:
+            #     print('words error?')
+            #     return
+            # self.connect_manager.setup_client.write_register(access_addr.value[0], 1)
+
+
             if title in ''.join(ocr_res[0]):
                 self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
-                current_wiring = self.connect_manager.setup_client.read_holding_registers(*ecm_address.value)
+                current_modbus = self.connect_manager.setup_client.read_holding_registers(*ecm_address.value)
+                low_word = current_modbus.registers[0]
+                high_word = current_modbus.registers[1]
+                full_32 = (high_word << 16) | low_word  # unsigned 32bit
+                val = ocr_res[1]
                 if setup_ref == setup_ref_title_1:
                     if ocr_res[1] == setup_ref_title_1:
-                        if current_wiring.registers[0] == 0:
-                            setup_result = ['PASS', f'Device = {ocr_res[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
-                            result_condition_1 = True
+                        if isinstance(val, str):
+                            if current_modbus.registers[0] == 0:
+                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                                result_condition_1 = True
+                            else:
+                                setup_result = ['FAIL', 'Modbus was wrong']
                         else:
-                            setup_result = ['FAIL', "Wiring modbus error"]
+                            if words == 1:
+                                if current_modbus.registers[0] == setup_ref_title_1:
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                                    result_condition_1 = True
+                                else:
+                                    setup_result = ['FAIL', 'Modbus was wrong']
+                            else:
+                                if full_32 == setup_ref_title_1:
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{full_32}', 'AccuraSM = N/A']
+                                    result_condition_1 = True
+                                else:
+                                    setup_result = ['FAIL', 'Modbus was wrong']
                     else:
-                        setup_result = ['FAIL', "Wiring device UI error"]
+                        setup_result = ['FAIL', 'Device UI was wrong']
                 if setup_ref == setup_ref_title_2:
                     if ocr_res[1] == setup_ref_title_2:
-                        if current_wiring.registers[0] == 1:
-                            setup_result = ['PASS', f'Device = {ocr_res[1]}', f'Modbus = {current_wiring.registers[0]}', "AccuraSM = Wye"]
-                            result_condition_1 = True
+                        if isinstance(val, str):
+                            if current_modbus.registers[0] == 1:
+                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 1/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                                result_condition_1 = True
+                            else:
+                                setup_result = ['FAIL', "Modbus was wrong"]
                         else:
-                            setup_result = ['FAIL', "Wiring modbus error"]
+                            if words == 1:
+                                if current_modbus.registers[0] == setup_ref_title_2:
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                                    result_condition_1 = True
+                                else:
+                                    setup_result = ['FAIL', 'Modbus was wrong']
+                            else:
+                                if full_32 == setup_ref_title_2:
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{full_32}', 'AccuraSM = N/A']
+                                    result_condition_1 = True
+                                else:
+                                    setup_result = ['FAIL', 'Modbus was wrong']
                     else:
-                        setup_result = ['FAIL', "Wiring device UI error"]
+                        setup_result = ['FAIL', 'Device UI was wrong']
             else:
-                setup_result = ['FAIL', "Unknown first part"]
+                setup_result = ['FAIL', 'OCR Title was wrong']
 
             return setup_result, result_condition_1
         
@@ -605,7 +647,7 @@ class Evaluation:
 
         overall_result = 'PASS' if ressult_condition and result_condition_2 else 'FAIL'
         
-        return setup_result, modbus_result, overall_result
+        return title, setup_result, modbus_result, overall_result
 
     def check_text(self, ocr_results):
         results = []
@@ -789,13 +831,14 @@ class Evaluation:
         dest_image_path = os.path.join(base_save_path, file_name_without_ip)
         shutil.copy(img_path, dest_image_path)
 
-    def setup_save_csv(self, setup_result, modbus_result, img_path, base_save_path, overall_result):
+    def setup_save_csv(self, setup_result, modbus_result, img_path, base_save_path, overall_result, title):
         """
         setup_result: list,  예) ['PASS', 'Device = Delta', 'Modbus = 1', 'AccuraSM = Wye']
         modbus_result: str, 예) 'PASS'
         img_path:   원본 이미지 파일 경로
         base_save_path: CSV/이미지 저장할 폴더
         overall_result: 최종 결과(예: 'PASS', 'FAIL' 등)를 파일명에 사용
+        title: 테스트 항목목
         """
         setup_result_str = ', '.join(setup_result)
         
@@ -818,7 +861,7 @@ class Evaluation:
         image_file_name = os.path.splitext(file_name_without_ip)[0]
 
         # 최종 CSV 저장 경로
-        save_path = os.path.join(base_save_path, f"{overall_result}_ocr_{image_file_name}.csv")
+        save_path = os.path.join(base_save_path, f"{overall_result}_{image_file_name}_{title}.csv")
 
         # 4) CSV 저장
         df.to_csv(save_path, index=False, encoding='utf-8-sig')

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'setting.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,14 +16,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QGridLayout, QHBoxLayout,
-    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
-    QWidget)
+    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
+    QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(915, 1038)
+        Form.resize(959, 1077)
         Form.setMinimumSize(QSize(800, 600))
         Form.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.verticalLayout_4 = QVBoxLayout(Form)
@@ -34,7 +34,15 @@ class Ui_Form(object):
         self.widget.setObjectName(u"widget")
         self.gridLayout_2 = QGridLayout(self.widget)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.widget_2 = QWidget(self.widget)
+        self.scrollArea = QScrollArea(self.widget)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1018, 1025))
+        self.verticalLayout_37 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_37.setObjectName(u"verticalLayout_37")
+        self.widget_2 = QWidget(self.scrollAreaWidgetContents)
         self.widget_2.setObjectName(u"widget_2")
         self.widget_2.setMinimumSize(QSize(1000, 1000))
         self.widget_2.setStyleSheet(u"QWidget{\n"
@@ -937,7 +945,11 @@ class Ui_Form(object):
         self.verticalLayout_3.addItem(self.verticalSpacer_3)
 
 
-        self.gridLayout_2.addWidget(self.widget_2, 0, 0, 1, 1)
+        self.verticalLayout_37.addWidget(self.widget_2)
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.gridLayout_2.addWidget(self.scrollArea, 0, 0, 1, 1)
 
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)

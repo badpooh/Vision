@@ -42,7 +42,7 @@ class SetupTest:
 		compare_title = roi_keys[0].value[0]
 		ref_title_1 = roi_keys[1].value[0]
 		ref_title_2 = roi_keys[1].value[1]
-		setup_result, modbus_result, overall_result = self.eval_manager.eval_setup_test(
+		title, setup_result, modbus_result, overall_result = self.eval_manager.eval_setup_test(
 			ocr_res=ocr_results,
 			setup_ref=reference_value,
 			title=compare_title,
@@ -52,11 +52,11 @@ class SetupTest:
 			setup_ref_title_2=ref_title_2,
 			except_addr=except_addr
 			)
-		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result)
+		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result, title)
 		time.sleep(0.5)
 		
 	def setup_meter_s_m_vol(self, base_save_path, search_pattern):
-		self.touch_manager.uitest_mode_start()
+		self.touch_manager.uitest_mode_start() 
 		### wiring -> Delta
 		self.touch_manager.btn_front_meter()
 		self.touch_manager.btn_front_setup()
@@ -215,6 +215,25 @@ class SetupTest:
 		except_addr = ecm.addr_sliding_reference_voltage_type
 		ref_value = roi_keys[1].value[0]
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_sliding_reference_voltage_setup_access.value, ref_value=ref_value)
+
+		### Rotating Sequence Positive -> Negative
+		self.touch_manager.touch_menu(cft.touch_data_view_7.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cr.s_rotation_sequence_1, cr.s_rotation_sequence_1]
+		except_addr = ecm.addr_rotating_sequence
+		ref_value = roi_keys[1].value[1]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		### Rotating Sequence Negative -> Positive
+		self.touch_manager.touch_menu(cft.touch_data_view_6.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_1.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cr.s_rotation_sequence_1, cr.s_rotation_sequence_1]
+		except_addr = ecm.addr_rotating_sequence
+		ref_value = roi_keys[1].value[0]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 
 
 
