@@ -535,65 +535,60 @@ class Evaluation:
             setup_ref_title_2 = setup_ref_title_2
 
             address, words = ecm_address.value
-            
-            #     self.connect_manager.setup_client.write_registers(target_addr.value[0], [*value_32bit(bit32)])
-            # else:
-            #     print('words error?')
-            #     return
-            # self.connect_manager.setup_client.write_register(access_addr.value[0], 1)
-
 
             if title in ''.join(ocr_res[0]):
                 self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
                 current_modbus = self.connect_manager.setup_client.read_holding_registers(*ecm_address.value)
-                low_word = current_modbus.registers[0]
-                high_word = current_modbus.registers[1]
-                full_32 = (high_word << 16) | low_word  # unsigned 32bit
+                print(current_modbus.registers[0])
+                if words == 2:
+                    low_word = current_modbus.registers[0]
+                    high_word = current_modbus.registers[1]
+                    full_32 = (high_word << 16) | low_word  # unsigned 32bit
                 val = ocr_res[1]
                 if setup_ref == setup_ref_title_1:
                     if ocr_res[1] == setup_ref_title_1:
-                        if isinstance(val, str):
+                        if isinstance(val, str) and not val.isdigit():
                             if current_modbus.registers[0] == 0:
                                 setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', 'AccuraSM = N/A']
                                 result_condition_1 = True
                             else:
-                                setup_result = ['FAIL', 'Modbus was wrong']
+                                setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}']
                         else:
                             if words == 1:
-                                if current_modbus.registers[0] == setup_ref_title_1:
+                                if ((current_modbus.registers[0])/10) == int(setup_ref_title_1):
                                     setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', 'AccuraSM = N/A']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = ['FAIL', 'Modbus was wrong']
+                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}']
                             else:
-                                if full_32 == setup_ref_title_1:
+                                if full_32 == int(setup_ref_title_1):
                                     setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{full_32}', 'AccuraSM = N/A']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = ['FAIL', 'Modbus was wrong']
+                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}']
                     else:
                         setup_result = ['FAIL', 'Device UI was wrong']
                 if setup_ref == setup_ref_title_2:
                     if ocr_res[1] == setup_ref_title_2:
-                        if isinstance(val, str):
+                        if isinstance(val, str) and not val.isdigit():
                             if current_modbus.registers[0] == 1:
                                 setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 1/{current_modbus.registers[0]}', 'AccuraSM = N/A']
                                 result_condition_1 = True
                             else:
-                                setup_result = ['FAIL', "Modbus was wrong"]
+                                setup_result = ['FAIL', f'Modbus = 1/{current_modbus.registers[0]}']
                         else:
                             if words == 1:
-                                if current_modbus.registers[0] == setup_ref_title_2:
+                                if current_modbus.registers[0] == int(setup_ref_title_2):
                                     setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}', 'AccuraSM = N/A']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = ['FAIL', 'Modbus was wrong']
+                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}']
                             else:
-                                if full_32 == setup_ref_title_2:
+                                if full_32 == int(setup_ref_title_2):
                                     setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{full_32}', 'AccuraSM = N/A']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = ['FAIL', 'Modbus was wrong']
+                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_2}/{full_32}']
                     else:
                         setup_result = ['FAIL', 'Device UI was wrong']
             else:
@@ -602,7 +597,7 @@ class Evaluation:
             return setup_result, result_condition_1
         
         if ocr_res:
-            setup_result, ressult_condition = check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2)
+            setup_result, ressult_condition_1 = check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2)
         else:
             setup_result = ['OCR result is None']
 
@@ -645,7 +640,7 @@ class Evaluation:
             result_condition_2 = True
             print("모든 변경되지 말아야 할 레지스터가 정상입니다.")
 
-        overall_result = 'PASS' if ressult_condition and result_condition_2 else 'FAIL'
+        overall_result = 'PASS' if ressult_condition_1 and result_condition_2 else 'FAIL'
         
         return title, setup_result, modbus_result, overall_result
 

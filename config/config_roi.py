@@ -76,13 +76,13 @@ class ConfigROI(Enum):
     s_wiring_2 = ["Wye", "Delta"]
     s_min_meas_sec_ln_vol_1 = ['Min. Meas. Secondary L-N Volt. [V]']
     s_min_meas_sec_ln_vol_2 = ['0', '10']
-    s_vt_primary_ll_vol_1 = ['VT Primary L-L Voltage [V]']
-    s_vt_primary_ll_vol_2 = ['50', '999999']
+    s_vt_test_ll_vol_1 = ['VT Primary L-L Voltage [V]']
+    s_vt_test_ll_vol_2 = ['50.0', '999999.0']
     s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
-    s_vt_secondary_ll_vol_2 = ['50', '220']
+    s_vt_secondary_ll_vol_2 = ['50.0', '220.0']
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
     s_primary_reference_vol_2 = ['Line-to-Line', 'Line-to-Neutral']
-    s_primary_reference_vol_3 = ['50', '999999']
+    s_primary_reference_vol_3 = ['50.0', '999999.0']
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
     s_sliding_reference_vol_2 = ['Disable', 'Enable']
     s_rotation_sequence_1 = ['Rotating Sequence']
@@ -243,13 +243,14 @@ class Configs():
             ConfigROI.s_wiring_2: [n*x for x in [175, 216, 298, 35]],
             ConfigROI.s_min_meas_sec_ln_vol_1: [n*x for x in [476, 182, 298, 34]],
             ConfigROI.s_min_meas_sec_ln_vol_2: [n*x for x in [740, 216, 34, 35]],
-            ConfigROI.s_vt_primary_ll_vol_1 : [n*x for x in [175, 254, 298, 34]],
-            ConfigROI.s_vt_primary_ll_vol_2 : [n*x for x in [175, 288, 298, 35]],
-            ConfigROI.s_vt_secondary_ll_vol_1 : [n*x for x in [476, 254, 298, 34]],
-            ConfigROI.s_vt_secondary_ll_vol_2 : [n*x for x in [476, 288, 298, 35]],
-            ConfigROI.s_primary_reference_vol_1 : [n*x for x in [175, 326, 298, 34]],
-            ConfigROI.s_primary_reference_vol_2 : [n*x for x in [175, 360, 298, 35]],
-            ConfigROI.s_primary_reference_vol_3 : [n*x for x in [175, 360, 298, 35]],
+            ConfigROI.s_vt_test_ll_vol_1: [n*x for x in [175, 254, 298, 34]],
+            # ConfigROI.s_vt_primary_ll_vol_2: [n*x for x in [175, 288, 298, 34]],
+            ConfigROI.s_vt_test_ll_vol_2: [n*x for x in [340, 292, 133, 28]],
+            ConfigROI.s_vt_secondary_ll_vol_1: [n*x for x in [476, 254, 298, 34]],
+            ConfigROI.s_vt_secondary_ll_vol_2: [n*x for x in [476, 288, 298, 35]],
+            ConfigROI.s_primary_reference_vol_1: [n*x for x in [175, 326, 298, 34]],
+            ConfigROI.s_primary_reference_vol_2: [n*x for x in [175, 360, 298, 35]],
+            ConfigROI.s_primary_reference_vol_3: [n*x for x in [175, 360, 298, 35]],
              
         }
         return params

@@ -31,7 +31,7 @@ class OCRManager:
     def update_phasor_condition(self, new_c):
         self.phasor_condition = new_c
 
-    def ocr_basic(self, image, roi_keys):
+    def ocr_basic(self, image, roi_keys, test_type):
         image = cv2.imread(image)
         if image is None:
             print(f"이미지를 읽을 수 없습니다: {image}")
@@ -42,16 +42,23 @@ class OCRManager:
         ocr_results = {}
         for roi_key in roi_keys:
             # 이미지 처리
-            if self.phasor_condition == 0:
+            if self.phasor_condition == 0 and test_type == 0:
                 self.update_n(3)
                 resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                 denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
                 kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
                 sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
             
-            elif self.phasor_condition == 1:
+            elif self.phasor_condition == 1 and test_type == 0:
                 self.update_n(3)
                 sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+            
+            elif test_type == 1:
+                self.update_n(2)
+                resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
+                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
 
             else:
                 print(f"Error {self.phasor_condition}")
@@ -80,7 +87,7 @@ class OCRManager:
                             confidence = float(confidence)
                             original_results.append((coords, text, confidence))
                             # 신뢰도 검사
-                            if confidence >= 0.90:
+                            if confidence >= 0.97:
                                 pass
                                 # extracted_texts.append(text)
                             else:
