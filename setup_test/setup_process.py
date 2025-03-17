@@ -1,5 +1,6 @@
 import time
-from function.func_ocr import OCRManager
+from function.func_ocr import PaddleOCRManager
+from function.func_ocr import EasyOCRManager
 from function.func_touch import TouchManager
 from function.func_modbus import ModbusLabels
 from function.func_evaluation import Evaluation
@@ -10,7 +11,8 @@ from config.config_map import ConfigModbusMap as ecm
 from config.config_map import ConfigInitialValue as civ
 
 image_directory = r"\\10.10.20.30\screenshot"
-ocr_func = OCRManager()
+paddleocr_func = PaddleOCRManager()
+easyocr_func = EasyOCRManager()
 
 class SetupTest:
      
@@ -36,7 +38,7 @@ class SetupTest:
 		self.touch_manager.screenshot()
 		image_path = self.eval_manager.load_image_file(search_pattern)
 		setup = 1
-		ocr_results = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)
+		ocr_results = paddleocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)
 		except_addr = {except_address}
 		target_address = except_address
 		reference_value = ref_value
@@ -83,60 +85,60 @@ class SetupTest:
 		# ref_value = roi_keys[1].value[0]
 		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 
-		# ## min.meas.secondary l-n volt 5-> 0
-		# self.touch_manager.touch_menu(cft.touch_data_view_2.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		# roi_keys = [cfr.s_min_meas_sec_ln_vol_1, cfr.s_min_meas_sec_ln_vol_2]
-		# except_addr = ecm.addr_min_measured_secondary_ln_voltage
-		# ref_value = roi_keys[1].value[0]
-		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		## min.meas.secondary l-n volt 5-> 0
+		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_min_meas_sec_ln_vol_1, cfr.s_min_meas_sec_ln_vol_2]
+		except_addr = ecm.addr_min_measured_secondary_ln_voltage
+		ref_value = roi_keys[1].value[0]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 		
-		# ### min.meas.secondary l-n volt 0-> 11
-		# self.touch_manager.touch_menu(cft.touch_data_view_2.value)
-		# for i in range(2):
-		# 	self.touch_manager.touch_menu(cft.touch_btn_number_1.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		# roi_keys = [cfr.s_min_meas_sec_ln_vol_1, cfr.s_min_meas_sec_ln_vol_2]
-		# except_addr = ecm.addr_min_measured_secondary_ln_voltage
-		# ref_value = roi_keys[1].value[1]
-		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
-		# ### min.meas.secondary l-n volt 초기화
-		# self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_min_measured_secondary_ln_voltage, bit16=5)
+		### min.meas.secondary l-n volt 0-> 11
+		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
+		for i in range(2):
+			self.touch_manager.touch_menu(cft.touch_btn_number_1.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_min_meas_sec_ln_vol_1, cfr.s_min_meas_sec_ln_vol_2]
+		except_addr = ecm.addr_min_measured_secondary_ln_voltage
+		ref_value = roi_keys[1].value[1]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		### min.meas.secondary l-n volt 초기화
+		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_min_measured_secondary_ln_voltage, bit16=5)
 
-		# ## VT Primary L-L Voltage 49 --> roi 2번 좌표가 아래로 뒤집어짐? 좌표 확인 필요
-		# self.touch_manager.touch_menu(cft.touch_data_view_3.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_number_4.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_number_9.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		# roi_keys = [cfr.s_vt_test_ll_vol_1, cfr.s_vt_test_ll_vol_2]
-		# except_addr = ecm.addr_vt_primary_ll_voltage
-		# ref_value = roi_keys[1].value[0]
-		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		## VT Primary L-L Voltage 49 --> roi 2번 좌표가 아래로 뒤집어짐? 좌표 확인 필요
+		self.touch_manager.touch_menu(cft.touch_data_view_3.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_4.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_9.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_vt_test_ll_vol_1, cfr.s_vt_test_ll_vol_2]
+		except_addr = ecm.addr_vt_primary_ll_voltage
+		ref_value = roi_keys[1].value[0]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 
-		# ## VT Primary L-L Voltage 1000000
-		# self.touch_manager.touch_menu(cft.touch_data_view_3.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_number_1.value)
-		# for i in range(6):
-		# 	self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		# roi_keys = [cfr.s_vt_test_ll_vol_1, cfr.s_vt_test_ll_vol_2]
-		# except_addr = ecm.addr_vt_primary_ll_voltage
-		# ref_value = roi_keys[1].value[1]
-		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
-		# ### VT Primary L-L Voltage 초기화
-		# self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_vt_primary_ll_voltage, bit32=1900)
+		## VT Primary L-L Voltage 1000000
+		self.touch_manager.touch_menu(cft.touch_data_view_3.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_1.value)
+		for i in range(6):
+			self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_vt_test_ll_vol_1, cfr.s_vt_test_ll_vol_2]
+		except_addr = ecm.addr_vt_primary_ll_voltage
+		ref_value = roi_keys[1].value[1]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		### VT Primary L-L Voltage 초기화
+		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_vt_primary_ll_voltage, bit32=1900)
 
 		### VT Secondary L-L Voltage 49
-		# self.touch_manager.touch_menu(cft.touch_data_view_4.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_number_4.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_number_9.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		self.touch_manager.touch_menu(cft.touch_data_view_4.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_4.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_9.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
 		roi_keys = [cfr.s_vt_secondary_ll_vol_1, cfr.s_vt_secondary_ll_vol_2]
 		except_addr = ecm.addr_vt_secondary_ll_voltage
 		ref_value = roi_keys[1].value[0]

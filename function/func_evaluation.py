@@ -8,7 +8,7 @@ import glob
 import pandas as pd
 from collections import Counter
 
-from function.func_ocr import OCRManager
+from function.func_ocr import PaddleOCRManager
 from function.func_connection import ConnectionManager
 
 from config.config_roi import Configs
@@ -20,7 +20,7 @@ from config.config_map import ConfigInitialValue as civ
 class Evaluation:
 
     reset_time = None
-    ocr_manager = OCRManager()
+    ocr_manager = PaddleOCRManager()
     config_data = Configs()
     rois = config_data.roi_params()
     connect_manager = ConnectionManager()
@@ -600,6 +600,7 @@ class Evaluation:
             setup_result, ressult_condition_1 = check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2)
         else:
             setup_result = ['OCR result is None']
+            ressult_condition_1 = False
 
         evaluation_results = {}
 

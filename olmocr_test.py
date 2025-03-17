@@ -1,10 +1,12 @@
+from gpt4all import GPT4All
+import easyocr
 import numpy as np
 import cv2
 from paddleocr import PaddleOCR
-import easyocr
 from itertools import chain
 
 from config.config_roi import Configs
+from config.config_roi import ConfigROI as cfr
 
 class PaddleOCRManager:
 
@@ -56,10 +58,10 @@ class PaddleOCRManager:
             
             elif test_type == 1:
                 self.update_n(2)
-                sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                # sharpened_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
-                # kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-                # sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
+                resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
+                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
 
             else:
                 print(f"Error {self.phasor_condition}")
@@ -70,9 +72,9 @@ class PaddleOCRManager:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
-                cv2.imshow("test", roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                # cv2.imshow("test", roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 
                 text_results = ocr.ocr(roi_image, cls=False)
                 original_results = []
@@ -88,7 +90,7 @@ class PaddleOCRManager:
                             confidence = float(confidence)
                             original_results.append((coords, text, confidence))
                             # 신뢰도 검사
-                            if confidence >= 0.97:
+                            if confidence >= 0.98:
                                 pass
                                 # extracted_texts.append(text)
                             else:
@@ -250,7 +252,7 @@ class PaddleOCRManager:
                     continue  # 'V'를 결과에서 제외하고 다음 단어로 이동
             processed_words.append(word)
         return ' '.join(processed_words)
-    
+
 class EasyOCRManager:
 
     def __init__(self, n=3):
@@ -320,10 +322,6 @@ class EasyOCRManager:
 
                 # EasyOCR 실행
                 results = reader.readtext(roi_image)
-                
-                cv2.imshow("test", roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
 
                 extracted_texts = []
                 low_confidence_texts = []
@@ -405,3 +403,53 @@ class EasyOCRManager:
                     continue  # 'V'를 결과에서 제외하고 다음 단어로 이동
             processed_words.append(word)
         return ' '.join(processed_words)
+
+def run_ocr_and_correct(image_path, model_path):
+    ocr_man = PaddleOCRManager()
+    easyocr_man = EasyOCRManager()
+   
+
+    # 2) 이미지 OCR
+    setup = 1
+    roi_keys = [cfr.s_vt_primary_ll_vol_1, cfr.s_vt_primary_ll_vol_2]
+    result = easyocr_man.easyocr_basic(image_path, roi_keys, setup)
+
+    print(f'{result}')
+
+    # 3) GPT4All 모델 로딩
+    try:
+        gpt = GPT4All(model_name=model_name, device='gpu')
+    except Exception as e:
+        print(e)
+        return
+    #...
+
+    # 4) 프롬프트 구성
+    prompt = f"""
+    The following text was recognized from an image rendered in the 'Roboto' font:
+
+    {result}
+
+    Please correct any spelling errors, punctuation issues, and other mistakes naturally.
+    Output only the corrected text, without additional commentary.
+    and we almost not use '()'.
+    """
+
+    # 5) 교정 결과 얻기
+    if gpt:
+        with gpt.chat_session():
+            corrected_text = gpt.generate(prompt, max_tokens=1024) # max_tokens 증가
+        return corrected_text
+    else:
+        return ""
+
+if __name__ == "__main__":
+    image_file = r"C:\rootech\AutoProgram\results\2025-03-14_17-43-01\2025-03-14_17_55_29_M_S_ME_Voltage.png"
+    model_name = "qwen2.5-coder-7b-instruct-q4_0.gguf"
+
+    corrected = run_ocr_and_correct(image_file, model_name)
+    cleaned_output = corrected.replace("<|im_start|>", "").replace("<|im_end|>", "")
+    print("=== 최종 교정 결과 ===")
+    print(corrected)
+
+

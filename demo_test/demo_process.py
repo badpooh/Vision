@@ -5,7 +5,7 @@ from datetime import datetime
 
 from function.func_connection import ConnectionManager
 from function.func_evaluation import Evaluation
-from function.func_ocr import OCRManager
+from function.func_ocr import PaddleOCRManager
 from function.func_touch import TouchManager
 from function.func_modbus import ModbusLabels
 
@@ -17,7 +17,7 @@ from config.config_touch import ConfigTouch as cft
 from demo_test.demo_interface import Interface
 
 image_directory = r"\\10.10.20.30\screenshot"
-ocr_func = OCRManager()
+ocr_func = PaddleOCRManager()
 
 class DemoProcess:
 
