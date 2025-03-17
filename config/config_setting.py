@@ -160,4 +160,5 @@ class SettingList:
         ('anal_curr_sym', 'demo_mea_anal_cursym'),
         ('anal_curr_unbal', 'demo_mea_anal_currunbal'), #30
 		('m_s_vol', 'setup_meter_s_m_vol'),
+		('m_s_curr', 'setup_meter_s_m_curr')
 		]

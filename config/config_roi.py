@@ -76,8 +76,8 @@ class ConfigROI(Enum):
     s_wiring_2 = ["Wye", "Delta"]
     s_min_meas_sec_ln_vol_1 = ['Min. Meas. Secondary L-N Volt. [V]']
     s_min_meas_sec_ln_vol_2 = ['0', '10']
-    s_vt_test_ll_vol_1 = ['VT Primary L-L Voltage [V]']
-    s_vt_test_ll_vol_2 = ['50.0', '999999.0']
+    s_vt_primary_ll_vol_1 = ['VT Primary L-L Voltage [V]']
+    s_vt_primary_ll_vol_2 = ['50.0', '999999.0']
     s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
     s_vt_secondary_ll_vol_2 = ['50.0', '220.0']
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
@@ -87,6 +87,20 @@ class ConfigROI(Enum):
     s_sliding_reference_vol_2 = ['Disable', 'Enable']
     s_rotation_sequence_1 = ['Rotating Sequence']
     s_rotation_sequence_2 = ['Positive', 'Negative']
+    s_ct_primary_curr_1 = ['CT Primary Current [A]']
+    s_ct_primary_curr_2 = ['5', '99999']
+    s_ct_secondary_curr_1 = ['CT Secondary Current [A]']
+    s_ct_secondary_curr_2 = ['5', '10']
+    s_reference_curr_1 = ['Reference Current [A]']
+    s_reference_curr_2 = ['5', '99999']
+    s_min_meas_curr_1 = ['Min. Measured Current [mA]']
+    s_min_meas_curr_2 = ['0', '100']
+    s_tdd_reference_selection_1 = ['TDD Reference Selection']
+    s_tdd_reference_selection_2 = ['TDD Nominal Current', 'Peak Demand Current']
+    s_tdd_nominal_curr_1 = ['TDD Nominal Current [A]']
+    s_tdd_nominal_curr_2 = ['Reference Current', 'Reference Current']
+    s_tdd_nominal_curr_3 = ['1', '99999']
+
     
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
     color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]
@@ -243,14 +257,31 @@ class Configs():
             ConfigROI.s_wiring_2: [n*x for x in [175, 216, 298, 35]],
             ConfigROI.s_min_meas_sec_ln_vol_1: [n*x for x in [476, 182, 298, 34]],
             ConfigROI.s_min_meas_sec_ln_vol_2: [n*x for x in [740, 216, 34, 35]],
-            ConfigROI.s_vt_test_ll_vol_1: [n*x for x in [175, 254, 298, 34]],
+            ConfigROI.s_vt_primary_ll_vol_1: [n*x for x in [175, 254, 298, 34]],
             # ConfigROI.s_vt_primary_ll_vol_2: [n*x for x in [175, 288, 298, 34]],
-            ConfigROI.s_vt_test_ll_vol_2: [n*x for x in [340, 292, 133, 28]],
+            ConfigROI.s_vt_primary_ll_vol_2: [n*x for x in [340, 292, 133, 28]],
             ConfigROI.s_vt_secondary_ll_vol_1: [n*x for x in [476, 254, 298, 34]],
             ConfigROI.s_vt_secondary_ll_vol_2: [n*x for x in [476, 288, 298, 35]],
             ConfigROI.s_primary_reference_vol_1: [n*x for x in [175, 326, 298, 34]],
             ConfigROI.s_primary_reference_vol_2: [n*x for x in [175, 360, 298, 35]],
             ConfigROI.s_primary_reference_vol_3: [n*x for x in [175, 360, 298, 35]],
+            ConfigROI.s_sliding_reference_vol_1: [n*x for x in [476, 326, 298, 34]],
+            ConfigROI.s_sliding_reference_vol_2: [n*x for x in [476, 360, 298, 35]],
+            ConfigROI.s_rotation_sequence_1: [n*x for x in [175, 398, 298, 34]],
+            ConfigROI.s_rotation_sequence_2: [n*x for x in [175, 432, 298, 35]],
+            ConfigROI.s_ct_primary_curr_1: [n*x for x in [175, 182, 298, 69]],
+            ConfigROI.s_ct_primary_curr_2: [n*x for x in [175, 216, 298, 35]],
+            ConfigROI.s_ct_secondary_curr_1: [n*x for x in [476, 182, 298, 34]],
+            ConfigROI.s_ct_secondary_curr_2: [n*x for x in [476, 216, 298, 35]],
+            ConfigROI.s_reference_curr_1: [n*x for x in [175, 254, 298, 34]],
+            ConfigROI.s_reference_curr_2: [n*x for x in [175, 288, 298, 35]],
+            ConfigROI.s_min_meas_curr_1: [n*x for x in [476, 254, 298, 34]],
+            ConfigROI.s_min_meas_curr_2: [n*x for x in [476, 288, 298, 35]],
+            ConfigROI.s_tdd_reference_selection_1: [n*x for x in [175, 326, 298, 34]],
+            ConfigROI.s_tdd_reference_selection_2: [n*x for x in [175, 360, 298, 35]],
+            ConfigROI.s_tdd_nominal_curr_1: [n*x for x in [476, 326, 298, 34]],
+            ConfigROI.s_tdd_nominal_curr_2: [n*x for x in [476, 360, 298, 35]],
+            ConfigROI.s_tdd_nominal_curr_3: [n*x for x in [476, 360, 298, 35]],
              
         }
         return params

@@ -55,7 +55,7 @@ class PaddleOCRManager:
                 sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
             
             elif test_type == 1:
-                self.update_n(2)
+                self.update_n(3)
                 sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                 # sharpened_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
                 # kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])

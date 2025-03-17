@@ -92,7 +92,12 @@ class TestProcess:
                 demo_test.demo_mea_anal_currunbal(base_save_path, test_mode, search_pattern)
             elif test_name == "m_s_vol":
                 setup_test.setup_meter_s_m_vol(base_save_path, search_pattern)
+            elif test_name == 'm_s_curr':
+                setup_test.setup_meter_s_m_curr(base_save_path, search_pattern)
             else:
                 print(f"Unknown test name: {test_name}")
+            
+        
+        
         else:
             print("demo_test_by_name Error")

@@ -539,10 +539,9 @@ class Evaluation:
             if title in ''.join(ocr_res[0]):
                 self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
                 current_modbus = self.connect_manager.setup_client.read_holding_registers(*ecm_address.value)
-                print(current_modbus.registers[0])
                 if words == 2:
-                    low_word = current_modbus.registers[0]
-                    high_word = current_modbus.registers[1]
+                    low_word = current_modbus.registers[1]
+                    high_word = current_modbus.registers[0]
                     full_32 = (high_word << 16) | low_word  # unsigned 32bit
                 val = ocr_res[1]
                 if setup_ref == setup_ref_title_1:

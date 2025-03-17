@@ -61,29 +61,29 @@ class SetupTest:
 	def setup_meter_s_m_vol(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
 		### wiring -> Delta
-		# self.touch_manager.btn_front_meter()
-		# self.touch_manager.btn_front_setup()
-		# self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-		# self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
-		# self.touch_manager.touch_menu(cft.touch_data_view_1.value)
-		# self.touch_manager.touch_password()
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		# roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
-		# except_addr = ecm.addr_wiring
-		# ref_value = roi_keys[1].value[1]
-		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+		self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
+		self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		self.touch_manager.touch_password()
+		self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
+		except_addr = ecm.addr_wiring
+		ref_value = roi_keys[1].value[1]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 		
-		# ### wiring -> Wye
-		# self.touch_manager.touch_menu(cft.touch_data_view_1.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_1.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		# roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
-		# except_addr = ecm.addr_wiring
-		# ref_value = roi_keys[1].value[0]
-		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		### wiring -> Wye
+		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_1.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
+		except_addr = ecm.addr_wiring
+		ref_value = roi_keys[1].value[0]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 
 		## min.meas.secondary l-n volt 5-> 0
 		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
@@ -114,7 +114,7 @@ class SetupTest:
 		self.touch_manager.touch_menu(cft.touch_btn_number_9.value)
 		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
 		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		roi_keys = [cfr.s_vt_test_ll_vol_1, cfr.s_vt_test_ll_vol_2]
+		roi_keys = [cfr.s_vt_primary_ll_vol_1, cfr.s_vt_primary_ll_vol_2]
 		except_addr = ecm.addr_vt_primary_ll_voltage
 		ref_value = roi_keys[1].value[0]
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
@@ -126,7 +126,7 @@ class SetupTest:
 			self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
 		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
 		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		roi_keys = [cfr.s_vt_test_ll_vol_1, cfr.s_vt_test_ll_vol_2]
+		roi_keys = [cfr.s_vt_primary_ll_vol_1, cfr.s_vt_primary_ll_vol_2]
 		except_addr = ecm.addr_vt_primary_ll_voltage
 		ref_value = roi_keys[1].value[1]
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
@@ -238,7 +238,57 @@ class SetupTest:
 		ref_value = roi_keys[1].value[0]
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 
+	def setup_meter_s_m_curr(self, base_save_path, search_pattern):
+		self.touch_manager.uitest_mode_start() 
+		### CT Primary Current 50 -> 5 (4로 변경)
+		# self.touch_manager.btn_front_meter()
+		# self.touch_manager.btn_front_setup()
+		# self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
+		# self.touch_manager.touch_menu(cft.touch_side_menu_2.value)
+		# self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		# self.touch_manager.touch_password()
+		# self.touch_manager.touch_menu(cft.touch_btn_number_4.value)
+		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_ct_primary_curr_1, cfr.s_ct_primary_curr_2]
+		except_addr = ecm.addr_ct_primary_current
+		ref_value = roi_keys[1].value[0]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		
+		### CT Primary Current 5 -> 99999 (100000로 변경)
+		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_1.value)
+		for i in range(5):
+			self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_ct_primary_curr_1, cfr.s_ct_primary_curr_2]
+		except_addr = ecm.addr_ct_primary_current
+		ref_value = roi_keys[1].value[1]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		### CT Primary Current 초기화(50)
+		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_ct_primary_current, bit32=50)
 
+		## CT Secondary Current 5-> 10 (11로 변경)
+		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_1.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_0.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_ct_secondary_curr_1, cfr.s_ct_secondary_curr_2]
+		except_addr = ecm.addr_ct_secondary_current
+		ref_value = roi_keys[1].value[1]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		
+		### CT Secondary Current 10-> 5 (4로 변경)
+		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_number_4.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_ct_secondary_curr_1, cfr.s_ct_secondary_curr_2]
+		except_addr = ecm.addr_ct_secondary_current
+		ref_value = roi_keys[1].value[0]
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
 
 
 
