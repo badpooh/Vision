@@ -4,6 +4,7 @@ from function.func_ocr import EasyOCRManager
 from function.func_touch import TouchManager
 from function.func_modbus import ModbusLabels
 from function.func_evaluation import Evaluation
+from function.func_autogui import AutoGUI
 
 from config.config_touch import ConfigTouch as cft
 from config.config_roi import ConfigROI as cfr
@@ -19,11 +20,12 @@ class SetupTest:
 	touch_manager = TouchManager()
 	modbus_label = ModbusLabels()
 	eval_manager = Evaluation()
+	autogui_manager = AutoGUI()
 
 	def __init__(self):
 		pass
 
-	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value):
+	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, coordinates=None):
 		"""
 		Args:
 			base_save_path (str): 결과 저장 디렉토리
@@ -31,7 +33,8 @@ class SetupTest:
 			roi_keys (list): ROI 키 (길이 2 이상 가정)
 			except_address (Enum): 검사에서 제외할 단일 주소 (ex: ecm.addr_wiring)
 			access_address (tuple): 측정 접근 주소 (ex: (6000,1))
-
+			template_path: AccuraSM 정답 png 파일
+			coordinates (list): 미정
 		Returns:
 			None
 		"""
@@ -45,6 +48,9 @@ class SetupTest:
 		compare_title = roi_keys[0].value[0]
 		ref_title_1 = roi_keys[1].value[0]
 		ref_title_2 = roi_keys[1].value[1]
+		self.autogui_manager.m_s_meas_refresh(image_path, base_save_path, compare_title)
+		time.sleep(0.6)
+		sm_res, sm_condition = self.autogui_manager.find_and_click(template_path, image_path, base_save_path, compare_title)
 		title, setup_result, modbus_result, overall_result = self.eval_manager.eval_setup_test(
 			ocr_res=ocr_results,
 			setup_ref=reference_value,
@@ -53,7 +59,9 @@ class SetupTest:
 			ecm_address=target_address,
 			setup_ref_title_1=ref_title_1,
 			setup_ref_title_2=ref_title_2,
-			except_addr=except_addr
+			except_addr=except_addr,
+			sm_res=sm_res,
+			sm_condition = sm_condition
 			)
 		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result, title)
 		time.sleep(0.5)
@@ -73,7 +81,8 @@ class SetupTest:
 		roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
 		except_addr = ecm.addr_wiring
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = r"C:\PNT\AutoProgram\Vision\image_ref\103.wiring_delta.png"
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		
 		### wiring -> Wye
 		self.touch_manager.touch_menu(cft.touch_data_view_1.value)

@@ -69,3 +69,13 @@ class ConfigImgRef(Enum):
     img_ref_harmonics_curr_rms_none = r".\image_ref\26.img_ref_harmonics_curr_rms_none.png"
     img_ref_waveform_all = r".\image_ref\41.img_ref_waveform_all.png"
     img_ref_waveform_all_none = r".\image_ref\42.img_ref_waveform_all_none.png"
+
+    ### AccuraSM
+    img_ref_meas_refresh = r'.\image_ref\101.meas_compare_apply_refresh.png'
+    img_ref_wiring_wye = r'.\image_ref\102.wiring_wye.png'
+    img_ref_wiring_delta = r'.\image_ref\103.wiring_delta.png'
+    img_ref_min_meas_secondary_ln_vol_0 = r'.\image_ref\104.min_meas_secondary_ln_vol_0.png'
+    img_ref_min_meas_secondary_ln_vol_10 = r'.\image_ref\105.min_meas_secondary_ln_vol_10.png'
+    img_ref_vt_primary_ll_vol_50 = r'.\image_ref\106.vt_primary_ll_vol_50.0.png'
+
+

@@ -3,8 +3,8 @@ import numpy as np
 import pyautogui
 import time
 
-def opencv_find_and_click():
-    template_path = r'C:\rootech\AutoProgram\image_test\naver.png'
+def opencv_find_and_click(template_path, coordinates):
+    
     # 1) 화면 전체 스크린샷
     screenshot = pyautogui.screenshot()
     screenshot = np.array(screenshot)  # Pillow → np array (RGB)
@@ -24,10 +24,13 @@ def opencv_find_and_click():
 
     threshold = 0.8
     if max_val >= threshold:
-        # max_loc가 템플릿의 left-top 위치
+        w_1, h_1 = coordinates
+
         top_left = max_loc
-        center_x = top_left[0] + w//2
-        center_y = top_left[1] + h//2
+        center_x = top_left[0] + w_1*w
+        center_y = top_left[1] + h_1*h
+
+        ### 181, 12
 
         # 4) 마우스 클릭
         pyautogui.moveTo(center_x, center_y, duration=0.5)
@@ -48,4 +51,19 @@ def opencv_find_and_click():
         print("템플릿 매칭 실패 (score=%.3f)" % max_val)
 
 if __name__ == "__main__":
-    opencv_find_and_click()
+    template_path = r"C:\PNT\AutoProgram\Vision\image_test\wiring_wye.png"
+    coordinates = [0.75, 0.5]
+    opencv_find_and_click(template_path, coordinates)
+    time.sleep(1)
+    template_path = r"C:\PNT\AutoProgram\Vision\image_test\wye_delta.png"
+    coordinates = [0.5, 0.75]
+    opencv_find_and_click(template_path, coordinates)
+    template_path = r"C:\PNT\AutoProgram\Vision\image_test\meas_apply_refresh.png"
+    coordinates = [0.33, 0.5]
+    opencv_find_and_click(template_path, coordinates)
+    template_path = r"C:\PNT\AutoProgram\Vision\image_test\warning_confirm_cancel.png"
+    coordinates = [0.7, 0.83]
+    opencv_find_and_click(template_path, coordinates)
+    template_path = r"C:\PNT\AutoProgram\Vision\image_test\apply_yes_no_cancel.png"
+    coordinates = [0.15, 0.5]
+    opencv_find_and_click(template_path, coordinates)

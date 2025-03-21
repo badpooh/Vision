@@ -516,7 +516,7 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
-    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, sm_res=None, except_addr=None):
+    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, sm_res, sm_condition, except_addr=None):
         """
         ocr_res: OCR 결과 리스트
         sm_res:  AccurSM 결과
@@ -547,44 +547,53 @@ class Evaluation:
                 if setup_ref == setup_ref_title_1:
                     if ocr_res[1] == setup_ref_title_1:
                         if isinstance(val, str) and not val.isdigit():
-                            if current_modbus.registers[0] == 0:
-                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                            if current_modbus.registers[0] == 0 and sm_condition == True:
+                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
                                 result_condition_1 = True
                             else:
-                                setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}']
+                                if sm_condition == True:
+                                    setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}']
+                                else:
+                                    setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
                         else:
                             if words == 1:
-                                if ((current_modbus.registers[0])/10) == int(setup_ref_title_1):
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                                if ((current_modbus.registers[0])/10) == int(setup_ref_title_1) and sm_condition == True:
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}']
+                                    if sm_condition == True:
+                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}']
+                                    else:
+                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref_title_1}/{sm_res}']
                             else:
-                                if full_32 == int(setup_ref_title_1):
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{full_32}', 'AccuraSM = N/A']
+                                if full_32 == int(setup_ref_title_1) and sm_condition == True:
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{full_32}', f'AccuraSM = {setup_ref}/{sm_res}']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}']
+                                    if sm_condition == True:
+                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}']
+                                    else:
+                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}', f'AccuraSM = {setup_ref_title_1}/{sm_res}']
                     else:
                         setup_result = ['FAIL', 'Device UI was wrong']
                 if setup_ref == setup_ref_title_2:
                     if ocr_res[1] == setup_ref_title_2:
                         if isinstance(val, str) and not val.isdigit():
                             if current_modbus.registers[0] == 1:
-                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 1/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 1/{current_modbus.registers[0]}', f'AccuraSM = {sm_res}']
                                 result_condition_1 = True
                             else:
                                 setup_result = ['FAIL', f'Modbus = 1/{current_modbus.registers[0]}']
                         else:
                             if words == 1:
                                 if current_modbus.registers[0] == int(setup_ref_title_2):
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}', 'AccuraSM = N/A']
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
                                     setup_result = ['FAIL', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}']
                             else:
                                 if full_32 == int(setup_ref_title_2):
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{full_32}', 'AccuraSM = N/A']
+                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{full_32}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
                                     setup_result = ['FAIL', f'Modbus = {setup_ref_title_2}/{full_32}']
