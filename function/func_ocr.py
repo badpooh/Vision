@@ -38,7 +38,8 @@ class PaddleOCRManager:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
 
-        ocr = PaddleOCR(use_gpu=True, use_angle_cls=False, lang='en', use_space_char=True, show_log=False)
+        ocr = PaddleOCR(use_gpu=True, use_angle_cls=False, lang='en', use_space_char=True, show_log=False, rec_model_dir="C:/rootech/AutoProgram/Vision/rec/")
+        #  det=False, 
 
         ocr_results = {}
         for roi_key in roi_keys:
@@ -55,11 +56,11 @@ class PaddleOCRManager:
                 sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
             
             elif test_type == 1:
-                self.update_n(3)
-                sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                # sharpened_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
-                # kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-                # sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
+                self.update_n(2)
+                resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+                denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
+                kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+                sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
 
             else:
                 print(f"Error {self.phasor_condition}")
@@ -89,6 +90,7 @@ class PaddleOCRManager:
                             original_results.append((coords, text, confidence))
                             # 신뢰도 검사
                             if confidence >= 0.97:
+                                print(confidence)
                                 pass
                                 # extracted_texts.append(text)
                             else:
@@ -199,7 +201,7 @@ class PaddleOCRManager:
                                 new_text = new_text.strip()
                                 new_confidence = float(new_confidence)
 
-                                if new_confidence >= 0.94 or new_text.lower() == "c" or ((new_text.upper() == "V0" or new_text.upper() == "U0") and new_confidence >= 0.85):
+                                if new_confidence >= 0.98 or new_text.lower() == "c" or ((new_text.upper() == "V0" or new_text.upper() == "U0") and new_confidence >= 0.85):
                                     # original_results에서 해당 좌표를 찾아 업데이트
                                     for i, (orig_coords, orig_text, orig_conf) in enumerate(original_results):
                                         if orig_coords == coords:
