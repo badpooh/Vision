@@ -77,5 +77,16 @@ class ConfigImgRef(Enum):
     img_ref_min_meas_secondary_ln_vol_0 = r'.\image_ref\104.min_meas_secondary_ln_vol_0.png'
     img_ref_min_meas_secondary_ln_vol_10 = r'.\image_ref\105.min_meas_secondary_ln_vol_10.png'
     img_ref_vt_primary_ll_vol_50 = r'.\image_ref\106.vt_primary_ll_vol_50.0.png'
+    img_ref_vt_primary_ll_vol_999999 = r'.\image_ref\107.vt_primary_ll_vol_999999.0.png'
+    img_ref_vt_secondary_ll_vol_50 = r'.\image_ref\108.vt_secondary_ll_vol_50.png'
+    img_ref_vt_secondary_ll_vol_220 = r'.\image_ref\109.vt_secondary_ll_vol_220.png'
+    img_ref_primary_reference_vol_mode_ll = r'.\image_ref\110.primary_reference_vol_mode_ll.png'
+    img_ref_primary_reference_vol_mode_ln = r'.\image_ref\111.primary_reference_vol_mode_ln.png'
+    img_ref_primary_reference_vol_50 = r'.\image_ref\112.primary_reference_vol_50.png'
+    img_ref_primary_reference_vol_999999 = r'.\image_ref\112.primary_reference_vol_999999.png'
+    img_ref_sliding_reference_vol_disable = r'.\image_ref\113.sliding_reference_vol_disable.png'
+    img_ref_sliding_reference_vol_enable = r'.\image_ref\114.sliding_reference_vol_enable.png'
+    img_ref_rotating_sequence_positive = r'.\image_ref\115.rotating_sequence_positive.png'
+    img_ref_rotating_sequence_negative = r'.\image_ref\116.rotating_sequence_negative.png'
 
 

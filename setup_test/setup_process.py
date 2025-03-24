@@ -10,6 +10,7 @@ from config.config_touch import ConfigTouch as cft
 from config.config_roi import ConfigROI as cfr
 from config.config_map import ConfigModbusMap as ecm
 from config.config_map import ConfigInitialValue as civ
+from config.config_ref import ConfigImgRef
 
 image_directory = r"\\10.10.20.30\screenshot"
 paddleocr_func = PaddleOCRManager()
@@ -81,7 +82,7 @@ class SetupTest:
 		roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
 		except_addr = ecm.addr_wiring
 		ref_value = roi_keys[1].value[1]
-		template_path = r"C:\PNT\AutoProgram\Vision\image_ref\103.wiring_delta.png"
+		template_path = ConfigImgRef.img_ref_wiring_delta
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		
 		### wiring -> Wye
@@ -92,7 +93,8 @@ class SetupTest:
 		roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
 		except_addr = ecm.addr_wiring
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_wiring_wye
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 
 		## min.meas.secondary l-n volt 5-> 0
 		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
@@ -102,7 +104,8 @@ class SetupTest:
 		roi_keys = [cfr.s_min_meas_sec_ln_vol_1, cfr.s_min_meas_sec_ln_vol_2]
 		except_addr = ecm.addr_min_measured_secondary_ln_voltage
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_min_meas_secondary_ln_vol_0
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		
 		### min.meas.secondary l-n volt 0-> 11
 		self.touch_manager.touch_menu(cft.touch_data_view_2.value)
@@ -113,7 +116,8 @@ class SetupTest:
 		roi_keys = [cfr.s_min_meas_sec_ln_vol_1, cfr.s_min_meas_sec_ln_vol_2]
 		except_addr = ecm.addr_min_measured_secondary_ln_voltage
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_min_meas_secondary_ln_vol_10
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### min.meas.secondary l-n volt 초기화
 		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_min_measured_secondary_ln_voltage, bit16=5)
 
@@ -126,7 +130,8 @@ class SetupTest:
 		roi_keys = [cfr.s_vt_primary_ll_vol_1, cfr.s_vt_primary_ll_vol_2]
 		except_addr = ecm.addr_vt_primary_ll_voltage
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_vt_primary_ll_vol_50
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 
 		## VT Primary L-L Voltage 1000000
 		self.touch_manager.touch_menu(cft.touch_data_view_3.value)
@@ -138,7 +143,8 @@ class SetupTest:
 		roi_keys = [cfr.s_vt_primary_ll_vol_1, cfr.s_vt_primary_ll_vol_2]
 		except_addr = ecm.addr_vt_primary_ll_voltage
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_vt_primary_ll_vol_999999
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### VT Primary L-L Voltage 초기화
 		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_vt_primary_ll_voltage, bit32=1900)
 
@@ -151,7 +157,8 @@ class SetupTest:
 		roi_keys = [cfr.s_vt_secondary_ll_vol_1, cfr.s_vt_secondary_ll_vol_2]
 		except_addr = ecm.addr_vt_secondary_ll_voltage
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_vt_secondary_ll_vol_50
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### VT Secondary L-L Voltage 221
 		self.touch_manager.touch_menu(cft.touch_data_view_4.value)
 		for i in range(2):
@@ -162,7 +169,8 @@ class SetupTest:
 		roi_keys = [cfr.s_vt_secondary_ll_vol_1, cfr.s_vt_secondary_ll_vol_2]
 		except_addr = ecm.addr_vt_secondary_ll_voltage
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_vt_secondary_ll_vol_220
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### VT Primary L-L Voltage 초기화
 		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_vt_secondary_ll_voltage, bit16=1900)
 
@@ -174,7 +182,8 @@ class SetupTest:
 		roi_keys = [cfr.s_primary_reference_vol_1, cfr.s_primary_reference_vol_2]
 		except_addr = ecm.addr_reference_voltage_mode
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_primary_reference_vol_mode_ln
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### Primary Reference Voltage L-N -> L-L
 		self.touch_manager.touch_menu(cft.touch_data_view_5.value)
 		self.touch_manager.touch_menu(cft.touch_btn_ref_ll.value)
@@ -183,7 +192,8 @@ class SetupTest:
 		roi_keys = [cfr.s_primary_reference_vol_1, cfr.s_primary_reference_vol_2]
 		except_addr = ecm.addr_reference_voltage_mode
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_primary_reference_vol_mode_ll
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 
 		### Primary Reference Voltage 49
 		self.touch_manager.touch_menu(cft.touch_data_view_5.value)
@@ -194,7 +204,8 @@ class SetupTest:
 		roi_keys = [cfr.s_primary_reference_vol_1, cfr.s_primary_reference_vol_3]
 		except_addr = ecm.addr_reference_voltage
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_primary_reference_vol_50
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### Primary Reference Voltage 1000000
 		self.touch_manager.touch_menu(cft.touch_data_view_5.value)
 		self.touch_manager.touch_menu(cft.touch_btn_ref_num_1.value)
@@ -205,7 +216,8 @@ class SetupTest:
 		roi_keys = [cfr.s_primary_reference_vol_1, cfr.s_primary_reference_vol_3]
 		except_addr = ecm.addr_reference_voltage
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_primary_reference_vol_999999
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### VT Primary L-L Voltage 초기화
 		self.modbus_label.setup_target_initialize(ecm.addr_measurement_setup_access, ecm.addr_reference_voltage, bit32=1900)
 
@@ -217,7 +229,8 @@ class SetupTest:
 		roi_keys = [cfr.s_sliding_reference_vol_1, cfr.s_sliding_reference_vol_2]
 		except_addr = ecm.addr_sliding_reference_voltage_type
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_sliding_reference_voltage_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_sliding_reference_vol_enable
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_sliding_reference_voltage_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### Sliding Reference Voltage Enable -> Disable
 		self.touch_manager.touch_menu(cft.touch_data_view_6.value)
 		self.touch_manager.touch_menu(cft.touch_btn_popup_1.value)
@@ -226,7 +239,8 @@ class SetupTest:
 		roi_keys = [cfr.s_sliding_reference_vol_1, cfr.s_sliding_reference_vol_2]
 		except_addr = ecm.addr_sliding_reference_voltage_type
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_sliding_reference_voltage_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_sliding_reference_vol_disable
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_sliding_reference_voltage_setup_access.value, ref_value=ref_value, template_path=template_path)
 
 		### Rotating Sequence Positive -> Negative
 		self.touch_manager.touch_menu(cft.touch_data_view_7.value)
@@ -236,7 +250,8 @@ class SetupTest:
 		roi_keys = [cfr.s_rotation_sequence_1, cfr.s_rotation_sequence_1]
 		except_addr = ecm.addr_rotating_sequence
 		ref_value = roi_keys[1].value[1]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_rotating_sequence_negative
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 		### Rotating Sequence Negative -> Positive
 		self.touch_manager.touch_menu(cft.touch_data_view_6.value)
 		self.touch_manager.touch_menu(cft.touch_btn_popup_1.value)
@@ -245,7 +260,8 @@ class SetupTest:
 		roi_keys = [cfr.s_rotation_sequence_1, cfr.s_rotation_sequence_1]
 		except_addr = ecm.addr_rotating_sequence
 		ref_value = roi_keys[1].value[0]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value)
+		template_path = ConfigImgRef.img_ref_rotating_sequence_positive
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 
 	def setup_meter_s_m_curr(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
