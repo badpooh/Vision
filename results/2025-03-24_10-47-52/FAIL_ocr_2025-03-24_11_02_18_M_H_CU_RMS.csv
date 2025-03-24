@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (2025-03-24 11:02:10+00:00),Img Match,H.Text
+RMS Current Min Max,,,,,,
+A,49.6% (PASS),[] (PASS),[] (PASS),2025-03-24 11:02:16 (PASS),,
+B,49.8% (PASS),,,2025-03-24 11:02:13 (PASS),,
+C,49.8% (PASS),,,2025-03-24 11:02:17 (PASS),,
+Average,49.8% (PASS),,,2025-03-24 11:02:17 (PASS),,
+,24.81 A (FAIL),,,,,
+,24.90 A (FAIL),,,,,
+,24.88 A (FAIL),,,,,
+,24.88 A (FAIL),,,,,

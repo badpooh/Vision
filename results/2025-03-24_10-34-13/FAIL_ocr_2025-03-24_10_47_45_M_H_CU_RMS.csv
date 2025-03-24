@@ -1,0 +1,10 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (None),Img Match,H.Text
+Min RMS Current Max,,,,,,
+A,49.7% (PASS),[] (PASS),[] (PASS),,,
+B,49.9% (PASS),,,,,
+C,49.8% (PASS),,,,,
+Average,49.8% (PASS),,,,,
+,24.83 A (FAIL),,,,,
+,24.93 A (FAIL),,,,,
+,24.92 A (FAIL),,,,,
+,24.89 A (FAIL),,,,,

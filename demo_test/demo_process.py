@@ -65,8 +65,9 @@ class DemoProcess:
         """
         self.test_mode = test_mode
         ocr_res = None
-        ocr_img = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys)
-        ocr_img_meas = ocr_func.ocr_basic(image=image_path, roi_keys=roi_keys_meas)
+        setup = 0
+        ocr_img = ocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)
+        ocr_img_meas = ocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys_meas, test_type=setup)
         if self.test_mode == "Demo":
             ocr_error, right_error, meas_error, ocr_res, all_meas_results = self.evaluation.eval_demo_test(ocr_img, ocr_ref, ocr_img_meas, image_path)
             if time_keys:

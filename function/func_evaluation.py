@@ -733,7 +733,8 @@ class Evaluation:
         if not self.reset_time:
             self.reset_time = datetime.now()
 
-        ocr_results_time = self.ocr_manager.ocr_basic(image, roi_keys)
+        setup = 0
+        ocr_results_time = self.ocr_manager.paddleocr_basic(image, roi_keys, test_type=setup)
 
          # 유효한 텍스트만 리스트로 반환
         time_images = [text for text in ocr_results_time if text]
