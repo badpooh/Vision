@@ -29,6 +29,8 @@ image_directory = r"\\10.10.20.30\screenshot"
 
 class MyDashBoard(QMainWindow, Ui_MainWindow):
 
+    cb_StateChanged = Signal(int)
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -48,6 +50,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.alarm = Alarm()
         self.setting_window = SettingWindow()
         self.setting_ip = SettingIP()
+        self.checkbox_states = {}
         
         self.tableWidget.setHorizontalHeaderLabels(["TITLE", "CONTENT", "RESULT (FAIL/TOTAL)"])
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
@@ -80,6 +83,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.btn_test_stop.clicked.connect(self.test_stop)
         self.btn_tc_save.clicked.connect(self.tc_save)
         self.btn_tc_load.clicked.connect(self.tc_load)
+        self.cb_accurasm.stateChanged.connect(self.accurasm_check_state)
 
         self.btn_setting.clicked.connect(self.ip_setting)
         self.btn_all_connect.clicked.connect(self.all_connect)
@@ -87,7 +91,29 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
         self.btn_add_tc.clicked.connect(self.add_box_tc)
         self.btn_del_tc.clicked.connect(self.del_box_tc)
-        self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)          
+        self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)
+
+    def accurasm_check_state(self, accruasm_state):
+        """
+        cb_accurasm 체크박스의 상태(체크/해제)에 따라 동작을 정의하고,
+        시그널을 발생시킵니다.
+        """
+        if accruasm_state == Qt.CheckState.Checked:  # PySide6
+            print("AccuraSM 테스트 체크됨")
+            # self.checkbox_states['cb_accurasm'] = True # 필요하면 저장
+        elif accruasm_state == Qt.CheckState.Unchecked: # PySide6
+            print("AccuraSM 테스트 체크 해제됨")
+            # self.checkbox_states['cb_accurasm'] = False  # 필요하면 저장
+
+        # 시그널 발생 (emit) - state 값을 함께 전달
+        self.cb_StateChanged.emit(accruasm_state)
+        # if  accruasm_state == 2:
+        #     print("AccuraSM 테스트 체크됨")
+
+        # else:
+        #     print("AccuraSM 테스트 체크 해제됨")
+
+        # self.cb_StateChanged.emit(accruasm_state)     
 
     def on_checkbox_changed(self, state, key):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음

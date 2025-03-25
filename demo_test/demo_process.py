@@ -1466,12 +1466,12 @@ class DemoTest:
         self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
         self.touch_manager.touch_menu(cft.touch_side_menu_6.value)
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
+        image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         ocr_ref = cftr.symm_curr.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
@@ -1480,13 +1480,13 @@ class DemoTest:
         reset_time = self.modbus_label.reset_max_min()
         self.touch_manager.touch_menu(cft.touch_toggle_max.value)
         self.touch_manager.screenshot()
-        image_path = self.sp.load_image_file()
+        image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.curr_per_c,
                          ecroi.a_meas, ecroi.b_meas, ecroi.c_meas]
         time_keys = [ecroi.a_time_stamp, ecroi.b_time_stamp, ecroi.c_time_stamp]
         ocr_ref = cftr.symm_curr.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, time_keys, reset_time, base_save_path, test_mode=test_mode)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return

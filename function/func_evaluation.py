@@ -516,7 +516,7 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
-    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, sm_res, sm_condition, except_addr=None):
+    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, sm_res=None, sm_condition=None, except_addr=None):
         """
         ocr_res: OCR 결과 리스트
         sm_res:  AccurSM 결과

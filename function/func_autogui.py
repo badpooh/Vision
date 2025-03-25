@@ -4,6 +4,7 @@ import pyautogui
 import time
 import os
 from function.func_modbus import ConnectionManager
+from config.config_ref import ConfigImgRef
 
 
 
@@ -70,6 +71,6 @@ class AutoGUI:
 		return sm_res, self.sm_condition
 
 	def m_s_meas_refresh(self, img_path, base_save_path, title):
-		template_path = r"C:\PNT\AutoProgram\Vision\image_ref\101.meas_compare_apply_refresh.png"
+		template_path = ConfigImgRef.img_ref_meas_refresh.value
 		coordinates = [0.94, 0.48]
 		self.find_and_click(template_path, img_path, base_save_path, title, coordinates, save_statue=0, click=1)
