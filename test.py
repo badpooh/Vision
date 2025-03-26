@@ -5,10 +5,9 @@ paddleocr_func = PaddleOCRManager()
 
 class test:
     
-
     def test001(self):
-        image_path = r"C:\rootech\AutoProgram\Vision\results\2025-03-21_16-38-54\2025-03-21_16_52_50_M_S_ME_Voltage.png"
-        roi_keys = [cfr.s_vt_primary_ll_vol_1, cfr.s_vt_primary_ll_vol_2]
+        image_path = r"C:\rootech\AutoProgram\Vision\image_test\10.10.26.159_2024-08-13_17_28_35_M_H_AN_Curr_Symm.png"
+        roi_keys = [cfr.curr_per_a, cfr.curr_per_b]
         setup = 1
         ocr_results = paddleocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)
 
