@@ -24,17 +24,12 @@ class SetupTest:
 	eval_manager = Evaluation()
 	autogui_manager = AutoGUI()
 
-	def __init__(self):
-		self.accruasm_state = Qt.CheckState.Unchecked 
+	def __init__(self, dashboard):
+		dashboard.accurasm_callback = self.on_accurasm_checked
 
-	def on_checkbox_state_changed(self, accruasm_state):
-		print(f"SetupTest에서 받은 체크박스 상태: {accruasm_state}")
-		self.accruasm_state = accruasm_state  # 상태 업데이트
-        # 여기에 체크박스 상태 변경에 따른 추가 동작을 구현할 수 있습니다.
-		# self.accruasm_state = accruasm_state
-		# print (self.accruasm_state)
-
-		# return self.accruasm_state
+	def on_accurasm_checked(self, checked):
+		print(f"SetupProcess: AccuraSM checked={checked}")
+		self.sm_condition = checked
 
 	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, coordinates=None):
 		"""
@@ -59,7 +54,7 @@ class SetupTest:
 		compare_title = roi_keys[0].value[0]
 		ref_title_1 = roi_keys[1].value[0]
 		ref_title_2 = roi_keys[1].value[1]
-		if self.accruasm_state == Qt.CheckState.Checked:
+		if self.sm_condition == 2:
 			self.autogui_manager.m_s_meas_refresh(image_path, base_save_path, compare_title)
 			time.sleep(2.0)
 			sm_res, sm_condition = self.autogui_manager.find_and_click(template_path, image_path, base_save_path, compare_title)
