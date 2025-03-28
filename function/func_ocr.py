@@ -38,7 +38,7 @@ class PaddleOCRManager:
             print(f"이미지를 읽을 수 없습니다: {image}")
             return []
 
-        ocr = PaddleOCR(use_gpu=True, use_angle_cls=False, lang='en', use_space_char=True, show_log=False, rec_model_dir="C:/rootech/AutoProgram/Vision/rec")
+        ocr = PaddleOCR(use_gpu=True, use_angle_cls=False, lang='en', use_space_char=True, show_log=False, rec_model_dir="C:/PNT/AutoProgram/Vision/rec")
         #  det=False, 
 
         ocr_results = {}

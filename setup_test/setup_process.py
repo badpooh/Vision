@@ -5,7 +5,7 @@ from function.func_touch import TouchManager
 from function.func_modbus import ModbusLabels
 from function.func_evaluation import Evaluation
 from function.func_autogui import AutoGUI
-from PySide6.QtCore import QSize, Qt, QObject, Signal, QThread
+from PySide6.QtCore import Qt, QObject
 
 from config.config_touch import ConfigTouch as cft
 from config.config_roi import ConfigROI as cfr
@@ -17,19 +17,20 @@ image_directory = r"\\10.10.20.30\screenshot"
 paddleocr_func = PaddleOCRManager()
 easyocr_func = EasyOCRManager()
 
-class SetupTest:
+class SetupTest(QObject):
      
 	touch_manager = TouchManager()
 	modbus_label = ModbusLabels()
 	eval_manager = Evaluation()
 	autogui_manager = AutoGUI()
 
-	def __init__(self, dashboard):
-		dashboard.accurasm_callback = self.on_accurasm_checked
+	def __init__(self):
+		super().__init__()
+		self.accruasm_state = Qt.CheckState.Unchecked # 초기 상태 설정
 
-	def on_accurasm_checked(self, checked):
-		print(f"SetupProcess: AccuraSM checked={checked}")
-		self.sm_condition = checked
+	def on_accurasm_checked(self, state):
+		print(f"SetupProcess: AccuraSM checked={state}")
+		self.sm_condition = state
 
 	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, coordinates=None):
 		"""

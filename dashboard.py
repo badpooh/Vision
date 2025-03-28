@@ -30,8 +30,9 @@ image_directory = r"\\10.10.20.30\screenshot"
 class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     cb_StateChanged = Signal(int)
+    cb_AccuraSMChanged = Signal(int)
 
-    def __init__(self):
+    def __init__(self, setup_test_instance: SetupTest):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("My DashBoard")
@@ -45,6 +46,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.thread = False
         self.stop_thread = False
         self.selected_ip = ''
+        self.setup_test_instance = setup_test_instance
         self.connect_manager = ConnectionManager()
         self.meter_setup_process = DemoProcess()
         self.alarm = Alarm()
@@ -96,7 +98,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
 
     def accurasm_check_state(self, state):
         if self.accurasm_callback:
-            self.accurasm_callback(state) 
+            self.cb_AccuraSMChanged.emit(state) 
 
     def on_checkbox_changed(self, state, key):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
@@ -230,10 +232,20 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.lineEdit.clear()
 
     def test_start(self):
-        self.worker = TestWorker(self.tableWidget, self)
-        self.worker.progress.connect(self.on_progress)
-        self.worker.finished.connect(self.on_finished)
-        self.worker.start()  # run() 비동기 실행
+         # 스레드가 이미 실행 중인지 확인 (선택 사항이지만 권장)
+        if not hasattr(self, 'worker') or not self.worker.isRunning():
+            self.stop_thread = False # 스레드 중지 플래그 초기화 (필요하다면)
+
+            # TestWorker 생성 시 self.setup_test_instance 전달
+            self.worker = TestWorker(self.tableWidget, self, self.setup_test_instance)
+
+            self.worker.progress.connect(self.on_progress)
+            self.worker.finished.connect(self.on_finished)
+            self.worker.start()  # run() 비동기 실행
+            self.thread = True # 스레드 실행 상태 플래그 업데이트 (필요하다면)
+            print("Test worker started.") # 시작 로그
+        else:
+            print("Test worker is already running.") # 이미 실행 중일 때 로그
 
     def test_stop(self):
         if hasattr(self, 'worker') and self.worker.isRunning():
@@ -297,13 +309,13 @@ class TestWorker(QThread):
     finished = Signal()          # 전체 테스트 완료 신호
     modbus_label = ModbusLabels()
 
-    def __init__(self, tableWidget, dashboard_instance: MyDashBoard):
+    def __init__(self, tableWidget, dashboard_instance: MyDashBoard, setup_test_instance: SetupTest):
         super().__init__()
         self.tableWidget = tableWidget
         self.dashboard = dashboard_instance
         self.stopRequested = False
         self.meter_demo_test = DemoTest()
-        self.meter_setup_test = SetupTest()
+        self.meter_setup_test = setup_test_instance
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
         self.test_mode = None
         self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

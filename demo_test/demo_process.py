@@ -1392,7 +1392,7 @@ class DemoTest:
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
         roi_keys_meas = [ecroi.curr_per_a, ecroi.curr_per_b, ecroi.a_meas, ecroi.b_meas]
         ocr_ref = cftr.symm_vol_ll.value
-        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
+        self.sp.ocr_process(image_path, roi_keys, roi_keys_meas, ocr_ref, base_save_path=base_save_path, test_mode=test_mode)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
