@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1602</width>
-    <height>999</height>
+    <width>1280</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -346,7 +346,7 @@ QPushButton:checked {
     <item row="0" column="2" alignment="Qt::AlignmentFlag::AlignVCenter">
      <widget class="QWidget" name="condition_bar" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -354,7 +354,7 @@ QPushButton:checked {
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>60</height>
+        <height>70</height>
        </size>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">

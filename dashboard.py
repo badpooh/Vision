@@ -97,8 +97,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
         self.tableWidget.cellDoubleClicked.connect(self.on_cell_double_click)
 
     def accurasm_check_state(self, state):
-        if self.accurasm_callback:
-            self.cb_AccuraSMChanged.emit(state) 
+        self.cb_AccuraSMChanged.emit(state) 
 
     def on_checkbox_changed(self, state, key):
         self.checkbox_states[key] = state == 2  # 2는 체크됨, 0은 체크되지 않음
@@ -237,7 +236,7 @@ class MyDashBoard(QMainWindow, Ui_MainWindow):
             self.stop_thread = False # 스레드 중지 플래그 초기화 (필요하다면)
 
             # TestWorker 생성 시 self.setup_test_instance 전달
-            self.worker = TestWorker(self.tableWidget, self, self.setup_test_instance)
+            self.worker = TestWorker(self.tableWidget, self, self.setup_test_instance, self.connect_manager)
 
             self.worker.progress.connect(self.on_progress)
             self.worker.finished.connect(self.on_finished)
@@ -309,13 +308,14 @@ class TestWorker(QThread):
     finished = Signal()          # 전체 테스트 완료 신호
     modbus_label = ModbusLabels()
 
-    def __init__(self, tableWidget, dashboard_instance: MyDashBoard, setup_test_instance: SetupTest):
+    def __init__(self, tableWidget, dashboard_instance: MyDashBoard, setup_test_instance: SetupTest, connect_manager: ConnectionManager):
         super().__init__()
         self.tableWidget = tableWidget
         self.dashboard = dashboard_instance
         self.stopRequested = False
         self.meter_demo_test = DemoTest()
-        self.meter_setup_test = setup_test_instance
+        self.setup_test_instance = setup_test_instance
+        self.connect_manager = connect_manager
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
         self.test_mode = None
         self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -375,8 +375,10 @@ class TestWorker(QThread):
             row_start_time = self.meter_demo_test.modbus_label.device_current_time()
 
             test_process = TestProcess(
+                setup_test=self.setup_test_instance,
                 score_callback = lambda score: self.result_callback(score, row),
-                stop_callback = lambda: self.stopRequested
+                stop_callback = lambda: self.stopRequested,
+                connect_manager=self.connect_manager
             )
 
             for test_name in test_list:

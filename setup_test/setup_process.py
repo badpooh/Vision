@@ -26,13 +26,14 @@ class SetupTest(QObject):
 
 	def __init__(self):
 		super().__init__()
-		self.accruasm_state = Qt.CheckState.Unchecked # 초기 상태 설정
+		self.accruasm_state = 2 # 초기 상태 설정
 
 	def on_accurasm_checked(self, state):
-		print(f"SetupProcess: AccuraSM checked={state}")
-		self.sm_condition = state
+		self.accruasm_state = state
+		# print(f"SetupProcess: AccuraSM checked={state}")
 
 	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, coordinates=None):
+		sm_condition = False
 		"""
 		Args:
 			base_save_path (str): 결과 저장 디렉토리
@@ -55,13 +56,14 @@ class SetupTest(QObject):
 		compare_title = roi_keys[0].value[0]
 		ref_title_1 = roi_keys[1].value[0]
 		ref_title_2 = roi_keys[1].value[1]
-		if self.sm_condition == 2:
+		print(self.accruasm_state)
+		if self.accruasm_state == 2:
 			self.autogui_manager.m_s_meas_refresh(image_path, base_save_path, compare_title)
 			time.sleep(2.0)
 			sm_res, sm_condition = self.autogui_manager.find_and_click(template_path, image_path, base_save_path, compare_title)
 		else:
 			sm_res = None
-			sm_condition = None
+			self.accruasm_state = None
 		title, setup_result, modbus_result, overall_result = self.eval_manager.eval_setup_test(
 			ocr_res=ocr_results,
 			setup_ref=reference_value,
@@ -80,15 +82,15 @@ class SetupTest(QObject):
 	def setup_meter_s_m_vol(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
 		### wiring -> Delta
-		# self.touch_manager.btn_front_meter()
-		# self.touch_manager.btn_front_setup()
-		# self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-		# self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
-		# self.touch_manager.touch_menu(cft.touch_data_view_1.value)
-		# self.touch_manager.touch_password()
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+		self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
+		self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		self.touch_manager.touch_password()
+		self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
 		roi_keys = [cfr.s_wiring_1, cfr.s_wiring_2]
 		except_addr = ecm.addr_wiring
 		ref_value = roi_keys[1].value[1]

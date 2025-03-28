@@ -1,28 +1,31 @@
 from demo_test.demo_process import DemoTest
 from setup_test.setup_process import SetupTest
+from function.func_modbus import ConnectionManager
 
 class TestProcess:
     
-    def __init__(self, score_callback=None, stop_callback=None):
+    def __init__(self, setup_test: SetupTest, connect_manager: ConnectionManager, score_callback=None, stop_callback=None):
         self.test_mode = None
         self.score_callback = score_callback
         self.stop_callback = stop_callback 
         self.demo_test = None
-        self.setup_test = None
+        self.setup_test = setup_test
+        self.connect_manager = connect_manager
+        # self.setup_test = None
 
     def get_demo_test_instance(self):
         if self.demo_test is None:
             self.demo_test = DemoTest(score_callback=self.score_callback, stop_callback=self.stop_callback)
         return self.demo_test
     
-    def get_setup_test_instance(self):
-        if self.setup_test is None:
-            self.setup_test = SetupTest()
-        return self.setup_test
+    # def get_setup_test_instance(self):
+    #     if self.setup_test is None:
+    #         self.setup_test = SetupTest()
+    #     return self.setup_test
     
     def test_by_name(self, test_name, base_save_path, test_mode, search_pattern):
         demo_test = self.get_demo_test_instance()
-        setup_test = self.get_setup_test_instance()
+        # setup_test = self.get_setup_test_instance()
 
         if test_name.strip().lower() == "tm_balance":
             demo_test.demo_test_mode()
@@ -91,9 +94,9 @@ class TestProcess:
             elif test_name == "anal_curr_unbal":
                 demo_test.demo_mea_anal_currunbal(base_save_path, test_mode, search_pattern)
             elif test_name == "m_s_vol":
-                setup_test.setup_meter_s_m_vol(base_save_path, search_pattern)
+                self.setup_test.setup_meter_s_m_vol(base_save_path, search_pattern)
             elif test_name == 'm_s_curr':
-                setup_test.setup_meter_s_m_curr(base_save_path, search_pattern)
+                self.setup_test.setup_meter_s_m_curr(base_save_path, search_pattern)
             else:
                 print(f"Unknown test name: {test_name}")
             

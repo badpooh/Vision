@@ -6,7 +6,7 @@ import os
 from function.func_modbus import ConnectionManager
 from config.config_ref import ConfigImgRef
 
-
+### 배율 100% 아닐시 동작 및 이미지 매칭 오류발생
 
 class AutoGUI:
 
@@ -71,6 +71,7 @@ class AutoGUI:
 		return sm_res, self.sm_condition
 
 	def m_s_meas_refresh(self, img_path, base_save_path, title):
+		print('refresh 함수는 동작?')
 		template_path = ConfigImgRef.img_ref_meas_refresh.value
 		coordinates = [0.94, 0.48]
 		self.find_and_click(template_path, img_path, base_save_path, title, coordinates, save_statue=0, click=1)

@@ -256,9 +256,9 @@ class Evaluation:
             all_meas_results.extend(check_results(["NEMA LL", "NEMA LN", "U2", "U0"], (0, 1, "%"), ocr_res_meas[4:8]))
             
         elif "Curr. Symm. Component" in ''.join(ocr_res[0]):
-            all_meas_results.extend(check_results(["I1"], (0, 1, "l1"), ocr_res_meas[0:1]))
-            all_meas_results.extend(check_results(["I2"], (0, 1, "l2"), ocr_res_meas[1:2]))
-            all_meas_results.extend(check_results(["I0"], (0, 1, "l0"), ocr_res_meas[2:3]))
+            all_meas_results.extend(check_results(["I1"], (0, 1, "I1"), ocr_res_meas[0:1]))
+            all_meas_results.extend(check_results(["I2"], (0, 1, "I2"), ocr_res_meas[1:2]))
+            all_meas_results.extend(check_results(["I0"], (0, 1, "I0"), ocr_res_meas[2:3]))
             all_meas_results.extend(check_results(["I1"], (2, 3, "A"), ocr_res_meas[3:4]))
             all_meas_results.extend(check_results(["I2"], (0, 0.1, "A"), ocr_res_meas[4:5]))
             all_meas_results.extend(check_results(["I0"], (0, 0.1, "A"), ocr_res_meas[5:6]))

@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1602, 999)
+        MainWindow.resize(1280, 720)
         MainWindow.setMinimumSize(QSize(1280, 720))
         MainWindow.setStyleSheet(u"background-color: rgb(245, 250, 254);")
         self.centralwidget = QWidget(MainWindow)
@@ -216,9 +216,12 @@ class Ui_MainWindow(object):
 
         self.condition_bar = QWidget(self.centralwidget)
         self.condition_bar.setObjectName(u"condition_bar")
-        sizePolicy1.setHeightForWidth(self.condition_bar.sizePolicy().hasHeightForWidth())
-        self.condition_bar.setSizePolicy(sizePolicy1)
-        self.condition_bar.setMinimumSize(QSize(0, 60))
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.condition_bar.sizePolicy().hasHeightForWidth())
+        self.condition_bar.setSizePolicy(sizePolicy2)
+        self.condition_bar.setMinimumSize(QSize(0, 70))
         self.gridLayout_4 = QGridLayout(self.condition_bar)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.horizontalSpacer = QSpacerItem(868, 19, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
