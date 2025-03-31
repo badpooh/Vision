@@ -32,7 +32,7 @@ class SetupTest(QObject):
 		self.accruasm_state = state
 		# print(f"SetupProcess: AccuraSM checked={state}")
 
-	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, coordinates=None):
+	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, coordinates=None):
 		sm_condition = False
 		"""
 		Args:
@@ -60,7 +60,7 @@ class SetupTest(QObject):
 		if self.accruasm_state == 2:
 			self.autogui_manager.m_s_meas_refresh(image_path, base_save_path, compare_title)
 			time.sleep(2.0)
-			sm_res, sm_condition = self.autogui_manager.find_and_click(template_path, image_path, base_save_path, compare_title)
+			sm_res, sm_condition = self.autogui_manager.find_and_click(template_path, image_path, base_save_path, compare_title, roi_mask)
 		else:
 			sm_res = None
 			self.accruasm_state = None
@@ -331,6 +331,22 @@ class SetupTest(QObject):
 		template_path = ConfigImgRef.img_ref_ct_secondary_curr_5.value
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 
-
+	def setup_meter_s_e_dip(self, base_save_path, search_pattern):
+		self.touch_manager.uitest_mode_start() 
+		### Dip Trigger Disable > Enable 
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+		self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
+		self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		self.touch_manager.touch_password()
+		self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		roi_keys = [cfr.s_ct_primary_curr_1, cfr.s_ct_primary_curr_2]
+		except_addr = ecm.addr_ct_primary_current
+		ref_value = roi_keys[1].value[0]
+		template_path = ConfigImgRef.img_ref_ct_primary_curr_5.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ecm.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path)
 
 

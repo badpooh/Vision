@@ -12,7 +12,7 @@ class AutoGUI:
 
 	connect_manager = ConnectionManager()
 
-	def find_and_click(self, template_path, img_path, base_save_path, title, coordinates=None, save_statue=1, click=0):
+	def find_and_click(self, template_path, img_path, base_save_path, title, roi_mask, coordinates=None, save_statue=1, click=0):
 		self.sm_condition = False
 		
 		file_name_with_extension = os.path.basename(img_path)  
@@ -29,9 +29,11 @@ class AutoGUI:
 
 		screenshot = pyautogui.screenshot()
 		screenshot = np.array(screenshot)  
-		screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)  
+		screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
 
-		template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+		mask_result = self.template_mask(template_path, roi_mask)
+
+		template = mask_result
 		h, w, _ = template.shape
 
 		result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
@@ -69,6 +71,17 @@ class AutoGUI:
 		print(sm_res)
 			
 		return sm_res, self.sm_condition
+	
+	def template_mask(self, template_path, roi_mask):
+		x1, y1, x2, y2 = roi_mask
+		template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+		mask = np.ones(template.shape[:2], dtype=np.uint8) * 255  # 255=사용, 0=무시
+
+		x1, y1 = 0, 21
+		x2, y2 = 242, 42
+		mask_result = cv2.rectangle(mask, (x1, y1), (x2, y2), 0, -1)
+
+		return mask_result
 
 	def m_s_meas_refresh(self, img_path, base_save_path, title):
 		print('refresh 함수는 동작?')

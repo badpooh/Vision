@@ -72,8 +72,8 @@ class ConfigROI(Enum):
     harmonics_fund_c = "harmonics_fund_c"
 
     ### for meter setup test
-    s_wiring_1 = ["Wiring"]
-    s_wiring_2 = ["Wye", "Delta"]
+    s_wiring_1 = ['Wiring']
+    s_wiring_2 = ['Wye', 'Delta']
     s_min_meas_sec_ln_vol_1 = ['Min. Meas. Secondary L-N Volt. [V]']
     s_min_meas_sec_ln_vol_2 = ['0', '10']
     s_vt_primary_ll_vol_1 = ['VT Primary L-L Voltage [V]']
@@ -100,6 +100,8 @@ class ConfigROI(Enum):
     s_tdd_nominal_curr_1 = ['TDD Nominal Current [A]']
     s_tdd_nominal_curr_2 = ['Reference Current', 'Reference Current']
     s_tdd_nominal_curr_3 = ['1', '99999']
+    s_dip_trigger_1 = ['Trigger']
+    s_dip_trigger_2 = ['Disable', 'Enable']
 
     
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
