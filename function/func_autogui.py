@@ -12,7 +12,7 @@ class AutoGUI:
 
 	connect_manager = ConnectionManager()
 
-	def find_and_click(self, template_path, img_path, base_save_path, title, roi_mask, coordinates=None, save_statue=1, click=0):
+	def find_and_click(self, template_path, img_path, base_save_path, title, roi_mask=None, coordinates=None, save_statue=1, click=0):
 		self.sm_condition = False
 		
 		file_name_with_extension = os.path.basename(img_path)  
@@ -31,10 +31,12 @@ class AutoGUI:
 		screenshot = np.array(screenshot)  
 		screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
 
-		mask_result = self.template_mask(template_path, roi_mask)
-
-		template = mask_result
-		h, w, _ = template.shape
+		if roi_mask:
+			mask_result = self.template_mask(template_path=template_path, roi_mask=roi_mask)
+			template = mask_result
+		else:
+			template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+			h, w, _ = template.shape
 
 		result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
 		min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
@@ -73,7 +75,7 @@ class AutoGUI:
 		return sm_res, self.sm_condition
 	
 	def template_mask(self, template_path, roi_mask):
-		x1, y1, x2, y2 = roi_mask
+		x1, y1, x2, y2 = [*roi_mask]
 		template = cv2.imread(template_path, cv2.IMREAD_COLOR)
 		mask = np.ones(template.shape[:2], dtype=np.uint8) * 255  # 255=사용, 0=무시
 
@@ -87,4 +89,10 @@ class AutoGUI:
 		print('refresh 함수는 동작?')
 		template_path = ConfigImgRef.img_ref_meas_refresh.value
 		coordinates = [0.94, 0.48]
-		self.find_and_click(template_path, img_path, base_save_path, title, coordinates, save_statue=0, click=1)
+		self.find_and_click(template_path, img_path, base_save_path, title, coordinates=coordinates, save_statue=0, click=1)
+	
+	def m_s_event_refresh(self, img_path, base_save_path, title):
+		print('refresh 함수는 동작?')
+		template_path = ConfigImgRef.img_ref_meter_setup_event_max.value
+		coordinates = [0.93, 0.98]
+		self.find_and_click(template_path, img_path, base_save_path, title, coordinates=coordinates, save_statue=0, click=1)

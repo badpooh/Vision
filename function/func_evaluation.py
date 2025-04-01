@@ -14,7 +14,7 @@ from function.func_connection import ConnectionManager
 from config.config_roi import Configs
 from config.config_color import ConfigColor as cc
 from config.config_ref import ConfigImgRef as cr
-from config.config_map import ConfigModbusMap as ecm
+from config.config_map import ConfigMap as ConfigMap
 from config.config_map import ConfigInitialValue as civ
 
 class Evaluation:

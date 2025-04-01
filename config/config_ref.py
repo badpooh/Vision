@@ -100,7 +100,7 @@ class ConfigImgRef(Enum):
     img_ref_tdd_reference_selection_tdd = r'.\vision\image_ref\126.tdd_reference_selection_tdd.png'
     img_ref_tdd_nominal_curr_0 = r'.\vision\image_ref\127.tdd_nominal_current_0.png'
     img_ref_tdd_nominal_curr_99999 = r'.\vision\image_ref\128.tdd_nominal_current_99999.png'
-    img_ref_meter_setup_event = r'.\vision\image_ref\103.meter_setup_event.png'
+    img_ref_meter_setup_event_max = r'.\vision\image_ref\104.meter_setup_event_max.png'
 
 
 

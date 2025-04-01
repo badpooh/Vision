@@ -1,0 +1,8 @@
+Main View,Measurement,OCR-Right,Right-OCR,Time Stamp (None),Img Match,H.Text
+Curr. Symm. Component Max,,,,,,
+Positive- Sequence,l1 (FAIL),"['Seguence', 'Seguence'] (FAIL)","['Sequence', 'Sequence'] (FAIL)",,,
+Negative- Seguence,22 (FAIL),,,,,
+Zero- Seguence,l0 (FAIL),,,,,
+,24.85 A (FAIL),,,,,
+,0.076A (PASS),,,,,
+,0.047A (PASS),,,,,

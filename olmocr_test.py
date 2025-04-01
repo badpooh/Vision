@@ -6,7 +6,7 @@ from paddleocr import PaddleOCR
 from itertools import chain
 
 from config.config_roi import Configs
-from config.config_roi import ConfigROI as cfr
+from config.config_roi import ConfigROI as ConfigROI
 
 class PaddleOCRManager:
 
@@ -411,7 +411,7 @@ def run_ocr_and_correct(image_path, model_path):
 
     # 2) 이미지 OCR
     setup = 1
-    roi_keys = [cfr.s_vt_primary_ll_vol_1, cfr.s_vt_primary_ll_vol_2]
+    roi_keys = [ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2]
     result = easyocr_man.easyocr_basic(image_path, roi_keys, setup)
 
     print(f'{result}')
