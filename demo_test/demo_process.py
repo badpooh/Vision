@@ -12,7 +12,7 @@ from function.func_modbus import ModbusLabels
 from config.config_roi import ConfigROI as ecroi
 from config.config_ref import ConfigTextRef as cftr
 from config.config_ref import ConfigImgRef as cfir
-from config.config_touch import ConfigTouch as cft
+from config.config_touch import ConfigTouch as ConfigTouch
 
 from demo_test.demo_interface import Interface
 
@@ -262,8 +262,8 @@ class DemoTest:
         ### Timeout을 infinite로 변경 후 Test Mode > Balance로 실행 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_setup()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_3.value)
         self.touch_manager.touch_menu("data_view_2")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -289,8 +289,8 @@ class DemoTest:
     def reset_max_min(self):
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_setup()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_1.value)
         self.touch_manager.touch_menu("data_view_3")
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
@@ -336,9 +336,9 @@ class DemoTest:
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_ll.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_ll.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(ecroi.title_view.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -347,7 +347,7 @@ class DemoTest:
 
         ### L-L min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -355,7 +355,7 @@ class DemoTest:
             return
 
         ### L-L max 검사 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -363,8 +363,8 @@ class DemoTest:
             return
 
         ### L-N 만 검사 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_ln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_ln.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(cftr.rms_vol_ln.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -373,7 +373,7 @@ class DemoTest:
 
         ### L-N min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -381,7 +381,7 @@ class DemoTest:
             return
 
         ### L-N max 검사 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.rms_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -405,9 +405,9 @@ class DemoTest:
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_ll.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_ll.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(cftr.fund_vol_ll.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -416,7 +416,7 @@ class DemoTest:
 
         ### L-L min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -424,7 +424,7 @@ class DemoTest:
             return
 
         ### L-L max 검사 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.fund_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -432,8 +432,8 @@ class DemoTest:
             return
 
         ### L-N 만 검사 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_ln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_ln.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase(cftr.fund_vol_ln.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -442,7 +442,7 @@ class DemoTest:
 
         ### L-N min 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -450,7 +450,7 @@ class DemoTest:
             return
 
         ### L-N max 검사 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_4phase_time(cftr.fund_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -463,9 +463,9 @@ class DemoTest:
         ### L-L 만 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_3.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_thd_ll.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_thd_ll.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.thd_vol_ll.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -474,7 +474,7 @@ class DemoTest:
 
         ### L-L max 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.thd_vol_ll.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -482,8 +482,8 @@ class DemoTest:
             return
 
         ### L-N 만 검사 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_thd_ln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_thd_ln.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.thd_vol_ln.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -492,7 +492,7 @@ class DemoTest:
 
         ### L-N max 검사 ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.thd_vol_ln.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -504,8 +504,8 @@ class DemoTest:
         ### 기본주파수 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_4.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab]
@@ -518,7 +518,7 @@ class DemoTest:
 
         ### 주파수 Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab]
@@ -532,7 +532,7 @@ class DemoTest:
             return
 
         ### 주파수 Max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab]
@@ -550,8 +550,8 @@ class DemoTest:
         ### 기본 검사 ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_1.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_5.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_5.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -564,7 +564,7 @@ class DemoTest:
 
         ### 잔류전압 Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -578,7 +578,7 @@ class DemoTest:
             return
 
         ### 잔류전압 Max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -605,8 +605,8 @@ class DemoTest:
         ### Current ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_1.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(cftr.rms_curr.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -615,7 +615,7 @@ class DemoTest:
 
         ### Current Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.rms_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -623,7 +623,7 @@ class DemoTest:
             return
 
         ### Current Max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.rms_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -634,8 +634,8 @@ class DemoTest:
         ### Current ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_2.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(cftr.fund_curr.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -644,7 +644,7 @@ class DemoTest:
 
         ### Current Min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.fund_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -652,7 +652,7 @@ class DemoTest:
             return
 
         ### Current Max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.fund_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -663,8 +663,8 @@ class DemoTest:
         ### Current thd ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_4.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.thd_curr.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -673,7 +673,7 @@ class DemoTest:
 
         ### Current thd Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.thd_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -684,8 +684,8 @@ class DemoTest:
         ### Current tdd ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_5.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_5.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.tdd_curr.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -694,7 +694,7 @@ class DemoTest:
 
         ### Current tdd Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.tdd_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -705,8 +705,8 @@ class DemoTest:
         ### Current crest factor ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_6.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_6.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.cf_curr.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -715,7 +715,7 @@ class DemoTest:
 
         ### Current crest factor Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.cf_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -726,8 +726,8 @@ class DemoTest:
         ### Current k-factor ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_7.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_7.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase(cftr.kf_curr.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -736,7 +736,7 @@ class DemoTest:
 
         ### Current k-factor Max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_3phase_time(cftr.kf_curr.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -747,8 +747,8 @@ class DemoTest:
         ### Current residual ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_8.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_8.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -761,7 +761,7 @@ class DemoTest:
 
         ### Current residual Min###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -775,7 +775,7 @@ class DemoTest:
             return
 
         ### Current residual Max###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -798,8 +798,8 @@ class DemoTest:
         ### active power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_3.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_1.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(cftr.active.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -808,7 +808,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -816,7 +816,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.active.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -827,8 +827,8 @@ class DemoTest:
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_3.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_2.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(cftr.reactive.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -837,7 +837,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -845,7 +845,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.reactive.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -856,8 +856,8 @@ class DemoTest:
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_3.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_3.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(cftr.apparent.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -866,7 +866,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -874,7 +874,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.apparent.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -885,8 +885,8 @@ class DemoTest:
         ### reactive power ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_3.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_4.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(cftr.pf.value, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -895,7 +895,7 @@ class DemoTest:
         
         ### power min ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_min.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_min.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -903,7 +903,7 @@ class DemoTest:
             return
         
         ### power max ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.pf.value, reset_time, base_save_path, test_mode, search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -924,8 +924,8 @@ class DemoTest:
         ### voltage+current vll ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_1.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
@@ -935,7 +935,7 @@ class DemoTest:
             return
         
         ## voltage+current vln ###
-        self.touch_manager.touch_menu(cft.touch_toggle_phasor_vln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_phasor_vln.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_all_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
@@ -945,8 +945,8 @@ class DemoTest:
             return
 
         ### voltage vll ###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_curr.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_phasor_vll.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_curr.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_phasor_vll.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
@@ -956,7 +956,7 @@ class DemoTest:
             return
 
         ### voltage vln ###
-        self.touch_manager.touch_menu(cft.touch_toggle_phasor_vln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_phasor_vln.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_vol_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
@@ -966,9 +966,9 @@ class DemoTest:
             return
 
         ### current vll ###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_curr.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_vol.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_phasor_vll.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_curr.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_vol.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_phasor_vll.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
@@ -978,7 +978,7 @@ class DemoTest:
             return
 
         ### current vln ###
-        self.touch_manager.touch_menu(cft.touch_toggle_phasor_vln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_phasor_vln.value)
         if test_mode == "Demo":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_curr_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         elif test_mode == "NoLoad":
@@ -988,8 +988,8 @@ class DemoTest:
             return
 
         ### nothing vll ###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_curr.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_phasor_vll.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_curr.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_phasor_vll.value)
         if test_mode == "Demo" or test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_na_vll.value, ref=cftr.phasor_ll.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -997,7 +997,7 @@ class DemoTest:
             return
 
         ### nothing vln ###
-        self.touch_manager.touch_menu(cft.touch_toggle_phasor_vln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_phasor_vln.value)
         if test_mode == "Demo" or test_mode == "NoLoad":
             self.sp.ocr_phaosr_process(img_ref=cfir.img_ref_phasor_na_vln.value, ref=cftr.phasor_ln.value, img_cut1=ecroi.phasor_img_cut, img_cut2=ecroi.phasor_a_c_angle_vol, img_cut3=ecroi.phasor_a_c_angle_cur, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         ocr_func.update_phasor_condition(0)
@@ -1015,8 +1015,8 @@ class DemoTest:
         ### voltage ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_2.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         ocr_ref = cftr.harmonics_vol_3p4w.value
@@ -1035,7 +1035,7 @@ class DemoTest:
             return
 
         ### current ###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_curr.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_curr.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         ocr_ref = cftr.harmonics_curr.value
@@ -1053,87 +1053,87 @@ class DemoTest:
             return
 
         ### vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_vol.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_vol.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.harmonics_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### vol_b-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### vol_c-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### curr_a-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_curr.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_curr.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### curr_b-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### curr_c-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### fund(v체크박스) 버튼 후 vol_a ~ curr_c 반복 ###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_vol.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_fund.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_vol.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_fund.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_curr.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_curr.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_curr_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_fund.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_fund.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### [v], fund, rms 그래프 변화 확인 ###
         ### voltage [%]fund ###
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_v.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_fund.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_v.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_fund.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = cftr.harmonics_per_fund.value
@@ -1151,28 +1151,28 @@ class DemoTest:
             return
         
         ### [%]Fund 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### voltage [%]RMS ###
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_v.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_rms.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_v.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_rms.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = cftr.harmonics_per_rms.value
@@ -1189,30 +1189,30 @@ class DemoTest:
             return
         
         ### [%]RMS 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
         
 
         ### current [%]Fund ###
-        self.touch_manager.touch_menu(cft.touch_toggle_analysis_curr.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_v.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_fund.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_analysis_curr.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_v.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_fund.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = cftr.harmonics_per_fund.value
@@ -1228,28 +1228,28 @@ class DemoTest:
             return
         
         ### [%]Fund 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### current [%]RMS ###
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_v.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_rms.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_v.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_rms.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         ocr_ref = cftr.harmonics_per_rms.value
@@ -1265,21 +1265,21 @@ class DemoTest:
             return
         
         ### [%]RMS 일때 vol_a-phase X / 색이 없어야되는 걸 찾는 것으로 Demo와 None 둘다 동일###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_graph_detection([ecroi.waveform_title], cftr.harmonics_for_img.value, roi_keys_meas, value=ecroi.color_harmonics_vol_a.value, base_save_path=base_save_path, test_mode=test_mode)
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         ocr_func.update_phasor_condition(0)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
@@ -1289,10 +1289,10 @@ class DemoTest:
         ### voltage ### -> 추후 구현
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_dropdown_harmonics_2.value)
-        self.touch_manager.touch_menu(cft.touch_harmonics_sub_text.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_dropdown_harmonics_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_harmonics_sub_text.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         image_path = r"C:\Users\jscho\Desktop\123.png"
@@ -1320,8 +1320,8 @@ class DemoTest:
         ### waveform basic ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_3.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.waveform_title]
@@ -1339,42 +1339,42 @@ class DemoTest:
             return
 
         ### waveform curr_c-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_c.value)
         self.sp.ocr_waveform_detection(roi_keys=[ecroi.waveform_title], ocr_ref=cftr.waveform_3p4w.value, value=ecroi.color_waveform_curr_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_b_c-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_b.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_a_b_c-phase X ###
-        self.touch_manager.touch_menu(cft.touch_toggle_waveform_curr_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_waveform_curr_a.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_curr_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_all_vol_c-phase X ###
-        self.touch_manager.touch_menu(cft.touch_wave_vol_c.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_wave_vol_c.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_c.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_all_vol_b_c-phase X ###
-        self.touch_manager.touch_menu(cft.touch_wave_vol_b.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_wave_vol_b.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_b.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
             print("test_stop")
             return
 
         ### waveform curr_all_vol_all-phase X ###
-        self.touch_manager.touch_menu(cft.touch_wave_vol_a.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_wave_vol_a.value)
         self.sp.ocr_waveform_detection([ecroi.waveform_title], cftr.waveform_3p4w.value, ecroi.color_waveform_vol_a.value, base_save_path=base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         ocr_func.update_phasor_condition(0)
         if self.stop_callback and self.stop_callback():
@@ -1385,8 +1385,8 @@ class DemoTest:
         ### LL ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_4.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -1399,7 +1399,7 @@ class DemoTest:
 
         ### LL Max###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc]
@@ -1412,8 +1412,8 @@ class DemoTest:
             return
 
         ### LN ###
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
-        self.touch_manager.touch_menu(cft.touch_toggle_thd_ln.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_thd_ln.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1426,7 +1426,7 @@ class DemoTest:
 
         ### LN Max###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1442,8 +1442,8 @@ class DemoTest:
         ### vol unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_5.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_5.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase(cftr.unbal_vol.value, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -1452,7 +1452,7 @@ class DemoTest:
 
         ### vol unbalance max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         self.sp.ocr_curr_4phase_time(cftr.unbal_vol.value, reset_time, base_save_path, test_mode=test_mode, search_pattern=search_pattern)
         if self.stop_callback and self.stop_callback():
@@ -1463,8 +1463,8 @@ class DemoTest:
         ### symm ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_6.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_6.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1478,7 +1478,7 @@ class DemoTest:
 
         ### symm max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file(search_pattern)
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1495,8 +1495,8 @@ class DemoTest:
         ### current unbalance ###
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_4.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_7.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_4.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_7.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1510,7 +1510,7 @@ class DemoTest:
 
         ### symm max ###
         reset_time = self.modbus_label.reset_max_min()
-        self.touch_manager.touch_menu(cft.touch_toggle_max.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_toggle_max.value)
         self.touch_manager.screenshot()
         image_path = self.sp.load_image_file()
         roi_keys = [ecroi.title_view, ecroi.a_ab, ecroi.b_bc, ecroi.c_ca]
@@ -1526,8 +1526,8 @@ class DemoTest:
     def demo_mea_curr_demand(self, base_save_path, test_mode, search_pattern):
         self.touch_manager.btn_front_meter()
         self.touch_manager.btn_front_home()
-        self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-        self.touch_manager.touch_menu(cft.touch_side_menu_3.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_2.value)
+        self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_3.value)
         self.modbus_label.reset_demand()
         self.modbus_label.reset_demand_peak()
         self.modbus_label.demo_test_demand()

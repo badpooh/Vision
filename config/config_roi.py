@@ -134,6 +134,32 @@ class ConfigROI(Enum):
     color_harmonics_vol = [540, 140, 10, 10, 67, 136, 255]
     color_harmonics_curr = [660, 140, 10, 10, 67, 136, 255]
 
+    ### AccuraSM 검사 부분
+    mask_m_s_meas_wiring = [5, 33, 248, 54]
+    mask_m_s_meas_min_meas_secondary_vol = [268, 33, 506, 54]
+    mask_m_s_meas_vt_primary = [5, 58, 248, 79]
+    mask_m_s_meas_vt_secondary = [268, 58, 506, 79]
+    mask_m_s_meas_primary_reference_voltage_mode = [5, 83, 248, 104]
+    mask_m_s_meas_primary_reference_voltage = [268, 83, 506, 104]
+    mask_m_s_meas_sliding_reference_voltage = [5, 108, 248, 129]
+    mask_m_s_meas_rotating_sequence = [268, 108, 506, 129]
+    mask_m_s_meas_ct_primary = [5, 182, 248, 203]
+    mask_m_s_meas_ct_secondary = [268, 182, 506, 203]
+    mask_m_s_meas_reference_curr = [5, 207, 248, 228]
+    mask_m_s_meas_min_meas_curr = [268, 207, 506, 228]
+    mask_m_s_meas_tdd_reference_selection = [5, 232, 248, 253]
+    mask_m_s_meas_tdd_nominal_curr = [268, 232, 506, 253]
+    mask_m_s_meas_subinterval_time = [5, 306, 248, 327]
+    mask_m_s_meas_number_of_subintervals = [268, 306, 506, 327]
+    mask_m_s_meas_power_type = [5, 331, 248, 352]
+    mask_m_s_meas_sync_mode = [268, 331, 506, 352]
+    mask_m_s_meas_thermal_response_index = [5, 356, 248, 377]
+    mask_m_s_meas_phase_power_calculation = [5, 430, 248, 451]
+    mask_m_s_meas_total_power_calculation = [268, 430, 506, 451]
+    mask_m_s_meas_pf_sign = [5, 455, 248, 476]
+    mask_m_s_meas_pf_value_at_noload = [268, 455, 506, 476]
+    mask_m_s_meas_reactive_power_sign = [5, 480, 248, 501]
+
 class Configs():
     
     def __init__(self, n=3):
@@ -284,6 +310,9 @@ class Configs():
             ConfigROI.s_tdd_nominal_curr_1: [n*x for x in [476, 326, 298, 34]],
             ConfigROI.s_tdd_nominal_curr_2: [n*x for x in [476, 360, 298, 35]],
             ConfigROI.s_tdd_nominal_curr_3: [n*x for x in [476, 360, 298, 35]],
+
+            ConfigROI.s_dip_trigger_1: [n*x for x in [175, 182, 298, 34]],
+            ConfigROI.s_dip_trigger_2: [n*x for x in [175, 216, 298, 35]],
              
         }
         return params

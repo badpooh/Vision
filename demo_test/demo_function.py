@@ -1265,7 +1265,7 @@ class Evaluation:
 
         image_file_name = os.path.splitext(file_name_without_ip)[0]
         
-        save_path = os.path.join(base_save_path, f"{overall_result}_ocr_{image_file_name}.csv")
+        save_path = os.path.join(base_save_path, f"{overall_result}_{image_file_name}.csv")
 
         df.to_csv(save_path, index=False)
         dest_image_path = os.path.join(base_save_path, file_name_without_ip)
@@ -1282,8 +1282,8 @@ class Evaluation:
             try:
                 parts = file_name.split('_')
                 # 날짜와 시간 부분 추출
-                date_part = parts[2]  # '2025-01-22'
-                time_part = "_".join(parts[3:6])  # '17_08_41'
+                date_part = parts[1]  # '2025-01-22'
+                time_part = "_".join(parts[2:5])  # '17_08_41'
                 file_time_str = f"{date_part}_{time_part}"  # '2025-01-22_17_08_41'
                 file_time = datetime.strptime(file_time_str, "%Y-%m-%d_%H_%M_%S")
 
@@ -1297,9 +1297,10 @@ class Evaluation:
                     if 'FAIL' in file_name.upper():
                         fail_count += 1
 
-            except (IndexError, ValueError):
+            except (IndexError, ValueError) as e:
                 print(f"[DEBUG] 파일 이름 분리 결과: {file_name.split('_')}")
                 print(f"[WARN] 파일 이름에서 시간을 추출할 수 없습니다: {file_name}")
+                print("[ERROR INFO]", e)
 
         return total_csv_files, fail_count
     

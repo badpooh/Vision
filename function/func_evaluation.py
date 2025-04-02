@@ -885,8 +885,8 @@ class Evaluation:
             try:
                 parts = file_name.split('_')
                 # 날짜와 시간 부분 추출
-                date_part = parts[2]  # '2025-01-22'
-                time_part = "_".join(parts[3:6])  # '17_08_41'
+                date_part = parts[1]  # '2025-01-22'
+                time_part = "_".join(parts[2:5])  # '17_08_41'
                 file_time_str = f"{date_part}_{time_part}"  # '2025-01-22_17_08_41'
                 file_time = datetime.strptime(file_time_str, "%Y-%m-%d_%H_%M_%S")
 

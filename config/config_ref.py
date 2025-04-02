@@ -71,7 +71,14 @@ class ConfigImgRef(Enum):
     img_ref_waveform_all_none = r".\image_ref\42.img_ref_waveform_all_none.png"
 
     ### AccuraSM
-    img_ref_meas_refresh = r'.\vision\image_ref\101.meas_compare_apply_refresh.png'
+    img_ref_meas_refresh = r'.\vision\image_ref\101.meter_setup_meas_min.png'
+    img_ref_meter_setup_meas_min = r'.\vision\image_ref\101.meter_setup_meas_min.png'
+    img_ref_meter_setup_meas_max = r'.\vision\image_ref\102.meter_setup_meas_max.png'
+    img_ref_meter_setup_meas_exc = r'.\vision\image_ref\103.meter_setup_meas_exc.png'
+    img_ref_meter_setup_event_min = r'.\vision\image_ref\104.meter_setup_event_min.png'
+    img_ref_meter_setup_event_max = r'.\vision\image_ref\105.meter_setup_event_max.png'
+
+
     img_ref_wiring_wye = r'.\vision\image_ref\102.wiring_wye.png'
     img_ref_wiring_delta = r'.\vision\image_ref\103.wiring_delta.png'
     img_ref_min_meas_secondary_ln_vol_0 = r'.\vision\image_ref\104.min_meas_secondary_ln_vol_0.png'
@@ -100,7 +107,7 @@ class ConfigImgRef(Enum):
     img_ref_tdd_reference_selection_tdd = r'.\vision\image_ref\126.tdd_reference_selection_tdd.png'
     img_ref_tdd_nominal_curr_0 = r'.\vision\image_ref\127.tdd_nominal_current_0.png'
     img_ref_tdd_nominal_curr_99999 = r'.\vision\image_ref\128.tdd_nominal_current_99999.png'
-    img_ref_meter_setup_event_max = r'.\vision\image_ref\104.meter_setup_event_max.png'
+    
 
 
 

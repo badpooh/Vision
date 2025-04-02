@@ -27,17 +27,34 @@ class AutoGUI:
 		save_path = os.path.join(base_save_path, f'{image_file_name}_{title}.png')
 		dest_image_path = os.path.join(base_save_path, file_name_without_ip)
 
-		screenshot = pyautogui.screenshot()
-		screenshot = np.array(screenshot)  
-		screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
+		screenshot_pil = pyautogui.screenshot()
+		screenshot = cv2.cvtColor(np.array(screenshot_pil), cv2.COLOR_RGB2BGR)
+	
+		template_full = cv2.imread(template_path, cv2.IMREAD_COLOR)
+		if template_full is None:
+			print(f"Failed to load template: {template_path}")
+			return None, False
+		
+		if roi_mask is not None:
+			x1, y1, x2, y2 = roi_mask
+			# 좌표 보정 (0보다 작으면 0, 원본보다 크면 원본 크기로)
+			h_full, w_full = template_full.shape[:2]
+			x1, y1 = max(0, x1), max(0, y1)
+			x2, y2 = min(w_full, x2), min(h_full, y2)
 
-		if roi_mask:
-			mask_result = self.template_mask(template_path=template_path, roi_mask=roi_mask)
-			template = mask_result
+			# crop된 템플릿
+			template = template_full[y1:y2, x1:x2]
+	
 		else:
-			template = cv2.imread(template_path, cv2.IMREAD_COLOR)
-			h, w, _ = template.shape
-
+			# template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+			# h, w, _ = template.shape
+			template = template_full
+			pass
+		
+		h, w = template.shape[:2]
+		if h == 0 or w == 0:
+			print("Cropped template is empty. Check roi_mask coordinates.")
+			return None, False
 		result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
 		min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
@@ -77,22 +94,22 @@ class AutoGUI:
 	def template_mask(self, template_path, roi_mask):
 		x1, y1, x2, y2 = [*roi_mask]
 		template = cv2.imread(template_path, cv2.IMREAD_COLOR)
-		mask = np.ones(template.shape[:2], dtype=np.uint8) * 255  # 255=사용, 0=무시
+		h, w = template.shape[:2]
 
-		x1, y1 = 0, 21
-		x2, y2 = 242, 42
-		mask_result = cv2.rectangle(mask, (x1, y1), (x2, y2), 0, -1)
+		x1, y1 = max(0, x1), max(0, y1)
+		x2, y2 = min(w, x2), min(h, y2)
+		cropped_template = template[y1:y2, x1:x2]
 
-		return mask_result
+		# mask = np.ones(template.shape[:2], dtype=np.uint8) * 255  # 255=사용, 0=무시
+		# mask_result = cv2.rectangle(mask, (x1, y1), (x2, y2), 0, -1)
+		return cropped_template
 
 	def m_s_meas_refresh(self, img_path, base_save_path, title):
-		print('refresh 함수는 동작?')
 		template_path = ConfigImgRef.img_ref_meas_refresh.value
-		coordinates = [0.94, 0.48]
+		coordinates = [0.93, 0.98]
 		self.find_and_click(template_path, img_path, base_save_path, title, coordinates=coordinates, save_statue=0, click=1)
 	
 	def m_s_event_refresh(self, img_path, base_save_path, title):
-		print('refresh 함수는 동작?')
 		template_path = ConfigImgRef.img_ref_meter_setup_event_max.value
 		coordinates = [0.93, 0.98]
 		self.find_and_click(template_path, img_path, base_save_path, title, coordinates=coordinates, save_statue=0, click=1)
