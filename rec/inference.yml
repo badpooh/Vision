@@ -3,8 +3,7 @@ PreProcess:
   - DecodeImage:
       channel_first: false
       img_mode: BGR
-  - MultiLabelEncode:
-      gtc_encode: NRTRLabelEncode
+  - MultiLabelEncode: null
   - RecResizeImg:
       image_shape:
       - 3
@@ -14,7 +13,7 @@ PreProcess:
       keep_keys:
       - image
       - label_ctc
-      - label_gtc
+      - label_sar
       - length
       - valid_ratio
 PostProcess:
