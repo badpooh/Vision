@@ -97,40 +97,13 @@ class PaddleOCRManager:
                 sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
             
             elif test_type == 1:
-                self.update_n(3)
+                self.update_n(2)
                 resized_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                 denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
+                
                 kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
                 sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
 
-                # # 1. 그레이스케일 변환
-                # gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-
-                # # 2. (선택 사항) 가우시안 블러 적용 (노이즈 감소 및 Thresholding 성능 향상 목적)
-                # #    커널 크기(예: (3,3) 또는 (5,5))는 실험을 통해 조정
-                # blurred_image = cv2.GaussianBlur(gray_image, (5, 5), 0)
-
-                # # 3. 적응형 이진화 (Adaptive Thresholding) - 조명 변화에 강함
-                # #    blockSize와 C 값은 실험을 통해 최적값 탐색 필요 (blockSize는 홀수)
-                # thresh_image = cv2.adaptiveThreshold(
-                #     blurred_image, # blurred_image 사용 시 blurred_image로 변경
-                #     255,                      # 최댓값
-                #     cv2.ADAPTIVE_THRESH_GAUSSIAN_C, # 주변 픽셀 가우시안 가중치 평균 사용
-                #     cv2.THRESH_BINARY_INV,     # 임계값보다 크면 0, 작으면 최댓값 (검은 글씨, 흰 배경 -> 흰 글씨, 검은 배경)
-                #                             # 또는 cv2.THRESH_BINARY (흰 글씨, 검은 배경 -> 검은 글씨, 흰 배경)
-                #     blockSize=11,              # 임계값을 계산할 주변 영역 크기 (홀수)
-                #     C=5                        # 평균 또는 가중 평균에서 뺄 상수
-                # )
-
-                # # 또는 Otsu 이진화 (이미지 전체에 대한 최적 임계값 자동 결정)
-                # _, thresh_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-
-                # # 최종 처리된 이미지를 sharpened_image 변수에 할당 (이후 코드와 호환되도록)
-                # sharpened_image = cv2.cvtColor(thresh_image, cv2.COLOR_GRAY2BGR) # 컬러 이미지로 변환 (필요한 경우)
-                # # 또는 Grayscale 상태로 OCR을 수행하는 것이 더 좋을 수도 있음
-                # # kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-                # # thresh_image = cv2.filter2D(thresh_image, -1, kernel)
-                # # sharpened_image = thresh_image
 
             else:
                 print(f"Error {self.phasor_condition}")
