@@ -78,26 +78,81 @@ class SetupTest(QObject):
 			)
 		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result, title)
 		time.sleep(0.5)
-		
+
+	def config_setup_action(self,
+                       main_menu=None,
+                       side_menu=None,
+                       data_view=None,
+                       password=None,
+                       popup_btn=None,
+                       numeric_input=None,
+                       apply_btn=True,
+                       roi_keys=None,
+                       except_addr=None,
+					   access_address=None,
+                       ref_value=None,
+                       template_path=None,
+                       roi_mask=None,
+                       search_pattern=None,
+                       base_save_path=None,
+                       title_desc=None):
+		"""
+		예시 인자:
+		- main_menu: ConfigTouch.touch_main_menu_1.value
+		- side_menu: ConfigTouch.touch_side_menu_1.value
+		- data_view: ConfigTouch.touch_data_view_1.value
+		- password: True/False => 터치 패스워드
+		- popup_btn: ConfigTouch.touch_btn_popup_2.value
+		- numeric_input: '100000' (문자열)
+		- apply_btn: True/False
+		- roi_keys, except_addr, ref_value, template_path, roi_mask => setup_ocr_process에 필요
+		- search_pattern, base_save_path => setup_ocr_process에 필요
+		- title_desc => 임의의 식별자 (setup_ocr_process 호출 시 구분)
+		"""
+
+		if main_menu is not None:
+			self.touch_manager.touch_menu(main_menu)
+		if side_menu is not None:
+			self.touch_manager.touch_menu(side_menu)
+		if data_view is not None:
+			self.touch_manager.touch_menu(data_view)
+
+		if password:
+			self.touch_manager.touch_password() 
+
+		if popup_btn is not None:
+			self.touch_manager.touch_menu(popup_btn)
+			self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
+
+		if numeric_input is not None:
+			self.touch_manager.input_number(numeric_input)
+			self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
+
+		if apply_btn:
+			self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+
+		if (roi_keys and except_addr and access_address and ref_value and template_path and roi_mask
+			and base_save_path and search_pattern):
+			self.setup_ocr_process(
+				base_save_path,
+				search_pattern,
+				roi_keys=roi_keys,
+				except_address=except_addr,
+				access_address=access_address,
+				ref_value=ref_value,
+				template_path=template_path,
+				roi_mask=roi_mask
+			)
+		else:
+			print(f"[DEBUG] Not calling setup_ocr_process for {title_desc} because some param is missing.")
+
 	def setup_meter_s_m_vol(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
 		### wiring -> Delta
 		self.touch_manager.btn_front_meter()
 		self.touch_manager.btn_front_setup()
-		self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_1.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_1.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_1.value)
-		self.touch_manager.touch_password()
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_2.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_wiring_1, ConfigROI.s_wiring_2]
-		except_addr = ConfigMap.addr_wiring
-		ref_value = roi_keys[1].value[1]
-		template_path = ConfigImgRef.img_ref_meter_setup_meas_max.value
-		roi_mask = ConfigROI.mask_m_s_meas_wiring.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
-		
+		self.config_setup_action(ConfigTouch.touch_main_menu_1.value, ConfigTouch.touch_side_menu_1.value, ConfigTouch.touch_data_view_1.value, True, ConfigTouch.touch_btn_popup_2.value, None, True, [ConfigROI.s_wiring_1, ConfigROI.s_wiring_2], ConfigMap.addr_wiring, ConfigMap.addr_measurement_setup_access.value, ConfigROI.s_wiring_2.value[1], ConfigImgRef.img_ref_meter_setup_meas_max.value, ConfigROI.mask_m_s_meas_wiring.value, search_pattern, base_save_path)
+
 		### wiring -> Wye
 		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_1.value)
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_1.value)
@@ -345,6 +400,30 @@ class SetupTest(QObject):
 		roi_keys = [ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2]
 		except_addr = ConfigMap.addr_ct_secondary_current
 		ref_value = roi_keys[1].value[0]
+		template_path = ConfigImgRef.img_ref_ct_secondary_curr_5.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+
+		### Reference Current 50 > 5 (4로 변경)
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_3.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_4.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys = [ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2]
+		except_addr = ConfigMap.addr_reference_current
+		ref_value = roi_keys[1].value[0]
+		template_path = ConfigImgRef.img_ref_ct_secondary_curr_5.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+
+		### Reference Current 50 > 99999 (100000로 변경)
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_3.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_1.value)
+		for i in range(5):
+			self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_0.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys = [ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2]
+		except_addr = ConfigMap.addr_reference_current
+		ref_value = roi_keys[1].value[1]
 		template_path = ConfigImgRef.img_ref_ct_secondary_curr_5.value
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
 

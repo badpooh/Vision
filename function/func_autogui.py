@@ -113,3 +113,5 @@ class AutoGUI:
 		template_path = ConfigImgRef.img_ref_meter_setup_event_max.value
 		coordinates = [0.93, 0.98]
 		self.find_and_click(template_path, img_path, base_save_path, title, coordinates=coordinates, save_statue=0, click=1)
+
+
