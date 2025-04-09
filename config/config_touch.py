@@ -100,8 +100,6 @@ class ConfigTouch(Enum):
     touch_btn_ref_num_9 = [285, 365]
     touch_btn_ref_num_0 = [345, 365]
 
-
-   
     
     ### touch 동작관련 address ###
     touch_addr_ui_test_mode = 57100

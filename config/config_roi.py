@@ -87,6 +87,7 @@ class ConfigROI(Enum):
     s_sliding_reference_vol_2 = ['Disable', 'Enable']
     s_rotation_sequence_1 = ['Rotating Sequence']
     s_rotation_sequence_2 = ['Positive', 'Negative']
+    #current
     s_ct_primary_curr_1 = ['CT Primary Current [A]']
     s_ct_primary_curr_2 = ['5', '99999']
     s_ct_secondary_curr_1 = ['CT Secondary Current [A]']
@@ -100,10 +101,75 @@ class ConfigROI(Enum):
     s_tdd_nominal_curr_1 = ['TDD Nominal Current [A]']
     s_tdd_nominal_curr_2 = ['Reference Current', 'Reference Current']
     s_tdd_nominal_curr_3 = ['1', '99999']
+    #demand
+    s_sub_interval_time_1 = ['Sub-Interval Time [min]']
+    s_sub_interval_time_2 = ['1', '60']
+    s_number_of_sub_intervals_1 = ['Number of Sub-Intervals']
+    s_number_of_sub_intervals_2 = ['1', '12']
+    s_demand_power_type_1 = ['Demand Power Type']
+    s_demand_power_type_2 = ['Received', 'Net']
+    s_demand_sync_mode_1 = ['Demand Sync Mode']
+    s_demand_sync_mode_2 = ['Hourly Auto Sync', 'Manual Sync']
+    s_thermal_response_index_1 = ['Thermal Response Index [%]']
+    s_thermal_response_index_2 = ['0', '100']
+    #power
+    s_phase_power_calculation_1 = ['Phase Power Calculation']
+    s_phase_power_calculation_2 = ['Fundamental', 'RMS']
+    s_total_power_calculation_1 = ['Total Power Calculation']
+    s_total_power_calculation_2 = ['Vector Sum', 'Arithmetic Sum']
+    s_pf_sign_1 = ['PF Sign']
+    s_pf_sign_2 = ['Unsigned', 'Signed']
+    s_pf_value_at_noload_1 = ['PF Value at No Load']
+    s_pf_value_at_noload_2 = ['PF = 0', 'PF = 1']
+    s_reactive_power_sign_1 = ['Reactive Power Sign']
+    s_reactive_power_sign_2 = ['Unsigned', 'Signed']
+
+    # event>dip
     s_dip_trigger_1 = ['Trigger']
     s_dip_trigger_2 = ['Disable', 'Enable']
+    s_dip_threshold_1 = ['Threshold [%]']
+    s_dip_threshold_2 = ['1.0', '99.0']
+    s_dip_hysteresis_1 = ['Hysteresis [%]']
+    s_dip_hysteresis_2 = ['1.0', '99.0']
+    s_dip_3phase_dip_1 = ['3-Phase Dip']
+    s_dip_3phase_dip_2 = ['Disable', 'Enable']
+    #swell
+    s_swell_trigger_1 = ['Trigger']
+    s_swell_trigger_2 = ['Disable', 'Enable']
+    s_swell_threshold_1 = ['Threshold [%]']
+    s_swell_threshold_2 = ['1.0', '99.0']
+    s_swell_hysteresis_1 = ['Hysteresis [%]']
+    s_swell_hysteresis_2 = ['1.0', '99.0']
+    #pq curve
+    s_pq_curve_semi_1 = ['SEMI F47-0706']
+    s_pq_curve_semi_2 = ['Disable', 'Enable']
+    s_pq_curve_iec_1 = ['IEC 61000-4-11/34 Class 3']
+    s_pq_curve_iec_2 = ['Disable', 'Enable']
+    s_pq_curve_itic_1 = ['ITIC']
+    s_pq_curve_itic_2 = ['Disable', 'Enable']
 
-    
+    #network>ethernet
+    #rs-485
+    s_device_address_1 = ['Device Address']
+    s_device_address_2 = ['0', '247']
+    s_bit_rate_1 = ['Bit Rate']
+    s_bit_rate_2 = ['1200', '2400', '4800', '9600', '19200', '38400', '57600', '115200']
+    s_parity_1 = ['Parity']
+    s_parity_2 = ['None', 'Odd', 'Even']
+    s_stop_bit_1 = ['Stop Bit']
+    s_stop_bit_2 = ['1', '2']
+    #advanced
+    s_modbus_timeout_1 = ['Modbus Timeout [sec]']
+    s_modbus_timeout_2 = ['5', '600']
+    s_rstp_1 = ['RSTP']
+    s_rstp_2 = ['Disable', 'Enable']
+    s_storm_control_1 = ['Storm Control']
+    s_storm_control_2 = ['Disable', 'Enable']
+    s_rs485_map_1 = ['RS-485 Map']
+    s_rs485_map_2 = ['Accura 7300', 'Accura 7500']
+    s_remote_control_lock_mode_1 = ['Remote Control Lock Mdoe']
+    s_remote_control_lock_mode_2 = ['Each Connection Lock', 'Always Unlock']
+
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
     color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]
     color_rms_vol_ll = [380, 140, 10, 10, 67, 136, 255]
@@ -170,30 +236,30 @@ class Configs():
 
     def roi_params(self):
         n = self.n
+
+        def scale_coord(coords):
+            """좌표 [x, y, w, h]에 n을 곱합니다."""
+            if coords is None: return None 
+            return [int(n * x) for x in coords]
+        
+        view1_zone_1 = (175, 182, 298, 34)
+        view1_zone_2 = (175, 217, 298, 34)
+        view2_zone_1 = (476, 182, 298, 34)
+        view2_zone_2 = (476, 217, 298, 34)
+        view3_zone_1 = (175, 254, 298, 34)
+        view3_zone_2 = (175, 289, 298, 34)
+        view4_zone_1 = (476, 254, 298, 34)
+        view4_zone_2 = (476, 289, 298, 34)
+        view5_zone_1 = (175, 326, 298, 34)
+        view5_zone_2 = (175, 361, 298, 34)
+        view6_zone_1 = (476, 326, 298, 34)
+        view6_zone_2 = (476, 361, 298, 34)
+        view7_zone_1 = (175, 398, 298, 34)
+        view7_zone_2 = (175, 433, 298, 34)
+        view8_zone_1 = (476, 398, 298, 34)
+        view8_zone_2 = (476, 433, 298, 34)
+        
         params = {
-            "1": [n*x for x in [176, 181, 298, 35]],
-            "2": [n*x for x in [477, 181, 298, 35]],
-            "3": [n*x for x in [176, 215, 298, 35]],
-            "4": [n*x for x in [477, 215, 298, 35]],
-            "5": [n*x for x in [176, 253, 298, 35]],
-            "6": [n*x for x in [477, 253, 298, 35]],
-            "7": [n*x for x in [176, 287, 298, 35]],
-            "8": [n*x for x in [477, 287, 298, 35]],
-            "9": [n*x for x in [176, 325, 298, 35]],
-            "10": [n*x for x in [477, 325, 298, 35]],
-            "11": [n*x for x in [176, 359, 298, 35]],
-            "12": [n*x for x in [477, 359, 298, 35]],
-            "13": [n*x for x in [176, 397, 298, 35]],
-            "14": [n*x for x in [477, 397, 298, 35]],
-            "15": [n*x for x in [176, 431, 298, 35]],
-            "16": [n*x for x in [477, 431, 298, 35]],
-            # popup title ~ popup button(enter, cancel)
-            "17": [n*x for x in [250, 20, 300, 55]],
-            "18": [n*x for x in [262, 88, 273, 44]],
-            "19": [n*x for x in [250, 138, 273, 44]],
-            # popup_number title ~ popup button(enter, cancel)
-            "20": [n*x for x in [280, 30, 240, 40]],
-            "21": [n*x for x in [280, 75, 240, 40]],
 
             # OCR 결과를 위한 좌표
             # rms voltage l-l l-m min max
@@ -281,13 +347,13 @@ class Configs():
             ConfigROI.harmonics_text_number_meas_1: [n*x for x in [206, 238, 67, 232]],
             ConfigROI.harmonics_text_chart_img_cut_3: [n*x for x in [170, 389, 610, 240]],
 
+            #meter>setup>measurement>voltage
             ConfigROI.s_wiring_1: [n*x for x in [175, 182, 298, 34]],
             ConfigROI.s_wiring_2: [n*x for x in [175, 216, 298, 35]],
             ConfigROI.s_min_meas_sec_ln_vol_1: [n*x for x in [476, 182, 298, 34]],
             ConfigROI.s_min_meas_sec_ln_vol_2: [n*x for x in [740, 216, 34, 35]],
             ConfigROI.s_vt_primary_ll_vol_1: [n*x for x in [175, 254, 298, 34]],
-            # ConfigROI.s_vt_primary_ll_vol_2: [n*x for x in [175, 288, 298, 34]],
-            ConfigROI.s_vt_primary_ll_vol_2: [n*x for x in [340, 292, 133, 28]],
+            ConfigROI.s_vt_primary_ll_vol_2: [n*x for x in [175, 288, 298, 34]],
             ConfigROI.s_vt_secondary_ll_vol_1: [n*x for x in [476, 254, 298, 34]],
             ConfigROI.s_vt_secondary_ll_vol_2: [n*x for x in [476, 288, 298, 35]],
             ConfigROI.s_primary_reference_vol_1: [n*x for x in [175, 326, 298, 34]],
@@ -297,6 +363,7 @@ class Configs():
             ConfigROI.s_sliding_reference_vol_2: [n*x for x in [476, 360, 298, 35]],
             ConfigROI.s_rotation_sequence_1: [n*x for x in [175, 398, 298, 34]],
             ConfigROI.s_rotation_sequence_2: [n*x for x in [175, 432, 298, 35]],
+            #current
             ConfigROI.s_ct_primary_curr_1: [n*x for x in [175, 182, 298, 69]],
             ConfigROI.s_ct_primary_curr_2: [n*x for x in [175, 216, 298, 35]],
             ConfigROI.s_ct_secondary_curr_1: [n*x for x in [476, 182, 298, 34]],
@@ -310,9 +377,74 @@ class Configs():
             ConfigROI.s_tdd_nominal_curr_1: [n*x for x in [476, 326, 298, 34]],
             ConfigROI.s_tdd_nominal_curr_2: [n*x for x in [476, 360, 298, 35]],
             ConfigROI.s_tdd_nominal_curr_3: [n*x for x in [476, 360, 298, 35]],
+            #demand
+            ConfigROI.s_sub_interval_time_1: scale_coord(view1_zone_1),
+            ConfigROI.s_sub_interval_time_2: scale_coord(view1_zone_2),
+            ConfigROI.s_number_of_sub_intervals_1: scale_coord(view2_zone_1),
+            ConfigROI.s_number_of_sub_intervals_2: scale_coord(view2_zone_2),
+            ConfigROI.s_demand_power_type_1: scale_coord(view3_zone_1),
+            ConfigROI.s_demand_power_type_2: scale_coord(view3_zone_2),
+            ConfigROI.s_demand_sync_mode_1: scale_coord(view4_zone_1),
+            ConfigROI.s_demand_sync_mode_2: scale_coord(view4_zone_2),
+            ConfigROI.s_thermal_response_index_1: scale_coord(view5_zone_1),
+            ConfigROI.s_thermal_response_index_2: scale_coord(view5_zone_2),
+            #power
+            ConfigROI.s_phase_power_calculation_1: scale_coord(view1_zone_1),
+            ConfigROI.s_phase_power_calculation_2: scale_coord(view1_zone_2),
+            ConfigROI.s_total_power_calculation_1: scale_coord(view2_zone_1),
+            ConfigROI.s_total_power_calculation_2: scale_coord(view2_zone_2),
+            ConfigROI.s_pf_sign_1: scale_coord(view3_zone_1),
+            ConfigROI.s_pf_sign_2: scale_coord(view3_zone_2),
+            ConfigROI.s_pf_value_at_noload_1: scale_coord(view4_zone_1),
+            ConfigROI.s_pf_value_at_noload_2: scale_coord(view4_zone_2),
+            ConfigROI.s_reactive_power_sign_1: scale_coord(view5_zone_1),
+            ConfigROI.s_reactive_power_sign_2: scale_coord(view5_zone_2),
 
-            ConfigROI.s_dip_trigger_1: [n*x for x in [175, 182, 298, 34]],
-            ConfigROI.s_dip_trigger_2: [n*x for x in [175, 216, 298, 35]],
-             
+            # event>dip
+            ConfigROI.s_dip_trigger_1: scale_coord(view1_zone_1),
+            ConfigROI.s_dip_trigger_2: scale_coord(view1_zone_2),
+            ConfigROI.s_dip_threshold_1: scale_coord(view2_zone_1),
+            ConfigROI.s_dip_threshold_2: scale_coord(view2_zone_2),
+            ConfigROI.s_dip_hysteresis_1: scale_coord(view3_zone_1),
+            ConfigROI.s_dip_hysteresis_2: scale_coord(view3_zone_2),
+            ConfigROI.s_dip_3phase_dip_1: [n*x for x in [175, 331, 298, 34]],
+            ConfigROI.s_dip_3phase_dip_2: [n*x for x in [175, 366, 298, 34]],
+            #swell
+            ConfigROI.s_swell_trigger_1: scale_coord(view1_zone_1),
+            ConfigROI.s_swell_trigger_2: scale_coord(view1_zone_2),
+            ConfigROI.s_swell_threshold_1: scale_coord(view2_zone_1),
+            ConfigROI.s_swell_threshold_2: scale_coord(view2_zone_2),
+            ConfigROI.s_swell_hysteresis_1: scale_coord(view3_zone_1),
+            ConfigROI.s_swell_hysteresis_2: scale_coord(view3_zone_2),
+            #pq curve
+            ConfigROI.s_pq_curve_semi_1: scale_coord(view1_zone_1),
+            ConfigROI.s_pq_curve_semi_2: scale_coord(view1_zone_2),
+            ConfigROI.s_pq_curve_iec_1: scale_coord(view2_zone_1),
+            ConfigROI.s_pq_curve_iec_2: scale_coord(view2_zone_2),
+            ConfigROI.s_pq_curve_itic_1: scale_coord(view3_zone_1),
+            ConfigROI.s_pq_curve_itic_2: scale_coord(view3_zone_2),
+
+            #network>ethernet
+            #rs-485
+            ConfigROI.s_device_address_1: scale_coord(view1_zone_1),
+            ConfigROI.s_device_address_2: scale_coord(view1_zone_2),
+            ConfigROI.s_bit_rate_1: scale_coord(view2_zone_1),
+            ConfigROI.s_bit_rate_2: scale_coord(view2_zone_2),
+            ConfigROI.s_parity_1: scale_coord(view3_zone_1),
+            ConfigROI.s_parity_2: scale_coord(view3_zone_2),
+            ConfigROI.s_stop_bit_1: scale_coord(view4_zone_1),
+            ConfigROI.s_stop_bit_2: scale_coord(view4_zone_2),
+            #advanced
+            ConfigROI.s_modbus_timeout_1: scale_coord(view1_zone_1),
+            ConfigROI.s_modbus_timeout_2: scale_coord(view1_zone_2),
+            ConfigROI.s_rstp_1: scale_coord(view2_zone_1),
+            ConfigROI.s_rstp_2: scale_coord(view2_zone_2),
+            ConfigROI.s_storm_control_1: scale_coord(view3_zone_1),
+            ConfigROI.s_storm_control_2: scale_coord(view3_zone_2),
+            ConfigROI.s_rs485_map_1: scale_coord(view4_zone_1),
+            ConfigROI.s_rs485_map_2: scale_coord(view4_zone_2),
+            ConfigROI.s_remote_control_lock_mode_1: scale_coord(view5_zone_1),
+            ConfigROI.s_remote_control_lock_mode_2: scale_coord(view5_zone_2),
+
         }
         return params

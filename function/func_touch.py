@@ -55,6 +55,7 @@ class TouchManager:
     def touch_menu(self, menu_key):
         if self.connect_manager.touch_client:
             data_view_x, data_view_y = menu_key
+            print(f'터치 좌표: {data_view_x, data_view_y}')
             self.touch_write(ConfigTouch.touch_addr_pos_x.value, data_view_x)
             self.touch_write(ConfigTouch.touch_addr_pos_y.value, data_view_y)
             self.touch_write(ConfigTouch.touch_addr_touch_mode.value, 1)
