@@ -448,50 +448,82 @@ class SetupTest(QObject):
 			base_save_path=base_save_path)
 
 	def setup_meter_s_m_curr(self, base_save_path, search_pattern):
+		# self.config_setup_action(
+		# 	main_menu=
+		# 	side_menu=
+		# 	data_view=
+		# 	password=
+		# 	popup_btn=
+		# 	number_input=
+		# 	apply_btn=
+		# 	roi_keys=
+		# 	except_addr=
+		# 	access_address=
+		# 	ref_value=
+		# 	template_path=
+		# 	roi_mask=
+		# 	search_pattern=
+		# 	base_save_path=)
 		self.touch_manager.uitest_mode_start() 
-		### CT Primary Current 50 -> 5 (4로 변경)
+		
 		self.touch_manager.btn_front_meter()
 		self.touch_manager.btn_front_setup()
-		self.touch_manager.touch_menu(ConfigTouch.touch_main_menu_1.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_side_menu_2.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_1.value)
-		self.touch_manager.touch_password()
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_4.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2]
-		except_addr = ConfigMap.addr_ct_primary_current
-		ref_value = roi_keys[1].value[0]
-		template_path = ConfigImgRef.img_ref_meter_setup_meas_min.value
-		roi_mask = ConfigROI.mask_m_s_meas_ct_primary.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+
+		### CT Primary Current 50 -> 5 (4로 변경)
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_1.value,
+			side_menu=ConfigTouch.touch_side_menu_2.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input='4',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2],
+			except_addr=ConfigMap.addr_ct_primary_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_ct_primary_curr_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,)
 		
 		### CT Primary Current 5 -> 99999 (100000로 변경) ---> 여기 부터 변경 필요
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_1.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_1.value)
-		for i in range(5):
-			self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_0.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2]
-		except_addr = ConfigMap.addr_ct_primary_current
-		ref_value = roi_keys[1].value[1]
-		template_path = ConfigImgRef.img_ref_ct_primary_curr_99999.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=None,
+			number_input='100000',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2],
+			except_addr=ConfigMap.addr_ct_primary_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_ct_primary_curr_2.value[1],
+			template_path=ConfigImgRef.img_ref_ct_primary_curr_99999.value,
+			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		### CT Primary Current 초기화(50)
 		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_ct_primary_current, bit32=50)
 
 		## CT Secondary Current 5-> 10 (11로 변경)
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_2.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_1.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_0.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2]
-		except_addr = ConfigMap.addr_ct_secondary_current
-		ref_value = roi_keys[1].value[1]
-		template_path = ConfigImgRef.img_ref_ct_secondary_curr_10.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='10',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2],
+			except_addr=ConfigMap.addr_ct_secondary_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_ct_secondary_curr_2.value[1],
+			template_path=ConfigImgRef.img_ref_ct_secondary_curr_10.value,
+			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
 		### CT Secondary Current 10-> 5 (4로 변경)
 		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_2.value)

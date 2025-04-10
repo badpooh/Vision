@@ -170,6 +170,89 @@ class ConfigROI(Enum):
     s_remote_control_lock_mode_1 = ['Remote Control Lock Mdoe']
     s_remote_control_lock_mode_2 = ['Each Connection Lock', 'Always Unlock']
 
+    #control>data reset
+    s_data_reset_demand = ['Demand']
+    s_data_reset_peak_demand = ['Peak Demand']
+    s_data_reset_max_min = ['Max/Min']
+    s_data_reset_energy = ['Energy']
+    s_data_reset_pq_event = ['PQ Event']
+    #demand sync
+    s_demand_sync = ['Demand Sync']
+    s_test_mode_1 = ['Test Mode']
+    s_test_mode_2 = ['Off', 'Balance', 'Unbalance', 'Dip Short', 'Dip Long', 'Swell Short', 'Swell Long']
+    s_test_mode_timeout_1 = ['Timeout [min]']
+    s_test_mode_timeout_2 = ['Infinite', '1', '1440']
+
+    #system>description
+    s_device_name = ['Device Name']
+    s_user_defined_info = ['User-Defined Info']
+    s_location = ['Location']
+    s_installation_year_1 = ['Installation Year']
+    s_installation_year_2 =['1970', '9999']
+    s_installation_month_1 = ['Installation Month']
+    s_installation_month_2 = ['1', '12']
+    s_installation_day_1 = ['Installation Day']
+    s_installation_day_2 = ['1', '31']
+    #locale
+    s_timezone_offset_1 = ['Timezone Offset [min]']
+    s_timezone_offset_2 = ['-720', '840']
+    s_temperature_unit_1 = ['Temperature Unit']
+    s_temperature_unit_2 = ['Celsius', 'Fahrenheit']
+    s_energy_unit_1 = ['Energy Unit']
+    s_energy_unit_2 = ['kWh', 'Wh']
+    s_date_format_1 = ['Date Format']
+    s_date_format_2 = ['YYY-MM-DD', 'YYY-DD-MM', 'YYY/DD/MM', 'MM.DD.YYYY', 'MM/DD/YYYY', 'MM-DD-YYYY', 'DD.MM.YYYY', 'DD/MM/YYYY', 'DD-MM-YYYY']
+    #local time
+    s_year_1 = ['Year']
+    s_year_2 = ['1970', '2037']
+    s_month_1 = ['Month']
+    s_month_2 = ['1', '12']
+    s_day_1 = ['Day']
+    s_day_2 = ['1', '31']
+    s_hour_1 = ['Hour']
+    s_hour_2 = ['0', '23']
+    s_minute_1 = ['Minute']
+    s_minute_2 = ['0', '59']
+    s_second_1 = ['Second']
+    s_second_2 = ['0', '59']
+    #summer time
+    s_summer_time_mode_1 = ['Mode']
+    s_summer_time_mode_2 = ['Disable', 'Enable']
+    s_summer_time_time_offset_1 = ['Time Offset [min]']
+    s_summer_time_time_offset_2 = ['0', '1439']
+    s_start_month_1 = ['Start Month']
+    s_start_month_2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    s_start_nth_weekday_1 = ['Start Nth Weekday']
+    s_start_nth_weekday_2 = ['1st', '2nd', '3rd', '4th', '5th']
+    s_start_weekday_1 = ['Start Weekday']
+    s_start_weekday_2 = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    s_start_minute_1 = ['Start Minute']
+    s_start_minute_2 = ['0', '1439']
+    s_end_month_1 = ['End Month']
+    s_end_month_2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    s_end_nth_weekday_1 = ['End Nth Weekday']
+    s_end_nth_weekday_2 = ['1st', '2nd', '3rd', '4th', '5th']
+    s_end_weekday_1 = ['End Weekday']
+    s_end_weekday_2 = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    s_end_minute_1 = ['End Minute']
+    s_end_minute_2 = ['0', '1439']
+
+    #ntp
+    #server ip address
+    s_sync_mode_1 = ['Sync Mode']
+    s_sync_mode_2 = ['Disable', 'Auto', 'Periodic']
+    s_sync_period_1 = ['Sync Period [sec]']
+    s_sync_period_2 = ['60', '999']
+    s_sync_max_drift_1 = ['Sync Max. Drift [ms]']
+    s_sync_max_drift_2 = ['1', '1000']
+    #lcd & buzzer
+    s_lcd_backlight_timeout_1 = ['LCD Backlight Timeout [sec]']
+    s_lcd_backlight_timeout_2 = ['10', '999']
+    s_lcd_backlight_low_level_1 = ['LCD Backlight Low Level [%]']
+    s_lcd_backlight_low_level_2 = ['0', '30']
+    s_buzzer_for_button_1 = ['Buzzer for Button']
+    s_buzzer_for_button_2 = ['Disable', 'Enable']    
+
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
     color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]
     color_rms_vol_ll = [380, 140, 10, 10, 67, 136, 255]
@@ -258,6 +341,10 @@ class Configs():
         view7_zone_2 = (175, 433, 298, 34)
         view8_zone_1 = (476, 398, 298, 34)
         view8_zone_2 = (476, 433, 298, 34)
+        view9_zone_1 = (175, 182, 298, 34)
+        view9_zone_2 = (175, 217, 298, 34)
+        view10_zone_1 = (476, 182, 298, 34)
+        view10_zone_2 = (476, 217, 298, 34)
         
         params = {
 
@@ -445,6 +532,86 @@ class Configs():
             ConfigROI.s_rs485_map_2: scale_coord(view4_zone_2),
             ConfigROI.s_remote_control_lock_mode_1: scale_coord(view5_zone_1),
             ConfigROI.s_remote_control_lock_mode_2: scale_coord(view5_zone_2),
+
+            #control>data reset
+            ConfigROI.s_data_reset_demand: scale_coord(view1_zone_1),
+            ConfigROI.s_data_reset_peak_demand: scale_coord(view2_zone_1),
+            ConfigROI.s_data_reset_max_min: scale_coord(view3_zone_1),
+            ConfigROI.s_data_reset_energy: scale_coord(view4_zone_1),
+            ConfigROI.s_data_reset_pq_event: scale_coord(view5_zone_1),
+            #demand sync
+            ConfigROI.s_demand_sync: scale_coord(view1_zone_1),
+            #test mode
+            ConfigROI.s_test_mode_1: scale_coord(view1_zone_1),
+            ConfigROI.s_test_mode_2: scale_coord(view1_zone_2),
+            ConfigROI.s_test_mode_timeout_1: scale_coord(view2_zone_1),
+            ConfigROI.s_test_mode_timeout_2: scale_coord(view2_zone_2),
+
+            #system>description
+            ConfigROI.s_installation_year_1: scale_coord(view4_zone_1),
+            ConfigROI.s_installation_year_2: scale_coord(view4_zone_2),
+            ConfigROI.s_installation_month_1: scale_coord(view5_zone_1),
+            ConfigROI.s_installation_month_2: scale_coord(view5_zone_2),
+            ConfigROI.s_installation_day_1: scale_coord(view6_zone_1),
+            ConfigROI.s_installation_day_2: scale_coord(view6_zone_2),
+            #locale
+            ConfigROI.s_timezone_offset_1: scale_coord(view1_zone_1),
+            ConfigROI.s_timezone_offset_2: scale_coord(view1_zone_2),
+            ConfigROI.s_temperature_unit_1: scale_coord(view2_zone_1),
+            ConfigROI.s_temperature_unit_2: scale_coord(view2_zone_2),
+            ConfigROI.s_energy_unit_1: scale_coord(view3_zone_1),
+            ConfigROI.s_energy_unit_2: scale_coord(view3_zone_2),
+            ConfigROI.s_date_format_1: scale_coord(view4_zone_1),
+            ConfigROI.s_date_format_2: scale_coord(view4_zone_2),
+            #local time
+            ConfigROI.s_year_1: scale_coord(view1_zone_1),
+            ConfigROI.s_year_2: scale_coord(view1_zone_2),
+            ConfigROI.s_month_1: scale_coord(view2_zone_1),
+            ConfigROI.s_month_2: scale_coord(view2_zone_2),
+            ConfigROI.s_day_1: scale_coord(view3_zone_1),
+            ConfigROI.s_day_2: scale_coord(view3_zone_2),
+            ConfigROI.s_hour_1: scale_coord(view4_zone_1),
+            ConfigROI.s_hour_2: scale_coord(view4_zone_2),
+            ConfigROI.s_minute_1: scale_coord(view5_zone_1),
+            ConfigROI.s_minute_2: scale_coord(view5_zone_2),
+            ConfigROI.s_second_1: scale_coord(view6_zone_1),
+            ConfigROI.s_second_2: scale_coord(view6_zone_2),
+            #summer time
+            ConfigROI.s_summer_time_mode_1: scale_coord(view1_zone_1),
+            ConfigROI.s_summer_time_mode_2: scale_coord(view1_zone_2),
+            ConfigROI.s_summer_time_time_offset_1: scale_coord(view2_zone_1),
+            ConfigROI.s_summer_time_time_offset_2: scale_coord(view2_zone_2),
+            ConfigROI.s_start_month_1: scale_coord(view3_zone_1),
+            ConfigROI.s_start_month_2: scale_coord(view3_zone_2),
+            ConfigROI.s_start_nth_weekday_1: scale_coord(view4_zone_1),
+            ConfigROI.s_start_nth_weekday_2: scale_coord(view4_zone_2),
+            ConfigROI.s_start_weekday_1: scale_coord(view5_zone_1),
+            ConfigROI.s_start_weekday_2: scale_coord(view5_zone_2),
+            ConfigROI.s_start_minute_1: scale_coord(view6_zone_1),
+            ConfigROI.s_start_minute_2: scale_coord(view6_zone_2),
+            ConfigROI.s_end_month_1: scale_coord(view7_zone_1),
+            ConfigROI.s_end_month_2: scale_coord(view7_zone_2),
+            ConfigROI.s_end_nth_weekday_1: scale_coord(view8_zone_1),
+            ConfigROI.s_end_nth_weekday_2: scale_coord(view8_zone_2),
+            ConfigROI.s_end_weekday_1: scale_coord(view9_zone_1),
+            ConfigROI.s_end_weekday_2: scale_coord(view9_zone_2),
+            ConfigROI.s_end_minute_1: scale_coord(view10_zone_1),
+            ConfigROI.s_end_minute_2: scale_coord(view10_zone_2),
+            #ntp
+            ConfigROI.s_sync_mode_1: scale_coord(view2_zone_1),
+            ConfigROI.s_sync_mode_2: scale_coord(view2_zone_2),
+            ConfigROI.s_sync_period_1: scale_coord(view3_zone_1),
+            ConfigROI.s_sync_period_2: scale_coord(view3_zone_2),
+            ConfigROI.s_sync_max_drift_1: scale_coord(view4_zone_1),
+            ConfigROI.s_sync_max_drift_2: scale_coord(view4_zone_2),
+            #lcd&buzzer
+            ConfigROI.s_lcd_backlight_timeout_1: scale_coord(view1_zone_1),
+            ConfigROI.s_lcd_backlight_timeout_2: scale_coord(view1_zone_2),
+            ConfigROI.s_lcd_backlight_low_level_1: scale_coord(view2_zone_1),
+            ConfigROI.s_lcd_backlight_low_level_2: scale_coord(view2_zone_2),
+            ConfigROI.s_buzzer_for_button_1: scale_coord(view3_zone_1),
+            ConfigROI.s_buzzer_for_button_2: scale_coord(view3_zone_2),
+
 
         }
         return params
