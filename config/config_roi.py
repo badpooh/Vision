@@ -99,8 +99,7 @@ class ConfigROI(Enum):
     s_tdd_reference_selection_1 = ['TDD Reference Selection']
     s_tdd_reference_selection_2 = ['TDD Nominal Current', 'Peak Demand Current']
     s_tdd_nominal_curr_1 = ['TDD Nominal Current [A]']
-    s_tdd_nominal_curr_2 = ['Reference Current', 'Reference Current']
-    s_tdd_nominal_curr_3 = ['1', '99999']
+    s_tdd_nominal_curr_2 = ['Reference Current', '1', '99999']
     #demand
     s_sub_interval_time_1 = ['Sub-Interval Time [min]']
     s_sub_interval_time_2 = ['1', '60']
@@ -300,7 +299,7 @@ class ConfigROI(Enum):
     mask_m_s_meas_tdd_nominal_curr = [268, 232, 506, 253]
     mask_m_s_meas_subinterval_time = [5, 306, 248, 327]
     mask_m_s_meas_number_of_subintervals = [268, 306, 506, 327]
-    mask_m_s_meas_power_type = [5, 331, 248, 352]
+    mask_m_s_meas_demand_power_type = [5, 331, 248, 352]
     mask_m_s_meas_sync_mode = [268, 331, 506, 352]
     mask_m_s_meas_thermal_response_index = [5, 356, 248, 377]
     mask_m_s_meas_phase_power_calculation = [5, 430, 248, 451]
@@ -461,9 +460,8 @@ class Configs():
             ConfigROI.s_min_meas_curr_2: [n*x for x in [476, 288, 298, 35]],
             ConfigROI.s_tdd_reference_selection_1: [n*x for x in [175, 326, 298, 34]],
             ConfigROI.s_tdd_reference_selection_2: [n*x for x in [175, 360, 298, 35]],
-            ConfigROI.s_tdd_nominal_curr_1: [n*x for x in [476, 326, 298, 34]],
-            ConfigROI.s_tdd_nominal_curr_2: [n*x for x in [476, 360, 298, 35]],
-            ConfigROI.s_tdd_nominal_curr_3: [n*x for x in [476, 360, 298, 35]],
+            ConfigROI.s_tdd_nominal_curr_1: scale_coord(view6_zone_1),
+            ConfigROI.s_tdd_nominal_curr_2: scale_coord(view6_zone_2),
             #demand
             ConfigROI.s_sub_interval_time_1: scale_coord(view1_zone_1),
             ConfigROI.s_sub_interval_time_2: scale_coord(view1_zone_2),

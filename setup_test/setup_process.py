@@ -464,7 +464,7 @@ class SetupTest(QObject):
 		# 	roi_mask=
 		# 	search_pattern=
 		# 	base_save_path=)
-		self.touch_manager.uitest_mode_start() 
+		self.touch_manager.uitest_mode_start()
 		
 		self.touch_manager.btn_front_meter()
 		self.touch_manager.btn_front_setup()
@@ -500,7 +500,7 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_ct_primary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_ct_primary_curr_2.value[1],
-			template_path=ConfigImgRef.img_ref_ct_primary_curr_99999.value,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
@@ -520,44 +520,178 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_ct_secondary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_ct_secondary_curr_2.value[1],
-			template_path=ConfigImgRef.img_ref_ct_secondary_curr_10.value,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 		
 		### CT Secondary Current 10-> 5 (4로 변경)
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_2.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_4.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2]
-		except_addr = ConfigMap.addr_ct_secondary_current
-		ref_value = roi_keys[1].value[0]
-		template_path = ConfigImgRef.img_ref_ct_secondary_curr_5.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=True,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2],
+			except_addr=ConfigMap.addr_ct_secondary_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_ct_secondary_curr_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_ct_secondary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
 		### Reference Current 50 > 5 (4로 변경)
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_3.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_4.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2]
-		except_addr = ConfigMap.addr_reference_current
-		ref_value = roi_keys[1].value[0]
-		template_path = ConfigImgRef.img_ref_ct_secondary_curr_5.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='4',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2],
+			except_addr=ConfigMap.addr_reference_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_reference_curr_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_reference_curr.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
 		### Reference Current 50 > 99999 (100000로 변경)
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_3.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_1.value)
-		for i in range(5):
-			self.touch_manager.touch_menu(ConfigTouch.touch_btn_number_0.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='100000',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2],
+			except_addr=ConfigMap.addr_reference_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_reference_curr_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_reference_curr.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		### Reference Current 초기화(50)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_ct_primary_current, bit32=50)
+		
+		### min measured current 5 > 0 (0으로 변경)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_min_meas_curr_1, ConfigROI.s_min_meas_curr_2],
+			except_addr=ConfigMap.addr_min_measured_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_min_meas_curr_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_curr.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### min measured current 0 > 100 (101으로 변경)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=None,
+			number_input='101',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_min_meas_curr_1, ConfigROI.s_min_meas_curr_2],
+			except_addr=ConfigMap.addr_min_measured_current,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_min_meas_curr_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_curr.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		### min measured current 초기화(5)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_ct_primary_current, bit16=5)
+		
+		### tdd reference selection / peak demand > tdd nominal
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_tdd_reference_selection_1, ConfigROI.s_tdd_reference_selection_2],
+			except_addr=ConfigMap.addr_tdd_reference,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_min_meas_curr_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_tdd_reference_selection.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### tdd reference selection / tdd nominal > peak demand
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_tdd_reference_selection_1, ConfigROI.s_tdd_reference_selection_2],
+			except_addr=ConfigMap.addr_tdd_reference,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_min_meas_curr_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_tdd_reference_selection.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### tdd nominal current 0 > 1 (reference current 체크 해제 후 0)
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_6.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_ref_curr.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_num_0.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_enter.value)
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2]
-		except_addr = ConfigMap.addr_reference_current
+		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
+		except_addr = ConfigMap.addr_nominal_tdd_current
 		ref_value = roi_keys[1].value[1]
-		template_path = ConfigImgRef.img_ref_ct_secondary_curr_5.value
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_min.value
+		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+
+		### tdd nominal current 1 > 99999 (100000으로 변경)
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_6.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_num_1.value)
+		for i in range(5):
+			self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_num_0.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_enter.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
+		except_addr = ConfigMap.addr_nominal_tdd_current
+		ref_value = roi_keys[1].value[2]
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_max.value
+		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+
+		### tdd nominal current 9999 > 0 (reference current로 변경)
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_6.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_ref_curr.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_enter.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
+		except_addr = ConfigMap.addr_nominal_tdd_current
+		ref_value = roi_keys[1].value[2]
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
+		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
 
 	def m_s_meas_demand(self, base_save_path, search_pattern):
@@ -583,19 +717,129 @@ class SetupTest(QObject):
 			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
+		
+		### Sub-interval time 1 > 60 (input 61)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=None,
+			number_input='61',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sub_interval_time_1, ConfigROI.s_sub_interval_time_2],
+			except_addr=ConfigMap.addr_sub_interval_time,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_sub_interval_time_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		### min measured current 초기화(15)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_sub_interval_time, bit16=15)
+		
+		### Number of Sub-Intervals 1 > 12 (input 13)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='61',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sub_interval_time_1, ConfigROI.s_sub_interval_time_2],
+			except_addr=ConfigMap.addr_sub_interval_time,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_sub_interval_time_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Number of Sub-Intervals 12 > 1 (input 0)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sub_interval_time_1, ConfigROI.s_sub_interval_time_2],
+			except_addr=ConfigMap.addr_sub_interval_time,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_sub_interval_time_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Demand Power Type 0 > 1 (input 1)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_demand_power_type_1, ConfigROI.s_demand_power_type_2],
+			except_addr=ConfigMap.addr_demand_power_type,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_demand_power_type_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_demand_power_type.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Demand Power Type 1 > 0 (input 0)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_demand_power_type_1, ConfigROI.s_demand_power_type_2],
+			except_addr=ConfigMap.addr_demand_power_type,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_demand_power_type_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_demand_power_type.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Demand Sync Mode 0 > 1 (input 0)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_demand_power_type_1, ConfigROI.s_demand_power_type_2],
+			except_addr=ConfigMap.addr_demand_power_type,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_demand_power_type_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_demand_power_type.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
 	def setup_meter_s_e_dip(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
 		### Dip Trigger Disable > Enable 
-		# self.touch_manager.btn_front_meter()
-		# self.touch_manager.btn_front_setup()
-		# self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-		# self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
-		# self.touch_manager.touch_menu(cft.touch_data_view_1.value)
-		# self.touch_manager.touch_password()
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		# self.touch_manager.touch_menu(cft.touch_btn_apply.value)
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+		self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
+		self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
+		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
+		self.touch_manager.touch_password()
+		self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
+		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
+		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
 		roi_keys = [ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2]
 		except_addr = ConfigMap.addr_dip
 		ref_value = roi_keys[1].value[0]

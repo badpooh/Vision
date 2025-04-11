@@ -100,7 +100,22 @@ class ConfigTouch(Enum):
     touch_btn_ref_num_9 = [285, 365]
     touch_btn_ref_num_0 = [345, 365]
 
-    
+    ### TDD Nominal Current popup
+    touch_btn_tdd_enter = [340, 400]
+    touch_btn_tdd_cancel = [460, 400]
+    touch_btn_tdd_ref_curr = [490, 120]
+    touch_btn_tdd_num_1 = [285, 220]
+    touch_btn_tdd_num_2 = [345, 220]
+    touch_btn_tdd_num_3 = [400, 220]
+    touch_btn_tdd_num_4 = [460, 220]
+    touch_btn_tdd_num_5 = [285, 280]
+    touch_btn_tdd_num_6 = [345, 280]
+    touch_btn_tdd_num_7 = [400, 280]
+    touch_btn_tdd_num_8 = [460, 280]
+    touch_btn_tdd_num_9 = [285, 335]
+    touch_btn_tdd_num_0 = [345, 335]
+
+
     ### touch 동작관련 address ###
     touch_addr_ui_test_mode = 57100
     touch_addr_pos_x = 57110
