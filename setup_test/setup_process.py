@@ -448,22 +448,6 @@ class SetupTest(QObject):
 			base_save_path=base_save_path)
 
 	def setup_meter_s_m_curr(self, base_save_path, search_pattern):
-		# self.config_setup_action(
-		# 	main_menu=
-		# 	side_menu=
-		# 	data_view=
-		# 	password=
-		# 	popup_btn=
-		# 	number_input=
-		# 	apply_btn=
-		# 	roi_keys=
-		# 	except_addr=
-		# 	access_address=
-		# 	ref_value=
-		# 	template_path=
-		# 	roi_mask=
-		# 	search_pattern=
-		# 	base_save_path=)
 		self.touch_manager.uitest_mode_start()
 		
 		self.touch_manager.btn_front_meter()
@@ -827,24 +811,272 @@ class SetupTest(QObject):
 			roi_mask=ConfigROI.mask_m_s_meas_demand_power_type.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
+		
+		### Thermal Response Index 90 > 0 (input 0)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_thermal_response_index_1, ConfigROI.s_thermal_response_index_2],
+			except_addr=ConfigMap.addr_thermal_response_index,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_thermal_response_index_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_thermal_response_index.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Thermal Response Index 0 > 100 (input 101)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=None,
+			number_input='101',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_thermal_response_index_1, ConfigROI.s_thermal_response_index_2],
+			except_addr=ConfigMap.addr_thermal_response_index,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_thermal_response_index_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_thermal_response_index.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		### Thermal Response Index 초기화(90)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_thermal_response_index, bit16=90)
 
-	def setup_meter_s_e_dip(self, base_save_path, search_pattern):
+	def m_s_meas_power(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
-		### Dip Trigger Disable > Enable 
+		
 		self.touch_manager.btn_front_meter()
 		self.touch_manager.btn_front_setup()
-		self.touch_manager.touch_menu(cft.touch_main_menu_2.value)
-		self.touch_manager.touch_menu(cft.touch_side_menu_1.value)
-		self.touch_manager.touch_menu(cft.touch_data_view_1.value)
-		self.touch_manager.touch_password()
-		self.touch_manager.touch_menu(cft.touch_btn_popup_2.value)
-		self.touch_manager.touch_menu(cft.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(cft.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2]
-		except_addr = ConfigMap.addr_dip
-		ref_value = roi_keys[1].value[0]
-		template_path = ConfigImgRef.img_ref_meter_setup_event_max.value
-		roi_mask = [9, 51, 248, 72]
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+
+		### Phase Power Calculation 1 > 0 (input )
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_1.value,
+			side_menu=ConfigTouch.touch_side_menu_4.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_phase_power_calculation_1, ConfigROI.s_phase_power_calculation_2],
+			except_addr=ConfigMap.addr_phase_power_calculation,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_phase_power_calculation_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_phase_power_calculation.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+
+		### Phase Power Calculation 0 > 1 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_phase_power_calculation_1, ConfigROI.s_phase_power_calculation_2],
+			except_addr=ConfigMap.addr_phase_power_calculation,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_phase_power_calculation_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_phase_power_calculation.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+
+		### Total Power Calculation 0 > 1 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_total_power_calculation_1, ConfigROI.s_total_power_calculation_2],
+			except_addr=ConfigMap.addr_total_power_calculation,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_total_power_calculation_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_total_power_calculation.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Total Power Calculation 1 > 0 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_total_power_calculation_1, ConfigROI.s_total_power_calculation_2],
+			except_addr=ConfigMap.addr_total_power_calculation,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_total_power_calculation_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_total_power_calculation.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### PF Sign 1 > 0 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pf_sign_1, ConfigROI.s_pf_sign_2],
+			except_addr=ConfigMap.addr_pf_sign,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_pf_sign_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_pf_sign.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### PF Sign 0 > 1 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pf_sign_1, ConfigROI.s_pf_sign_2],
+			except_addr=ConfigMap.addr_pf_sign,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_pf_sign_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_pf_sign.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### PF Value at No-Load 1 > 0 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pf_value_at_noload_1, ConfigROI.s_pf_value_at_noload_2],
+			except_addr=ConfigMap.addr_pf_value_at_no_load,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_pf_value_at_noload_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_pf_value_at_noload.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### PF Value at No-Load 0 > 1 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pf_value_at_noload_1, ConfigROI.s_pf_value_at_noload_2],
+			except_addr=ConfigMap.addr_pf_value_at_no_load,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_pf_value_at_noload_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_pf_value_at_noload.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Reactive Power Sign 1 > 0 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_reactive_power_sign_1, ConfigROI.s_reactive_power_sign_2],
+			except_addr=ConfigMap.addr_reactive_power_sign,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_reactive_power_sign_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_reactive_power_sign.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Reactive Power Sign 0 > 1 (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_reactive_power_sign_1, ConfigROI.s_reactive_power_sign_2],
+			except_addr=ConfigMap.addr_reactive_power_sign,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_reactive_power_sign_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_reactive_power_sign.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+	
+	def m_s_event_dip(self, base_save_path, search_pattern):
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+
+		### Dip Trigger Disable > Enable (input )
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_2.value,
+			side_menu=ConfigTouch.touch_side_menu_1.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2],
+			except_addr=ConfigMap.addr_dip,
+			access_address=ConfigMap.addr_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_trigger_2.value[1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI..value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Dip Trigger Enable > Disable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2],
+			except_addr=ConfigMap.addr_dip,
+			access_address=ConfigMap.addr_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_trigger_2.value[0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI..value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+	
 
 

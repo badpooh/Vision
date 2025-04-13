@@ -81,8 +81,7 @@ class ConfigROI(Enum):
     s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
     s_vt_secondary_ll_vol_2 = ['50.0', '220.0']
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
-    s_primary_reference_vol_2 = ['Line-to-Line', 'Line-to-Neutral']
-    s_primary_reference_vol_3 = ['50.0', '999999.0']
+    s_primary_reference_vol_2 = ['Line-to-Line', 'Line-to-Neutral', '50.0', '999999.0']
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
     s_sliding_reference_vol_2 = ['Disable', 'Enable']
     s_rotation_sequence_1 = ['Rotating Sequence']
@@ -307,6 +306,18 @@ class ConfigROI(Enum):
     mask_m_s_meas_pf_sign = [5, 455, 248, 476]
     mask_m_s_meas_pf_value_at_noload = [268, 455, 506, 476]
     mask_m_s_meas_reactive_power_sign = [5, 480, 248, 501]
+    mask_m_s_event_dip_trigger = [5, 51, 248, 72]
+    mask_m_s_event_dip_threshold = [268, 51, 506, 72]
+    mask_m_s_event_dip_hysteresis = []
+    mask_m_s_event_3dip_trigger = []
+    mask_m_s_event_3dip_interr_ratio = []
+    mask_m_s_event_3dip_interr_delay = []
+    mask_m_s_event_swell_trigger = []
+    mask_m_s_event_swell_threshold = []
+    mask_m_s_event_swell_hysteresis = []
+    mask_m_s_event_pq_curve_semi = []
+    mask_m_s_event_pq_curve_iec = []
+    mask_m_s_event_pq_curve_itic = []
 
 class Configs():
     
@@ -326,9 +337,9 @@ class Configs():
         
         view1_zone_1 = (175, 182, 298, 34)
         view1_zone_2 = (175, 217, 298, 34)
-        view2_zone_1 = (476, 182, 298, 34)
+        view2_zone_1 = (476, 182, 305, 34)
         view2_zone_2 = (476, 217, 298, 34)
-        view3_zone_1 = (175, 254, 298, 34)
+        view3_zone_1 = (175, 254, 305, 34)
         view3_zone_2 = (175, 289, 298, 34)
         view4_zone_1 = (476, 254, 298, 34)
         view4_zone_2 = (476, 289, 298, 34)
@@ -434,21 +445,20 @@ class Configs():
             ConfigROI.harmonics_text_chart_img_cut_3: [n*x for x in [170, 389, 610, 240]],
 
             #meter>setup>measurement>voltage
-            ConfigROI.s_wiring_1: [n*x for x in [175, 182, 298, 34]],
-            ConfigROI.s_wiring_2: [n*x for x in [175, 216, 298, 35]],
-            ConfigROI.s_min_meas_sec_ln_vol_1: [n*x for x in [476, 182, 298, 34]],
-            ConfigROI.s_min_meas_sec_ln_vol_2: [n*x for x in [740, 216, 34, 35]],
-            ConfigROI.s_vt_primary_ll_vol_1: [n*x for x in [175, 254, 298, 34]],
-            ConfigROI.s_vt_primary_ll_vol_2: [n*x for x in [175, 288, 298, 34]],
-            ConfigROI.s_vt_secondary_ll_vol_1: [n*x for x in [476, 254, 298, 34]],
-            ConfigROI.s_vt_secondary_ll_vol_2: [n*x for x in [476, 288, 298, 35]],
-            ConfigROI.s_primary_reference_vol_1: [n*x for x in [175, 326, 298, 34]],
-            ConfigROI.s_primary_reference_vol_2: [n*x for x in [175, 360, 298, 35]],
-            ConfigROI.s_primary_reference_vol_3: [n*x for x in [175, 360, 298, 35]],
-            ConfigROI.s_sliding_reference_vol_1: [n*x for x in [476, 326, 298, 34]],
-            ConfigROI.s_sliding_reference_vol_2: [n*x for x in [476, 360, 298, 35]],
-            ConfigROI.s_rotation_sequence_1: [n*x for x in [175, 398, 298, 34]],
-            ConfigROI.s_rotation_sequence_2: [n*x for x in [175, 432, 298, 35]],
+            ConfigROI.s_wiring_1: scale_coord(view1_zone_1),
+            ConfigROI.s_wiring_2: scale_coord(view1_zone_2),
+            ConfigROI.s_min_meas_sec_ln_vol_1: scale_coord(view2_zone_1),
+            ConfigROI.s_min_meas_sec_ln_vol_2: scale_coord(view2_zone_2),
+            ConfigROI.s_vt_primary_ll_vol_1: scale_coord(view3_zone_1),
+            ConfigROI.s_vt_primary_ll_vol_2: scale_coord(view3_zone_2),
+            ConfigROI.s_vt_secondary_ll_vol_1: scale_coord(view4_zone_1),
+            ConfigROI.s_vt_secondary_ll_vol_2: scale_coord(view4_zone_2),
+            ConfigROI.s_primary_reference_vol_1: scale_coord(view5_zone_1),
+            ConfigROI.s_primary_reference_vol_2: scale_coord(view5_zone_2),
+            ConfigROI.s_sliding_reference_vol_1: scale_coord(view6_zone_1),
+            ConfigROI.s_sliding_reference_vol_2: scale_coord(view6_zone_2),
+            ConfigROI.s_rotation_sequence_1: scale_coord(view7_zone_1),
+            ConfigROI.s_rotation_sequence_2: scale_coord(view7_zone_2),
             #current
             ConfigROI.s_ct_primary_curr_1: [n*x for x in [175, 182, 298, 69]],
             ConfigROI.s_ct_primary_curr_2: [n*x for x in [175, 216, 298, 35]],

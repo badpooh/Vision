@@ -62,35 +62,6 @@ class PaddleOCRManager:
                 denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
                 kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
                 sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
-
-                # # 1. 그레이스케일 변환
-                # gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-
-                # # 2. (선택 사항) 가우시안 블러 적용 (노이즈 감소 및 Thresholding 성능 향상 목적)
-                # #    커널 크기(예: (3,3) 또는 (5,5))는 실험을 통해 조정
-                # blurred_image = cv2.GaussianBlur(gray_image, (3, 3), 0)
-
-                # # 3. 적응형 이진화 (Adaptive Thresholding) - 조명 변화에 강함
-                # #    blockSize와 C 값은 실험을 통해 최적값 탐색 필요 (blockSize는 홀수)
-                # thresh_image = cv2.adaptiveThreshold(
-                #     blurred_image, # blurred_image 사용 시 blurred_image로 변경
-                #     255,                      # 최댓값
-                #     cv2.ADAPTIVE_THRESH_GAUSSIAN_C, # 주변 픽셀 가우시안 가중치 평균 사용
-                #     cv2.THRESH_BINARY_INV,     # 임계값보다 크면 0, 작으면 최댓값 (검은 글씨, 흰 배경 -> 흰 글씨, 검은 배경)
-                #                             # 또는 cv2.THRESH_BINARY (흰 글씨, 검은 배경 -> 검은 글씨, 흰 배경)
-                #     blockSize=11,              # 임계값을 계산할 주변 영역 크기 (홀수)
-                #     C=5                        # 평균 또는 가중 평균에서 뺄 상수
-                # )
-
-                # # 또는 Otsu 이진화 (이미지 전체에 대한 최적 임계값 자동 결정)
-                # _, thresh_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-
-                # # 최종 처리된 이미지를 sharpened_image 변수에 할당 (이후 코드와 호환되도록)
-                # # sharpened_image = cv2.cvtColor(thresh_image, cv2.COLOR_GRAY2BGR) # 컬러 이미지로 변환 (필요한 경우)
-                # # 또는 Grayscale 상태로 OCR을 수행하는 것이 더 좋을 수도 있음
-                # kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-                # thresh_image = cv2.filter2D(thresh_image, -1, kernel)
-                # sharpened_image = thresh_image
                
             elif self.phasor_condition == 1 and test_type == 0:
                 self.update_n(3)
@@ -98,12 +69,8 @@ class PaddleOCRManager:
             
             elif test_type == 1:
                 self.update_n(1)
-                sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-                # denoised_image = cv2.fastNlMeansDenoisingColored(resized_image, None, 10, 30, 9, 21)
-                
-                # kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-                # sharpened_image = cv2.filter2D(denoised_image, -1, kernel)
-
+                sharpened_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                sharpened_image = cv2.cvtColor(sharpened_image, cv2.COLOR_BGR2GRAY)
 
             else:
                 print(f"Error {self.phasor_condition}")
@@ -114,9 +81,9 @@ class PaddleOCRManager:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
-                # cv2.imshow("test", roi_image)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
+                cv2.imshow("test", roi_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
                 
                 text_results = ocr.ocr(roi_image, cls=False)
                 original_results = []
@@ -132,7 +99,7 @@ class PaddleOCRManager:
                             confidence = float(confidence)
                             original_results.append((coords, text, confidence))
                             # 신뢰도 검사
-                            if confidence >= 0.98:
+                            if confidence >= 0.96:
                                 # print(confidence)
                                 pass
                                 # extracted_texts.append(text)
@@ -161,13 +128,17 @@ class PaddleOCRManager:
                     y_max = min(height, int(max([pt[1] for pt in coords])) + margin)
                     text_roi = roi_image[y_min:y_max, x_min:x_max]
 
+                    # cv2.imshow("test", text_roi)
+                    # cv2.waitKey(0)
+                    # cv2.destroyAllWindows()
+
                     # 이미지 전처리 및 OCR 재시도
                     if text_roi.size == 0:
                         continue  # 유효하지 않은 영역은 건너뜁니다
                     while retry_count < max_retries and not success:
                         char_image = text_roi.copy()
                         ### 일반 텍스트 영역 / 97% 초과가 되지않으면 바로 실행
-                        if retry_count == 0 and self.phasor_condition == 0:
+                        if retry_count == 0 and self.phasor_condition == 0 and test_type == 0:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                             kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
@@ -177,7 +148,7 @@ class PaddleOCRManager:
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
                         
                         ### 그림 영역 / 97% 초과가 되지않으면 바로 실행 (Phasor와 같은 A, B, C 주위에 색박스로 된 부분)
-                        elif retry_count == 0 and self.phasor_condition == 1:
+                        elif retry_count == 0 and self.phasor_condition == 1 and test_type == 0:
                             self.update_n(3)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                             sharpening_kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
@@ -188,7 +159,7 @@ class PaddleOCRManager:
                             char_image = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
                         
                         ### 일반 텍스트 영역 재시도 2번째
-                        elif retry_count == 1 and self.phasor_condition == 0:
+                        elif retry_count == 1 and self.phasor_condition == 0 and test_type == 0:
                             self.update_n(3)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                             kernel2 = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
@@ -200,7 +171,7 @@ class PaddleOCRManager:
                             char_image = cv2.cvtColor(enhanced_char, cv2.COLOR_GRAY2BGR)
 
                         ### 그림 영역 재시도 2번째
-                        elif retry_count == 1 and self.phasor_condition == 1:
+                        elif retry_count == 1 and self.phasor_condition == 1 and test_type == 0:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                             kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
@@ -210,7 +181,7 @@ class PaddleOCRManager:
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
 
                         ### 일반 텍스트 영역 재시도 3번째
-                        elif retry_count > 1 and self.phasor_condition == 0:
+                        elif retry_count > 1 and self.phasor_condition == 0 and test_type == 0:
                             self.update_n(3)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_LANCZOS4)
                             char_image = cv2.Canny(char_image, 0, 200)
@@ -222,7 +193,7 @@ class PaddleOCRManager:
                                                 [-1, -1, -1, -1, -1]], dtype=np.float32)
                             char_image = cv2.filter2D(char_image, -1, kernel)
 
-                        elif retry_count > 1 and self.phasor_condition == 1:
+                        elif retry_count > 1 and self.phasor_condition == 1 and test_type == 0:
                             self.update_n(4)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
                             kernel2 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
@@ -231,12 +202,12 @@ class PaddleOCRManager:
                             _, thresh_char = cv2.threshold(gray_char, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
 
-                        # cv2.imshow("test2", char_image)
-                        # cv2.waitKey(0)
-                        # cv2.destroyAllWindows()
+                        elif retry_count == 0 and self.phasor_condition == 0 and test_type == 1:
+                            self.update_n(1)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.THRESH_OTSU)
 
                         retry_result = ocr.ocr(char_image, cls=False)
-                        print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
+                        # print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
                         if retry_result and retry_result[0]:
                             flat_retry_result = list(chain.from_iterable(retry_result))
                             for res in flat_retry_result:
