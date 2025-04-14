@@ -551,11 +551,14 @@ class Evaluation:
                             if current_modbus.registers[0] == 0 and sm_condition == True:
                                 setup_result = [f'PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
                                 result_condition_1 = True
+                            elif current_modbus.registers[0] == 0 and sm_condition == False:
+                                setup_result = [f'PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}']
+                                result_condition_1 = True
                             else:
                                 if sm_condition == True:
-                                    setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}']
-                                else:
                                     setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
+                                else:
+                                    setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}']
                         else:
                             if words == 1:
                                 if ((current_modbus.registers[0])/10) == int(setup_ref_title_1) and sm_condition == True:

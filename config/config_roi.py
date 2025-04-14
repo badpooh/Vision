@@ -71,185 +71,186 @@ class ConfigROI(Enum):
     harmonics_fund_b = "harmonics_fund_b"
     harmonics_fund_c = "harmonics_fund_c"
 
-    ### for meter setup test
+    ### for meter setup test ###
     s_wiring_1 = ['Wiring']
-    s_wiring_2 = ['Wye', 'Delta']
+    s_wiring_2 = ('Wiring', ['Wye', 'Delta'])
     s_min_meas_sec_ln_vol_1 = ['Min. Meas. Secondary L-N Volt. [V]']
-    s_min_meas_sec_ln_vol_2 = ['0', '10']
+    s_min_meas_sec_ln_vol_2 = ('Min. Meas. Secondary L-N Volt. [V]', ['0', '10'])
     s_vt_primary_ll_vol_1 = ['VT Primary L-L Voltage [V]']
-    s_vt_primary_ll_vol_2 = ['50.0', '999999.0']
+    s_vt_primary_ll_vol_2 = ('VT Primary L-L Voltage [V]', ['50.0', '999999.0'])
     s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
-    s_vt_secondary_ll_vol_2 = ['50.0', '220.0']
+    s_vt_secondary_ll_vol_2 = ('VT Secondary L-L Voltage [V]', ['50.0', '220.0'])
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
-    s_primary_reference_vol_2 = ['Line-to-Line', 'Line-to-Neutral', '50.0', '999999.0']
+    s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', ['Line-to-Line', 'Line-to-Neutral']) # 값 분리
+    s_primary_reference_vol_3 = ('Primary Reference Voltage [V]', ['50.0', '999999.0']) # 값 분리
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
-    s_sliding_reference_vol_2 = ('s_sliding_reference_vol_2', ['Disable', 'Enable'])
+    s_sliding_reference_vol_2 = ('Sliding Reference Voltage', ['Disable', 'Enable'])
     s_rotation_sequence_1 = ['Rotating Sequence']
-    s_rotation_sequence_2 = ['Positive', 'Negative']
-    #current
+    s_rotation_sequence_2 = ('Rotating Sequence', ['Positive', 'Negative'])
+    # current
     s_ct_primary_curr_1 = ['CT Primary Current [A]']
-    s_ct_primary_curr_2 = ['5', '99999']
+    s_ct_primary_curr_2 = ('CT Primary Current [A]', ['5', '99999'])
     s_ct_secondary_curr_1 = ['CT Secondary Current [A]']
-    s_ct_secondary_curr_2 = ['5', '10']
+    s_ct_secondary_curr_2 = ('CT Secondary Current [A]', ['5', '10'])
     s_reference_curr_1 = ['Reference Current [A]']
-    s_reference_curr_2 = ['5', '99999']
+    s_reference_curr_2 = ('Reference Current [A]', ['5', '99999'])
     s_min_meas_curr_1 = ['Min. Measured Current [mA]']
-    s_min_meas_curr_2 = ['0', '100']
+    s_min_meas_curr_2 = ('Min. Measured Current [mA]', ['0', '100'])
     s_tdd_reference_selection_1 = ['TDD Reference Selection']
-    s_tdd_reference_selection_2 = ['TDD Nominal Current', 'Peak Demand Current']
+    s_tdd_reference_selection_2 = ('TDD Reference Selection', ['TDD Nominal Current', 'Peak Demand Current'])
     s_tdd_nominal_curr_1 = ['TDD Nominal Current [A]']
-    s_tdd_nominal_curr_2 = ['Reference Current', '1', '99999']
-    #demand
+    s_tdd_nominal_curr_2 = ('TDD Nominal Current [A]', ['Reference Current', '1', '99999'])
+    # demand
     s_sub_interval_time_1 = ['Sub-Interval Time [min]']
-    s_sub_interval_time_2 = ['1', '60']
+    s_sub_interval_time_2 = ('Sub-Interval Time [min]', ['1', '60'])
     s_number_of_sub_intervals_1 = ['Number of Sub-Intervals']
-    s_number_of_sub_intervals_2 = ['1', '12']
+    s_number_of_sub_intervals_2 = ('Number of Sub-Intervals', ['1', '12'])
     s_demand_power_type_1 = ['Demand Power Type']
-    s_demand_power_type_2 = ['Received', 'Net']
+    s_demand_power_type_2 = ('Demand Power Type', ['Received', 'Net'])
     s_demand_sync_mode_1 = ['Demand Sync Mode']
-    s_demand_sync_mode_2 = ['Hourly Auto Sync', 'Manual Sync']
+    s_demand_sync_mode_2 = ('Demand Sync Mode', ['Hourly Auto Sync', 'Manual Sync'])
     s_thermal_response_index_1 = ['Thermal Response Index [%]']
-    s_thermal_response_index_2 = ['0', '100']
-    #power
+    s_thermal_response_index_2 = ('Thermal Response Index [%]', ['0', '100'])
+    # power
     s_phase_power_calculation_1 = ['Phase Power Calculation']
-    s_phase_power_calculation_2 = ['Fundamental', 'RMS']
+    s_phase_power_calculation_2 = ('Phase Power Calculation', ['Fundamental', 'RMS'])
     s_total_power_calculation_1 = ['Total Power Calculation']
-    s_total_power_calculation_2 = ['Vector Sum', 'Arithmetic Sum']
+    s_total_power_calculation_2 = ('Total Power Calculation', ['Vector Sum', 'Arithmetic Sum'])
     s_pf_sign_1 = ['PF Sign']
-    s_pf_sign_2 = ['Unsigned', 'Signed']
+    s_pf_sign_2 = ('PF Sign', ['Unsigned', 'Signed'])
     s_pf_value_at_noload_1 = ['PF Value at No Load']
-    s_pf_value_at_noload_2 = ['PF = 0', 'PF = 1']
+    s_pf_value_at_noload_2 = ('PF Value at No Load', ['PF = 0', 'PF = 1'])
     s_reactive_power_sign_1 = ['Reactive Power Sign']
-    s_reactive_power_sign_2 = ['Unsigned', 'Signed']
+    s_reactive_power_sign_2 = ('Reactive Power Sign', ['Unsigned', 'Signed'])
 
     # event>dip
     s_dip_trigger_1 = ['Trigger']
-    s_dip_trigger_2 = ('s_dip_trigger_2', ['Disable', 'Enable'])
+    s_dip_trigger_2 = ('Trigger', ['Disable', 'Enable'])
     s_dip_threshold_1 = ['Threshold [%]']
-    s_dip_threshold_2 = ['1.0', '99.0']
+    s_dip_threshold_2 = ('Threshold [%]', ['1.0', '99.0'])
     s_dip_hysteresis_1 = ['Hysteresis [%]']
-    s_dip_hysteresis_2 = ['1.0', '99.0']
+    s_dip_hysteresis_2 = ('Hysteresis [%]', ['1.0', '99.0'])
     s_dip_3phase_dip_1 = ['3-Phase Dip']
-    s_dip_3phase_dip_2 = ['Disable', 'Enable']
-    #swell
-    s_swell_trigger_1 = ['Trigger']
-    s_swell_trigger_2 = ['Disable', 'Enable']
-    s_swell_threshold_1 = ['Threshold [%]']
-    s_swell_threshold_2 = ['1.0', '99.0']
-    s_swell_hysteresis_1 = ['Hysteresis [%]']
-    s_swell_hysteresis_2 = ['1.0', '99.0']
-    #pq curve
+    s_dip_3phase_dip_2 = ('3-Phase Dip', ['Disable', 'Enable'])
+    # swell
+    s_swell_trigger_1 = ['Trigger'] # s_dip_trigger_1과 동일 값 주의
+    s_swell_trigger_2 = ('Trigger', ['Disable', 'Enable']) # s_dip_trigger_2와 동일 값 주의
+    s_swell_threshold_1 = ['Threshold [%]'] # s_dip_threshold_1과 동일 값 주의
+    s_swell_threshold_2 = ('Threshold [%]', ['1.0', '99.0']) # s_dip_threshold_2와 동일 값 주의
+    s_swell_hysteresis_1 = ['Hysteresis [%]'] # s_dip_hysteresis_1과 동일 값 주의
+    s_swell_hysteresis_2 = ('Hysteresis [%]', ['1.0', '99.0']) # s_dip_hysteresis_2와 동일 값 주의
+    # pq curve
     s_pq_curve_semi_1 = ['SEMI F47-0706']
-    s_pq_curve_semi_2 = ['Disable', 'Enable']
+    s_pq_curve_semi_2 = ('SEMI F47-0706', ['Disable', 'Enable'])
     s_pq_curve_iec_1 = ['IEC 61000-4-11/34 Class 3']
-    s_pq_curve_iec_2 = ['Disable', 'Enable']
+    s_pq_curve_iec_2 = ('IEC 61000-4-11/34 Class 3', ['Disable', 'Enable'])
     s_pq_curve_itic_1 = ['ITIC']
-    s_pq_curve_itic_2 = ['Disable', 'Enable']
+    s_pq_curve_itic_2 = ('ITIC', ['Disable', 'Enable'])
 
-    #network>ethernet
-    #rs-485
+    # network>ethernet
+    # rs-485
     s_device_address_1 = ['Device Address']
-    s_device_address_2 = ['0', '247']
+    s_device_address_2 = ('Device Address', ['0', '247'])
     s_bit_rate_1 = ['Bit Rate']
-    s_bit_rate_2 = ['1200', '2400', '4800', '9600', '19200', '38400', '57600', '115200']
+    s_bit_rate_2 = ('Bit Rate', ['1200', '2400', '4800', '9600', '19200', '38400', '57600', '115200'])
     s_parity_1 = ['Parity']
-    s_parity_2 = ['None', 'Odd', 'Even']
+    s_parity_2 = ('Parity', ['None', 'Odd', 'Even'])
     s_stop_bit_1 = ['Stop Bit']
-    s_stop_bit_2 = ['1', '2']
-    #advanced
+    s_stop_bit_2 = ('Stop Bit', ['1', '2'])
+    # advanced
     s_modbus_timeout_1 = ['Modbus Timeout [sec]']
-    s_modbus_timeout_2 = ['5', '600']
+    s_modbus_timeout_2 = ('Modbus Timeout [sec]', ['5', '600'])
     s_rstp_1 = ['RSTP']
-    s_rstp_2 = ['Disable', 'Enable']
+    s_rstp_2 = ('RSTP', ['Disable', 'Enable'])
     s_storm_control_1 = ['Storm Control']
-    s_storm_control_2 = ['Disable', 'Enable']
+    s_storm_control_2 = ('Storm Control', ['Disable', 'Enable'])
     s_rs485_map_1 = ['RS-485 Map']
-    s_rs485_map_2 = ['Accura 7300', 'Accura 7500']
-    s_remote_control_lock_mode_1 = ['Remote Control Lock Mdoe']
-    s_remote_control_lock_mode_2 = ['Each Connection Lock', 'Always Unlock']
+    s_rs485_map_2 = ('RS-485 Map', ['Accura 7300', 'Accura 7500'])
+    s_remote_control_lock_mode_1 = ['Remote Control Lock Mdoe'] # 오타 확인 Mdoe -> Mode
+    s_remote_control_lock_mode_2 = ('Remote Control Lock Mode', ['Each Connection Lock', 'Always Unlock']) # 오타 수정 반영
 
-    #control>data reset
+    # control>data reset
     s_data_reset_demand = ['Demand']
     s_data_reset_peak_demand = ['Peak Demand']
     s_data_reset_max_min = ['Max/Min']
     s_data_reset_energy = ['Energy']
     s_data_reset_pq_event = ['PQ Event']
-    #demand sync
+    # demand sync
     s_demand_sync = ['Demand Sync']
     s_test_mode_1 = ['Test Mode']
-    s_test_mode_2 = ['Off', 'Balance', 'Unbalance', 'Dip Short', 'Dip Long', 'Swell Short', 'Swell Long']
+    s_test_mode_2 = ('Test Mode', ['Off', 'Balance', 'Unbalance', 'Dip Short', 'Dip Long', 'Swell Short', 'Swell Long'])
     s_test_mode_timeout_1 = ['Timeout [min]']
-    s_test_mode_timeout_2 = ['Infinite', '1', '1440']
+    s_test_mode_timeout_2 = ('Timeout [min]', ['Infinite', '1', '1440'])
 
-    #system>description
+    # system>description
     s_device_name = ['Device Name']
     s_user_defined_info = ['User-Defined Info']
     s_location = ['Location']
     s_installation_year_1 = ['Installation Year']
-    s_installation_year_2 =['1970', '9999']
+    s_installation_year_2 = ('Installation Year', ['1970', '9999'])
     s_installation_month_1 = ['Installation Month']
-    s_installation_month_2 = ['1', '12']
+    s_installation_month_2 = ('Installation Month', ['1', '12'])
     s_installation_day_1 = ['Installation Day']
-    s_installation_day_2 = ['1', '31']
-    #locale
+    s_installation_day_2 = ('Installation Day', ['1', '31'])
+    # locale
     s_timezone_offset_1 = ['Timezone Offset [min]']
-    s_timezone_offset_2 = ['-720', '840']
+    s_timezone_offset_2 = ('Timezone Offset [min]', ['-720', '840'])
     s_temperature_unit_1 = ['Temperature Unit']
-    s_temperature_unit_2 = ['Celsius', 'Fahrenheit']
+    s_temperature_unit_2 = ('Temperature Unit', ['Celsius', 'Fahrenheit'])
     s_energy_unit_1 = ['Energy Unit']
-    s_energy_unit_2 = ['kWh', 'Wh']
+    s_energy_unit_2 = ('Energy Unit', ['kWh', 'Wh'])
     s_date_format_1 = ['Date Format']
-    s_date_format_2 = ['YYY-MM-DD', 'YYY-DD-MM', 'YYY/DD/MM', 'MM.DD.YYYY', 'MM/DD/YYYY', 'MM-DD-YYYY', 'DD.MM.YYYY', 'DD/MM/YYYY', 'DD-MM-YYYY']
-    #local time
+    s_date_format_2 = ('Date Format', ['YYY-MM-DD', 'YYY-DD-MM', 'YYY/DD/MM', 'MM.DD.YYYY', 'MM/DD/YYYY', 'MM-DD-YYYY', 'DD.MM.YYYY', 'DD/MM/YYYY', 'DD-MM-YYYY'])
+    # local time
     s_year_1 = ['Year']
-    s_year_2 = ['1970', '2037']
+    s_year_2 = ('Year', ['1970', '2037'])
     s_month_1 = ['Month']
-    s_month_2 = ['1', '12']
+    s_month_2 = ('Month', ['1', '12'])
     s_day_1 = ['Day']
-    s_day_2 = ['1', '31']
+    s_day_2 = ('Day', ['1', '31'])
     s_hour_1 = ['Hour']
-    s_hour_2 = ['0', '23']
+    s_hour_2 = ('Hour', ['0', '23'])
     s_minute_1 = ['Minute']
-    s_minute_2 = ['0', '59']
+    s_minute_2 = ('Minute', ['0', '59'])
     s_second_1 = ['Second']
-    s_second_2 = ['0', '59']
-    #summer time
-    s_summer_time_mode_1 = ['Mode']
-    s_summer_time_mode_2 = ['Disable', 'Enable']
+    s_second_2 = ('Second', ['0', '59'])
+    # summer time
+    s_summer_time_mode_1 = ['Mode'] # 'Mode' 가 너무 일반적임, 'Summer Time Mode' 등 구체화 고려
+    s_summer_time_mode_2 = ('Summer Time Mode', ['Disable', 'Enable'])
     s_summer_time_time_offset_1 = ['Time Offset [min]']
-    s_summer_time_time_offset_2 = ['0', '1439']
+    s_summer_time_time_offset_2 = ('Time Offset [min]', ['0', '1439'])
     s_start_month_1 = ['Start Month']
-    s_start_month_2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    s_start_month_2 = ('Start Month', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
     s_start_nth_weekday_1 = ['Start Nth Weekday']
-    s_start_nth_weekday_2 = ['1st', '2nd', '3rd', '4th', '5th']
+    s_start_nth_weekday_2 = ('Start Nth Weekday', ['1st', '2nd', '3rd', '4th', '5th'])
     s_start_weekday_1 = ['Start Weekday']
-    s_start_weekday_2 = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    s_start_weekday_2 = ('Start Weekday', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
     s_start_minute_1 = ['Start Minute']
-    s_start_minute_2 = ['0', '1439']
+    s_start_minute_2 = ('Start Minute', ['0', '1439'])
     s_end_month_1 = ['End Month']
-    s_end_month_2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    s_end_month_2 = ('End Month', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
     s_end_nth_weekday_1 = ['End Nth Weekday']
-    s_end_nth_weekday_2 = ['1st', '2nd', '3rd', '4th', '5th']
+    s_end_nth_weekday_2 = ('End Nth Weekday', ['1st', '2nd', '3rd', '4th', '5th'])
     s_end_weekday_1 = ['End Weekday']
-    s_end_weekday_2 = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    s_end_weekday_2 = ('End Weekday', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
     s_end_minute_1 = ['End Minute']
-    s_end_minute_2 = ['0', '1439']
+    s_end_minute_2 = ('End Minute', ['0', '1439'])
 
-    #ntp
-    #server ip address
+    # ntp
+    # server ip address
     s_sync_mode_1 = ['Sync Mode']
-    s_sync_mode_2 = ['Disable', 'Auto', 'Periodic']
+    s_sync_mode_2 = ('Sync Mode', ['Disable', 'Auto', 'Periodic'])
     s_sync_period_1 = ['Sync Period [sec]']
-    s_sync_period_2 = ['60', '999']
+    s_sync_period_2 = ('Sync Period [sec]', ['60', '999'])
     s_sync_max_drift_1 = ['Sync Max. Drift [ms]']
-    s_sync_max_drift_2 = ['1', '1000']
-    #lcd & buzzer
+    s_sync_max_drift_2 = ('Sync Max. Drift [ms]', ['1', '1000'])
+    # lcd & buzzer
     s_lcd_backlight_timeout_1 = ['LCD Backlight Timeout [sec]']
-    s_lcd_backlight_timeout_2 = ['10', '999']
+    s_lcd_backlight_timeout_2 = ('LCD Backlight Timeout [sec]', ['10', '999'])
     s_lcd_backlight_low_level_1 = ['LCD Backlight Low Level [%]']
-    s_lcd_backlight_low_level_2 = ['0', '30']
+    s_lcd_backlight_low_level_2 = ('LCD Backlight Low Level [%]', ['0', '30'])
     s_buzzer_for_button_1 = ['Buzzer for Button']
-    s_buzzer_for_button_2 = ['Disable', 'Enable']    
+    s_buzzer_for_button_2 = ('Buzzer for Button', ['Disable', 'Enable']) 
 
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
     color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]

@@ -172,7 +172,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
 			except_addr=ConfigMap.addr_wiring,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_wiring_2.value[1],
+			ref_value=ConfigROI.s_wiring_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
 			search_pattern=search_pattern,
@@ -190,7 +190,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
 			except_addr=ConfigMap.addr_wiring,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_wiring_2.value[0],
+			ref_value=ConfigROI.s_wiring_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
 			search_pattern=search_pattern,
@@ -208,7 +208,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2],
 			except_addr=ConfigMap.addr_min_measured_secondary_ln_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[0],
+			ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
 			search_pattern=search_pattern,
@@ -226,7 +226,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2],
 			except_addr=ConfigMap.addr_min_measured_secondary_ln_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1],
+			ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
 			search_pattern=search_pattern,
@@ -245,7 +245,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2],
 			except_addr=ConfigMap.addr_vt_primary_ll_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[0],
+			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value, # 경로 확인 필요 (min?)
 			roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value, # Enum 값 확인
 			search_pattern=search_pattern,
@@ -263,7 +263,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2],
 			except_addr=ConfigMap.addr_vt_primary_ll_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1],
+			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value, # 경로 확인 필요 (max?)
 			roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value, # Enum 값 확인
 			search_pattern=search_pattern,
@@ -283,7 +283,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_vt_secondary_ll_vol_1, ConfigROI.s_vt_secondary_ll_vol_2],
 			except_addr=ConfigMap.addr_vt_secondary_ll_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[0],
+			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value, # Enum 값 확인
 			search_pattern=search_pattern,
@@ -301,7 +301,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_vt_secondary_ll_vol_1, ConfigROI.s_vt_secondary_ll_vol_2],
 			except_addr=ConfigMap.addr_vt_secondary_ll_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1],
+			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value, # Enum 값 확인
 			search_pattern=search_pattern,
@@ -321,7 +321,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2],
 			except_addr=ConfigMap.addr_reference_voltage_mode,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_2.value[0],
+			ref_value=ConfigROI.s_primary_reference_vol_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_exc.value, # 경로 확인
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value, # Enum 값 확인
 			search_pattern=search_pattern,
@@ -339,7 +339,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2],
 			except_addr=ConfigMap.addr_reference_voltage_mode,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_2.value[1],
+			ref_value=ConfigROI.s_primary_reference_vol_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
 			search_pattern=search_pattern,
@@ -357,7 +357,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_3],
 			except_addr=ConfigMap.addr_reference_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_3.value[0], # roi_keys 와 인덱스 매칭 확인
+			ref_value=ConfigROI.s_primary_reference_vol_3.value[1][0], # roi_keys 와 인덱스 매칭 확인
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage.value,
 			search_pattern=search_pattern,
@@ -375,7 +375,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_3],
 			except_addr=ConfigMap.addr_reference_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_3.value[1], # roi_keys 와 인덱스 매칭 확인
+			ref_value=ConfigROI.s_primary_reference_vol_3.value[1][1], # roi_keys 와 인덱스 매칭 확인
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage.value,
 			search_pattern=search_pattern,
@@ -383,41 +383,41 @@ class SetupTest(QObject):
 		### Primary Reference Voltage 초기화
 		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_reference_voltage, bit32=1900)
 
-		# ### Sliding Reference Voltage Disable -> Enable
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_6.value,
-		# 	password=False,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value,
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
-		# 	except_addr=ConfigMap.addr_sliding_reference_voltage_type,
-		# 	access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
-		# 	ref_value=ConfigROI.s_sliding_reference_vol_2.value[1],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### Sliding Reference Voltage Disable -> Enable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_6.value,
+			password=False,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
+			except_addr=ConfigMap.addr_sliding_reference_voltage_type,
+			access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
+			ref_value=ConfigROI.s_sliding_reference_vol_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
-		# ### Sliding Reference Voltage Enable -> Disable
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_6.value,
-		# 	password=False,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_1.value,
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
-		# 	except_addr=ConfigMap.addr_sliding_reference_voltage_type,
-		# 	access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
-		# 	ref_value=ConfigROI.s_sliding_reference_vol_2.value[0],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### Sliding Reference Voltage Enable -> Disable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_6.value,
+			password=False,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
+			except_addr=ConfigMap.addr_sliding_reference_voltage_type,
+			access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
+			ref_value=ConfigROI.s_sliding_reference_vol_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
 		### Rotating Sequence Positive -> Negative
 		self.config_setup_action(
@@ -431,7 +431,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_rotation_sequence_1, ConfigROI.s_rotation_sequence_2],
 			except_addr=ConfigMap.addr_rotating_sequence,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_rotation_sequence_2.value[1], # 인덱스 확인
+			ref_value=ConfigROI.s_rotation_sequence_2.value[1][1], # 인덱스 확인
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_rotating_sequence.value,
 			search_pattern=search_pattern,
@@ -449,7 +449,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_rotation_sequence_1, ConfigROI.s_rotation_sequence_2],
 			except_addr=ConfigMap.addr_rotating_sequence,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_rotation_sequence_2.value[0],
+			ref_value=ConfigROI.s_rotation_sequence_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_rotating_sequence.value,
 			search_pattern=search_pattern,
@@ -473,7 +473,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2],
 			except_addr=ConfigMap.addr_ct_primary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_ct_primary_curr_2.value[0],
+			ref_value=ConfigROI.s_ct_primary_curr_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
 			search_pattern=search_pattern,
@@ -491,7 +491,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2],
 			except_addr=ConfigMap.addr_ct_primary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_ct_primary_curr_2.value[1],
+			ref_value=ConfigROI.s_ct_primary_curr_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
 			search_pattern=search_pattern,
@@ -511,7 +511,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2],
 			except_addr=ConfigMap.addr_ct_secondary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_ct_secondary_curr_2.value[1],
+			ref_value=ConfigROI.s_ct_secondary_curr_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
 			search_pattern=search_pattern,
@@ -529,7 +529,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2],
 			except_addr=ConfigMap.addr_ct_secondary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_ct_secondary_curr_2.value[0],
+			ref_value=ConfigROI.s_ct_secondary_curr_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_secondary.value,
 			search_pattern=search_pattern,
@@ -547,7 +547,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2],
 			except_addr=ConfigMap.addr_reference_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_reference_curr_2.value[0],
+			ref_value=ConfigROI.s_reference_curr_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_reference_curr.value,
 			search_pattern=search_pattern,
@@ -565,7 +565,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2],
 			except_addr=ConfigMap.addr_reference_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_reference_curr_2.value[1],
+			ref_value=ConfigROI.s_reference_curr_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_reference_curr.value,
 			search_pattern=search_pattern,
@@ -585,7 +585,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_min_meas_curr_1, ConfigROI.s_min_meas_curr_2],
 			except_addr=ConfigMap.addr_min_measured_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_min_meas_curr_2.value[0],
+			ref_value=ConfigROI.s_min_meas_curr_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_curr.value,
 			search_pattern=search_pattern,
@@ -603,7 +603,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_min_meas_curr_1, ConfigROI.s_min_meas_curr_2],
 			except_addr=ConfigMap.addr_min_measured_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_min_meas_curr_2.value[1],
+			ref_value=ConfigROI.s_min_meas_curr_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_curr.value,
 			search_pattern=search_pattern,
@@ -623,7 +623,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_tdd_reference_selection_1, ConfigROI.s_tdd_reference_selection_2],
 			except_addr=ConfigMap.addr_tdd_reference,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_min_meas_curr_2.value[0],
+			ref_value=ConfigROI.s_min_meas_curr_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_tdd_reference_selection.value,
 			search_pattern=search_pattern,
@@ -641,7 +641,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_tdd_reference_selection_1, ConfigROI.s_tdd_reference_selection_2],
 			except_addr=ConfigMap.addr_tdd_reference,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_min_meas_curr_2.value[1],
+			ref_value=ConfigROI.s_min_meas_curr_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_tdd_reference_selection.value,
 			search_pattern=search_pattern,
@@ -655,7 +655,7 @@ class SetupTest(QObject):
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
 		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
 		except_addr = ConfigMap.addr_nominal_tdd_current
-		ref_value = roi_keys[1].value[1]
+		ref_value = roi_keys[1].value[1][1]
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_min.value
 		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
@@ -669,7 +669,7 @@ class SetupTest(QObject):
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
 		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
 		except_addr = ConfigMap.addr_nominal_tdd_current
-		ref_value = roi_keys[1].value[2]
+		ref_value = roi_keys[1].value[1][2]
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_max.value
 		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
@@ -681,7 +681,7 @@ class SetupTest(QObject):
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
 		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
 		except_addr = ConfigMap.addr_nominal_tdd_current
-		ref_value = roi_keys[1].value[2]
+		ref_value = roi_keys[1].value[1][2]
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
 		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
@@ -704,7 +704,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_sub_interval_time_1, ConfigROI.s_sub_interval_time_2],
 			except_addr=ConfigMap.addr_sub_interval_time,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_sub_interval_time_2.value[0],
+			ref_value=ConfigROI.s_sub_interval_time_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
 			search_pattern=search_pattern,
@@ -722,7 +722,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_sub_interval_time_1, ConfigROI.s_sub_interval_time_2],
 			except_addr=ConfigMap.addr_sub_interval_time,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_sub_interval_time_2.value[1],
+			ref_value=ConfigROI.s_sub_interval_time_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
 			search_pattern=search_pattern,
@@ -742,7 +742,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_sub_interval_time_1, ConfigROI.s_sub_interval_time_2],
 			except_addr=ConfigMap.addr_sub_interval_time,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_sub_interval_time_2.value[1],
+			ref_value=ConfigROI.s_sub_interval_time_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
 			search_pattern=search_pattern,
@@ -760,7 +760,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_sub_interval_time_1, ConfigROI.s_sub_interval_time_2],
 			except_addr=ConfigMap.addr_sub_interval_time,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_sub_interval_time_2.value[0],
+			ref_value=ConfigROI.s_sub_interval_time_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_subinterval_time.value,
 			search_pattern=search_pattern,
@@ -778,7 +778,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_demand_power_type_1, ConfigROI.s_demand_power_type_2],
 			except_addr=ConfigMap.addr_demand_power_type,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_demand_power_type_2.value[1],
+			ref_value=ConfigROI.s_demand_power_type_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_demand_power_type.value,
 			search_pattern=search_pattern,
@@ -796,7 +796,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_demand_power_type_1, ConfigROI.s_demand_power_type_2],
 			except_addr=ConfigMap.addr_demand_power_type,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_demand_power_type_2.value[0],
+			ref_value=ConfigROI.s_demand_power_type_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_demand_power_type.value,
 			search_pattern=search_pattern,
@@ -814,7 +814,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_demand_power_type_1, ConfigROI.s_demand_power_type_2],
 			except_addr=ConfigMap.addr_demand_power_type,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_demand_power_type_2.value[0],
+			ref_value=ConfigROI.s_demand_power_type_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_demand_power_type.value,
 			search_pattern=search_pattern,
@@ -832,7 +832,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_thermal_response_index_1, ConfigROI.s_thermal_response_index_2],
 			except_addr=ConfigMap.addr_thermal_response_index,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_thermal_response_index_2.value[0],
+			ref_value=ConfigROI.s_thermal_response_index_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_thermal_response_index.value,
 			search_pattern=search_pattern,
@@ -850,7 +850,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_thermal_response_index_1, ConfigROI.s_thermal_response_index_2],
 			except_addr=ConfigMap.addr_thermal_response_index,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_thermal_response_index_2.value[1],
+			ref_value=ConfigROI.s_thermal_response_index_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_thermal_response_index.value,
 			search_pattern=search_pattern,
@@ -876,7 +876,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_phase_power_calculation_1, ConfigROI.s_phase_power_calculation_2],
 			except_addr=ConfigMap.addr_phase_power_calculation,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_phase_power_calculation_2.value[0],
+			ref_value=ConfigROI.s_phase_power_calculation_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_phase_power_calculation.value,
 			search_pattern=search_pattern,
@@ -894,7 +894,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_phase_power_calculation_1, ConfigROI.s_phase_power_calculation_2],
 			except_addr=ConfigMap.addr_phase_power_calculation,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_phase_power_calculation_2.value[1],
+			ref_value=ConfigROI.s_phase_power_calculation_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_phase_power_calculation.value,
 			search_pattern=search_pattern,
@@ -912,7 +912,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_total_power_calculation_1, ConfigROI.s_total_power_calculation_2],
 			except_addr=ConfigMap.addr_total_power_calculation,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_total_power_calculation_2.value[1],
+			ref_value=ConfigROI.s_total_power_calculation_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_total_power_calculation.value,
 			search_pattern=search_pattern,
@@ -930,7 +930,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_total_power_calculation_1, ConfigROI.s_total_power_calculation_2],
 			except_addr=ConfigMap.addr_total_power_calculation,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_total_power_calculation_2.value[0],
+			ref_value=ConfigROI.s_total_power_calculation_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_total_power_calculation.value,
 			search_pattern=search_pattern,
@@ -948,7 +948,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_pf_sign_1, ConfigROI.s_pf_sign_2],
 			except_addr=ConfigMap.addr_pf_sign,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_pf_sign_2.value[0],
+			ref_value=ConfigROI.s_pf_sign_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_pf_sign.value,
 			search_pattern=search_pattern,
@@ -966,7 +966,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_pf_sign_1, ConfigROI.s_pf_sign_2],
 			except_addr=ConfigMap.addr_pf_sign,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_pf_sign_2.value[1],
+			ref_value=ConfigROI.s_pf_sign_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_pf_sign.value,
 			search_pattern=search_pattern,
@@ -984,7 +984,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_pf_value_at_noload_1, ConfigROI.s_pf_value_at_noload_2],
 			except_addr=ConfigMap.addr_pf_value_at_no_load,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_pf_value_at_noload_2.value[1],
+			ref_value=ConfigROI.s_pf_value_at_noload_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_pf_value_at_noload.value,
 			search_pattern=search_pattern,
@@ -1002,7 +1002,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_pf_value_at_noload_1, ConfigROI.s_pf_value_at_noload_2],
 			except_addr=ConfigMap.addr_pf_value_at_no_load,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_pf_value_at_noload_2.value[0],
+			ref_value=ConfigROI.s_pf_value_at_noload_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_pf_value_at_noload.value,
 			search_pattern=search_pattern,
@@ -1020,7 +1020,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_reactive_power_sign_1, ConfigROI.s_reactive_power_sign_2],
 			except_addr=ConfigMap.addr_reactive_power_sign,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_reactive_power_sign_2.value[0],
+			ref_value=ConfigROI.s_reactive_power_sign_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_reactive_power_sign.value,
 			search_pattern=search_pattern,
@@ -1038,7 +1038,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_reactive_power_sign_1, ConfigROI.s_reactive_power_sign_2],
 			except_addr=ConfigMap.addr_reactive_power_sign,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_reactive_power_sign_2.value[1],
+			ref_value=ConfigROI.s_reactive_power_sign_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_reactive_power_sign.value,
 			search_pattern=search_pattern,
@@ -1047,27 +1047,27 @@ class SetupTest(QObject):
 	def m_s_event_dip(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
 		
-		# self.touch_manager.btn_front_meter()
-		# self.touch_manager.btn_front_setup()
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
 
 		### Dip Trigger Disable > Enable (input )
-		# self.config_setup_action(
-		# 	main_menu=ConfigTouch.touch_main_menu_2.value,
-		# 	side_menu=ConfigTouch.touch_side_menu_1.value,
-		# 	data_view=ConfigTouch.touch_data_view_1.value,
-		# 	password=True,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value,
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2],
-		# 	except_addr=ConfigMap.addr_dip,
-		# 	access_address=ConfigMap.addr_dip_setup_access.value,
-		# 	ref_value=ConfigROI.s_dip_trigger_2.value[1],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path,
-		# 	refresh='event')
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_2.value,
+			side_menu=ConfigTouch.touch_side_menu_1.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2],
+			except_addr=ConfigMap.addr_dip,
+			access_address=ConfigMap.addr_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_trigger_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
 		
 		### Dip Trigger Enable > Disable (input )
 		self.config_setup_action(
