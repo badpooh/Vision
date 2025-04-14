@@ -32,7 +32,7 @@ class SetupTest(QObject):
 		self.accruasm_state = state
 		# print(f"SetupProcess: AccuraSM checked={state}")
 
-	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, coordinates=None):
+	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, refresh=None, coordinates=None):
 		sm_condition = False
 		"""
 		Args:
@@ -57,10 +57,17 @@ class SetupTest(QObject):
 		ref_title_1 = roi_keys[1].value[0]
 		ref_title_2 = roi_keys[1].value[1]
 		print(self.accruasm_state)
-		if self.accruasm_state == 2:
+
+		if self.accruasm_state == 2 and refresh == 'event':
+			self.autogui_manager.m_s_event_refresh(image_path, base_save_path, compare_title)
+			time.sleep(2.0)
+			sm_res, sm_condition = self.autogui_manager.find_and_click(template_path, image_path, base_save_path, compare_title, roi_mask=roi_mask)
+
+		elif self.accruasm_state == 2:
 			self.autogui_manager.m_s_meas_refresh(image_path, base_save_path, compare_title)
 			time.sleep(2.0)
 			sm_res, sm_condition = self.autogui_manager.find_and_click(template_path, image_path, base_save_path, compare_title, roi_mask=roi_mask)
+
 		else:
 			sm_res = None
 			self.accruasm_state = None
@@ -95,6 +102,7 @@ class SetupTest(QObject):
                        roi_mask=None,
                        search_pattern=None,
                        base_save_path=None,
+					   refresh=None,
                        title_desc=None):
 		"""
 		예시 인자:
@@ -141,7 +149,8 @@ class SetupTest(QObject):
 				access_address=access_address,
 				ref_value=ref_value,
 				template_path=template_path,
-				roi_mask=roi_mask
+				roi_mask=roi_mask,
+				refresh=refresh
 			)
 		else:
 			print(f"[DEBUG] Not calling setup_ocr_process for {title_desc} because some param is missing.")
@@ -1056,9 +1065,10 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_dip_setup_access.value,
 			ref_value=ConfigROI.s_dip_trigger_2.value[1],
 			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
-			roi_mask=ConfigROI..value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
 			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+			base_save_path=base_save_path,
+			refresh='event')
 		
 		### Dip Trigger Enable > Disable (input )
 		self.config_setup_action(
@@ -1074,9 +1084,10 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_dip_setup_access.value,
 			ref_value=ConfigROI.s_dip_trigger_2.value[0],
 			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
-			roi_mask=ConfigROI..value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
 			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+			base_save_path=base_save_path,
+			refresh='event')
 	
 
 
