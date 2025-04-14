@@ -1087,6 +1087,168 @@ class SetupTest(QObject):
 			search_pattern=search_pattern,
 			base_save_path=base_save_path,
 			refresh='event')
+		
+		### Dip Threshold 90 > 10 (input 0)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_threshold_1, ConfigROI.s_dip_threshold_2],
+			except_addr=ConfigMap.addr_dip_threshold,
+			access_address=ConfigMap.addr_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_threshold_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_threshold.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### Dip Threshold 10 > 99 (input 100)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='100',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_threshold_1, ConfigROI.s_dip_threshold_2],
+			except_addr=ConfigMap.addr_dip_threshold,
+			access_address=ConfigMap.addr_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_threshold_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_threshold.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		### min measured current 초기화(90)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_dip_setup_access, ConfigMap.addr_dip_threshold, bit16=900)
+		
+		### Dip hysteresis 2 > 1 (input 0)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_hysteresis_1, ConfigROI.s_dip_hysteresis_2],
+			except_addr=ConfigMap.addr_dip_hysteresis,
+			access_address=ConfigMap.addr_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_hysteresis_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_hysteresis.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### Dip hysteresis 1 > 99 (input 100)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='100',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_hysteresis_1, ConfigROI.s_dip_hysteresis_2],
+			except_addr=ConfigMap.addr_dip_hysteresis,
+			access_address=ConfigMap.addr_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_hysteresis_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_hysteresis.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		### min measured current 초기화(90)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_dip_setup_access, ConfigMap.addr_dip_hysteresis, bit16=20)
+
+		### 3-Phase Dip Disable > Enable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_3phase_dip_1, ConfigROI.s_dip_3phase_dip_2],
+			except_addr=ConfigMap.addr_3phase_dip,
+			access_address=ConfigMap.addr_3phase_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_3phase_dip_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_3dip_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### 3-Phase Dip Enable > Disable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dip_3phase_dip_1, ConfigROI.s_dip_3phase_dip_2],
+			except_addr=ConfigMap.addr_3phase_dip,
+			access_address=ConfigMap.addr_3phase_dip_setup_access.value,
+			ref_value=ConfigROI.s_dip_3phase_dip_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_3dip_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+	def m_s_event_swell(self, base_save_path, search_pattern):
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+		
+		### Swell Disable > Enable (input )
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_2.value,
+			side_menu=ConfigTouch.touch_side_menu_2.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_swell_trigger_1, ConfigROI.s_swell_trigger_2],
+			except_addr=ConfigMap.addr_swell,
+			access_address=ConfigMap.addr_swell.value,
+			ref_value=ConfigROI.s_swell_trigger_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_swell_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### Swell Enable > Disable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_swell_trigger_1, ConfigROI.s_swell_trigger_2],
+			except_addr=ConfigMap.addr_swell,
+			access_address=ConfigMap.addr_swell.value,
+			ref_value=ConfigROI.s_swell_trigger_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_swell_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
 	
 
 
