@@ -83,7 +83,7 @@ class ConfigROI(Enum):
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
     s_primary_reference_vol_2 = ['Line-to-Line', 'Line-to-Neutral', '50.0', '999999.0']
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
-    s_sliding_reference_vol_2 = ['Disable', 'Enable']
+    s_sliding_reference_vol_2 = ('s_sliding_reference_vol_2', ['Disable', 'Enable'])
     s_rotation_sequence_1 = ['Rotating Sequence']
     s_rotation_sequence_2 = ['Positive', 'Negative']
     #current
@@ -124,7 +124,7 @@ class ConfigROI(Enum):
 
     # event>dip
     s_dip_trigger_1 = ['Trigger']
-    s_dip_trigger_2 = ['Disable', 'Enable']
+    s_dip_trigger_2 = ('s_dip_trigger_2', ['Disable', 'Enable'])
     s_dip_threshold_1 = ['Threshold [%]']
     s_dip_threshold_2 = ['1.0', '99.0']
     s_dip_hysteresis_1 = ['Hysteresis [%]']
@@ -330,31 +330,31 @@ class Configs():
     def roi_params(self):
         n = self.n
 
+        self.view1_zone_1 = (175, 182, 298, 34)
+        self.view1_zone_2 = (175, 217, 298, 34)
+        self.view2_zone_1 = (476, 182, 305, 34)
+        self.view2_zone_2 = (476, 217, 298, 34)
+        self.view3_zone_1 = (175, 254, 305, 34)
+        self.view3_zone_2 = (175, 289, 298, 34)
+        self.view4_zone_1 = (476, 254, 298, 34)
+        self.view4_zone_2 = (476, 289, 298, 34)
+        self.view5_zone_1 = (175, 326, 298, 34)
+        self.view5_zone_2 = (175, 361, 298, 34)
+        self.view6_zone_1 = (476, 326, 298, 34)
+        self.view6_zone_2 = (476, 361, 298, 34)
+        self.view7_zone_1 = (175, 398, 298, 34)
+        self.view7_zone_2 = (175, 433, 298, 34)
+        self.view8_zone_1 = (476, 398, 298, 34)
+        self.view8_zone_2 = (476, 433, 298, 34)
+        self.view9_zone_1 = (175, 182, 298, 34)
+        self.view9_zone_2 = (175, 217, 298, 34)
+        self.view10_zone_1 = (476, 182, 298, 34)
+        self.view10_zone_2 = (476, 217, 298, 34)
+
         def scale_coord(coords):
             """좌표 [x, y, w, h]에 n을 곱합니다."""
             if coords is None: return None 
             return [int(n * x) for x in coords]
-        
-        view1_zone_1 = (175, 182, 298, 34)
-        view1_zone_2 = (175, 217, 298, 34)
-        view2_zone_1 = (476, 182, 305, 34)
-        view2_zone_2 = (476, 217, 298, 34)
-        view3_zone_1 = (175, 254, 305, 34)
-        view3_zone_2 = (175, 289, 298, 34)
-        view4_zone_1 = (476, 254, 298, 34)
-        view4_zone_2 = (476, 289, 298, 34)
-        view5_zone_1 = (175, 326, 298, 34)
-        view5_zone_2 = (175, 361, 298, 34)
-        view6_zone_1 = (476, 326, 298, 34)
-        view6_zone_2 = (476, 361, 298, 34)
-        view7_zone_1 = (175, 398, 298, 34)
-        view7_zone_2 = (175, 433, 298, 34)
-        view8_zone_1 = (476, 398, 298, 34)
-        view8_zone_2 = (476, 433, 298, 34)
-        view9_zone_1 = (175, 182, 298, 34)
-        view9_zone_2 = (175, 217, 298, 34)
-        view10_zone_1 = (476, 182, 298, 34)
-        view10_zone_2 = (476, 217, 298, 34)
         
         params = {
 
@@ -445,20 +445,20 @@ class Configs():
             ConfigROI.harmonics_text_chart_img_cut_3: [n*x for x in [170, 389, 610, 240]],
 
             #meter>setup>measurement>voltage
-            ConfigROI.s_wiring_1: scale_coord(view1_zone_1),
-            ConfigROI.s_wiring_2: scale_coord(view1_zone_2),
-            ConfigROI.s_min_meas_sec_ln_vol_1: scale_coord(view2_zone_1),
-            ConfigROI.s_min_meas_sec_ln_vol_2: scale_coord(view2_zone_2),
-            ConfigROI.s_vt_primary_ll_vol_1: scale_coord(view3_zone_1),
-            ConfigROI.s_vt_primary_ll_vol_2: scale_coord(view3_zone_2),
-            ConfigROI.s_vt_secondary_ll_vol_1: scale_coord(view4_zone_1),
-            ConfigROI.s_vt_secondary_ll_vol_2: scale_coord(view4_zone_2),
-            ConfigROI.s_primary_reference_vol_1: scale_coord(view5_zone_1),
-            ConfigROI.s_primary_reference_vol_2: scale_coord(view5_zone_2),
-            ConfigROI.s_sliding_reference_vol_1: scale_coord(view6_zone_1),
-            ConfigROI.s_sliding_reference_vol_2: scale_coord(view6_zone_2),
-            ConfigROI.s_rotation_sequence_1: scale_coord(view7_zone_1),
-            ConfigROI.s_rotation_sequence_2: scale_coord(view7_zone_2),
+            ConfigROI.s_wiring_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_wiring_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_min_meas_sec_ln_vol_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_min_meas_sec_ln_vol_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_vt_primary_ll_vol_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_vt_primary_ll_vol_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_vt_secondary_ll_vol_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_vt_secondary_ll_vol_2: scale_coord(self.view4_zone_2),
+            ConfigROI.s_primary_reference_vol_1: scale_coord(self.view5_zone_1),
+            ConfigROI.s_primary_reference_vol_2: scale_coord(self.view5_zone_2),
+            ConfigROI.s_sliding_reference_vol_1: scale_coord(self.view6_zone_1),
+            ConfigROI.s_sliding_reference_vol_2: scale_coord(self.view6_zone_2),
+            ConfigROI.s_rotation_sequence_1: scale_coord(self.view7_zone_1),
+            ConfigROI.s_rotation_sequence_2: scale_coord(self.view7_zone_2),
             #current
             ConfigROI.s_ct_primary_curr_1: [n*x for x in [175, 182, 298, 69]],
             ConfigROI.s_ct_primary_curr_2: [n*x for x in [175, 216, 298, 35]],
@@ -470,156 +470,155 @@ class Configs():
             ConfigROI.s_min_meas_curr_2: [n*x for x in [476, 288, 298, 35]],
             ConfigROI.s_tdd_reference_selection_1: [n*x for x in [175, 326, 298, 34]],
             ConfigROI.s_tdd_reference_selection_2: [n*x for x in [175, 360, 298, 35]],
-            ConfigROI.s_tdd_nominal_curr_1: scale_coord(view6_zone_1),
-            ConfigROI.s_tdd_nominal_curr_2: scale_coord(view6_zone_2),
+            ConfigROI.s_tdd_nominal_curr_1: scale_coord(self.view6_zone_1),
+            ConfigROI.s_tdd_nominal_curr_2: scale_coord(self.view6_zone_2),
             #demand
-            ConfigROI.s_sub_interval_time_1: scale_coord(view1_zone_1),
-            ConfigROI.s_sub_interval_time_2: scale_coord(view1_zone_2),
-            ConfigROI.s_number_of_sub_intervals_1: scale_coord(view2_zone_1),
-            ConfigROI.s_number_of_sub_intervals_2: scale_coord(view2_zone_2),
-            ConfigROI.s_demand_power_type_1: scale_coord(view3_zone_1),
-            ConfigROI.s_demand_power_type_2: scale_coord(view3_zone_2),
-            ConfigROI.s_demand_sync_mode_1: scale_coord(view4_zone_1),
-            ConfigROI.s_demand_sync_mode_2: scale_coord(view4_zone_2),
-            ConfigROI.s_thermal_response_index_1: scale_coord(view5_zone_1),
-            ConfigROI.s_thermal_response_index_2: scale_coord(view5_zone_2),
+            ConfigROI.s_sub_interval_time_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_sub_interval_time_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_number_of_sub_intervals_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_number_of_sub_intervals_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_demand_power_type_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_demand_power_type_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_demand_sync_mode_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_demand_sync_mode_2: scale_coord(self.view4_zone_2),
+            ConfigROI.s_thermal_response_index_1: scale_coord(self.view5_zone_1),
+            ConfigROI.s_thermal_response_index_2: scale_coord(self.view5_zone_2),
             #power
-            ConfigROI.s_phase_power_calculation_1: scale_coord(view1_zone_1),
-            ConfigROI.s_phase_power_calculation_2: scale_coord(view1_zone_2),
-            ConfigROI.s_total_power_calculation_1: scale_coord(view2_zone_1),
-            ConfigROI.s_total_power_calculation_2: scale_coord(view2_zone_2),
-            ConfigROI.s_pf_sign_1: scale_coord(view3_zone_1),
-            ConfigROI.s_pf_sign_2: scale_coord(view3_zone_2),
-            ConfigROI.s_pf_value_at_noload_1: scale_coord(view4_zone_1),
-            ConfigROI.s_pf_value_at_noload_2: scale_coord(view4_zone_2),
-            ConfigROI.s_reactive_power_sign_1: scale_coord(view5_zone_1),
-            ConfigROI.s_reactive_power_sign_2: scale_coord(view5_zone_2),
+            ConfigROI.s_phase_power_calculation_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_phase_power_calculation_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_total_power_calculation_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_total_power_calculation_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_pf_sign_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_pf_sign_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_pf_value_at_noload_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_pf_value_at_noload_2: scale_coord(self.view4_zone_2),
+            ConfigROI.s_reactive_power_sign_1: scale_coord(self.view5_zone_1),
+            ConfigROI.s_reactive_power_sign_2: scale_coord(self.view5_zone_2),
 
             # event>dip
-            ConfigROI.s_dip_trigger_1: scale_coord(view1_zone_1),
-            ConfigROI.s_dip_trigger_2: scale_coord(view1_zone_2),
-            ConfigROI.s_dip_threshold_1: scale_coord(view2_zone_1),
-            ConfigROI.s_dip_threshold_2: scale_coord(view2_zone_2),
-            ConfigROI.s_dip_hysteresis_1: scale_coord(view3_zone_1),
-            ConfigROI.s_dip_hysteresis_2: scale_coord(view3_zone_2),
+            ConfigROI.s_dip_trigger_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_dip_trigger_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_dip_threshold_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_dip_threshold_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_dip_hysteresis_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_dip_hysteresis_2: scale_coord(self.view3_zone_2),
             ConfigROI.s_dip_3phase_dip_1: [n*x for x in [175, 331, 298, 34]],
             ConfigROI.s_dip_3phase_dip_2: [n*x for x in [175, 366, 298, 34]],
             #swell
-            ConfigROI.s_swell_trigger_1: scale_coord(view1_zone_1),
-            ConfigROI.s_swell_trigger_2: scale_coord(view1_zone_2),
-            ConfigROI.s_swell_threshold_1: scale_coord(view2_zone_1),
-            ConfigROI.s_swell_threshold_2: scale_coord(view2_zone_2),
-            ConfigROI.s_swell_hysteresis_1: scale_coord(view3_zone_1),
-            ConfigROI.s_swell_hysteresis_2: scale_coord(view3_zone_2),
+            ConfigROI.s_swell_trigger_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_swell_trigger_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_swell_threshold_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_swell_threshold_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_swell_hysteresis_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_swell_hysteresis_2: scale_coord(self.view3_zone_2),
             #pq curve
-            ConfigROI.s_pq_curve_semi_1: scale_coord(view1_zone_1),
-            ConfigROI.s_pq_curve_semi_2: scale_coord(view1_zone_2),
-            ConfigROI.s_pq_curve_iec_1: scale_coord(view2_zone_1),
-            ConfigROI.s_pq_curve_iec_2: scale_coord(view2_zone_2),
-            ConfigROI.s_pq_curve_itic_1: scale_coord(view3_zone_1),
-            ConfigROI.s_pq_curve_itic_2: scale_coord(view3_zone_2),
+            ConfigROI.s_pq_curve_semi_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_pq_curve_semi_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_pq_curve_iec_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_pq_curve_iec_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_pq_curve_itic_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_pq_curve_itic_2: scale_coord(self.view3_zone_2),
 
             #network>ethernet
             #rs-485
-            ConfigROI.s_device_address_1: scale_coord(view1_zone_1),
-            ConfigROI.s_device_address_2: scale_coord(view1_zone_2),
-            ConfigROI.s_bit_rate_1: scale_coord(view2_zone_1),
-            ConfigROI.s_bit_rate_2: scale_coord(view2_zone_2),
-            ConfigROI.s_parity_1: scale_coord(view3_zone_1),
-            ConfigROI.s_parity_2: scale_coord(view3_zone_2),
-            ConfigROI.s_stop_bit_1: scale_coord(view4_zone_1),
-            ConfigROI.s_stop_bit_2: scale_coord(view4_zone_2),
+            ConfigROI.s_device_address_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_device_address_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_bit_rate_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_bit_rate_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_parity_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_parity_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_stop_bit_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_stop_bit_2: scale_coord(self.view4_zone_2),
             #advanced
-            ConfigROI.s_modbus_timeout_1: scale_coord(view1_zone_1),
-            ConfigROI.s_modbus_timeout_2: scale_coord(view1_zone_2),
-            ConfigROI.s_rstp_1: scale_coord(view2_zone_1),
-            ConfigROI.s_rstp_2: scale_coord(view2_zone_2),
-            ConfigROI.s_storm_control_1: scale_coord(view3_zone_1),
-            ConfigROI.s_storm_control_2: scale_coord(view3_zone_2),
-            ConfigROI.s_rs485_map_1: scale_coord(view4_zone_1),
-            ConfigROI.s_rs485_map_2: scale_coord(view4_zone_2),
-            ConfigROI.s_remote_control_lock_mode_1: scale_coord(view5_zone_1),
-            ConfigROI.s_remote_control_lock_mode_2: scale_coord(view5_zone_2),
+            ConfigROI.s_modbus_timeout_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_modbus_timeout_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_rstp_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_rstp_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_storm_control_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_storm_control_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_rs485_map_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_rs485_map_2: scale_coord(self.view4_zone_2),
+            ConfigROI.s_remote_control_lock_mode_1: scale_coord(self.view5_zone_1),
+            ConfigROI.s_remote_control_lock_mode_2: scale_coord(self.view5_zone_2),
 
             #control>data reset
-            ConfigROI.s_data_reset_demand: scale_coord(view1_zone_1),
-            ConfigROI.s_data_reset_peak_demand: scale_coord(view2_zone_1),
-            ConfigROI.s_data_reset_max_min: scale_coord(view3_zone_1),
-            ConfigROI.s_data_reset_energy: scale_coord(view4_zone_1),
-            ConfigROI.s_data_reset_pq_event: scale_coord(view5_zone_1),
+            ConfigROI.s_data_reset_demand: scale_coord(self.view1_zone_1),
+            ConfigROI.s_data_reset_peak_demand: scale_coord(self.view2_zone_1),
+            ConfigROI.s_data_reset_max_min: scale_coord(self.view3_zone_1),
+            ConfigROI.s_data_reset_energy: scale_coord(self.view4_zone_1),
+            ConfigROI.s_data_reset_pq_event: scale_coord(self.view5_zone_1),
             #demand sync
-            ConfigROI.s_demand_sync: scale_coord(view1_zone_1),
+            ConfigROI.s_demand_sync: scale_coord(self.view1_zone_1),
             #test mode
-            ConfigROI.s_test_mode_1: scale_coord(view1_zone_1),
-            ConfigROI.s_test_mode_2: scale_coord(view1_zone_2),
-            ConfigROI.s_test_mode_timeout_1: scale_coord(view2_zone_1),
-            ConfigROI.s_test_mode_timeout_2: scale_coord(view2_zone_2),
+            ConfigROI.s_test_mode_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_test_mode_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_test_mode_timeout_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_test_mode_timeout_2: scale_coord(self.view2_zone_2),
 
             #system>description
-            ConfigROI.s_installation_year_1: scale_coord(view4_zone_1),
-            ConfigROI.s_installation_year_2: scale_coord(view4_zone_2),
-            ConfigROI.s_installation_month_1: scale_coord(view5_zone_1),
-            ConfigROI.s_installation_month_2: scale_coord(view5_zone_2),
-            ConfigROI.s_installation_day_1: scale_coord(view6_zone_1),
-            ConfigROI.s_installation_day_2: scale_coord(view6_zone_2),
+            ConfigROI.s_installation_year_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_installation_year_2: scale_coord(self.view4_zone_2),
+            ConfigROI.s_installation_month_1: scale_coord(self.view5_zone_1),
+            ConfigROI.s_installation_month_2: scale_coord(self.view5_zone_2),
+            ConfigROI.s_installation_day_1: scale_coord(self.view6_zone_1),
+            ConfigROI.s_installation_day_2: scale_coord(self.view6_zone_2),
             #locale
-            ConfigROI.s_timezone_offset_1: scale_coord(view1_zone_1),
-            ConfigROI.s_timezone_offset_2: scale_coord(view1_zone_2),
-            ConfigROI.s_temperature_unit_1: scale_coord(view2_zone_1),
-            ConfigROI.s_temperature_unit_2: scale_coord(view2_zone_2),
-            ConfigROI.s_energy_unit_1: scale_coord(view3_zone_1),
-            ConfigROI.s_energy_unit_2: scale_coord(view3_zone_2),
-            ConfigROI.s_date_format_1: scale_coord(view4_zone_1),
-            ConfigROI.s_date_format_2: scale_coord(view4_zone_2),
+            ConfigROI.s_timezone_offset_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_timezone_offset_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_temperature_unit_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_temperature_unit_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_energy_unit_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_energy_unit_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_date_format_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_date_format_2: scale_coord(self.view4_zone_2),
             #local time
-            ConfigROI.s_year_1: scale_coord(view1_zone_1),
-            ConfigROI.s_year_2: scale_coord(view1_zone_2),
-            ConfigROI.s_month_1: scale_coord(view2_zone_1),
-            ConfigROI.s_month_2: scale_coord(view2_zone_2),
-            ConfigROI.s_day_1: scale_coord(view3_zone_1),
-            ConfigROI.s_day_2: scale_coord(view3_zone_2),
-            ConfigROI.s_hour_1: scale_coord(view4_zone_1),
-            ConfigROI.s_hour_2: scale_coord(view4_zone_2),
-            ConfigROI.s_minute_1: scale_coord(view5_zone_1),
-            ConfigROI.s_minute_2: scale_coord(view5_zone_2),
-            ConfigROI.s_second_1: scale_coord(view6_zone_1),
-            ConfigROI.s_second_2: scale_coord(view6_zone_2),
+            ConfigROI.s_year_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_year_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_month_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_month_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_day_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_day_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_hour_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_hour_2: scale_coord(self.view4_zone_2),
+            ConfigROI.s_minute_1: scale_coord(self.view5_zone_1),
+            ConfigROI.s_minute_2: scale_coord(self.view5_zone_2),
+            ConfigROI.s_second_1: scale_coord(self.view6_zone_1),
+            ConfigROI.s_second_2: scale_coord(self.view6_zone_2),
             #summer time
-            ConfigROI.s_summer_time_mode_1: scale_coord(view1_zone_1),
-            ConfigROI.s_summer_time_mode_2: scale_coord(view1_zone_2),
-            ConfigROI.s_summer_time_time_offset_1: scale_coord(view2_zone_1),
-            ConfigROI.s_summer_time_time_offset_2: scale_coord(view2_zone_2),
-            ConfigROI.s_start_month_1: scale_coord(view3_zone_1),
-            ConfigROI.s_start_month_2: scale_coord(view3_zone_2),
-            ConfigROI.s_start_nth_weekday_1: scale_coord(view4_zone_1),
-            ConfigROI.s_start_nth_weekday_2: scale_coord(view4_zone_2),
-            ConfigROI.s_start_weekday_1: scale_coord(view5_zone_1),
-            ConfigROI.s_start_weekday_2: scale_coord(view5_zone_2),
-            ConfigROI.s_start_minute_1: scale_coord(view6_zone_1),
-            ConfigROI.s_start_minute_2: scale_coord(view6_zone_2),
-            ConfigROI.s_end_month_1: scale_coord(view7_zone_1),
-            ConfigROI.s_end_month_2: scale_coord(view7_zone_2),
-            ConfigROI.s_end_nth_weekday_1: scale_coord(view8_zone_1),
-            ConfigROI.s_end_nth_weekday_2: scale_coord(view8_zone_2),
-            ConfigROI.s_end_weekday_1: scale_coord(view9_zone_1),
-            ConfigROI.s_end_weekday_2: scale_coord(view9_zone_2),
-            ConfigROI.s_end_minute_1: scale_coord(view10_zone_1),
-            ConfigROI.s_end_minute_2: scale_coord(view10_zone_2),
+            ConfigROI.s_summer_time_mode_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_summer_time_mode_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_summer_time_time_offset_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_summer_time_time_offset_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_start_month_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_start_month_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_start_nth_weekday_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_start_nth_weekday_2: scale_coord(self.view4_zone_2),
+            ConfigROI.s_start_weekday_1: scale_coord(self.view5_zone_1),
+            ConfigROI.s_start_weekday_2: scale_coord(self.view5_zone_2),
+            ConfigROI.s_start_minute_1: scale_coord(self.view6_zone_1),
+            ConfigROI.s_start_minute_2: scale_coord(self.view6_zone_2),
+            ConfigROI.s_end_month_1: scale_coord(self.view7_zone_1),
+            ConfigROI.s_end_month_2: scale_coord(self.view7_zone_2),
+            ConfigROI.s_end_nth_weekday_1: scale_coord(self.view8_zone_1),
+            ConfigROI.s_end_nth_weekday_2: scale_coord(self.view8_zone_2),
+            ConfigROI.s_end_weekday_1: scale_coord(self.view9_zone_1),
+            ConfigROI.s_end_weekday_2: scale_coord(self.view9_zone_2),
+            ConfigROI.s_end_minute_1: scale_coord(self.view10_zone_1),
+            ConfigROI.s_end_minute_2: scale_coord(self.view10_zone_2),
             #ntp
-            ConfigROI.s_sync_mode_1: scale_coord(view2_zone_1),
-            ConfigROI.s_sync_mode_2: scale_coord(view2_zone_2),
-            ConfigROI.s_sync_period_1: scale_coord(view3_zone_1),
-            ConfigROI.s_sync_period_2: scale_coord(view3_zone_2),
-            ConfigROI.s_sync_max_drift_1: scale_coord(view4_zone_1),
-            ConfigROI.s_sync_max_drift_2: scale_coord(view4_zone_2),
+            ConfigROI.s_sync_mode_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_sync_mode_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_sync_period_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_sync_period_2: scale_coord(self.view3_zone_2),
+            ConfigROI.s_sync_max_drift_1: scale_coord(self.view4_zone_1),
+            ConfigROI.s_sync_max_drift_2: scale_coord(self.view4_zone_2),
             #lcd&buzzer
-            ConfigROI.s_lcd_backlight_timeout_1: scale_coord(view1_zone_1),
-            ConfigROI.s_lcd_backlight_timeout_2: scale_coord(view1_zone_2),
-            ConfigROI.s_lcd_backlight_low_level_1: scale_coord(view2_zone_1),
-            ConfigROI.s_lcd_backlight_low_level_2: scale_coord(view2_zone_2),
-            ConfigROI.s_buzzer_for_button_1: scale_coord(view3_zone_1),
-            ConfigROI.s_buzzer_for_button_2: scale_coord(view3_zone_2),
-
+            ConfigROI.s_lcd_backlight_timeout_1: scale_coord(self.view1_zone_1),
+            ConfigROI.s_lcd_backlight_timeout_2: scale_coord(self.view1_zone_2),
+            ConfigROI.s_lcd_backlight_low_level_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_lcd_backlight_low_level_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_buzzer_for_button_1: scale_coord(self.view3_zone_1),
+            ConfigROI.s_buzzer_for_button_2: scale_coord(self.view3_zone_2),
 
         }
         return params

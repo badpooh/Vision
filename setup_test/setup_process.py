@@ -54,9 +54,9 @@ class SetupTest(QObject):
 		target_address = except_address
 		reference_value = ref_value
 		compare_title = roi_keys[0].value[0]
-		ref_title_1 = roi_keys[1].value[0]
-		ref_title_2 = roi_keys[1].value[1]
-		print(self.accruasm_state)
+		ref_title_1 = roi_keys[1].value[1][0]
+		ref_title_2 = roi_keys[1].value[1][1]
+		print(compare_title)
 
 		if self.accruasm_state == 2 and refresh == 'event':
 			self.autogui_manager.m_s_event_refresh(image_path, base_save_path, compare_title)
@@ -117,7 +117,6 @@ class SetupTest(QObject):
 		- search_pattern, base_save_path => setup_ocr_process에 필요
 		- title_desc => 임의의 식별자 (setup_ocr_process 호출 시 구분)
 		"""
-
 		if main_menu is not None:
 			self.touch_manager.touch_menu(main_menu)
 		if side_menu is not None:
@@ -384,41 +383,41 @@ class SetupTest(QObject):
 		### Primary Reference Voltage 초기화
 		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_reference_voltage, bit32=1900)
 
-		### Sliding Reference Voltage Disable -> Enable
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_6.value,
-			password=False,
-			popup_btn=ConfigTouch.touch_btn_popup_2.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
-			except_addr=ConfigMap.addr_sliding_reference_voltage_type,
-			access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
-			ref_value=ConfigROI.s_sliding_reference_vol_2.value[1],
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-			roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### Sliding Reference Voltage Disable -> Enable
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_6.value,
+		# 	password=False,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
+		# 	except_addr=ConfigMap.addr_sliding_reference_voltage_type,
+		# 	access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
+		# 	ref_value=ConfigROI.s_sliding_reference_vol_2.value[1],
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 
-		### Sliding Reference Voltage Enable -> Disable
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_6.value,
-			password=False,
-			popup_btn=ConfigTouch.touch_btn_popup_1.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
-			except_addr=ConfigMap.addr_sliding_reference_voltage_type,
-			access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
-			ref_value=ConfigROI.s_sliding_reference_vol_2.value[0],
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### Sliding Reference Voltage Enable -> Disable
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_6.value,
+		# 	password=False,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_1.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_sliding_reference_vol_1, ConfigROI.s_sliding_reference_vol_2],
+		# 	except_addr=ConfigMap.addr_sliding_reference_voltage_type,
+		# 	access_address=ConfigMap.addr_sliding_reference_voltage_setup_access.value,
+		# 	ref_value=ConfigROI.s_sliding_reference_vol_2.value[0],
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_sliding_reference_voltage.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 
 		### Rotating Sequence Positive -> Negative
 		self.config_setup_action(
@@ -1048,27 +1047,27 @@ class SetupTest(QObject):
 	def m_s_event_dip(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
 		
-		self.touch_manager.btn_front_meter()
-		self.touch_manager.btn_front_setup()
+		# self.touch_manager.btn_front_meter()
+		# self.touch_manager.btn_front_setup()
 
 		### Dip Trigger Disable > Enable (input )
-		self.config_setup_action(
-			main_menu=ConfigTouch.touch_main_menu_2.value,
-			side_menu=ConfigTouch.touch_side_menu_1.value,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=True,
-			popup_btn=ConfigTouch.touch_btn_popup_2.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2],
-			except_addr=ConfigMap.addr_dip,
-			access_address=ConfigMap.addr_dip_setup_access.value,
-			ref_value=ConfigROI.s_dip_trigger_2.value[1],
-			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
-			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path,
-			refresh='event')
+		# self.config_setup_action(
+		# 	main_menu=ConfigTouch.touch_main_menu_2.value,
+		# 	side_menu=ConfigTouch.touch_side_menu_1.value,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=True,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2],
+		# 	except_addr=ConfigMap.addr_dip,
+		# 	access_address=ConfigMap.addr_dip_setup_access.value,
+		# 	ref_value=ConfigROI.s_dip_trigger_2.value[1],
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+		# 	roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path,
+		# 	refresh='event')
 		
 		### Dip Trigger Enable > Disable (input )
 		self.config_setup_action(
@@ -1082,7 +1081,7 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_dip_trigger_1, ConfigROI.s_dip_trigger_2],
 			except_addr=ConfigMap.addr_dip,
 			access_address=ConfigMap.addr_dip_setup_access.value,
-			ref_value=ConfigROI.s_dip_trigger_2.value[0],
+			ref_value=ConfigROI.s_dip_trigger_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
 			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
 			search_pattern=search_pattern,

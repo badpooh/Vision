@@ -100,7 +100,7 @@ class TestProcess:
             elif test_name == 'm_s_demand':
                 self.setup_test.m_s_meas_demand(base_save_path, search_pattern)
             elif test_name == 'm_s_dip':
-                self.setup_test.setup_meter_s_e_dip(base_save_path, search_pattern)
+                self.setup_test.m_s_event_dip(base_save_path, search_pattern)
 
                 
             else:

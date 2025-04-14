@@ -528,6 +528,7 @@ class Evaluation:
 
         def check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1=None, setup_ref_title_2=None):
             result_condition_1 = False
+            setup_result = ["Error", "Initial check failed or condition not met"]
             title = title
             ecm_access_address = ecm_access_address
             ecm_address = ecm_address
@@ -548,7 +549,7 @@ class Evaluation:
                     if ocr_res[1] == setup_ref_title_1:
                         if isinstance(val, str) and not val.isdigit():
                             if current_modbus.registers[0] == 0 and sm_condition == True:
-                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
+                                setup_result = [f'PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
                                 result_condition_1 = True
                             else:
                                 if sm_condition == True:
@@ -575,7 +576,7 @@ class Evaluation:
                                     else:
                                         setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}', f'AccuraSM = {setup_ref_title_1}/{sm_res}']
                     else:
-                        setup_result = ['FAIL', 'Device UI was wrong']
+                        setup_result = ['FAIL', f'{ocr_res[1]} / Device UI was wrong']
                 if setup_ref == setup_ref_title_2:
                     if ocr_res[1] == setup_ref_title_2:
                         if isinstance(val, str) and not val.isdigit():
