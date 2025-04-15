@@ -154,6 +154,12 @@ class SetupTest(QObject):
 		else:
 			print(f"[DEBUG] Not calling setup_ocr_process for {title_desc} because some param is missing.")
 
+	def setup_m_s_meas_all(self, base_save_path, search_pattern):
+		self.setup_meter_s_m_vol(base_save_path, search_pattern)
+		self.setup_meter_s_m_curr(base_save_path, search_pattern)
+		self.m_s_meas_demand(base_save_path, search_pattern)
+		self.m_s_meas_power(base_save_path, search_pattern)
+
 	def setup_meter_s_m_vol(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start()
 
@@ -1043,6 +1049,11 @@ class SetupTest(QObject):
 			roi_mask=ConfigROI.mask_m_s_meas_reactive_power_sign.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
+	
+	def setup_m_s_event_all(self, base_save_path, search_pattern):
+		self.m_s_event_dip(self, base_save_path, search_pattern)
+		self.m_s_event_swell(self, base_save_path, search_pattern)
+		self.m_s_event_pq_curve(self, base_save_path, search_pattern)
 	
 	def m_s_event_dip(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
