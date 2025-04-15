@@ -1212,18 +1212,18 @@ class SetupTest(QObject):
 		self.touch_manager.btn_front_meter()
 		self.touch_manager.btn_front_setup()
 		
-		### Swell Disable > Enable (input )
+		### Swell Trigger Disable > Enable (input )
 		self.config_setup_action(
 			main_menu=ConfigTouch.touch_main_menu_2.value,
 			side_menu=ConfigTouch.touch_side_menu_2.value,
 			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
+			password=True,
 			popup_btn=ConfigTouch.touch_btn_popup_2.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_swell_trigger_1, ConfigROI.s_swell_trigger_2],
 			except_addr=ConfigMap.addr_swell,
-			access_address=ConfigMap.addr_swell.value,
+			access_address=ConfigMap.addr_swell_setup_access.value,
 			ref_value=ConfigROI.s_swell_trigger_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
 			roi_mask=ConfigROI.mask_m_s_event_swell_trigger.value,
@@ -1231,7 +1231,7 @@ class SetupTest(QObject):
 			base_save_path=base_save_path,
 			refresh='event')
 		
-		### Swell Enable > Disable (input )
+		### Swell Trigger Enable > Disable (input )
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
@@ -1242,10 +1242,210 @@ class SetupTest(QObject):
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_swell_trigger_1, ConfigROI.s_swell_trigger_2],
 			except_addr=ConfigMap.addr_swell,
-			access_address=ConfigMap.addr_swell.value,
+			access_address=ConfigMap.addr_swell_setup_access.value,
 			ref_value=ConfigROI.s_swell_trigger_2.value[1][0],
 			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
 			roi_mask=ConfigROI.mask_m_s_event_swell_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### Swell Threshold 110 > 101 (input 100.9)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='100.9',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_swell_threshold_1, ConfigROI.s_swell_threshold_2],
+			except_addr=ConfigMap.addr_swell_threshold,
+			access_address=ConfigMap.addr_swell_setup_access.value,
+			ref_value=ConfigROI.s_swell_threshold_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_swell_threshold.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### Swell Threshold 101 > 999 (input 999.1)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='999.1',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_swell_threshold_1, ConfigROI.s_swell_threshold_2],
+			except_addr=ConfigMap.addr_swell_threshold,
+			access_address=ConfigMap.addr_swell_setup_access.value,
+			ref_value=ConfigROI.s_swell_trigger_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_swell_threshold.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		### Swell Threshold 초기화(110)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_swell_setup_access, ConfigMap.addr_swell_threshold, bit16=1100)
+
+		### Swell Hysteresis 2 > 1 (input 0.9)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='0.9',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_swell_hysteresis_1, ConfigROI.s_swell_hysteresis_2],
+			except_addr=ConfigMap.addr_swell_hysteresis,
+			access_address=ConfigMap.addr_swell_setup_access.value,
+			ref_value=ConfigROI.s_swell_hysteresis_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_swell_hysteresis.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### Swell Hysteresis 1 > 99 (input 99.1)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='99.1',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_swell_hysteresis_1, ConfigROI.s_swell_hysteresis_2],
+			except_addr=ConfigMap.addr_swell_hysteresis,
+			access_address=ConfigMap.addr_swell_setup_access.value,
+			ref_value=ConfigROI.s_swell_hysteresis_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_swell_hysteresis.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		### Swell Hysteresis 초기화(90)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_swell_setup_access, ConfigMap.addr_swell_hysteresis, bit16=20)
+
+	def m_s_event_pq_curve(self, base_save_path, search_pattern):
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+		
+		### SEMI F47-0706 Disable > Enable (input )
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_2.value,
+			side_menu=ConfigTouch.touch_side_menu_3.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pq_curve_semi_1, ConfigROI.s_pq_curve_semi_2],
+			except_addr=ConfigMap.addr_semi,
+			access_address=ConfigMap.addr_semi_event_setup_access.value,
+			ref_value=ConfigROI.s_pq_curve_semi_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_pq_curve_semi.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### SEMI F47-0706 Enable > Disable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pq_curve_semi_1, ConfigROI.s_pq_curve_semi_2],
+			except_addr=ConfigMap.addr_semi,
+			access_address=ConfigMap.addr_semi_event_setup_access.value,
+			ref_value=ConfigROI.s_pq_curve_semi_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_pq_curve_semi.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### IEC 61000-4-11/34 Class 3 Disable > Enable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pq_curve_iec_1, ConfigROI.s_pq_curve_iec_2],
+			except_addr=ConfigMap.addr_iec,
+			access_address=ConfigMap.addr_iec_event_setup_access.value,
+			ref_value=ConfigROI.s_pq_curve_iec_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_pq_curve_iec.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### IEC 61000-4-11/34 Class 3 Enable > Disable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pq_curve_iec_1, ConfigROI.s_pq_curve_iec_2],
+			except_addr=ConfigMap.addr_iec,
+			access_address=ConfigMap.addr_iec_event_setup_access.value,
+			ref_value=ConfigROI.s_pq_curve_iec_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_pq_curve_iec.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### ITIC Disable > Enable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pq_curve_itic_1, ConfigROI.s_pq_curve_itic_2],
+			except_addr=ConfigMap.addr_itic,
+			access_address=ConfigMap.addr_itic_event_setup_access.value,
+			ref_value=ConfigROI.s_pq_curve_itic_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_pq_curve_itic.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### ITIC Enable > Disable (input )
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_pq_curve_itic_1, ConfigROI.s_pq_curve_itic_2],
+			except_addr=ConfigMap.addr_itic,
+			access_address=ConfigMap.addr_itic_event_setup_access.value,
+			ref_value=ConfigROI.s_pq_curve_itic_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_pq_curve_itic.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path,
 			refresh='event')

@@ -192,5 +192,8 @@ class TouchManager:
                 self.touch_menu(ConfigTouch.touch_btn_number_8.value)
             elif digit == '9':
                 self.touch_menu(ConfigTouch.touch_btn_number_9.value)
+            elif digit == '.':
+                self.touch_menu(ConfigTouch.touch_btn_number_dot.value)
+
             else:
                 print("input number touch error")
