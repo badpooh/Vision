@@ -73,7 +73,7 @@ class ConfigROI(Enum):
 
     ### for meter setup test ###
     s_wiring_1 = ['Wiring']
-    s_wiring_2 = ('Wiring', ['Wye', 'Delta'])
+    s_wiring_2 = ('Wiring', {'Wye': 0, 'Delta': 1})
     s_min_meas_sec_ln_vol_1 = ['Min. Meas. Secondary L-N Volt. [V]']
     s_min_meas_sec_ln_vol_2 = ('Min. Meas. Secondary L-N Volt. [V]', ['0', '10'])
     s_vt_primary_ll_vol_1 = ['VT Primary L-L Voltage [V]']
@@ -81,8 +81,7 @@ class ConfigROI(Enum):
     s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
     s_vt_secondary_ll_vol_2 = ('VT Secondary L-L Voltage [V]', ['50.0', '220.0'])
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
-    s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', ['Line-to-Line', 'Line-to-Neutral']) # 값 분리
-    s_primary_reference_vol_3 = ('Primary Reference Voltage [V]', ['50.0', '999999.0']) # 값 분리
+    s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', ['Line-to-Line', 'Line-to-Neutral'], ['50.0', '999999.0'])
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
     s_sliding_reference_vol_2 = ('Sliding Reference Voltage', ['Disable', 'Enable'])
     s_rotation_sequence_1 = ['Rotating Sequence']

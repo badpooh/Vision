@@ -82,12 +82,14 @@ class AutoGUI:
 			screenshot_region.save(save_path)
 
 			if max_val >= threshold:
-				sm_res = f'PASS_{max_val:.3f}_{title}'
+				sm_res = f'PASS_{max_val:.3f}'
+				sm_res_raw = f'PASS_{max_val:.3f}_{title}'
 				self.sm_condition = True
 			else:
-				sm_res = f'FAIL_{max_val:.3f}_{title}'
+				sm_res = f'FAIL_{max_val:.3f}'
+				sm_res_raw = f'FAIL_{max_val:.3f}_{title}'
 
-		print(sm_res)
+		print(sm_res_raw)
 			
 		return sm_res, self.sm_condition
 	

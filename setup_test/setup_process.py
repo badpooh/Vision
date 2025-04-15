@@ -32,7 +32,7 @@ class SetupTest(QObject):
 		self.accruasm_state = state
 		# print(f"SetupProcess: AccuraSM checked={state}")
 
-	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, refresh=None, coordinates=None):
+	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, modbus_ref, refresh=None, coordinates=None):
 		sm_condition = False
 		"""
 		Args:
@@ -54,8 +54,8 @@ class SetupTest(QObject):
 		target_address = except_address
 		reference_value = ref_value
 		compare_title = roi_keys[0].value[0]
-		ref_title_1 = roi_keys[1].value[1][0]
-		ref_title_2 = roi_keys[1].value[1][1]
+		ref_title_1 = list(roi_keys[1].value[1])[0]
+		ref_title_2 = list(roi_keys[1].value[1])[1]
 		print(compare_title)
 
 		if self.accruasm_state == 2 and refresh == 'event':
@@ -81,7 +81,8 @@ class SetupTest(QObject):
 			setup_ref_title_2=ref_title_2,
 			except_addr=except_addr,
 			sm_res=sm_res,
-			sm_condition = sm_condition
+			sm_condition = sm_condition,
+			modbus_ref=modbus_ref
 			)
 		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result, title)
 		time.sleep(0.5)
@@ -98,6 +99,7 @@ class SetupTest(QObject):
                        except_addr=None,
 					   access_address=None,
                        ref_value=None,
+					   modbus_ref=None,
                        template_path=None,
                        roi_mask=None,
                        search_pattern=None,
@@ -149,7 +151,8 @@ class SetupTest(QObject):
 				ref_value=ref_value,
 				template_path=template_path,
 				roi_mask=roi_mask,
-				refresh=refresh
+				refresh=refresh,
+				modbus_ref = modbus_ref
 			)
 		else:
 			print(f"[DEBUG] Not calling setup_ocr_process for {title_desc} because some param is missing.")
@@ -178,7 +181,8 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
 			except_addr=ConfigMap.addr_wiring,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_wiring_2.value[1][1],
+			ref_value=list(ConfigROI.s_wiring_2.value[1])[1],
+			modbus_ref=ConfigROI.s_wiring_2.value[1]['Delta'],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
 			search_pattern=search_pattern,
@@ -352,24 +356,26 @@ class SetupTest(QObject):
 			base_save_path=base_save_path)
 
 		### Primary Reference Voltage 49
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_5.value,
-			password=False,
-			popup_btn=None,
-			number_input='49',
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_3],
-			except_addr=ConfigMap.addr_reference_voltage,
-			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_3.value[1][0], # roi_keys 와 인덱스 매칭 확인
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_5.value)
+		self.touch_manager.input_number('49', key_type='ref')
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys = [ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2]
+		except_addr = ConfigMap.addr_reference_voltage
+		ref_value = roi_keys[1].value[2][0]
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_min.value
+		roi_mask = ConfigROI.mask_m_s_meas_primary_reference_voltage.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
 
 		### Primary Reference Voltage 1000000
+		# self.touch_manager.touch_menu(ConfigTouch.touch_data_view_5.value)
+		# self.touch_manager.input_number('1000000', key_type='ref')
+		# self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		# roi_keys = [ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2]
+		# except_addr = ConfigMap.addr_reference_voltage
+		# ref_value = roi_keys[1].value[2][1]
+		# template_path = ConfigImgRef.img_ref_meter_setup_meas_max.value
+		# roi_mask = ConfigROI.mask_m_s_meas_primary_reference_voltage.value
+		# self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
@@ -378,10 +384,10 @@ class SetupTest(QObject):
 			popup_btn=None,
 			number_input='1000000',
 			apply_btn=True,
-			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_3],
+			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2],
 			except_addr=ConfigMap.addr_reference_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_3.value[1][1], # roi_keys 와 인덱스 매칭 확인
+			ref_value=ConfigROI.s_primary_reference_vol_2.value[2][1], # roi_keys 와 인덱스 매칭 확인
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage.value,
 			search_pattern=search_pattern,

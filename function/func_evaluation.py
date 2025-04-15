@@ -516,7 +516,7 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
-    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, sm_res=None, sm_condition=None, except_addr=None):
+    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, modbus_ref, sm_res=None, sm_condition=None, except_addr=None):
         """
         ocr_res: OCR 결과 리스트
         sm_res:  AccurSM 결과
@@ -526,14 +526,9 @@ class Evaluation:
         if except_addr is None:
             except_addr = set()
 
-        def check_configuration(title, ecm_access_address, ecm_address, setup_ref_title_1=None, setup_ref_title_2=None):
+        def check_configuration(title, ecm_access_address, ecm_address, modbus_ref, setup_ref_title_1=None, setup_ref_title_2=None):
             result_condition_1 = False
             setup_result = ["Error", "Initial check failed or condition not met"]
-            title = title
-            ecm_access_address = ecm_access_address
-            ecm_address = ecm_address
-            setup_ref_title_1 = setup_ref_title_1
-            setup_ref_title_2 = setup_ref_title_2
 
             address, words = ecm_address.value
 
@@ -545,66 +540,56 @@ class Evaluation:
                     high_word = current_modbus.registers[0]
                     full_32 = (high_word << 16) | low_word  # unsigned 32bit
                 val = ocr_res[1]
-                if setup_ref == setup_ref_title_1:
-                    if ocr_res[1] == setup_ref_title_1:
-                        if isinstance(val, str) and not val.isdigit():
-                            if current_modbus.registers[0] == 0 and sm_condition == True:
-                                setup_result = [f'PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
-                                result_condition_1 = True
-                            elif current_modbus.registers[0] == 0 and sm_condition == False:
-                                setup_result = [f'PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 0/{current_modbus.registers[0]}']
-                                result_condition_1 = True
-                            else:
-                                if sm_condition == True:
-                                    setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
-                                else:
-                                    setup_result = ['FAIL', f'Modbus = 0/{current_modbus.registers[0]}']
-                        else:
-                            if words == 1:
-                                if ((current_modbus.registers[0])/10) == int(setup_ref_title_1) and sm_condition == True:
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
+
+                if words == 1:
+                    if setup_ref == setup_ref_title_1:
+                        if ocr_res[1] == setup_ref_title_1:
+                            ### Devie UI, modbus, sm > pass / 설정값이 문자열
+                            if isinstance(val, str) and not val.isdigit():
+                                if current_modbus.registers[0] == 0 and sm_condition == True:
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {current_modbus.registers[0]}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
-                                else:
-                                    if sm_condition == True:
-                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}']
-                                    else:
-                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref_title_1}/{sm_res}']
-                            else:
-                                if full_32 == int(setup_ref_title_1) and sm_condition == True:
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{full_32}', f'AccuraSM = {setup_ref}/{sm_res}']
+                            ### Devie UI, modbus, sm > pass / 설정값이 uint16
+                            elif isinstance(val, str) and val.isdigit():
+                                if current_modbus.registers[0] == int(val) and sm_condition == True:
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {current_modbus.registers[0]}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
-                                else:
-                                    if sm_condition == True:
-                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}']
-                                    else:
-                                        setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}', f'AccuraSM = {setup_ref_title_1}/{sm_res}']
+                            else:
+                                setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {current_modbus.registers[0]}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                    elif setup_ref == setup_ref_title_2:
+                        if ocr_res[1] == setup_ref_title_2:
+                            ### Devie UI, modbus, sm > pass / 설정값이 문자열
+                            if isinstance(val, str) and not val.isdigit():
+                                if high_word == 0 and sm_condition == True:
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    result_condition_1 = True
+                            ### Devie UI, modbus, sm > pass / 설정값이 uint16
+                            elif isinstance(val, str) and val.isdigit():
+                                if high_word == int(val) and sm_condition == True:
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    result_condition_1 = True
+                            else:
+                                setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                elif words == 2:
+                    if ((current_modbus.registers[0])/10) == int(setup_ref_title_1) and sm_condition == True:
+                        setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref}/{sm_res}']
+                        result_condition_1 = True
                     else:
-                        setup_result = ['FAIL', f'{ocr_res[1]} / Device UI was wrong']
-                if setup_ref == setup_ref_title_2:
-                    if ocr_res[1] == setup_ref_title_2:
-                        if isinstance(val, str) and not val.isdigit():
-                            if current_modbus.registers[0] == 1:
-                                setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = 1/{current_modbus.registers[0]}', f'AccuraSM = {sm_res}']
-                                result_condition_1 = True
-                            else:
-                                setup_result = ['FAIL', f'Modbus = 1/{current_modbus.registers[0]}']
+                        if sm_condition == True:
+                            setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}']
                         else:
-                            if words == 1:
-                                if current_modbus.registers[0] == int(setup_ref_title_2):
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True
-                                else:
-                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_2}/{current_modbus.registers[0]}']
-                            else:
-                                if full_32 == int(setup_ref_title_2):
-                                    setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_2}/{full_32}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True
-                                else:
-                                    setup_result = ['FAIL', f'Modbus = {setup_ref_title_2}/{full_32}']
+                            setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{current_modbus.registers[0]}', f'AccuraSM = {setup_ref_title_1}/{sm_res}']
+                else:
+                    if full_32 == int(setup_ref_title_1) and sm_condition == True:
+                        setup_result = ['PASS', f'Device = {setup_ref}/{ocr_res[1]}', f'Modbus = {setup_ref_title_1}/{full_32}', f'AccuraSM = {setup_ref}/{sm_res}']
+                        result_condition_1 = True
                     else:
-                        setup_result = ['FAIL', 'Device UI was wrong']
-            else:
-                setup_result = ['FAIL', 'OCR Title was wrong']
+                        if sm_condition == True:
+                            setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}']
+                        else:
+                            setup_result = ['FAIL', f'Modbus = {setup_ref_title_1}/{full_32}', f'AccuraSM = {setup_ref_title_1}/{sm_res}']
+                        
 
             return setup_result, result_condition_1
         

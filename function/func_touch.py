@@ -166,34 +166,63 @@ class TouchManager:
         else:
             print("Front home button is clicked Error")
 
-    def input_number(self, number_str):
+    def input_number(self, number_str, key_type=None):
         """
         number_str 예: '123', '100000', '0'
         각 자릿수를 순회하며, 해당 버튼 터치 로직을 수행.
         """
-        for digit in number_str:
-            if digit == '0':
-                self.touch_menu(ConfigTouch.touch_btn_number_0.value)
-            elif digit == '1':
-                self.touch_menu(ConfigTouch.touch_btn_number_1.value)
-            elif digit == '2':
-                self.touch_menu(ConfigTouch.touch_btn_number_2.value)
-            elif digit == '3':
-                self.touch_menu(ConfigTouch.touch_btn_number_3.value)
-            elif digit == '4':
-                self.touch_menu(ConfigTouch.touch_btn_number_4.value)
-            elif digit == '5':
-                self.touch_menu(ConfigTouch.touch_btn_number_5.value)
-            elif digit == '6':
-                self.touch_menu(ConfigTouch.touch_btn_number_6.value)
-            elif digit == '7':
-                self.touch_menu(ConfigTouch.touch_btn_number_7.value)
-            elif digit == '8':
-                self.touch_menu(ConfigTouch.touch_btn_number_8.value)
-            elif digit == '9':
-                self.touch_menu(ConfigTouch.touch_btn_number_9.value)
-            elif digit == '.':
-                self.touch_menu(ConfigTouch.touch_btn_number_dot.value)
+        if key_type == None:
+            for digit in number_str:
+                if digit == '0':
+                    self.touch_menu(ConfigTouch.touch_btn_number_0.value)
+                elif digit == '1':
+                    self.touch_menu(ConfigTouch.touch_btn_number_1.value)
+                elif digit == '2':
+                    self.touch_menu(ConfigTouch.touch_btn_number_2.value)
+                elif digit == '3':
+                    self.touch_menu(ConfigTouch.touch_btn_number_3.value)
+                elif digit == '4':
+                    self.touch_menu(ConfigTouch.touch_btn_number_4.value)
+                elif digit == '5':
+                    self.touch_menu(ConfigTouch.touch_btn_number_5.value)
+                elif digit == '6':
+                    self.touch_menu(ConfigTouch.touch_btn_number_6.value)
+                elif digit == '7':
+                    self.touch_menu(ConfigTouch.touch_btn_number_7.value)
+                elif digit == '8':
+                    self.touch_menu(ConfigTouch.touch_btn_number_8.value)
+                elif digit == '9':
+                    self.touch_menu(ConfigTouch.touch_btn_number_9.value)
+                elif digit == '.':
+                    self.touch_menu(ConfigTouch.touch_btn_number_dot.value)
 
-            else:
-                print("input number touch error")
+                else:
+                    print("input number touch error")
+        elif key_type == 'ref':
+            for digit in number_str:
+                if digit == '0':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_0.value)
+                elif digit == '1':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_1.value)
+                elif digit == '2':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_2.value)
+                elif digit == '3':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_3.value)
+                elif digit == '4':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_4.value)
+                elif digit == '5':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_5.value)
+                elif digit == '6':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_6.value)
+                elif digit == '7':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_7.value)
+                elif digit == '8':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_8.value)
+                elif digit == '9':
+                    self.touch_menu(ConfigTouch.touch_btn_ref_num_9.value)
+                # elif digit == '.':
+                #     self.touch_menu(ConfigTouch.touch_btn_ref_num_dot.value)
+
+                else:
+                    print("input number touch error")
+
