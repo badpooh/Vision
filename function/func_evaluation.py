@@ -597,13 +597,13 @@ class Evaluation:
                     if setup_ref == setup_ref_title_1:
                         if ocr_res[1] == setup_ref_title_1:
                             if sm_res:
-                                if full_32 == int(setup_ref_title_1) and sm_condition == True:
+                                if (full_32 *0.1) == int(setup_ref_title_1) and sm_condition == True:
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             else:
-                                if full_32 == int(setup_ref_title_1):
+                                if (full_32 *0.1) == int(setup_ref_title_1):
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
@@ -614,13 +614,13 @@ class Evaluation:
                     elif setup_ref == setup_ref_title_2:
                         if ocr_res[1] == setup_ref_title_2:
                             if sm_res:
-                                if full_32 == int(setup_ref_title_2) and sm_condition == True:
+                                if (full_32 *0.1) == int(setup_ref_title_2) and sm_condition == True:
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             else:
-                                if full_32 == int(setup_ref_title_2):
+                                if (full_32 *0.1) == int(setup_ref_title_2):
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:

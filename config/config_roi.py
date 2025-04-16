@@ -81,11 +81,11 @@ class ConfigROI(Enum):
     s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
     s_vt_secondary_ll_vol_2 = ('VT Secondary L-L Voltage [V]', ['50.0', '220.0'])
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
-    s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', ['Line-to-Line', 'Line-to-Neutral'], ['50.0', '999999.0'])
+    s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', {'Line-to-Line': 0, 'Line-to-Neutral': 1}, ['50.0', '999999.0'])
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
-    s_sliding_reference_vol_2 = ('Sliding Reference Voltage', ['Disable', 'Enable'])
+    s_sliding_reference_vol_2 = ('Sliding Reference Voltage', {'Disable': 0, 'Enable': 1})
     s_rotation_sequence_1 = ['Rotating Sequence']
-    s_rotation_sequence_2 = ('Rotating Sequence', ['Positive', 'Negative'])
+    s_rotation_sequence_2 = ('Rotating Sequence', {'Positive': 0, 'Negative': 1})
     # current
     s_ct_primary_curr_1 = ['CT Primary Current [A]']
     s_ct_primary_curr_2 = ('CT Primary Current [A]', ['5', '99999'])
@@ -96,7 +96,7 @@ class ConfigROI(Enum):
     s_min_meas_curr_1 = ['Min. Measured Current [mA]']
     s_min_meas_curr_2 = ('Min. Measured Current [mA]', ['0', '100'])
     s_tdd_reference_selection_1 = ['TDD Reference Selection']
-    s_tdd_reference_selection_2 = ('TDD Reference Selection', ['TDD Nominal Current', 'Peak Demand Current'])
+    s_tdd_reference_selection_2 = ('TDD Reference Selection', {'TDD Nominal Current': 0, 'Peak Demand Current': 1})
     s_tdd_nominal_curr_1 = ['TDD Nominal Current [A]']
     s_tdd_nominal_curr_2 = ('TDD Nominal Current [A]', ['Reference Current', '1', '99999'])
     # demand
@@ -105,9 +105,9 @@ class ConfigROI(Enum):
     s_number_of_sub_intervals_1 = ['Number of Sub-Intervals']
     s_number_of_sub_intervals_2 = ('Number of Sub-Intervals', ['1', '12'])
     s_demand_power_type_1 = ['Demand Power Type']
-    s_demand_power_type_2 = ('Demand Power Type', ['Received', 'Net'])
+    s_demand_power_type_2 = ('Demand Power Type', {'Received': 0, 'Net': 1})
     s_demand_sync_mode_1 = ['Demand Sync Mode']
-    s_demand_sync_mode_2 = ('Demand Sync Mode', ['Hourly Auto Sync', 'Manual Sync'])
+    s_demand_sync_mode_2 = ('Demand Sync Mode', {'Hourly Auto Sync': 0, 'Manual Sync': 1})
     s_thermal_response_index_1 = ['Thermal Response Index [%]']
     s_thermal_response_index_2 = ('Thermal Response Index [%]', ['0', '100'])
     # power
@@ -299,7 +299,7 @@ class ConfigROI(Enum):
     mask_m_s_meas_subinterval_time = [5, 306, 248, 327]
     mask_m_s_meas_number_of_subintervals = [268, 306, 506, 327]
     mask_m_s_meas_demand_power_type = [5, 331, 248, 352]
-    mask_m_s_meas_sync_mode = [268, 331, 506, 352]
+    mask_m_s_meas_demand_sync_mode = [268, 331, 506, 352]
     mask_m_s_meas_thermal_response_index = [5, 356, 248, 377]
     mask_m_s_meas_phase_power_calculation = [5, 430, 248, 451]
     mask_m_s_meas_total_power_calculation = [268, 430, 506, 451]
