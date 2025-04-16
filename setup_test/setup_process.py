@@ -56,7 +56,6 @@ class SetupTest(QObject):
 		compare_title = roi_keys[0].value[0]
 		ref_title_1 = list(roi_keys[1].value[1])[0]
 		ref_title_2 = list(roi_keys[1].value[1])[1]
-		print(compare_title)
 
 		if self.accruasm_state == 2 and refresh == 'event':
 			self.autogui_manager.m_s_event_refresh(image_path, base_save_path, compare_title)
@@ -166,27 +165,27 @@ class SetupTest(QObject):
 	def setup_meter_s_m_vol(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start()
 
-		self.touch_manager.btn_front_meter()
-		self.touch_manager.btn_front_setup()
+		# self.touch_manager.btn_front_meter()
+		# self.touch_manager.btn_front_setup()
 
 		### wiring -> Delta
-		self.config_setup_action(
-			main_menu=ConfigTouch.touch_main_menu_1.value,
-			side_menu=ConfigTouch.touch_side_menu_1.value,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=True,
-			popup_btn=ConfigTouch.touch_btn_popup_2.value, 
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
-			except_addr=ConfigMap.addr_wiring,
-			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=list(ConfigROI.s_wiring_2.value[1])[1],
-			modbus_ref=ConfigROI.s_wiring_2.value[1]['Delta'],
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# self.config_setup_action(
+		# 	main_menu=ConfigTouch.touch_main_menu_1.value,
+		# 	side_menu=ConfigTouch.touch_side_menu_1.value,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=True,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value, 
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
+		# 	except_addr=ConfigMap.addr_wiring,
+		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
+		# 	ref_value=list(ConfigROI.s_wiring_2.value[1])[1],
+		# 	modbus_ref=ConfigROI.s_wiring_2.value[1]['Delta'],
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 
 		### wiring -> Wye
 		self.config_setup_action(
@@ -200,7 +199,8 @@ class SetupTest(QObject):
 			roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
 			except_addr=ConfigMap.addr_wiring,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_wiring_2.value[1][0],
+			ref_value=list(ConfigROI.s_wiring_2.value[1])[0],
+			modbus_ref=ConfigROI.s_wiring_2.value[1]['Wye'],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
 			search_pattern=search_pattern,
