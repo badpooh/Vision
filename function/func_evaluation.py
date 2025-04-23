@@ -556,6 +556,7 @@ class Evaluation:
                                 else:
                                     if high_word == 0:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True
                             ### Devie UI, modbus, sm > pass / 설정값이 uint16
                             else:
                                 if sm_res:
@@ -572,14 +573,15 @@ class Evaluation:
                             ### Devie UI, modbus, sm > pass / 설정값이 문자열
                             if isinstance(val, str) and not val.isdigit():
                                 if sm_res:
-                                    if high_word == 0 and sm_condition == True:
+                                    if high_word == 1 and sm_condition == True:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                         result_condition_1 = True
                                     else:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                 else:
-                                    if high_word == 0:
+                                    if high_word == 1:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True
                             ### Devie UI, modbus, sm > pass / 설정값이 uint16
                             else:
                                 if sm_res:
@@ -630,7 +632,7 @@ class Evaluation:
                     else:
                         print("setup_ref == setup_ref_title_1,2: 이 부분에서 예외 사항으로 에러")
                 else:
-                        print("words == 1,2: 이 부분에서 예외 사항으로 에러")
+                    print("words == 1,2: 이 부분에서 예외 사항으로 에러")
                                 
             return setup_result, result_condition_1
         
