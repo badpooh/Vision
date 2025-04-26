@@ -344,11 +344,11 @@ class SetupTest(QObject):
 			popup_btn=ConfigTouch.touch_btn_ref_ln.value,
 			number_input=None,
 			apply_btn=True,
-			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2],
+			roi_keys=[ConfigROI.s_primary_reference_vol_1, (175, 361, 234, 34)],
 			except_addr=ConfigMap.addr_reference_voltage_mode,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_2.value[1][0],
-			modbus_ref=ConfigROI.s_primary_reference_vol_2.value[1][0],
+			ref_value=list(ConfigROI.s_primary_reference_vol_2.value[1])[1],
+			modbus_ref=list(ConfigROI.s_primary_reference_vol_2.value[1])['Line-to-Neutral,'],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_exc.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
 			search_pattern=search_pattern,
@@ -363,10 +363,11 @@ class SetupTest(QObject):
 			popup_btn=ConfigTouch.touch_btn_ref_ll.value,
 			number_input=None,
 			apply_btn=True,
-			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2],
+			roi_keys=[ConfigROI.s_primary_reference_vol_1, (175, 361, 234, 34)],
 			except_addr=ConfigMap.addr_reference_voltage_mode,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=ConfigROI.s_primary_reference_vol_2.value[1][1],
+			ref_value=list(ConfigROI.s_primary_reference_vol_2.value[1])[0],
+			modbus_ref=list(ConfigROI.s_primary_reference_vol_2.value[1])['Line-to-Line,'],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
 			search_pattern=search_pattern,
@@ -376,23 +377,25 @@ class SetupTest(QObject):
 		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_5.value)
 		self.touch_manager.input_number('49', key_type='ref')
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2]
+		roi_keys = [ConfigROI.s_primary_reference_vol_1, (409, 361, 64, 34)]
 		except_addr = ConfigMap.addr_reference_voltage
-		ref_value = roi_keys[1].value[2][0]
+		ref_value = ConfigROI.s_primary_reference_vol_2.value[2][0]
+		modbus_ref = ConfigROI.s_primary_reference_vol_2.value[2][0]
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_min.value
 		roi_mask = ConfigROI.mask_m_s_meas_primary_reference_voltage.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask, modbus_ref=modbus_ref)
 
 		### Primary Reference Voltage 1000000
 		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_5.value)
 		self.touch_manager.input_number('1000000', key_type='ref')
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_2]
+		roi_keys = [ConfigROI.s_primary_reference_vol_1, (409, 361, 64, 34)]
 		except_addr = ConfigMap.addr_reference_voltage
-		ref_value = roi_keys[1].value[2][1]
+		ref_value = ConfigROI.s_primary_reference_vol_2.value[2][1]
+		modbus_ref = ConfigROI.s_primary_reference_vol_2.value[2][1]
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_max.value
 		roi_mask = ConfigROI.mask_m_s_meas_primary_reference_voltage.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask)
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask, modbus_ref=modbus_ref)
 		### Primary Reference Voltage 초기화
 		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_reference_voltage, bit32=1900)
 

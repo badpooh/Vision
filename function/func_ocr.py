@@ -69,8 +69,9 @@ class PaddleOCRManager:
             
             elif test_type == 1:
                 self.update_n(1)
-                sharpened_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                sharpened_image = cv2.cvtColor(sharpened_image, cv2.COLOR_BGR2GRAY)
+                # sharpened_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                # sharpened_image = cv2.cvtColor(sharpened_image, cv2.COLOR_BGR2GRAY)
+                sharpened_image = image
 
             else:
                 print(f"Error {self.phasor_condition}")
@@ -203,8 +204,12 @@ class PaddleOCRManager:
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
 
                         elif retry_count == 0 and self.phasor_condition == 0 and test_type == 1:
-                            self.update_n(1)
-                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.THRESH_OTSU)
+                            self.update_n(3)
+                            char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
+
+                            cv2.imshow("test", char_image)
+                            cv2.waitKey(0)
+                            cv2.destroyAllWindows()
 
                         retry_result = ocr.ocr(char_image, cls=False)
                         # print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)
@@ -254,9 +259,13 @@ class PaddleOCRManager:
             return new_text
 
     def handle_special_cases(self, text):
+        if not isinstance(text, str):
+             print(f"Warning: handle_special_cases received non-string input: {type(text)}")
+             return "handle_special_cases type error"
         words = text.strip().split()
         processed_words = []
         for i, word in enumerate(words):
+            original_word = word
             if word == 'V':
                 has_word_before = (i > 0)
                 has_word_after = (i < len(words) - 1)
@@ -264,6 +273,16 @@ class PaddleOCRManager:
                     # 앞뒤로 단어가 있는 경우 'V'를 제외
                     print(f"예외 처리: '{word}'를 결과에서 제외")
                     continue  # 'V'를 결과에서 제외하고 다음 단어로 이동
+
+            if word.upper() == 'O':
+                has_word_before = (i > 0)
+                has_word_after = (i < len(words) - 1)
+                if not has_word_before or not has_word_after:
+                    print(f"예외 처리 (Isolated O->0): '{original_word}'를 '0'으로 변경")
+                    word = '0'
+                # else: # 중간에 있는 'O'는 변경하지 않음
+                #     print(f"Info: Keeping middle 'O': '{original_word}'")
+
             processed_words.append(word)
         return ' '.join(processed_words)
     

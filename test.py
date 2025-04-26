@@ -85,10 +85,15 @@ class test:
             self.setup_client.write_register(ConfigMap.addr_measurement_setup_access.value[0], 1)
     
     def test001(self):
-        image_path = r"C:\rootech\AutoProgram\Vision\results\2025-04-09_11-14-59\2025-04-09_11_30_40_M_S_ME_Voltage.png"
+        image_path = r"C:\rootech\AutoProgram\Vision\results\2025-04-23_17-33-25\2025-04-23_17_50_40_M_S_ME_Voltage.png"
         roi_keys = [ConfigROI.s_wiring_1, ConfigROI.s_wiring_2, ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2, ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2]
         setup = 1
         ocr_results = paddleocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)
+        print(type(ocr_results[3]))
+        if ocr_results[3] == "0":
+            print("okay")
+        else:
+            print("none")
 
         print(ocr_results)
 
