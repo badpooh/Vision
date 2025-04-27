@@ -204,12 +204,8 @@ class PaddleOCRManager:
                             char_image = cv2.cvtColor(thresh_char, cv2.COLOR_GRAY2BGR)
 
                         elif retry_count == 0 and self.phasor_condition == 0 and test_type == 1:
-                            self.update_n(3)
+                            self.update_n(1)
                             char_image = cv2.resize(char_image, None, fx=self.n, fy=self.n, interpolation=cv2.INTER_CUBIC)
-
-                            cv2.imshow("test", char_image)
-                            cv2.waitKey(0)
-                            cv2.destroyAllWindows()
 
                         retry_result = ocr.ocr(char_image, cls=False)
                         # print(f"재시도 OCR 결과 (시도 {retry_count}):", retry_result)

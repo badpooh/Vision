@@ -85,16 +85,12 @@ class test:
             self.setup_client.write_register(ConfigMap.addr_measurement_setup_access.value[0], 1)
     
     def test001(self):
-        image_path = r"C:\rootech\AutoProgram\Vision\results\2025-04-23_17-33-25\2025-04-23_17_50_40_M_S_ME_Voltage.png"
-        roi_keys = [ConfigROI.s_wiring_1, ConfigROI.s_wiring_2, ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2, ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2]
+        image_path = r"C:\rootech\AutoProgram\Vision\image_test\10.10.26.159_2025-04-14_17_37_57_M_S_EV_PQ_Curve.png"
+        roi_keys = [ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2, ConfigROI.s_ct_secondary_curr_1, 
+                    ConfigROI.s_ct_secondary_curr_2, ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2, 
+                   ] # ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2, ConfigROI.s_min_meas_curr_1, ConfigROI.s_min_meas_curr_2, ConfigROI.s_tdd_reference_selection_1, ConfigROI.s_tdd_reference_selection_2,
         setup = 1
         ocr_results = paddleocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)
-        print(type(ocr_results[3]))
-        if ocr_results[3] == "0":
-            print("okay")
-        else:
-            print("none")
-
         print(ocr_results)
 
     def test002(self):
