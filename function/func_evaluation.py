@@ -516,7 +516,7 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
-    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, modbus_ref, sm_res=None, sm_condition=None, except_addr=None):
+    def eval_setup_test(self, ocr_res, setup_ref, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, modbus_ref, ref_select =None, sm_res=None, sm_condition=None, except_addr=None):
         """
         ocr_res: OCR 결과 리스트
         sm_res:  AccurSM 결과
@@ -541,55 +541,114 @@ class Evaluation:
                     low_word = current_modbus.registers[1]
                     full_32 = (high_word << 16) | low_word  # unsigned 32bit
                 val = ocr_res[1]
+                
+                if ref_select == 1:
+                    comparison_type = 'choice'
+                else:
+                    try:
+                        float_val = int(setup_ref_title_1)
+                        comparison_type = 'int'
+                    except ValueError:
+                        comparison_type = 'numeric' 
+
+                print(comparison_type)
 
                 if words == 1:
                     if setup_ref == setup_ref_title_1:
                         if ocr_res[1] == setup_ref_title_1:
                             ### Devie UI, modbus, sm > pass / 설정값이 문자열
-                            if isinstance(val, str) and not val.isdigit():
-                                if sm_res:
-                                    if high_word == 0 and sm_condition == True:
+                            if sm_res:
+                                if comparison_type == 'choice':
+                                    if high_word == modbus_ref and sm_condition == True:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
+                                        result_condition_1 = True                         
                                     else:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                else:
-                                    if high_word == 0:
+
+                                elif comparison_type == 'int':
+                                    if high_word == int(modbus_ref) and sm_condition == True:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
-                            ### Devie UI, modbus, sm > pass / 설정값이 uint16
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                                elif comparison_type == 'numeric':
+                                    if high_word == float(modbus_ref) and sm_condition == True:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             else:
-                                if sm_res:
-                                    if high_word == int(val) and sm_condition == True:
+                                if comparison_type == 'choice':
+                                    if high_word == modbus_ref:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                                elif comparison_type == 'int':
+                                    if high_word == int(modbus_ref):
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                
+                                elif comparison_type == 'numeric':
+                                    if high_word == float(modbus_ref)*10:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
                                     else:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                         else:
-                            print("ocr_res[1] == setup_ref_title_1: 이 부분에서 예외 사항으로 에러")
+                            print("ocr_res 결과가 ref_title과 매칭되지 않음")
 
                     elif setup_ref == setup_ref_title_2:
                         if ocr_res[1] == setup_ref_title_2:
                             ### Devie UI, modbus, sm > pass / 설정값이 문자열
-                            if isinstance(val, str) and not val.isdigit():
-                                if sm_res:
-                                    if high_word == 1 and sm_condition == True:
+                            if sm_res:
+                                if comparison_type == 'choice':
+                                    if high_word == modbus_ref and sm_condition == True:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
+                                        result_condition_1 = True                         
                                     else:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                else:
-                                    if high_word == 1:
+
+                                elif comparison_type == 'int':
+                                    if high_word == int(modbus_ref) and sm_condition == True:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
-                            ### Devie UI, modbus, sm > pass / 설정값이 uint16
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                
+                                elif comparison_type == 'numeric':
+                                    if high_word == float(modbus_ref)*10:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
                             else:
-                                if sm_res:
-                                    if high_word == int(val) and sm_condition == True:
+                                if comparison_type == 'choice':
+                                    if high_word == modbus_ref:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
+                                        result_condition_1 = True                         
                                     else:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                                elif comparison_type == 'int':
+                                    if high_word == int(modbus_ref):
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                                elif comparison_type == 'numeric':
+                                    if high_word == float(modbus_ref)*10:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        
                         else:
                             print("ocr_res[1] == setup_ref_title_1: 이 부분에서 예외 사항으로 에러")
                     else:
@@ -599,34 +658,34 @@ class Evaluation:
                     if setup_ref == setup_ref_title_1:
                         if ocr_res[1] == setup_ref_title_1:
                             if sm_res:
-                                if (full_32 *0.1) == int(setup_ref_title_1) and sm_condition == True:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                if (full_32 *0.1) == float(setup_ref_title_1) and sm_condition == True:
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             else:
-                                if (full_32 *0.1) == int(setup_ref_title_1):
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                if (full_32 *0.1) == float(setup_ref_title_1):
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                         else:
-                            print("ocr_res[1] == setup_ref_title_1: 이 부분에서 예외 사항으로 에러")
+                            print("ocr_res 결과가 ref_title과 매칭되지 않음")
 
                     elif setup_ref == setup_ref_title_2:
                         if ocr_res[1] == setup_ref_title_2:
                             if sm_res:
-                                if (full_32 *0.1) == int(setup_ref_title_2) and sm_condition == True:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                if (full_32 *0.1) == float(setup_ref_title_2) and sm_condition == True:
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             else:
-                                if (full_32 *0.1) == int(setup_ref_title_2):
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                if (full_32 *0.1) == float(setup_ref_title_2):
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                         else:
                             print("ocr_res[1] == setup_ref_title_2: 이 부분에서 예외 사항으로 에러")
                     else:
