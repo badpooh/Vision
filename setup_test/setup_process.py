@@ -456,7 +456,7 @@ class SetupTest(QObject):
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 		###  Primary Reference Voltage 초기화
-		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_reference_voltage_mode, bit32=1900)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_reference_voltage, bit32=1900)
 
 		### Sliding Reference Voltage Disable -> Enable
 		self.config_setup_action(

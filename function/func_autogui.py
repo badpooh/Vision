@@ -89,7 +89,7 @@ class AutoGUI:
 				sm_res = f'FAIL_{max_val:.3f}'
 				sm_res_raw = f'FAIL_{max_val:.3f}_{title}'
 
-		print(sm_res_raw)
+		# print(sm_res_raw)
 			
 		return sm_res, self.sm_condition
 	
