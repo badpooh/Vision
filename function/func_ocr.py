@@ -71,6 +71,7 @@ class PaddleOCRManager:
                 self.update_n(1)
                 # sharpened_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 # sharpened_image = cv2.cvtColor(sharpened_image, cv2.COLOR_BGR2GRAY)
+                # sharpened_image = cv2.resize(image, None, fx=self.n, fy=self.n)
                 sharpened_image = image
 
             else:

@@ -82,7 +82,7 @@ class ConfigROI(Enum):
     s_vt_secondary_ll_vol_2 = ('VT Secondary L-L Voltage [V]', ['50.0', '220.0'])
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
     s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', {'Line-to-Line': 0, 'Line-to-Neutral': 1}, ['50.0', '999999.0'])
-    s_primary_reference_vol_3 = ('LL_LN_Pri Ref Vol', {'Line-to-Line, 190': 0, 'Line-to-Neutral, 190': 1})
+    s_primary_reference_vol_3 = ('LL_LN_Pri Ref Vol', {'Line-to-Line, 190.0': 0, 'Line-to-Neutral, 190.0': 1})
     s_primary_reference_vol_4 = ('Range_Pri Ref Vol', ['Line-to-Line, 50.0', 'Line-to-Line, 999999.0'])
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
     s_sliding_reference_vol_2 = ('Sliding Reference Voltage', {'Disable': 0, 'Enable': 1})
