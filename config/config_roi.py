@@ -81,8 +81,9 @@ class ConfigROI(Enum):
     s_vt_secondary_ll_vol_1 = ['VT Secondary L-L Voltage [V]']
     s_vt_secondary_ll_vol_2 = ('VT Secondary L-L Voltage [V]', ['50.0', '220.0'])
     s_primary_reference_vol_1 = ['Primary Reference Voltage [V]']
-    s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', {'Line-to-Line,': 0, 'Line-to-Neutral,': 1}, ['50.0', '999999.0'])
-    s_primary_reference_vol_3= ['LL or LN']
+    s_primary_reference_vol_2 = ('Primary Reference Voltage [V]', {'Line-to-Line': 0, 'Line-to-Neutral': 1}, ['50.0', '999999.0'])
+    s_primary_reference_vol_3 = ('LL_LN_Pri Ref Vol', {'Line-to-Line, 190': 0, 'Line-to-Neutral, 190': 1})
+    s_primary_reference_vol_4 = ('Range_Pri Ref Vol', ['Line-to-Line, 50.0', 'Line-to-Line, 999999.0'])
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
     s_sliding_reference_vol_2 = ('Sliding Reference Voltage', {'Disable': 0, 'Enable': 1})
     s_rotation_sequence_1 = ['Rotating Sequence']
@@ -352,6 +353,9 @@ class Configs():
         self.view10_zone_1 = (476, 182, 298, 34)
         self.view10_zone_2 = (476, 217, 298, 34)
 
+        self.ref_vol_zone_1 = (175, 361, 234, 34)
+        self.ref_vol_zone_2 = (420, 361, 64, 34)
+
         def scale_coord(coords):
             """좌표 [x, y, w, h]에 n을 곱합니다."""
             if coords is None: return None 
@@ -456,7 +460,8 @@ class Configs():
             ConfigROI.s_vt_secondary_ll_vol_2: scale_coord(self.view4_zone_2),
             ConfigROI.s_primary_reference_vol_1: scale_coord(self.view5_zone_1),
             ConfigROI.s_primary_reference_vol_2: scale_coord(self.view5_zone_2),
-            ConfigROI.s_primary_reference_vol_3: (175, 361, 234, 34),
+            ConfigROI.s_primary_reference_vol_3: scale_coord(self.view5_zone_2),
+            ConfigROI.s_primary_reference_vol_4: scale_coord(self.view5_zone_2),
             ConfigROI.s_sliding_reference_vol_1: scale_coord(self.view6_zone_1),
             ConfigROI.s_sliding_reference_vol_2: scale_coord(self.view6_zone_2),
             ConfigROI.s_rotation_sequence_1: scale_coord(self.view7_zone_1),

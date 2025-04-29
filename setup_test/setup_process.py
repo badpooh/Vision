@@ -64,6 +64,44 @@ class SetupTest(QObject):
 		elif ref_select == 1:
 			ref_title_1 = list(roi_keys[1].value[1])[0]
 			ref_title_2 = list(roi_keys[1].value[1])[1]
+		
+		if roi_keys[1] == ConfigROI.s_primary_reference_vol_3:
+			parts = ref_title_1.split(',')
+			numeric_part_with_space = parts[0]
+			ref_title_1 = numeric_part_with_space.strip()
+
+			parts2 = ref_title_2.split(',')
+			numeric_part_with_space2 = parts2[0]
+			ref_title_2 = numeric_part_with_space2.strip()
+
+			parts3 = reference_value.split(',')
+			numeric_part_with_space3 = parts3[0]
+			reference_value = numeric_part_with_space3.strip()
+
+			ocr_1 = ocr_results[1]
+			parts4 = ocr_1.split(',')
+			numeric_part_with_space4 = parts4[0]
+			ocr_1 = numeric_part_with_space4.strip()
+			ocr_results[1] = ocr_1
+
+		if roi_keys[1] == ConfigROI.s_primary_reference_vol_4:
+			parts = ref_title_1.split(',')
+			numeric_part_with_space = parts[-1]
+			ref_title_1 = numeric_part_with_space.strip()
+
+			parts2 = ref_title_2.split(',')
+			numeric_part_with_space2 = parts2[-1]
+			ref_title_2 = numeric_part_with_space2.strip()
+
+			parts3 = reference_value.split(',')
+			numeric_part_with_space3 = parts3[-1]
+			reference_value = numeric_part_with_space3.strip()
+
+			ocr_1 = ocr_results[1]
+			parts4 = ocr_1.split(',')
+			numeric_part_with_space4 = parts4[-1]
+			ocr_1 = numeric_part_with_space4.strip()
+			ocr_results[1] = ocr_1
 			
 		if self.accruasm_state == 2 and refresh == 'event':
 			self.autogui_manager.m_s_event_refresh(image_path, base_save_path, compare_title)
@@ -114,6 +152,7 @@ class SetupTest(QObject):
                        base_save_path=None,
 					   refresh=None,
 					   ref_select=0,
+					   key_type=None,
                        title_desc=None):
 		"""
 		예시 인자:
@@ -144,7 +183,7 @@ class SetupTest(QObject):
 			self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
 
 		if number_input is not None:
-			self.touch_manager.input_number(number_input)
+			self.touch_manager.input_number(number_input, key_type=key_type)
 			self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
 
 		if apply_btn:
@@ -177,204 +216,187 @@ class SetupTest(QObject):
 	def setup_meter_s_m_vol(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start()
 
-		# self.touch_manager.btn_front_meter()
-		# self.touch_manager.btn_front_setup()
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
 
-		# ### wiring -> Delta
-		# self.config_setup_action(
-		# 	main_menu=ConfigTouch.touch_main_menu_1.value,
-		# 	side_menu=ConfigTouch.touch_side_menu_1.value,
-		# 	data_view=ConfigTouch.touch_data_view_1.value,
-		# 	password=True,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value, 
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
-		# 	except_addr=ConfigMap.addr_wiring,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=list(ConfigROI.s_wiring_2.value[1])[1],
-		# 	ref_select=1,
-		# 	modbus_ref=ConfigROI.s_wiring_2.value[1]['Delta'],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### wiring -> Delta
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_1.value,
+			side_menu=ConfigTouch.touch_side_menu_1.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value, 
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
+			except_addr=ConfigMap.addr_wiring,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=list(ConfigROI.s_wiring_2.value[1])[1],
+			ref_select=1,
+			modbus_ref=ConfigROI.s_wiring_2.value[1]['Delta'],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
-		# ### wiring -> Wye
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None, 
-		# 	data_view=ConfigTouch.touch_data_view_1.value,
-		# 	password=False,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_1.value,
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
-		# 	except_addr=ConfigMap.addr_wiring,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=list(ConfigROI.s_wiring_2.value[1])[0],
-		# 	ref_select=1,
-		# 	modbus_ref=ConfigROI.s_wiring_2.value[1]['Wye'],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### wiring -> Wye
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None, 
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=False,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_wiring_1, ConfigROI.s_wiring_2],
+			except_addr=ConfigMap.addr_wiring,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=list(ConfigROI.s_wiring_2.value[1])[0],
+			ref_select=1,
+			modbus_ref=ConfigROI.s_wiring_2.value[1]['Wye'],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
-		# ### min.meas.secondary l-n volt 5-> 0
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_2.value,
-		# 	password=False,
-		# 	popup_btn=None,
-		# 	number_input='0',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2],
-		# 	except_addr=ConfigMap.addr_min_measured_secondary_ln_voltage,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][0],
-		# 	modbus_ref=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][0],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### min.meas.secondary l-n volt 5-> 0
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=False,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2],
+			except_addr=ConfigMap.addr_min_measured_secondary_ln_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][0],
+			modbus_ref=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
-		# ### min.meas.secondary l-n volt 0-> 11
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_2.value,
-		# 	password=False,
-		# 	popup_btn=None,
-		# 	number_input='11',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2],
-		# 	except_addr=ConfigMap.addr_min_measured_secondary_ln_voltage,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][1],
-		# 	modbus_ref=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][1],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
-		# self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_min_measured_secondary_ln_voltage, bit16=5)
+		### min.meas.secondary l-n volt 0-> 11
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=False,
+			popup_btn=None,
+			number_input='11',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_min_meas_sec_ln_vol_1, ConfigROI.s_min_meas_sec_ln_vol_2],
+			except_addr=ConfigMap.addr_min_measured_secondary_ln_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][1],
+			modbus_ref=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_min_measured_secondary_ln_voltage, bit16=5)
 
-		# ### VT Primary L-L Voltage 49
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_3.value,
-		# 	password=False,
-		# 	popup_btn=None,
-		# 	number_input='49',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2],
-		# 	except_addr=ConfigMap.addr_vt_primary_ll_voltage,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][0],
-		# 	modbus_ref=ConfigROI.s_vt_primary_ll_vol_2.value[1][0],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### VT Primary L-L Voltage 49
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=False,
+			popup_btn=None,
+			number_input='49',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2],
+			except_addr=ConfigMap.addr_vt_primary_ll_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][0],
+			modbus_ref=ConfigROI.s_vt_primary_ll_vol_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
-		# ### VT Primary L-L Voltage 1000000
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_3.value,
-		# 	password=False,
-		# 	popup_btn=None,
-		# 	number_input='1000000',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2],
-		# 	except_addr=ConfigMap.addr_vt_primary_ll_voltage,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][1],
-		# 	modbus_ref=ConfigROI.s_vt_primary_ll_vol_2.value[1][1],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
-		# ### VT Primary L-L Voltage 초기화
-		# self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_vt_primary_ll_voltage, bit32=1900)
+		### VT Primary L-L Voltage 1000000
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=False,
+			popup_btn=None,
+			number_input='1000000',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_vt_primary_ll_vol_1, ConfigROI.s_vt_primary_ll_vol_2],
+			except_addr=ConfigMap.addr_vt_primary_ll_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][1],
+			modbus_ref=ConfigROI.s_vt_primary_ll_vol_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		### VT Primary L-L Voltage 초기화
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_vt_primary_ll_voltage, bit32=1900)
 
-		# ### VT Secondary L-L Voltage 49
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_4.value,
-		# 	password=False,
-		# 	popup_btn=None,
-		# 	number_input='49',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_vt_secondary_ll_vol_1, ConfigROI.s_vt_secondary_ll_vol_2],
-		# 	except_addr=ConfigMap.addr_vt_secondary_ll_voltage,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
-		# 	modbus_ref=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### VT Secondary L-L Voltage 49
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=False,
+			popup_btn=None,
+			number_input='49',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_vt_secondary_ll_vol_1, ConfigROI.s_vt_secondary_ll_vol_2],
+			except_addr=ConfigMap.addr_vt_secondary_ll_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
+			modbus_ref=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
-		# ### VT Secondary L-L Voltage 221
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_4.value,
-		# 	password=False,
-		# 	popup_btn=None,
-		# 	number_input='221',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_vt_secondary_ll_vol_1, ConfigROI.s_vt_secondary_ll_vol_2],
-		# 	except_addr=ConfigMap.addr_vt_secondary_ll_voltage,
-		# 	access_address=ConfigMap.addr_measurement_setup_access.value,
-		# 	ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
-		# 	modbus_ref=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
-		# ### VT Secondary L-L Voltage 초기화
-		# self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_vt_secondary_ll_voltage, bit16=1900)
+		### VT Secondary L-L Voltage 221
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=False,
+			popup_btn=None,
+			number_input='221',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_vt_secondary_ll_vol_1, ConfigROI.s_vt_secondary_ll_vol_2],
+			except_addr=ConfigMap.addr_vt_secondary_ll_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
+			modbus_ref=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		### VT Secondary L-L Voltage 초기화
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_vt_secondary_ll_voltage, bit16=1900)
 
 		### Primary Reference Voltage L-L -> L-N
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_5.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_ref_ln.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_popup_enter.value)
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		self.touch_manager.screenshot()
-		image_path = self.eval_manager.load_image_file(search_pattern)
-		setup = 1
-		roi_keys = [ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_3]
-		ocr_results = paddleocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)
-		target_address = ConfigMap.addr_reference_voltage_mode
-		except_addr = {target_address}
-		access_address=ConfigMap.addr_measurement_setup_access.value
-		reference_value = list(ConfigROI.s_primary_reference_vol_2.value[1])[1]
-		compare_title = ConfigROI.s_primary_reference_vol_1.value[0]
-		ref_title_1 = list(ConfigROI.s_primary_reference_vol_2.value[1])[0]
-		ref_title_2 = list(ConfigROI.s_primary_reference_vol_2.value[1])[1]
-		modbus_ref=ConfigROI.s_primary_reference_vol_2.value[1]['Line-to-Neutral,'],
-			
-		sm_res = None
-		self.accruasm_state = None
-		title, setup_result, modbus_result, overall_result = self.eval_manager.eval_setup_test(
-			ocr_res=ocr_results,
-			setup_ref=reference_value,
-			title=compare_title,
-			ecm_access_address=access_address,
-			ecm_address=target_address,
-			setup_ref_title_1=ref_title_1,
-			setup_ref_title_2=ref_title_2,
-			except_addr=except_addr,
-			sm_res=sm_res,
-			sm_condition = False,
-			modbus_ref=modbus_ref,
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=False,
+			popup_btn=ConfigTouch.touch_btn_ref_ln.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_3],
+			except_addr=ConfigMap.addr_reference_voltage_mode,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=list(ConfigROI.s_primary_reference_vol_3.value[1])[1],
 			ref_select=1,
-			)
-		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result, title)
+			modbus_ref=ConfigROI.s_primary_reference_vol_3.value[1]['Line-to-Neutral, 190'],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
 		### Primary Reference Voltage L-N -> L-L
 		self.config_setup_action(
@@ -385,42 +407,56 @@ class SetupTest(QObject):
 			popup_btn=ConfigTouch.touch_btn_ref_ll.value,
 			number_input=None,
 			apply_btn=True,
-			roi_keys=[ConfigROI.s_primary_reference_vol_1, (175, 361, 234, 34)],
+			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_3],
 			except_addr=ConfigMap.addr_reference_voltage_mode,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
-			ref_value=list(ConfigROI.s_primary_reference_vol_2.value[1].keys())[0],
+			ref_value=list(ConfigROI.s_primary_reference_vol_3.value[1])[0],
 			ref_select=1,
-			modbus_ref=ConfigROI.s_primary_reference_vol_2.value[1]['Line-to-Line,'],
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			modbus_ref=ConfigROI.s_primary_reference_vol_3.value[1]['Line-to-Line, 190'],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 
 		### Primary Reference Voltage 49
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_5.value)
-		self.touch_manager.input_number('49', key_type='ref')
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_primary_reference_vol_1, (409, 361, 64, 34)]
-		except_addr = ConfigMap.addr_reference_voltage
-		ref_value = ConfigROI.s_primary_reference_vol_2.value[2][0]
-		modbus_ref = ConfigROI.s_primary_reference_vol_2.value[2][0]
-		template_path = ConfigImgRef.img_ref_meter_setup_meas_min.value
-		roi_mask = ConfigROI.mask_m_s_meas_primary_reference_voltage.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask, modbus_ref=modbus_ref)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=False,
+			popup_btn=None,
+			number_input='49', key_type='ref',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_4],
+			except_addr=ConfigMap.addr_reference_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_primary_reference_vol_4.value[1][0],
+			modbus_ref=ConfigROI.s_primary_reference_vol_4.value[1][0],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
 		### Primary Reference Voltage 1000000
-		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_5.value)
-		self.touch_manager.input_number('1000000', key_type='ref')
-		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
-		roi_keys = [ConfigROI.s_primary_reference_vol_1, (409, 361, 64, 34)]
-		except_addr = ConfigMap.addr_reference_voltage
-		ref_value = ConfigROI.s_primary_reference_vol_2.value[2][1]
-		modbus_ref = ConfigROI.s_primary_reference_vol_2.value[2][1]
-		template_path = ConfigImgRef.img_ref_meter_setup_meas_max.value
-		roi_mask = ConfigROI.mask_m_s_meas_primary_reference_voltage.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, template_path=template_path, roi_mask=roi_mask, modbus_ref=modbus_ref)
-		### Primary Reference Voltage 초기화
-		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_reference_voltage, bit32=1900)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=False,
+			popup_btn=None,
+			number_input='1000000', key_type='ref',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_primary_reference_vol_1, ConfigROI.s_primary_reference_vol_4],
+			except_addr=ConfigMap.addr_reference_voltage,
+			access_address=ConfigMap.addr_measurement_setup_access.value,
+			ref_value=ConfigROI.s_primary_reference_vol_4.value[1][1],
+			modbus_ref=ConfigROI.s_primary_reference_vol_4.value[1][1],
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		###  Primary Reference Voltage 초기화
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_measurement_setup_access, ConfigMap.addr_reference_voltage_mode, bit32=1900)
 
 		### Sliding Reference Voltage Disable -> Enable
 		self.config_setup_action(
