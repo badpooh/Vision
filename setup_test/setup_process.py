@@ -32,7 +32,7 @@ class SetupTest(QObject):
 		self.accruasm_state = state
 		# print(f"SetupProcess: AccuraSM checked={state}")
 
-	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, modbus_ref, ref_select=0, refresh=None, coordinates=None):
+	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, modbus_ref, ref_select=0, refresh=None, coordinates=None, modbus_unit=None):
 		sm_condition = False
 		"""
 		Args:
@@ -128,6 +128,7 @@ class SetupTest(QObject):
 			sm_res=sm_res,
 			sm_condition = sm_condition,
 			modbus_ref=modbus_ref,
+			modbus_unit=modbus_unit,
 			ref_select = ref_select,
 			)
 		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result, title)
@@ -146,6 +147,7 @@ class SetupTest(QObject):
 					   access_address=None,
                        ref_value=None,
 					   modbus_ref=None,
+					   modbus_unit=None,
                        template_path=None,
                        roi_mask=None,
                        search_pattern=None,
@@ -202,6 +204,7 @@ class SetupTest(QObject):
 				roi_mask=roi_mask,
 				refresh=refresh,
 				modbus_ref=modbus_ref,
+				modbus_unit=modbus_unit,
 				ref_select=ref_select
 			)
 		else:
@@ -234,6 +237,7 @@ class SetupTest(QObject):
 			ref_value=list(ConfigROI.s_wiring_2.value[1])[1],
 			ref_select=1,
 			modbus_ref=ConfigROI.s_wiring_2.value[1]['Delta'],
+			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
 			search_pattern=search_pattern,
@@ -254,6 +258,7 @@ class SetupTest(QObject):
 			ref_value=list(ConfigROI.s_wiring_2.value[1])[0],
 			ref_select=1,
 			modbus_ref=ConfigROI.s_wiring_2.value[1]['Wye'],
+			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
 			search_pattern=search_pattern,
@@ -273,6 +278,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][0],
 			modbus_ref=ConfigROI.s_min_meas_sec_ln_vol_2.value[1][0],
+			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
 			search_pattern=search_pattern,
@@ -312,6 +318,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][0],
 			modbus_ref=ConfigROI.s_vt_primary_ll_vol_2.value[1][0],
+			modbus_unit=1,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value,
 			search_pattern=search_pattern,
@@ -331,6 +338,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_vt_primary_ll_vol_2.value[1][1],
 			modbus_ref=ConfigROI.s_vt_primary_ll_vol_2.value[1][1],
+			modbus_unit=1,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_primary.value,
 			search_pattern=search_pattern,
@@ -352,6 +360,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
 			modbus_ref=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
+			modbus_unit=1,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
 			search_pattern=search_pattern,
@@ -371,6 +380,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
 			modbus_ref=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
+			modbus_unit=1,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
 			search_pattern=search_pattern,
@@ -558,6 +568,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_ct_primary_curr_2.value[1][0],
 			modbus_ref=ConfigROI.s_ct_primary_curr_2.value[1][0],
+			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
 			search_pattern=search_pattern,
@@ -576,6 +587,7 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_ct_primary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_ct_primary_curr_2.value[1][1],
+			modbus_unit=None,
 			modbus_ref=ConfigROI.s_ct_primary_curr_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
