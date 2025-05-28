@@ -309,6 +309,11 @@ class TestWorker(QThread):
     modbus_label = ModbusLabels()
 
     def __init__(self, tableWidget, dashboard_instance: MyDashBoard, setup_test_instance: SetupTest, connect_manager: ConnectionManager):
+        
+        current_working_directory = os.getcwd()
+        current_folder_name = os.path.basename(current_working_directory)
+        print(current_folder_name)
+
         super().__init__()
         self.tableWidget = tableWidget
         self.dashboard = dashboard_instance
@@ -319,7 +324,11 @@ class TestWorker(QThread):
         self.search_pattern = os.path.join(image_directory, f'./**/*{self.dashboard.selected_ip}*.png')
         self.test_mode = None
         self.current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.base_save_path = os.path.expanduser(f"./vision/results/{self.current_time}/")
+        if current_folder_name.lower() == "vision":
+            self.base_save_path = os.path.expanduser(f"./results/{self.current_time}/")
+        else:
+            self.base_save_path = os.path.expanduser(f"./vision/results/{self.current_time}/")
+        
         os.makedirs(self.base_save_path, exist_ok=True)
         self.test_map = {
             "tm_all": lambda: print("not yet"),

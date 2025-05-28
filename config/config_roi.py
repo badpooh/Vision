@@ -87,7 +87,7 @@ class ConfigROI(Enum):
     s_sliding_reference_vol_1 = ['Sliding Reference Voltage']
     s_sliding_reference_vol_2 = ('Sliding Reference Voltage', {'Disable': 0, 'Enable': 1})
     s_rotation_sequence_1 = ['Rotating Sequence']
-    s_rotation_sequence_2 = ('Rotating Sequence', {'Positive': 0, 'Negative': 1})
+    s_rotation_sequence_2 = ('Rotating Sequence', {'Positive': 1, 'Negative': 2})
     # current
     s_ct_primary_curr_1 = ['CT Primary Current [A]']
     s_ct_primary_curr_2 = ('CT Primary Current [A]', ['5', '99999'])
