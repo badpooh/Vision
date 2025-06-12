@@ -102,6 +102,7 @@ class SetupTest(QObject):
 			numeric_part_with_space4 = parts4[-1]
 			ocr_1 = numeric_part_with_space4.strip()
 			ocr_results[1] = ocr_1
+			print(ocr_results[1])
 			
 		if self.accruasm_state == 2 and refresh == 'event':
 			self.autogui_manager.m_s_event_refresh(image_path, base_save_path, compare_title)
@@ -441,8 +442,10 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_reference_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_primary_reference_vol_4.value[1][0],
+			ref_select=1,
 			modbus_ref=ConfigROI.s_primary_reference_vol_4.value[1][0],
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			modbus_unit=1,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
@@ -460,6 +463,7 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_reference_voltage,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=ConfigROI.s_primary_reference_vol_4.value[1][1],
+			ref_select=1,
 			modbus_ref=ConfigROI.s_primary_reference_vol_4.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_primary_reference_voltage_mode.value,
@@ -611,7 +615,7 @@ class SetupTest(QObject):
 			ref_value=ConfigROI.s_ct_secondary_curr_2.value[1][1],
 			modbus_ref=ConfigROI.s_ct_secondary_curr_2.value[1][1],
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
+			roi_mask=ConfigROI.mask_m_s_meas_ct_secondary.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 		
@@ -621,7 +625,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=True,
+			popup_btn=None,
 			number_input='4',
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_ct_secondary_curr_1, ConfigROI.s_ct_secondary_curr_2],

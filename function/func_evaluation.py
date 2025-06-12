@@ -650,8 +650,10 @@ class Evaluation:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                         
                         else:
+                            setup_result = [f'{ocr_res[1]} != {setup_ref_title_1}']
                             print(f"{ocr_res[1]} == {setup_ref_title_1}: 이 부분에서 예외 사항으로 에러")
                     else:
+                        setup_result = [f'{setup_ref} != {setup_ref_title_1} or {setup_ref_title_2}']
                         print(f"{setup_ref} == {setup_ref_title_1},{setup_ref_title_2}: 이 부분에서 예외 사항으로 에러")
 
                 elif words == 2:
@@ -679,10 +681,10 @@ class Evaluation:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
                                 else:
                                     if (full_32) == float(setup_ref_title_1) and sm_condition == True:
-                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
                                         result_condition_1 = True
                                     else:
-                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
                         else:
                             print(f"{ocr_res[1]} != {setup_ref_title_1}")
 
@@ -701,8 +703,10 @@ class Evaluation:
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_2}', f'AccuraSM = {sm_res}']
                         else:
+                            setup_result = [f'{ocr_res[1]} != {setup_ref_title_2}']
                             print("ocr_res[1] == setup_ref_title_2: 이 부분에서 예외 사항으로 에러")
                     else:
+                        setup_result = [f'{setup_ref} != {setup_ref_title_1} or {setup_ref_title_2}']
                         print("setup_ref == setup_ref_title_1,2: 이 부분에서 예외 사항으로 에러")
                 else:
                     print("words == 1,2: 이 부분에서 예외 사항으로 에러")

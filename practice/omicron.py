@@ -9,6 +9,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QLineEdit, QMainWindow, QApplication
 import sys
 import time
+import threading
 
 from ui_omicron import Ui_MainWindow
 
@@ -33,6 +34,8 @@ class CMEngine(QMainWindow, Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.select_device)
         self.pushButton_3.clicked.connect(self.start)
         self.pushButton_4.clicked.connect(self.stop)
+        self.is_outputting = False
+        self.output_thread = None
         
     def scan_device(self):
         self.scan_for_new()
@@ -105,27 +108,17 @@ class CMEngine(QMainWindow, Ui_MainWindow):
         except Exception as e:
             print(f"Failed to execute command. Error: {e}")
 
-    def start_output(self):
-        # self.vi = "v"
-        # self.gen = 0
-        # self.phase1 = "0"
-        # self.phase2 = "240"
-        # self.phase3 = "120"
-        # self.kind = "a"
-        # self.value = 10.0
-        # # 전압 설정
-        # self.execute_command("out:{}({}:{}):{}({:.3f})".format(self.vi, self.gen, self.phase1, self.kind,self.value))
-        # self.execute_command("out:{}({}:{}):{}({:.3f})".format(self.vi, self.gen, self.phase2, self.kind,self.value))
-        # self.execute_command("out:{}({}:{}):{}({:.3f})".format(self.vi, self.gen, self.phase3, self.kind,self.value))
-                                                 
-        self.execute_command("out:v(1:1):a(50.000)")
+    def output(self):
+        time.sleep(3)
+    
+        self.execute_command("out:v(1:1):a(110.000)")
         self.execute_command("out:v(1:1):p(0.000)")
         self.execute_command("out:v(1:1):f(60.000)")
-        self.execute_command("out:v(1:2):a(50.000)")
-        self.execute_command("out:v(1:2):p(-120.000)")
+        self.execute_command("out:v(1:2):a(110.000)")
+        self.execute_command("out:v(1:2):p(300.000)")
         self.execute_command("out:v(1:2):f(60.000)")
-        self.execute_command("out:v(1:3):a(50.000)")
-        self.execute_command("out:v(1:3):p(120.000)")
+        self.execute_command("out:v(1:3):a(110.000)")
+        self.execute_command("out:v(1:3):p(130.000)")
         self.execute_command("out:v(1:3):f(60.000)")
 
         # 전류 설정
@@ -139,16 +132,25 @@ class CMEngine(QMainWindow, Ui_MainWindow):
         self.execute_command("out:i(1:3):p(120.000)")
         self.execute_command("out:i(1:3):f(60.000)")
 
-        # 주파수 설정
-        # self.execute_command("out:f:60.000")
-
         # 출력 시작
         time.sleep(2)
         self.execute_command("out:on")
+        time.sleep(5)
+        self.execute_command("out:off")
+
+    def start_output(self):
+        self.is_outputting = True
+        while self.is_outputting:
+            self.output()
+        self.execute_command("out:off")
+        
+        
 
     def stop_output(self):
+        self.is_outputting = False
         # 출력 중지
         self.execute_command("out:off")
+        
 
     #----<logging>-------------------------------------------------------------
     def devlog(self, msg):
