@@ -660,48 +660,86 @@ class Evaluation:
                     if setup_ref == setup_ref_title_1:
                         if ocr_res[1] == setup_ref_title_1:
                             if sm_res:
-                                if modbus_unit == 1:
-                                    if (full_32 *0.1) == float(setup_ref_title_1) and sm_condition == True:
-                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
+                                if setup_ref_title_1 != "Reference Current":
+                                    if modbus_unit == 1:
+                                        if (full_32 *0.1) == float(setup_ref_title_1) and sm_condition == True:
+                                            setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                            result_condition_1 = True
+                                        else:
+                                            setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     else:
-                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                else:
-                                    if (full_32) == float(setup_ref_title_1) and sm_condition == True:
+                                        if (full_32) == float(setup_ref_title_1) and sm_condition == True:
+                                            setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                            result_condition_1 = True
+                                        else:
+                                            setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                                elif setup_ref_title_1 == "Reference Current":
+                                    setup_ref_title_1 = 0
+                                    if full_32 == int(setup_ref_title_1) and sm_condition == True:
                                         setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                         result_condition_1 = True
                                     else:
                                         setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                            else:
-                                if modbus_unit == 1:
-                                    if (full_32 *0.1) == float(setup_ref_title_1):
-                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
-                                        result_condition_1 = True
-                                    else:
-                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
                                 else:
-                                    if (full_32) == float(setup_ref_title_1) and sm_condition == True:
-                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
+                                    print("(AccuraSM) Current TDD Nominal Currrent Error")
+
+                            else:
+                                if setup_ref_title_1 != "Reference Current":
+                                    if modbus_unit == 1:
+                                        if (full_32 *0.1) == float(setup_ref_title_1):
+                                            setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
+                                            result_condition_1 = True
+                                        else:
+                                            setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
+                                    else:
+                                        if (full_32) == float(setup_ref_title_1):
+                                            setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
+                                            result_condition_1 = True
+                                        else:
+                                            setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
+
+                                elif setup_ref_title_1 == "Reference Current":
+                                    setup_ref_title_1 = 0
+                                    if full_32 == int(setup_ref_title_1):
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                         result_condition_1 = True
                                     else:
-                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_1}', f'AccuraSM = {sm_res}']
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        print(f"{full_32}, {setup_ref_title_1}, {type(full_32)}, {type(setup_ref_title_1)}")
+                                else:
+                                    print("Current TDD Nominal Currrent Error")
                         else:
                             print(f"{ocr_res[1]} != {setup_ref_title_1}")
 
                     elif setup_ref == setup_ref_title_2:
                         if ocr_res[1] == setup_ref_title_2:
                             if sm_res:
-                                if (full_32 *0.1) == float(setup_ref_title_2) and sm_condition == True:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True
+                                if modbus_unit == 1:
+                                    if (full_32 *0.1) == float(setup_ref_title_2) and sm_condition == True:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    if (full_32) == float(setup_ref_title_2) and sm_condition == True:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             else:
-                                if (full_32 *0.1) == float(setup_ref_title_2):
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_2}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True
+                                if modbus_unit == 1:
+                                    if (full_32 *0.1) == float(setup_ref_title_2):
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_2}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_2}', f'AccuraSM = {sm_res}']
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32 *0.1}/{setup_ref_title_2}', f'AccuraSM = {sm_res}']
+                                    if (full_32) == float(setup_ref_title_2):
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_2}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_ref}', f'Modbus = {full_32}/{setup_ref_title_2}', f'AccuraSM = {sm_res}']
                         else:
                             setup_result = [f'{ocr_res[1]} != {setup_ref_title_2}']
                             print("ocr_res[1] == setup_ref_title_2: 이 부분에서 예외 사항으로 에러")
