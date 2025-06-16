@@ -546,7 +546,7 @@ class Evaluation:
                     comparison_type = 'choice'
                 else:
                     try:
-                        float_val = int(setup_ref_title_1)
+                        int_val = int(setup_ref_title_1)
                         comparison_type = 'int'
                     except ValueError:
                         comparison_type = 'numeric' 
