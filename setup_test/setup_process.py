@@ -775,7 +775,7 @@ class SetupTest(QObject):
 		ref_value = roi_keys[1].value[1][1]
 		ref_select=2
 		modbus_ref = ref_value
-		template_path = ConfigImgRef.img_ref_meter_setup_meas_min.value
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
 		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
 		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, ref_value=ref_value, ref_select=ref_select, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
 

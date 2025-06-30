@@ -58,7 +58,7 @@ class AutoGUI:
 		result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
 		min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
-		threshold = 0.8
+		threshold = 0.95
 		top_left = max_loc
 		if max_val >= threshold and coordinates:
 			w_1, h_1 = coordinates
