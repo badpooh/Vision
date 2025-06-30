@@ -102,10 +102,10 @@ class ConfigROI(Enum):
     s_tdd_nominal_curr_1 = ['TDD Nominal Current [A]']
     s_tdd_nominal_curr_2 = ('TDD Nominal Current [A]', ['Reference Current', '1', '99999'])
     # demand
-    s_sub_interval_time_1 = ['Sub-Interval Time [min]']
-    s_sub_interval_time_2 = ('Sub-Interval Time [min]', ['1', '60'])
-    s_number_of_sub_intervals_1 = ['Number of Sub-Intervals']
-    s_number_of_sub_intervals_2 = ('Number of Sub-Intervals', ['1', '12'])
+    s_sub_interval_time_1 = ['Subinterval Time [min]']
+    s_sub_interval_time_2 = ('Subinterval Time [min]', ['1', '60'])
+    s_number_of_sub_intervals_1 = ['Number of Subintervals']
+    s_number_of_sub_intervals_2 = ('Number of Subintervals', ['1', '12'])
     s_demand_power_type_1 = ['Demand Power Type']
     s_demand_power_type_2 = ('Demand Power Type', {'Received': 0, 'Net': 1})
     s_demand_sync_mode_1 = ['Demand Sync Mode']

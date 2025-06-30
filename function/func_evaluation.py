@@ -749,7 +749,10 @@ class Evaluation:
                         print("setup_ref == setup_ref_title_1,2: 이 부분에서 예외 사항으로 에러")
                 else:
                     print("words == 1,2: 이 부분에서 예외 사항으로 에러")
-                                
+
+            else:
+                setup_result = [f'{title} != {ocr_res[0]}']
+                  
             return setup_result, result_condition_1
         
         if ocr_res:
