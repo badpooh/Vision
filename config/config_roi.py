@@ -104,8 +104,8 @@ class ConfigROI(Enum):
     # demand
     s_sub_interval_time_1 = ['Subinterval Time [min]']
     s_sub_interval_time_2 = ('Subinterval Time [min]', ['1', '60'])
-    s_num_of_sub_intervals_1 = ['Number of Subintervals']
-    s_num_of_sub_intervals_2 = ('Number of Subintervals', ['1', '12'])
+    s_number_of_sub_intervals_1 = ['Number of Subintervals']
+    s_number_of_sub_intervals_2 = ('Number of Subintervals', ['1', '12'])
     s_demand_power_type_1 = ['Power Type']
     s_demand_power_type_2 = ('Power Type', {'Received': 0, 'Net': 1})
     s_demand_sync_mode_1 = ('demand', ['Sync Mode'])
@@ -114,15 +114,15 @@ class ConfigROI(Enum):
     s_thermal_response_index_2 = ('Thermal Response Index [%]', ['0', '100'])
     # power
     s_phase_power_calculation_1 = ['Phase Power Calculation']
-    s_phase_power_calculation_2 = ('Phase Power Calculation', ['Fundamental', 'RMS'])
+    s_phase_power_calculation_2 = ('Phase Power Calculation', {'Fundamental': 0, 'RMS': 1})
     s_total_power_calculation_1 = ['Total Power Calculation']
-    s_total_power_calculation_2 = ('Total Power Calculation', ['Vector Sum', 'Arithmetic Sum'])
+    s_total_power_calculation_2 = ('Total Power Calculation', {'Vector Sum': 0, 'Arithmetic Sum': 1})
     s_pf_sign_1 = ['PF Sign']
-    s_pf_sign_2 = ('PF Sign', ['Unsigned', 'Signed'])
+    s_pf_sign_2 = ('PF Sign', {'Unsigned': 0, 'Signed': 1})
     s_pf_value_at_noload_1 = ['PF Value at No Load']
-    s_pf_value_at_noload_2 = ('PF Value at No Load', ['PF = 0', 'PF = 1'])
+    s_pf_value_at_noload_2 = ('PF Value at No Load', {'PF = 0': 0, 'PF = 1': 1})
     s_reactive_power_sign_1 = ['Reactive Power Sign']
-    s_reactive_power_sign_2 = ('Reactive Power Sign', ['Unsigned', 'Signed'])
+    s_reactive_power_sign_2 = ('Reactive Power Sign', {'Unsigned': 0, 'Signed': 1})
 
     # event>dip
     s_dip_trigger_1 = ['Trigger']
@@ -482,8 +482,8 @@ class Configs():
             #demand
             ConfigROI.s_sub_interval_time_1: scale_coord(self.view1_zone_1),
             ConfigROI.s_sub_interval_time_2: scale_coord(self.view1_zone_2),
-            ConfigROI.s_num_of_sub_intervals_1: scale_coord(self.view2_zone_1),
-            ConfigROI.s_num_of_sub_intervals_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_number_of_sub_intervals_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_number_of_sub_intervals_2: scale_coord(self.view2_zone_2),
             ConfigROI.s_demand_power_type_1: scale_coord(self.view3_zone_1),
             ConfigROI.s_demand_power_type_2: scale_coord(self.view3_zone_2),
             ConfigROI.s_demand_sync_mode_1: scale_coord(self.view4_zone_1),
