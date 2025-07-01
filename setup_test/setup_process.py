@@ -32,7 +32,7 @@ class SetupTest(QObject):
 		self.accruasm_state = state
 		# print(f"SetupProcess: AccuraSM checked={state}")
 
-	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, modbus_ref, ref_select=0, refresh=None, coordinates=None, modbus_unit=None):
+	def setup_ocr_process(self, base_save_path, search_pattern, roi_keys, except_address, access_address, ref_value, template_path, roi_mask, modbus_ref, ref_select=0, refresh=None, coordinates=None, modbus_unit=None, compare_exc=None):
 		sm_condition = False
 		"""
 		Args:
@@ -56,8 +56,11 @@ class SetupTest(QObject):
 		except_addr = {except_address}
 		target_address = except_address
 		reference_value = ref_value
-		compare_title = roi_keys[0].value[0]
-
+		if compare_exc == 1:
+			compare_title = roi_keys[0].value[1][0]
+		else:
+			compare_title = roi_keys[0].value[0]
+		
 		if ref_select == 0:
 			ref_title_1 = roi_keys[1].value[1][0]
 			ref_title_2 = roi_keys[1].value[1][1]
@@ -133,7 +136,7 @@ class SetupTest(QObject):
 			sm_condition = sm_condition,
 			modbus_ref=modbus_ref,
 			modbus_unit=modbus_unit,
-			ref_select = ref_select,
+			ref_select=ref_select,
 			)
 		self.eval_manager.setup_save_csv(setup_result, modbus_result, image_path, base_save_path, overall_result, title)
 		time.sleep(0.5)
@@ -159,6 +162,7 @@ class SetupTest(QObject):
 					   refresh=None,
 					   ref_select=0,
 					   key_type=None,
+					   compare_exc=None,
                        title_desc=None):
 		"""
 		예시 인자:
@@ -209,7 +213,8 @@ class SetupTest(QObject):
 				refresh=refresh,
 				modbus_ref=modbus_ref,
 				modbus_unit=modbus_unit,
-				ref_select=ref_select
+				ref_select=ref_select,
+				compare_exc=compare_exc
 			)
 		else:
 			print(f"[DEBUG] Not calling setup_ocr_process for {title_desc} because some param is missing.")
@@ -943,6 +948,7 @@ class SetupTest(QObject):
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_demand_sync_mode_1, ConfigROI.s_demand_sync_mode_2],
+			compare_exc=1,
 			except_addr=ConfigMap.addr_demand_sync_mode,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=list(ConfigROI.s_demand_sync_mode_2.value[1])[1],
@@ -963,6 +969,7 @@ class SetupTest(QObject):
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_demand_sync_mode_1, ConfigROI.s_demand_sync_mode_2],
+			compare_exc=1,
 			except_addr=ConfigMap.addr_demand_sync_mode,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			ref_value=list(ConfigROI.s_demand_sync_mode_2.value[1])[0],

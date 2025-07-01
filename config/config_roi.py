@@ -104,11 +104,11 @@ class ConfigROI(Enum):
     # demand
     s_sub_interval_time_1 = ['Subinterval Time [min]']
     s_sub_interval_time_2 = ('Subinterval Time [min]', ['1', '60'])
-    s_number_of_sub_intervals_1 = ['Number of Subintervals']
-    s_number_of_sub_intervals_2 = ('Number of Subintervals', ['1', '12'])
+    s_num_of_sub_intervals_1 = ['Number of Subintervals']
+    s_num_of_sub_intervals_2 = ('Number of Subintervals', ['1', '12'])
     s_demand_power_type_1 = ['Power Type']
     s_demand_power_type_2 = ('Power Type', {'Received': 0, 'Net': 1})
-    s_demand_sync_mode_1 = ['Sync Mode']
+    s_demand_sync_mode_1 = ('demand', ['Sync Mode'])
     s_demand_sync_mode_2 = ('Sync Mode', {'Hourly Auto Sync': 0, 'Manual Sync': 1})
     s_thermal_response_index_1 = ['Thermal Response Index [%]']
     s_thermal_response_index_2 = ('Thermal Response Index [%]', ['0', '100'])
@@ -239,7 +239,7 @@ class ConfigROI(Enum):
 
     # ntp
     # server ip address
-    s_sync_mode_1 = ['Sync Mode']
+    s_sync_mode_1 = ('ntp', ['Sync Mode'])
     s_sync_mode_2 = ('Sync Mode', ['Disable', 'Auto', 'Periodic'])
     s_sync_period_1 = ['Sync Period [sec]']
     s_sync_period_2 = ('Sync Period [sec]', ['60', '999'])
@@ -482,8 +482,8 @@ class Configs():
             #demand
             ConfigROI.s_sub_interval_time_1: scale_coord(self.view1_zone_1),
             ConfigROI.s_sub_interval_time_2: scale_coord(self.view1_zone_2),
-            ConfigROI.s_number_of_sub_intervals_1: scale_coord(self.view2_zone_1),
-            ConfigROI.s_number_of_sub_intervals_2: scale_coord(self.view2_zone_2),
+            ConfigROI.s_num_of_sub_intervals_1: scale_coord(self.view2_zone_1),
+            ConfigROI.s_num_of_sub_intervals_2: scale_coord(self.view2_zone_2),
             ConfigROI.s_demand_power_type_1: scale_coord(self.view3_zone_1),
             ConfigROI.s_demand_power_type_2: scale_coord(self.view3_zone_2),
             ConfigROI.s_demand_sync_mode_1: scale_coord(self.view4_zone_1),
@@ -628,4 +628,5 @@ class Configs():
             ConfigROI.s_buzzer_for_button_2: scale_coord(self.view3_zone_2),
 
         }
+
         return params
