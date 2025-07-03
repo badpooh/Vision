@@ -125,28 +125,28 @@ class ConfigROI(Enum):
     s_reactive_power_sign_2 = ('Reactive Power Sign', {'Unsigned': 0, 'Signed': 1})
 
     # event>dip
-    s_dip_trigger_1 = ['Trigger']
-    s_dip_trigger_2 = ('Trigger', ['Disable', 'Enable'])
-    s_dip_threshold_1 = ['Threshold [%]']
+    s_dip_trigger_1 = ('dip', ['Trigger'])
+    s_dip_trigger_2 = ('Trigger', {'Disable': 0, 'Enable': 1})
+    s_dip_threshold_1 = ('dip_threshold', ['Threshold [%]'])
     s_dip_threshold_2 = ('Threshold [%]', ['1.0', '99.0'])
-    s_dip_hysteresis_1 = ['Hysteresis [%]']
+    s_dip_hysteresis_1 = ('dip_hysteresis', ['Hysteresis [%]'])
     s_dip_hysteresis_2 = ('Hysteresis [%]', ['1.0', '99.0'])
     s_dip_3phase_dip_1 = ['3-Phase Dip']
-    s_dip_3phase_dip_2 = ('3-Phase Dip', ['Disable', 'Enable'])
+    s_dip_3phase_dip_2 = ('3-Phase Dip', {'Disable': 0, 'Enable': 1})
     # swell
-    s_swell_trigger_1 = ['Trigger'] # s_dip_trigger_1과 동일 값 주의
-    s_swell_trigger_2 = ('Trigger', ['Disable', 'Enable']) # s_dip_trigger_2와 동일 값 주의
-    s_swell_threshold_1 = ['Threshold [%]'] # s_dip_threshold_1과 동일 값 주의
+    s_swell_trigger_1 = ('swell', ['Trigger'])
+    s_swell_trigger_2 = ('Trigger', {'Disable': 0, 'Enable': 1}) # s_dip_trigger_2와 동일 값 주의
+    s_swell_threshold_1 = ('swell_threshold', ['Threshold [%]'])
     s_swell_threshold_2 = ('Threshold [%]', ['1.0', '99.0']) # s_dip_threshold_2와 동일 값 주의
-    s_swell_hysteresis_1 = ['Hysteresis [%]'] # s_dip_hysteresis_1과 동일 값 주의
+    s_swell_hysteresis_1 = ('swell_hysteresis', ['Hysteresis [%]'])
     s_swell_hysteresis_2 = ('Hysteresis [%]', ['1.0', '99.0']) # s_dip_hysteresis_2와 동일 값 주의
     # pq curve
     s_pq_curve_semi_1 = ['SEMI F47-0706']
-    s_pq_curve_semi_2 = ('SEMI F47-0706', ['Disable', 'Enable'])
+    s_pq_curve_semi_2 = ('SEMI F47-0706', {'Disable': 0, 'Enable': 1})
     s_pq_curve_iec_1 = ['IEC 61000-4-11/34 Class 3']
-    s_pq_curve_iec_2 = ('IEC 61000-4-11/34 Class 3', ['Disable', 'Enable'])
+    s_pq_curve_iec_2 = ('IEC 61000-4-11/34 Class 3', {'Disable': 0, 'Enable': 1})
     s_pq_curve_itic_1 = ['ITIC']
-    s_pq_curve_itic_2 = ('ITIC', ['Disable', 'Enable'])
+    s_pq_curve_itic_2 = ('ITIC', {'Disable': 0, 'Enable': 1})
 
     # network>ethernet
     # rs-485
