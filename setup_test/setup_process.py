@@ -1441,7 +1441,7 @@ class SetupTest(QObject):
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_swell_trigger_1, ConfigROI.s_swell_trigger_2],
-			except_addr=1,
+			compare_exc=1,
 			except_addr=ConfigMap.addr_swell,
 			access_address=ConfigMap.addr_swell_setup_access.value,
 			ref_value=list(ConfigROI.s_swell_trigger_2.value[1])[0],
