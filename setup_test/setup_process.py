@@ -70,6 +70,9 @@ class SetupTest(QObject):
 		elif ref_select == 2:
 			ref_title_1 = roi_keys[1].value[1][1]
 			ref_title_2 = roi_keys[1].value[1][2]
+		elif ref_select == 3:
+			ref_title_1 = list(roi_keys[1].value[1][1])[0]
+			ref_title_2 = list(roi_keys[1].value[1][1])[1]
 		
 		if roi_keys[1] == ConfigROI.s_primary_reference_vol_3:
 			parts = ref_title_1.split(',')
@@ -1422,7 +1425,7 @@ class SetupTest(QObject):
 			compare_exc=1,
 			except_addr=ConfigMap.addr_swell,
 			access_address=ConfigMap.addr_swell_setup_access.value,
-			ref_value=list(ConfigROI.s_swell_trigger_2.value[1])[1],
+			ref_value=list(ConfigROI.s_swell_trigger_2.value[1][1])[1],
 			ref_select=1,
 			modbus_ref=ConfigROI.s_swell_trigger_2.value[1]['Enable'],
 			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,

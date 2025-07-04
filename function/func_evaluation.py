@@ -542,7 +542,7 @@ class Evaluation:
                     full_32 = (high_word << 16) | low_word  # unsigned 32bit
                 val = ocr_res[1]
                 
-                if ref_select == 1:
+                if ref_select == 1 or ref_select == 3:
                     comparison_type = 'choice'
                 else:
                     try:
