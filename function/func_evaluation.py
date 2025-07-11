@@ -544,6 +544,8 @@ class Evaluation:
                 
                 if ref_select == 1 or ref_select == 3:
                     comparison_type = 'choice'
+                elif ref_select == 4:
+                    comparison_type = 'numeric'
                 else:
                     try:
                         int_val = int(setup_ref_title_1)
