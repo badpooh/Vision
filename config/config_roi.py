@@ -137,7 +137,7 @@ class ConfigROI(Enum):
     s_swell_trigger_1 = ('swell', ['Trigger'])
     s_swell_trigger_2 = ('swell', ('Trigger', {'Disable': 0, 'Enable': 1}))
     s_swell_threshold_1 = ('swell', ['Threshold [%]'])
-    s_swell_threshold_2 = ('swell', ('Threshold [%]', ['1.0', '99.0']))
+    s_swell_threshold_2 = ('swell', ('Threshold [%]', ['101.0', '999.0']))
     s_swell_hysteresis_1 = ('swell', ['Hysteresis [%]'])
     s_swell_hysteresis_2 = ('swell', ('Hysteresis [%]', ['1.0', '99.0']))
     # pq curve
@@ -149,6 +149,9 @@ class ConfigROI(Enum):
     s_pq_curve_itic_2 = ('ITIC', {'Disable': 0, 'Enable': 1})
 
     # network>ethernet
+    s_dhcp_1 = ['DHCP']
+    s_dhcp_2 = ('DHCP', {'Disable': 0, 'Enable': 1})
+
     # rs-485
     s_device_address_1 = ['Device Address']
     s_device_address_2 = ('Device Address', ['0', '247'])

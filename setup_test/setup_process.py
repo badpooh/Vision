@@ -1692,5 +1692,325 @@ class SetupTest(QObject):
 			base_save_path=base_save_path,
 			refresh='event')
 	
+	def setup_m_s_network_all(self, base_save_path, search_pattern):
+		self.m_s_network_ethernet(self, base_save_path, search_pattern)
+		self.m_s_network_rs485(self, base_save_path, search_pattern)
+		self.m_s_network_advanced(self, base_save_path, search_pattern)
+
+	def m_s_network_ethernet(self, base_save_path, search_pattern):
+		### 모두 AccuraSR은 변경해야됨
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+
+		### Ethernet DHCP Disable > Enable
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_3.value,
+			side_menu=ConfigTouch.touch_side_menu_1.value,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dhcp_1, ConfigROI.s_dhcp_2],
+			except_addr=ConfigMap.addr_dhcp,
+			access_address=ConfigMap.addr_dhcp_setup_access.value,
+			ref_value=list(ConfigROI.s_dhcp_2.value[1])[1],
+			ref_select=1,
+			modbus_ref=ConfigROI.s_dhcp_2.value[1]['Enable'],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+		### Ethernet DHCP Enable > Disable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_dhcp_1, ConfigROI.s_dhcp_2],
+			except_addr=ConfigMap.addr_dhcp,
+			access_address=ConfigMap.addr_dhcp_setup_access.value,
+			ref_value=list(ConfigROI.s_dhcp_2.value[1])[0],
+			ref_select=1,
+			modbus_ref=ConfigROI.s_dhcp_2.value[1]['Disable'],
+			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path,
+			refresh='event')
+		
+	def m_s_network_rs485(self, base_save_path, search_pattern):
+		### 모두 AccuraSR은 변경해야됨
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+
+		### device address 0 > 247
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_3.value,
+			side_menu=ConfigTouch.touch_side_menu_2.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input='248',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_device_address_1, ConfigROI.s_device_address_2],
+			except_addr=ConfigMap.addr_device_address,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_device_address_2.value[1][1],
+			modbus_ref=ConfigROI.s_device_address_2.value[1][1],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### device address 247 > 0
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_device_address_1, ConfigROI.s_device_address_2],
+			except_addr=ConfigMap.addr_device_address,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_device_address_2.value[1][0],
+			modbus_ref=ConfigROI.s_device_address_2.value[1][0],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 1200
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][0],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][0],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 2400
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_3.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][1],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][1],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 4800
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_5.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][2],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][2],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 9600
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_7.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][3],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][3],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 19200
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_9.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][4],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][4],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 38400
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_9.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][5],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][5],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 57600
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][6],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][6],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### bit rate 115200
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_bitrate_4.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
+			except_addr=ConfigMap.addr_bit_rate,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_bit_rate_2.value[1][7],
+			modbus_ref=ConfigROI.s_bit_rate_2.value[1][7],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### parity even > none
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_parity_1, ConfigROI.s_parity_2],
+			except_addr=ConfigMap.addr_parity,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_parity_2.value[1][0],
+			modbus_ref=ConfigROI.s_parity_2.value[1][0],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### parity none > odd
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_parity_1, ConfigROI.s_parity_2],
+			except_addr=ConfigMap.addr_parity,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_parity_2.value[1][1],
+			modbus_ref=ConfigROI.s_parity_2.value[1][1],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### parity odd > even
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_3.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_parity_1, ConfigROI.s_parity_2],
+			except_addr=ConfigMap.addr_parity,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			ref_value=ConfigROI.s_parity_2.value[1][2],
+			modbus_ref=ConfigROI.s_parity_2.value[1][2],
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 
 

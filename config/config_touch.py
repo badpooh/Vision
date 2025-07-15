@@ -69,7 +69,18 @@ class ConfigTouch(Enum):
     touch_btn_popup_3 = [400, 215]
     touch_btn_popup_4 = [400, 265]
     touch_btn_popup_5 = [400, 315]
-
+    touch_btn_popup_bitrate_1 = [270, 105]
+    touch_btn_popup_bitrate_2 = [530, 105]
+    touch_btn_popup_bitrate_3 = [270, 155]
+    touch_btn_popup_bitrate_4 = [530, 155]
+    touch_btn_popup_bitrate_5 = [270, 205]
+    touch_btn_popup_bitrate_6 = [530, 205]
+    touch_btn_popup_bitrate_7 = [270, 260]
+    touch_btn_popup_bitrate_8 = [530, 260]
+    touch_btn_popup_bitrate_9 = [270, 315]
+    touch_btn_popup_bitrate_10 = [530, 315]
+    touch_btn_popup_bitrate_11 = [270, 365]
+    
     ### popup number, enter/cancel 은 위 popup button와 공유
     touch_btn_number_1 = [310, 200]
     touch_btn_number_2 = [370, 200]

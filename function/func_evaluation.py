@@ -1023,9 +1023,10 @@ class Evaluation:
 
         # 확장자 제거
         image_file_name = os.path.splitext(file_name_without_ip)[0]
+        sanitized_title = re.sub(r'[\\/*?:"<>|]', '_', title)
 
         # 최종 CSV 저장 경로
-        save_path = os.path.join(base_save_path, f"{overall_result}_{image_file_name}_{title}.csv")
+        save_path = os.path.join(base_save_path, f"{overall_result}_{image_file_name}_{sanitized_title}.csv")
 
         # 4) CSV 저장
         df.to_csv(save_path, index=False, encoding='utf-8-sig')

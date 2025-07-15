@@ -111,6 +111,12 @@ class TestProcess:
                 self.setup_test.m_s_event_swell(base_save_path, search_pattern)
             elif test_name == 'm_s_pq_curve':
                 self.setup_test.m_s_event_pq_curve(base_save_path, search_pattern)
+            elif test_name == 'm_s_network_all':
+                self.setup_test.setup_m_s_network_all(base_save_path, search_pattern)
+            elif test_name == 'm_s_ethernet':
+                self.setup_test.m_s_network_ethernet(base_save_path, search_pattern)
+            elif test_name == 'm_s_rs485':
+                self.setup_test.m_s_network_rs485(base_save_path, search_pattern)
 
                 
             else:
