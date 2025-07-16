@@ -160,18 +160,18 @@ class ConfigROI(Enum):
     s_parity_1 = ['Parity']
     s_parity_2 = ('Parity', ['None', 'Odd', 'Even'])
     s_stop_bit_1 = ['Stop Bit']
-    s_stop_bit_2 = ('Stop Bit', ['1', '2'])
+    s_stop_bit_2 = ('Stop Bit', ['0', '1'])
     # advanced
     s_modbus_timeout_1 = ['Modbus Timeout [sec]']
     s_modbus_timeout_2 = ('Modbus Timeout [sec]', ['5', '600'])
     s_rstp_1 = ['RSTP']
-    s_rstp_2 = ('RSTP', ['Disable', 'Enable'])
+    s_rstp_2 = ('RSTP', {'Disable': 0, 'Enable': 1})
     s_storm_control_1 = ['Storm Control']
-    s_storm_control_2 = ('Storm Control', ['Disable', 'Enable'])
+    s_storm_control_2 = ('Storm Control', {'Disable': 0, 'Enable': 1})
     s_rs485_map_1 = ['RS-485 Map']
-    s_rs485_map_2 = ('RS-485 Map', ['Accura 7300', 'Accura 7500'])
-    s_remote_control_lock_mode_1 = ['Remote Control Lock Mdoe'] # 오타 확인 Mdoe -> Mode
-    s_remote_control_lock_mode_2 = ('Remote Control Lock Mode', ['Each Connection Lock', 'Always Unlock']) # 오타 수정 반영
+    s_rs485_map_2 = ('RS-485 Map', {'Accura 7300': 0, 'Accura 7500': 1})
+    s_remote_control_lock_mode_1 = ['Remote Control Lock Mode'] # 오타 확인 Mdoe -> Mode
+    s_remote_control_lock_mode_2 = ('Remote Control Lock Mode', {'Each Connection Lock': 0, 'Always Unlock': 1}) # 오타 수정 반영
 
     # control>data reset
     s_data_reset_demand = ['Demand']
