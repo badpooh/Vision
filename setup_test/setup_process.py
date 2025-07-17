@@ -61,56 +61,25 @@ class SetupTest(QObject):
 		else:
 			compare_title = roi_keys[0].value[0]
 		
-		# if eval_type == 0:
-		# 	# ref_title_1 = roi_keys[1].value[1][0]
-		# 	# ref_title_2 = roi_keys[1].value[1][1]
-		# 	ref_title_1 = setup_answer_key
-		# 	ref_title_2 = setup_answer_key
-		# elif eval_type == 1:
-		# 	ref_title_1 = list(roi_keys[1].value[1])[0]
-		# 	ref_title_2 = list(roi_keys[1].value[1])[1]
-		# elif eval_type == 2:
-		# 	ref_title_1 = roi_keys[1].value[1][1]
-		# 	ref_title_2 = roi_keys[1].value[1][2]
-		# elif eval_type == 3 or eval_type == 4:
-		# 	ref_title_1 = list(roi_keys[1].value[1][1])[0]
-		# 	ref_title_2 = list(roi_keys[1].value[1][1])[1]
-		
 		if roi_keys[1] == ConfigROI.s_primary_reference_vol_3:
-			parts = ref_title_1.split(',')
+			parts = setup_answer_key.split(',')
 			numeric_part_with_space = parts[0]
-			ref_title_1 = numeric_part_with_space.strip()
-
-			parts2 = ref_title_2.split(',')
-			numeric_part_with_space2 = parts2[0]
-			ref_title_2 = numeric_part_with_space2.strip()
-
-			parts3 = setup_expected_value.split(',')
-			numeric_part_with_space3 = parts3[0]
-			setup_expected_value = numeric_part_with_space3.strip()
+			setup_expected_value = numeric_part_with_space.strip()
 
 			ocr_1 = ocr_results[1]
-			parts4 = ocr_1.split(',')
-			numeric_part_with_space4 = parts4[0]
+			parts_ocr = ocr_1.split(',')
+			numeric_part_with_space4 = parts_ocr[0]
 			ocr_1 = numeric_part_with_space4.strip()
 			ocr_results[1] = ocr_1
 
 		if roi_keys[1] == ConfigROI.s_primary_reference_vol_4:
-			parts = ref_title_1.split(',')
+			parts = setup_answer_key.split(',')
 			numeric_part_with_space = parts[-1]
-			ref_title_1 = numeric_part_with_space.strip()
-
-			parts2 = ref_title_2.split(',')
-			numeric_part_with_space2 = parts2[-1]
-			ref_title_2 = numeric_part_with_space2.strip()
-
-			parts3 = setup_expected_value.split(',')
-			numeric_part_with_space3 = parts3[-1]
-			setup_expected_value = numeric_part_with_space3.strip()
+			setup_expected_value = numeric_part_with_space.strip()
 
 			ocr_1 = ocr_results[1]
-			parts4 = ocr_1.split(',')
-			numeric_part_with_space4 = parts4[-1]
+			parts_ocr = ocr_1.split(',')
+			numeric_part_with_space4 = parts_ocr[-1]
 			ocr_1 = numeric_part_with_space4.strip()
 			ocr_results[1] = ocr_1
 			print(ocr_results[1])
@@ -590,6 +559,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_ct_primary_curr_2.value[1][0],
 			modbus_answer_key=ConfigROI.s_ct_primary_curr_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
 			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
@@ -609,8 +579,9 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_ct_primary_current,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_ct_primary_curr_2.value[1][1],
-			modbus_unit=None,
 			modbus_answer_key=ConfigROI.s_ct_primary_curr_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_primary.value,
 			search_pattern=search_pattern,
@@ -632,6 +603,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_ct_secondary_curr_2.value[1][1],
 			modbus_answer_key=ConfigROI.s_ct_secondary_curr_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_secondary.value,
 			search_pattern=search_pattern,
@@ -651,6 +623,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_ct_secondary_curr_2.value[1][0],
 			modbus_answer_key=ConfigROI.s_ct_secondary_curr_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_ct_secondary.value,
 			search_pattern=search_pattern,
@@ -670,6 +643,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_reference_curr_2.value[1][0],
 			modbus_answer_key=ConfigROI.s_reference_curr_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_reference_curr.value,
 			search_pattern=search_pattern,
@@ -689,6 +663,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_reference_curr_2.value[1][1],
 			modbus_answer_key=ConfigROI.s_reference_curr_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_reference_curr.value,
 			search_pattern=search_pattern,
@@ -710,6 +685,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_min_meas_curr_2.value[1][0],
 			modbus_answer_key=ConfigROI.s_min_meas_curr_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_curr.value,
 			search_pattern=search_pattern,
@@ -729,6 +705,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_min_meas_curr_2.value[1][1],
 			modbus_answer_key=ConfigROI.s_min_meas_curr_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_curr.value,
 			search_pattern=search_pattern,
@@ -749,8 +726,8 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_tdd_reference,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_tdd_reference_selection_2.value[1])[0],
-			eval_type=1,
 			modbus_answer_key=ConfigROI.s_tdd_reference_selection_2.value[1]['TDD Nominal Current'],
+			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_tdd_reference_selection.value,
@@ -770,8 +747,8 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_tdd_reference,
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_tdd_reference_selection_2.value[1])[1],
-			eval_type=1,
 			modbus_answer_key=ConfigROI.s_tdd_reference_selection_2.value[1]['Peak Demand Current'],
+			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_tdd_reference_selection.value,
@@ -786,12 +763,12 @@ class SetupTest(QObject):
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
 		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
 		except_addr = ConfigMap.addr_nominal_tdd_current
-		ref_value = roi_keys[1].value[1][1]
-		ref_select=2
-		modbus_ref = ref_value
+		setup_answer_key = roi_keys[1].value[1][1]
+		eval_type=SelectType.type_float.value
+		modbus_ref = setup_answer_key
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
 		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, setup_answer_key=ref_value, eval_type=ref_select, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, setup_answer_key=setup_answer_key, eval_type=eval_type, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
 
 		### tdd nominal current 1 > 99999 (100000으로 변경)
 		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_6.value)
@@ -802,12 +779,12 @@ class SetupTest(QObject):
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
 		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
 		except_addr = ConfigMap.addr_nominal_tdd_current
-		ref_value = roi_keys[1].value[1][2]
-		ref_select=2
-		modbus_ref = ref_value
+		setup_answer_key = roi_keys[1].value[1][2]
+		eval_type=SelectType.type_float.value
+		modbus_ref = setup_answer_key
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_max.value
 		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, setup_answer_key=ref_value, eval_type=ref_select, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, setup_answer_key=setup_answer_key, eval_type=eval_type, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
 
 		### tdd nominal current 9999 > 0 (reference current로 변경)
 		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_6.value)
@@ -816,12 +793,12 @@ class SetupTest(QObject):
 		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
 		roi_keys = [ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2]
 		except_addr = ConfigMap.addr_nominal_tdd_current
-		ref_value = roi_keys[1].value[1][0]
-		ref_select=0
-		modbus_ref = ref_value
+		setup_answer_key = roi_keys[1].value[1][0]
+		eval_type=SelectType.type_integer.value
+		modbus_ref = setup_answer_key
 		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
 		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
-		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, setup_answer_key=ref_value, eval_type=ref_select, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_measurement_setup_access.value, setup_answer_key=setup_answer_key, eval_type=eval_type, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
 
 	def m_s_meas_demand(self, base_save_path, search_pattern):
 		self.touch_manager.uitest_mode_start() 
