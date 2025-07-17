@@ -516,7 +516,7 @@ class Evaluation:
 
         return self.ocr_error, right_error, self.meas_error, ocr_res, all_meas_results
     
-    def eval_setup_test(self, ocr_res, setup_expected_value, title, ecm_access_address, ecm_address, setup_ref_title_1, setup_ref_title_2, modbus_ref, modbus_unit=None, ref_select=None, sm_res=None, sm_condition=None, except_addr=None):
+    def eval_setup_test(self, ocr_res, setup_expected_value, title, ecm_access_address, ecm_address, modbus_ref, modbus_unit=None, eval_type=None, sm_res=None, sm_condition=None, except_addr=None):
         """
         ocr_res: OCR 결과 리스트
         sm_res:  AccurSM 결과
@@ -528,7 +528,13 @@ class Evaluation:
 
         def check_configuration(title, ecm_access_address, ecm_address, modbus_ref, setup_expected_value=None):
             result_condition_1 = False
-            setup_result = ["Error", "Initial check failed or condition not met"]
+            setup_result = [
+                                "Error", 
+                                "No specific PASS/FAIL condition was met in the logic.",
+                                f"OCR Title: {ocr_res[0]}",
+                                f"OCR Value: {ocr_res[1]}",
+                                f"{setup_expected_value}"
+                            ]
 
             address, words = ecm_address.value
             
@@ -541,60 +547,47 @@ class Evaluation:
                     low_word = current_modbus.registers[1]
                     full_32 = (high_word << 16) | low_word  # unsigned 32bit
                 val = ocr_res[1]
-                
-                if ref_select == 1 or ref_select == 3:
-                    comparison_type = 'choice'
-                elif ref_select == 4:
-                    comparison_type = 'numeric'
-                else:
-                    try:
-                        int_val = int(setup_expected_value)
-                        comparison_type = 'int'
-                    except ValueError:
-                        comparison_type = 'numeric' 
-
-                print(comparison_type)
 
                 if words == 1:
                     if ocr_res[1] == setup_expected_value:
                         ### Devie UI, modbus, sm > pass / 설정값이 문자열
                         if sm_res:
-                            if comparison_type == 'choice':
+                            if eval_type == 'SELECTION':
                                 if high_word == modbus_ref and sm_condition == True:
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True                         
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
 
-                            elif comparison_type == 'int':
+                            elif eval_type == 'INTEGER':
                                 if high_word == int(modbus_ref)and sm_condition == True:
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True                         
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             
-                            elif comparison_type == 'numeric':
+                            elif eval_type == 'FLOAT':
                                 if high_word == float(modbus_ref)*10 and sm_condition == True:
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True                         
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                         else:
-                            if comparison_type == 'choice':
+                            if eval_type == 'SELECTION':
                                 if high_word == modbus_ref:
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True                         
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
 
-                            elif comparison_type == 'int':
+                            elif eval_type == 'INTEGER':
                                 if high_word == int(modbus_ref):
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True                         
                                 else:
                                     setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             
-                            elif comparison_type == 'numeric':
+                            elif eval_type == 'FLOAT':
                                 if high_word == float(modbus_ref)*10:
                                     setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
                                     result_condition_1 = True                         

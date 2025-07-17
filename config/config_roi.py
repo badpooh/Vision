@@ -156,11 +156,11 @@ class ConfigROI(Enum):
     s_device_address_1 = ['Device Address']
     s_device_address_2 = ('Device Address', ['0', '247'])
     s_bit_rate_1 = ['Bit Rate']
-    s_bit_rate_2 = ('Bit Rate', ['1200', '2400', '4800', '9600', '19200', '38400', '57600', '115200'])
+    s_bit_rate_2 = ('Bit Rate', {'1200': 0, '2400': 1, '4800': 2, '9600': 3, '19200': 4, '38400': 5, '57600': 6, '115200': 7})
     s_parity_1 = ['Parity']
-    s_parity_2 = ('Parity', ['None', 'Odd', 'Even'])
+    s_parity_2 = ('Parity', {'None': 0, 'Odd': 1, 'Even': 2})
     s_stop_bit_1 = ['Stop Bit']
-    s_stop_bit_2 = ('Stop Bit', ['0', '1'])
+    s_stop_bit_2 = ('Stop Bit', {'0': 0, '1': 1})
     # advanced
     s_modbus_timeout_1 = ['Modbus Timeout [sec]']
     s_modbus_timeout_2 = ('Modbus Timeout [sec]', ['5', '600'])
@@ -633,3 +633,8 @@ class Configs():
         }
 
         return params
+    
+class SelectType(Enum):
+    type_selection = "SELECTION"
+    type_integer = "INTEGER"
+    type_float = "FLOAT"
