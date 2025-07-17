@@ -62,8 +62,10 @@ class SetupTest(QObject):
 			compare_title = roi_keys[0].value[0]
 		
 		if ref_select == 0:
-			ref_title_1 = roi_keys[1].value[1][0]
-			ref_title_2 = roi_keys[1].value[1][1]
+			# ref_title_1 = roi_keys[1].value[1][0]
+			# ref_title_2 = roi_keys[1].value[1][1]
+			ref_title_1 = ref_value
+			ref_title_2 = ref_value
 		elif ref_select == 1:
 			ref_title_1 = list(roi_keys[1].value[1])[0]
 			ref_title_2 = list(roi_keys[1].value[1])[1]
@@ -1704,47 +1706,47 @@ class SetupTest(QObject):
 		self.touch_manager.btn_front_meter()
 		self.touch_manager.btn_front_setup()
 
-		### Ethernet DHCP Disable > Enable
-		self.config_setup_action(
-			main_menu=ConfigTouch.touch_main_menu_3.value,
-			side_menu=ConfigTouch.touch_side_menu_1.value,
-			data_view=ConfigTouch.touch_data_view_5.value,
-			password=True,
-			popup_btn=ConfigTouch.touch_btn_popup_2.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_dhcp_1, ConfigROI.s_dhcp_2],
-			except_addr=ConfigMap.addr_dhcp,
-			access_address=ConfigMap.addr_dhcp_setup_access.value,
-			ref_value=list(ConfigROI.s_dhcp_2.value[1])[1],
-			ref_select=1,
-			modbus_ref=ConfigROI.s_dhcp_2.value[1]['Enable'],
-			template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
-			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path,
-			refresh='event')
+		# ### Ethernet DHCP Disable > Enable ip가 변경되는 상황이라 주석처리
+		# self.config_setup_action(
+		# 	main_menu=ConfigTouch.touch_main_menu_3.value,
+		# 	side_menu=ConfigTouch.touch_side_menu_1.value,
+		# 	data_view=ConfigTouch.touch_data_view_5.value,
+		# 	password=True,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_dhcp_1, ConfigROI.s_dhcp_2],
+		# 	except_addr=ConfigMap.addr_dhcp,
+		# 	access_address=ConfigMap.addr_dhcp_setup_access.value,
+		# 	ref_value=list(ConfigROI.s_dhcp_2.value[1])[1],
+		# 	ref_select=1,
+		# 	modbus_ref=ConfigROI.s_dhcp_2.value[1]['Enable'],
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_event_max.value,
+		# 	roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path,
+		# 	refresh='event')
 		
-		### Ethernet DHCP Enable > Disable
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_5.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_1.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_dhcp_1, ConfigROI.s_dhcp_2],
-			except_addr=ConfigMap.addr_dhcp,
-			access_address=ConfigMap.addr_dhcp_setup_access.value,
-			ref_value=list(ConfigROI.s_dhcp_2.value[1])[0],
-			ref_select=1,
-			modbus_ref=ConfigROI.s_dhcp_2.value[1]['Disable'],
-			template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
-			roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path,
-			refresh='event')
+		# ### Ethernet DHCP Enable > Disable
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_5.value,
+		# 	password=None,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_1.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_dhcp_1, ConfigROI.s_dhcp_2],
+		# 	except_addr=ConfigMap.addr_dhcp,
+		# 	access_address=ConfigMap.addr_dhcp_setup_access.value,
+		# 	ref_value=list(ConfigROI.s_dhcp_2.value[1])[0],
+		# 	ref_select=1,
+		# 	modbus_ref=ConfigROI.s_dhcp_2.value[1]['Disable'],
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_event_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_event_dip_trigger.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path,
+		# 	refresh='event')
 		
 	def m_s_network_rs485(self, base_save_path, search_pattern):
 		### 모두 AccuraSR은 변경해야됨
