@@ -1,0 +1,2 @@
+﻿Device Setup Result,Device Other Modbus Result
+Modbus Timeout [sec] != Modbus TCP Timeout [sec],PASS(others)

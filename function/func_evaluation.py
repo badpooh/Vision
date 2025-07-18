@@ -7,6 +7,9 @@ import os
 import glob
 import pandas as pd
 from collections import Counter
+from pymodbus.exceptions import ModbusIOException
+from pymodbus.pdu import ExceptionResponse
+import time
 
 from function.func_ocr import PaddleOCRManager
 from function.func_connection import ConnectionManager
@@ -681,7 +684,27 @@ class Evaluation:
                 continue
 
             address, words = modbus_enum.value
-            response = self.connect_manager.setup_client.read_holding_registers(address, words)
+            response = None  # 응답 변수 초기화
+            max_attempts = 2 # 총 시도 횟수 (기본 1회 + 재시도 1회)
+
+            for attempt in range(max_attempts):
+                # Modbus 읽기 시도
+                response = self.connect_manager.setup_client.read_holding_registers(address, words)
+                
+                # 응답이 성공적인지 확인
+                if not isinstance(response, (ModbusIOException, ExceptionResponse)):
+                    # 성공 시, 재시도 루프를 즉시 빠져나감
+                    break
+                
+                # 실패 시, 로그를 남기고 잠시 대기 후 재시도
+                print(f"Warning: Modbus read failed on attempt {attempt + 1}/{max_attempts}. Retrying...")
+                time.sleep(1) # 1초 대기 후 재시도
+            # -------------------- 재시도 로직 종료 --------------------
+
+            # 모든 재시도 후에도 최종적으로 응답이 실패했는지 다시 한번 확인
+            if isinstance(response, (ModbusIOException, ExceptionResponse)) or response is None:
+                print(f"Error: All {max_attempts} attempts to read {modbus_enum.name} failed. Skipping.")
+                continue # 다음 항목으로 넘어감
 
             if words is None:
                 continue

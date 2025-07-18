@@ -162,8 +162,8 @@ class ConfigROI(Enum):
     s_stop_bit_1 = ['Stop Bit']
     s_stop_bit_2 = ('Stop Bit', {'1': 0, '2': 1})
     # advanced
-    s_modbus_timeout_1 = ['Modbus Timeout [sec]']
-    s_modbus_timeout_2 = ('Modbus Timeout [sec]', ['5', '600'])
+    s_modbus_timeout_1 = ['Modbus TCP Timeout [sec]']
+    s_modbus_timeout_2 = ('Modbus TCP Timeout [sec]', ['5', '600'])
     s_rstp_1 = ['RSTP']
     s_rstp_2 = ('RSTP', {'Disable': 0, 'Enable': 1})
     s_storm_control_1 = ['Storm Control']
