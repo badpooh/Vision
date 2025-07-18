@@ -49,6 +49,7 @@ class SetupTest(QObject):
 		Returns:
 			None
 		"""
+		time.sleep(0.6)
 		self.touch_manager.screenshot()
 		image_path = self.eval_manager.load_image_file(search_pattern)
 		setup = 1
@@ -1740,6 +1741,7 @@ class SetupTest(QObject):
 		self.touch_manager.uitest_mode_start() 
 		
 		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
 		self.touch_manager.btn_front_setup()
 
 		### device address 0 > 247
@@ -1951,6 +1953,8 @@ class SetupTest(QObject):
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
+		### Swell Hysteresis 초기화(90)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_rs485_setup_access, ConfigMap.addr_bit_rate, bit16=3)
 		
 		### parity even > none
 		self.config_setup_action(
@@ -2015,7 +2019,28 @@ class SetupTest(QObject):
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 		
-		### stop bit 1 > 0
+		### stop bit 1 > 2
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_stop_bit_1, ConfigROI.s_stop_bit_2],
+			except_addr=ConfigMap.addr_stop_bit,
+			access_address=ConfigMap.addr_rs485_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_stop_bit_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_stop_bit_2.value[1]['2'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### stop bit 2 > 1
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
@@ -2028,27 +2053,6 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_stop_bit,
 			access_address=ConfigMap.addr_rs485_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_stop_bit_2.value[1])[0],
-			modbus_answer_key=ConfigROI.s_stop_bit_2.value[1]['0'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
-		
-		### stop bit 0 > 1
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_4.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_1.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_stop_bit_1, ConfigROI.s_stop_bit_2],
-			except_addr=ConfigMap.addr_stop_bit,
-			access_address=ConfigMap.addr_rs485_setup_access.value,
-			setup_answer_key=list(ConfigROI.s_stop_bit_2.value[1])[1],
 			modbus_answer_key=ConfigROI.s_stop_bit_2.value[1]['1'],
 			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
@@ -2062,6 +2066,7 @@ class SetupTest(QObject):
 		self.touch_manager.uitest_mode_start() 
 		
 		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
 		self.touch_manager.btn_front_setup()
 
 		### modbus timeout 600 > 5
@@ -2074,8 +2079,8 @@ class SetupTest(QObject):
 			number_input='4',
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_modbus_timeout_1, ConfigROI.s_modbus_timeout_2],
-			except_addr=ConfigMap.addr_modbus_timeout_setup_access,
-			access_address=ConfigMap.addr_modbus_timeout.value,
+			except_addr=ConfigMap.addr_modbus_timeout,
+			access_address=ConfigMap.addr_modbus_timeout_setup_access.value,
 			setup_answer_key=ConfigROI.s_modbus_timeout_2.value[1][0],
 			modbus_answer_key=ConfigROI.s_modbus_timeout_2.value[1][0],
 			eval_type=SelectType.type_integer.value,
@@ -2095,8 +2100,8 @@ class SetupTest(QObject):
 			number_input='601',
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_modbus_timeout_1, ConfigROI.s_modbus_timeout_2],
-			except_addr=ConfigMap.addr_modbus_timeout_setup_access,
-			access_address=ConfigMap.addr_modbus_timeout.value,
+			except_addr=ConfigMap.addr_modbus_timeout,
+			access_address=ConfigMap.addr_modbus_timeout_setup_access.value,
 			setup_answer_key=ConfigROI.s_modbus_timeout_2.value[1][1],
 			modbus_answer_key=ConfigROI.s_modbus_timeout_2.value[1][1],
 			eval_type=SelectType.type_integer.value,
@@ -2279,6 +2284,7 @@ class SetupTest(QObject):
 		self.touch_manager.uitest_mode_start() 
 		
 		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
 		self.touch_manager.btn_front_setup()
 
 		### test mode off > balance
@@ -2414,7 +2420,7 @@ class SetupTest(QObject):
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=True,
 			popup_btn=None,
-			number_input=,
+			number_input=ConfigTouch.touch_btn_number_0.value,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
 			except_addr=ConfigMap.addr_meter_test_mode,

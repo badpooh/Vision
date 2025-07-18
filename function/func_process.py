@@ -117,6 +117,10 @@ class TestProcess:
                 self.setup_test.m_s_network_ethernet(base_save_path, search_pattern)
             elif test_name == 'm_s_rs485':
                 self.setup_test.m_s_network_rs485(base_save_path, search_pattern)
+            elif test_name == 'm_s_advanced':
+                self.setup_test.m_s_network_advanced(base_save_path, search_pattern)
+            elif test_name == 'm_s_test_mode':
+                self.setup_test.m_s_control_test_mode(base_save_path, search_pattern)
 
                 
             else:

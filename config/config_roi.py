@@ -160,7 +160,7 @@ class ConfigROI(Enum):
     s_parity_1 = ['Parity']
     s_parity_2 = ('Parity', {'None': 0, 'Odd': 1, 'Even': 2})
     s_stop_bit_1 = ['Stop Bit']
-    s_stop_bit_2 = ('Stop Bit', {'0': 0, '1': 1})
+    s_stop_bit_2 = ('Stop Bit', {'1': 0, '2': 1})
     # advanced
     s_modbus_timeout_1 = ['Modbus Timeout [sec]']
     s_modbus_timeout_2 = ('Modbus Timeout [sec]', ['5', '600'])
