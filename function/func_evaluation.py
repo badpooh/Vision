@@ -662,7 +662,7 @@ class Evaluation:
                     print("words == 1,2: 이 부분에서 예외 사항으로 에러")
 
             else:
-                setup_result = [f'{title} != {ocr_res[0]}']
+                setup_result = [f'{ocr_res[0]} != {title}']
                   
             return setup_result, result_condition_1
         
