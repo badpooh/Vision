@@ -182,7 +182,7 @@ class ConfigROI(Enum):
     # demand sync
     s_demand_sync = ['Demand Sync']
     s_test_mode_1 = ['Test Mode']
-    s_test_mode_2 = ('Test Mode', ['Off', 'Balance', 'Unbalance', 'Dip Short', 'Dip Long', 'Swell Short', 'Swell Long'])
+    s_test_mode_2 = ('Test Mode', {'Off': 0, 'Balance': 1, 'Unbalance': 2, 'Dip Short': 3, 'Dip Long': 4, 'Swell Short': 5, 'Swell Long': 6})
     s_test_mode_timeout_1 = ['Timeout [min]']
     s_test_mode_timeout_2 = ('Timeout [min]', ['Infinite', '1', '1440'])
 

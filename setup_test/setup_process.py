@@ -1790,7 +1790,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_1.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_1.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -1811,7 +1811,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_3.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_3.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -1832,7 +1832,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_5.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_5.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -1853,7 +1853,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_7.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_7.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -1874,7 +1874,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_9.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_9.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -1895,7 +1895,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_9.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_9.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -1916,7 +1916,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_2.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_2.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -1937,7 +1937,7 @@ class SetupTest(QObject):
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_bitrate_4.value,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_4.value,
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_bit_rate_1, ConfigROI.s_bit_rate_2],
@@ -2273,3 +2273,139 @@ class SetupTest(QObject):
 			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
+		
+	def m_s_control_test_mode(self, base_save_path, search_pattern):
+		### 모두 AccuraSR은 변경해야됨
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_setup()
+
+		### test mode off > balance
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_4.value,
+			side_menu=ConfigTouch.touch_side_menu_3.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input=ConfigTouch.touch_btn_popup_wide_3.value,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+			except_addr=ConfigMap.addr_meter_test_mode,
+			access_address=None,
+			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Balance'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### test mode balance > unbalance
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input=ConfigTouch.touch_btn_popup_wide_5.value,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+			except_addr=ConfigMap.addr_meter_test_mode,
+			access_address=None,
+			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[2],
+			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Unbalance'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### test mode unbalance > dip short
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input=ConfigTouch.touch_btn_popup_wide_7.value,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+			except_addr=ConfigMap.addr_meter_test_mode,
+			access_address=None,
+			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[3],
+			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Dip Short'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### test mode dip short > dip long
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input=ConfigTouch.touch_btn_popup_wide_9.value,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+			except_addr=ConfigMap.addr_meter_test_mode,
+			access_address=None,
+			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[4],
+			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Dip Long'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### test mode dip long > swell short
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input=ConfigTouch.touch_btn_popup_wide_11.value,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+			except_addr=ConfigMap.addr_meter_test_mode,
+			access_address=None,
+			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
+			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['swell short'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### test mode dip long > swell long
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input=ConfigTouch.touch_btn_popup_wide_2.value,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+			except_addr=ConfigMap.addr_meter_test_mode,
+			access_address=None,
+			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
+			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['swell long'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		
+		
