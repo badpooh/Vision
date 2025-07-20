@@ -85,9 +85,9 @@ class test:
             self.setup_client.write_register(ConfigMap.addr_measurement_setup_access.value[0], 1)
     
     def test001(self):
-        image_path = r"C:\rootech\AutoProgram\Vision\image_test\10.10.26.159_2025-04-14_17_37_57_M_S_EV_PQ_Curve.png"
+        image_path = r"C:\rootech\AutoProgram\Vision\image_test\10.10.26.159_2025-04-14_17_38_09_M_S_NE_Advanced.png"
         roi_keys = [ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2, ConfigROI.s_ct_secondary_curr_1, 
-                    ConfigROI.s_ct_secondary_curr_2, ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2, 
+                    ConfigROI.s_ct_secondary_curr_2, ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2, ConfigROI.s_remote_control_lock_mode_1,  ConfigROI.s_remote_control_lock_mode_2
                    ] # ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2, ConfigROI.s_min_meas_curr_1, ConfigROI.s_min_meas_curr_2, ConfigROI.s_tdd_reference_selection_1, ConfigROI.s_tdd_reference_selection_2,
         setup = 1
         ocr_results = paddleocr_func.paddleocr_basic(image=image_path, roi_keys=roi_keys, test_type=setup)

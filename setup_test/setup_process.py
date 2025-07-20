@@ -2413,19 +2413,19 @@ class SetupTest(QObject):
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 		
-		### timeout 60 > 0
+		### timeout 60 > 0 --- 회사에서 추가
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
 			data_view=ConfigTouch.touch_data_view_2.value,
-			password=True,
+			password=None,
 			popup_btn=None,
 			number_input=ConfigTouch.touch_btn_number_0.value,
 			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
+			roi_keys=[ConfigROI.s_test_mode_timeout_1, ConfigROI.s_test_mode_timeout_2],
+			except_addr=ConfigMap.addr_meter_demo_mode_timeout,
 			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
+			setup_answer_key=list(ConfigROI.s_test_mode_timeout_2.value[1])[5],
 			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Swell Long'],
 			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
