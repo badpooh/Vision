@@ -83,7 +83,6 @@ class SetupTest(QObject):
 			numeric_part_with_space4 = parts_ocr[-1]
 			ocr_1 = numeric_part_with_space4.strip()
 			ocr_results[1] = ocr_1
-			print(ocr_results[1])
 			
 		if self.accruasm_state == 2 and refresh == 'event':
 			self.autogui_manager.m_s_event_refresh(image_path, base_save_path, compare_title)
@@ -172,7 +171,7 @@ class SetupTest(QObject):
 		if apply_btn:
 			self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
 
-		if (roi_keys and except_addr and access_address and setup_answer_key and template_path and roi_mask
+		if (roi_keys and except_addr and setup_answer_key and template_path and roi_mask
 			and base_save_path and search_pattern):
 			self.setup_ocr_process(
 				base_save_path,
@@ -2065,177 +2064,177 @@ class SetupTest(QObject):
 		### 모두 AccuraSR은 변경해야됨
 		self.touch_manager.uitest_mode_start() 
 		
-		# self.touch_manager.btn_front_meter()
-		# self.touch_manager.btn_front_home()
-		# self.touch_manager.btn_front_setup()
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
+		self.touch_manager.btn_front_setup()
 
-		# ### modbus timeout 600 > 5
-		# self.config_setup_action(
-		# 	main_menu=ConfigTouch.touch_main_menu_3.value,
-		# 	side_menu=ConfigTouch.touch_side_menu_3.value,
-		# 	data_view=ConfigTouch.touch_data_view_1.value,
-		# 	password=True,
-		# 	popup_btn=None,
-		# 	number_input='4',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_modbus_timeout_1, ConfigROI.s_modbus_timeout_2],
-		# 	except_addr=ConfigMap.addr_modbus_timeout,
-		# 	access_address=ConfigMap.addr_modbus_timeout_setup_access.value,
-		# 	setup_answer_key=ConfigROI.s_modbus_timeout_2.value[1][0],
-		# 	modbus_answer_key=ConfigROI.s_modbus_timeout_2.value[1][0],
-		# 	eval_type=SelectType.type_integer.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### modbus timeout 600 > 5
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_3.value,
+			side_menu=ConfigTouch.touch_side_menu_3.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input='4',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_modbus_timeout_1, ConfigROI.s_modbus_timeout_2],
+			except_addr=ConfigMap.addr_modbus_timeout,
+			access_address=ConfigMap.addr_modbus_timeout_setup_access.value,
+			setup_answer_key=ConfigROI.s_modbus_timeout_2.value[1][0],
+			modbus_answer_key=ConfigROI.s_modbus_timeout_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
-		# ### modbus timeout 5 > 600
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_1.value,
-		# 	password=None,
-		# 	popup_btn=None,
-		# 	number_input='601',
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_modbus_timeout_1, ConfigROI.s_modbus_timeout_2],
-		# 	except_addr=ConfigMap.addr_modbus_timeout,
-		# 	access_address=ConfigMap.addr_modbus_timeout_setup_access.value,
-		# 	setup_answer_key=ConfigROI.s_modbus_timeout_2.value[1][1],
-		# 	modbus_answer_key=ConfigROI.s_modbus_timeout_2.value[1][1],
-		# 	eval_type=SelectType.type_integer.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### modbus timeout 5 > 600
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=None,
+			number_input='601',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_modbus_timeout_1, ConfigROI.s_modbus_timeout_2],
+			except_addr=ConfigMap.addr_modbus_timeout,
+			access_address=ConfigMap.addr_modbus_timeout_setup_access.value,
+			setup_answer_key=ConfigROI.s_modbus_timeout_2.value[1][1],
+			modbus_answer_key=ConfigROI.s_modbus_timeout_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
-		# ### rstp Disable > Enable
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_2.value,
-		# 	password=None,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value, 
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_rstp_1, ConfigROI.s_rstp_2],
-		# 	except_addr=ConfigMap.addr_rstp,
-		# 	access_address=ConfigMap.addr_rstp_setup_access.value,
-		# 	setup_answer_key=list(ConfigROI.s_rstp_2.value[1])[1],
-		# 	modbus_answer_key=ConfigROI.s_rstp_2.value[1]['Enable'],
-		# 	eval_type=SelectType.type_selection.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### rstp Disable > Enable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value, 
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_rstp_1, ConfigROI.s_rstp_2],
+			except_addr=ConfigMap.addr_rstp,
+			access_address=ConfigMap.addr_rstp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_rstp_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_rstp_2.value[1]['Enable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
-		# ### rstp Enable > Disable
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_2.value,
-		# 	password=None,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_1.value, 
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_rstp_1, ConfigROI.s_rstp_2],
-		# 	except_addr=ConfigMap.addr_rstp,
-		# 	access_address=ConfigMap.addr_rstp_setup_access.value,
-		# 	setup_answer_key=list(ConfigROI.s_rstp_2.value[1])[0],
-		# 	modbus_answer_key=ConfigROI.s_rstp_2.value[1]['Disable'],
-		# 	eval_type=SelectType.type_selection.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### rstp Enable > Disable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value, 
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_rstp_1, ConfigROI.s_rstp_2],
+			except_addr=ConfigMap.addr_rstp,
+			access_address=ConfigMap.addr_rstp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_rstp_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_rstp_2.value[1]['Disable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
-		# ### storm control Enable > Disable
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_3.value,
-		# 	password=None,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_1.value, 
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_storm_control_1, ConfigROI.s_storm_control_2],
-		# 	except_addr=ConfigMap.addr_storm_control,
-		# 	access_address=ConfigMap.addr_storm_control_setup_access.value,
-		# 	setup_answer_key=list(ConfigROI.s_storm_control_2.value[1])[0],
-		# 	modbus_answer_key=ConfigROI.s_storm_control_2.value[1]['Disable'],
-		# 	eval_type=SelectType.type_selection.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### storm control Enable > Disable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value, 
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_storm_control_1, ConfigROI.s_storm_control_2],
+			except_addr=ConfigMap.addr_storm_control,
+			access_address=ConfigMap.addr_storm_control_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_storm_control_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_storm_control_2.value[1]['Disable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
-		# ### storm control Disable > Enable
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_3.value,
-		# 	password=None,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value, 
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_storm_control_1, ConfigROI.s_storm_control_2],
-		# 	except_addr=ConfigMap.addr_storm_control,
-		# 	access_address=ConfigMap.addr_storm_control_setup_access.value,
-		# 	setup_answer_key=list(ConfigROI.s_storm_control_2.value[1])[1],
-		# 	modbus_answer_key=ConfigROI.s_storm_control_2.value[1]['Enable'],
-		# 	eval_type=SelectType.type_selection.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### storm control Disable > Enable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value, 
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_storm_control_1, ConfigROI.s_storm_control_2],
+			except_addr=ConfigMap.addr_storm_control,
+			access_address=ConfigMap.addr_storm_control_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_storm_control_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_storm_control_2.value[1]['Enable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
-		# ### rs485 map 7300 map > 7500 map
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_4.value,
-		# 	password=None,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_2.value, 
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_rs485_map_1, ConfigROI.s_rs485_map_2],
-		# 	except_addr=ConfigMap.addr_rs485_map,
-		# 	access_address=ConfigMap.addr_rs485_map_setup_access.value,
-		# 	setup_answer_key=list(ConfigROI.s_rs485_map_2.value[1])[1],
-		# 	modbus_answer_key=ConfigROI.s_rs485_map_2.value[1]['Accura 7500'],
-		# 	eval_type=SelectType.type_selection.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### rs485 map 7300 map > 7500 map
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value, 
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_rs485_map_1, ConfigROI.s_rs485_map_2],
+			except_addr=ConfigMap.addr_rs485_map,
+			access_address=ConfigMap.addr_rs485_map_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_rs485_map_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_rs485_map_2.value[1]['Accura 7500'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
-		# ### rs485 map 7500 map > 7300 map
-		# self.config_setup_action(
-		# 	main_menu=None,
-		# 	side_menu=None,
-		# 	data_view=ConfigTouch.touch_data_view_4.value,
-		# 	password=None,
-		# 	popup_btn=ConfigTouch.touch_btn_popup_1.value, 
-		# 	number_input=None,
-		# 	apply_btn=True,
-		# 	roi_keys=[ConfigROI.s_rs485_map_1, ConfigROI.s_rs485_map_2],
-		# 	except_addr=ConfigMap.addr_rs485_map,
-		# 	access_address=ConfigMap.addr_rs485_map_setup_access.value,
-		# 	setup_answer_key=list(ConfigROI.s_rs485_map_2.value[1])[0],
-		# 	modbus_answer_key=ConfigROI.s_rs485_map_2.value[1]['Accura 7300'],
-		# 	eval_type=SelectType.type_selection.value,
-		# 	modbus_unit=None,
-		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
-		# 	roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
-		# 	search_pattern=search_pattern,
-		# 	base_save_path=base_save_path)
+		### rs485 map 7500 map > 7300 map
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value, 
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_rs485_map_1, ConfigROI.s_rs485_map_2],
+			except_addr=ConfigMap.addr_rs485_map,
+			access_address=ConfigMap.addr_rs485_map_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_rs485_map_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_rs485_map_2.value[1]['Accura 7300'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
+			roi_mask=ConfigROI.mask_m_s_meas_wiring.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
 		
 		### remote control lock mode / each > always
 		self.config_setup_action(
@@ -2283,156 +2282,183 @@ class SetupTest(QObject):
 		### 모두 AccuraSR은 변경해야됨
 		self.touch_manager.uitest_mode_start() 
 		
-		self.touch_manager.btn_front_meter()
-		self.touch_manager.btn_front_home()
-		self.touch_manager.btn_front_setup()
+		# self.touch_manager.btn_front_meter()
+		# self.touch_manager.btn_front_home()
+		# self.touch_manager.btn_front_setup()
 
-		### test mode off > balance
-		self.config_setup_action(
-			main_menu=ConfigTouch.touch_main_menu_4.value,
-			side_menu=ConfigTouch.touch_side_menu_3.value,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_wide_3.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
-			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[1],
-			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Balance'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### test mode off > balance
+		# self.config_setup_action(
+		# 	main_menu=ConfigTouch.touch_main_menu_4.value,
+		# 	side_menu=ConfigTouch.touch_side_menu_3.value,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=True,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_wide_3.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+		# 	except_addr=ConfigMap.addr_meter_test_mode,
+		# 	access_address=None,
+		# 	setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[1],
+		# 	modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Balance'],
+		# 	eval_type=SelectType.type_selection.value,
+		# 	modbus_unit=None,
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 		
-		### test mode balance > unbalance
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_wide_5.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
-			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[2],
-			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Unbalance'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### test mode balance > unbalance
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=None,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_wide_5.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+		# 	except_addr=ConfigMap.addr_meter_test_mode,
+		# 	access_address=None,
+		# 	setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[2],
+		# 	modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Unbalance'],
+		# 	eval_type=SelectType.type_selection.value,
+		# 	modbus_unit=None,
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 		
-		### test mode unbalance > dip short
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_wide_7.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
-			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[3],
-			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Dip Short'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### test mode unbalance > dip short
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=None,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_wide_7.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+		# 	except_addr=ConfigMap.addr_meter_test_mode,
+		# 	access_address=None,
+		# 	setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[3],
+		# 	modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Dip Short'],
+		# 	eval_type=SelectType.type_selection.value,
+		# 	modbus_unit=None,
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 		
-		### test mode dip short > dip long
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_wide_9.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
-			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[4],
-			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Dip Long'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### test mode dip short > dip long
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=None,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_wide_9.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+		# 	except_addr=ConfigMap.addr_meter_test_mode,
+		# 	access_address=None,
+		# 	setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[4],
+		# 	modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Dip Long'],
+		# 	eval_type=SelectType.type_selection.value,
+		# 	modbus_unit=None,
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 		
-		### test mode dip long > swell short
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_wide_11.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
-			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
-			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Swell Short'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### test mode dip long > swell short
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=None,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_wide_11.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+		# 	except_addr=ConfigMap.addr_meter_test_mode,
+		# 	access_address=None,
+		# 	setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
+		# 	modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Swell Short'],
+		# 	eval_type=SelectType.type_selection.value,
+		# 	modbus_unit=None,
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 		
-		### test mode dip long > swell long
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
-			popup_btn=ConfigTouch.touch_btn_popup_wide_2.value,
-			number_input=None,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
-			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
-			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Swell Long'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		# ### test mode dip long > swell long
+		# self.config_setup_action(
+		# 	main_menu=None,
+		# 	side_menu=None,
+		# 	data_view=ConfigTouch.touch_data_view_1.value,
+		# 	password=None,
+		# 	popup_btn=ConfigTouch.touch_btn_popup_wide_2.value,
+		# 	number_input=None,
+		# 	apply_btn=True,
+		# 	roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
+		# 	except_addr=ConfigMap.addr_meter_test_mode,
+		# 	access_address=None,
+		# 	setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
+		# 	modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Swell Long'],
+		# 	eval_type=SelectType.type_selection.value,
+		# 	modbus_unit=None,
+		# 	template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+		# 	roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+		# 	search_pattern=search_pattern,
+		# 	base_save_path=base_save_path)
 		
-		### timeout 60 > 0
-		self.config_setup_action(
-			main_menu=None,
-			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_2.value,
-			password=True,
-			popup_btn=None,
-			number_input=ConfigTouch.touch_btn_number_0.value,
-			apply_btn=True,
-			roi_keys=[ConfigROI.s_test_mode_1, ConfigROI.s_test_mode_2],
-			except_addr=ConfigMap.addr_meter_test_mode,
-			access_address=None,
-			setup_answer_key=list(ConfigROI.s_test_mode_2.value[1])[5],
-			modbus_answer_key=ConfigROI.s_test_mode_2.value[1]['Swell Long'],
-			eval_type=SelectType.type_selection.value,
-			modbus_unit=None,
-			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
-			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
-			search_pattern=search_pattern,
-			base_save_path=base_save_path)
+		### timeout 60 > 1
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_2.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_num_0.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_enter.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys=[ConfigROI.s_test_mode_timeout_1, ConfigROI.s_test_mode_timeout_2]
+		except_addr = ConfigMap.addr_meter_demo_mode_timeout
+		setup_answer_key = roi_keys[1].value[1][1]
+		eval_type=SelectType.type_integer.value
+		modbus_ref = setup_answer_key
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
+		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_meter_demo_mode_timeout_setup_access.value, setup_answer_key=setup_answer_key, eval_type=eval_type, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
+
+		### timeout 1 > 0(Infinite)
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_2.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_ref_curr.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_enter.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys=[ConfigROI.s_test_mode_timeout_1, ConfigROI.s_test_mode_timeout_2]
+		except_addr = ConfigMap.addr_meter_demo_mode_timeout
+		setup_answer_key = roi_keys[1].value[1][0]
+		eval_type=SelectType.type_integer.value
+		modbus_ref = setup_answer_key
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
+		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_meter_demo_mode_timeout_setup_access.value, setup_answer_key=setup_answer_key, eval_type=eval_type, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
+		
+		### timeout 0(Infinite) > 1440
+		self.touch_manager.touch_menu(ConfigTouch.touch_data_view_2.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_ref_curr.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_num_1.value)
+		for i in range(2):
+			self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_num_4.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_num_0.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_tdd_enter.value)
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_apply.value)
+		roi_keys=[ConfigROI.s_test_mode_timeout_1, ConfigROI.s_test_mode_timeout_2]
+		except_addr = ConfigMap.addr_meter_demo_mode_timeout
+		setup_answer_key = roi_keys[1].value[1][2]
+		eval_type=SelectType.type_integer.value
+		modbus_ref = setup_answer_key
+		template_path = ConfigImgRef.img_ref_meter_setup_meas_exc.value
+		roi_mask = ConfigROI.mask_m_s_meas_tdd_nominal_curr.value
+		self.setup_ocr_process(base_save_path, search_pattern, roi_keys, except_addr, access_address=ConfigMap.addr_meter_demo_mode_timeout_setup_access.value, setup_answer_key=setup_answer_key, eval_type=eval_type, modbus_ref=modbus_ref, template_path=template_path, roi_mask=roi_mask)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_meter_demo_mode_timeout_setup_access, ConfigMap.addr_meter_demo_mode_timeout, bit16=60)
+
 		
 		
 		

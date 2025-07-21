@@ -83,9 +83,9 @@ class PaddleOCRManager:
                 x, y, w, h = self.rois[roi_key]
                 roi_image = sharpened_image[y:y+h, x:x+w]
 
-                cv2.imshow("test", roi_image)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+                # cv2.imshow("test", roi_image)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 
                 text_results = ocr.ocr(roi_image, cls=False)
                 original_results = []

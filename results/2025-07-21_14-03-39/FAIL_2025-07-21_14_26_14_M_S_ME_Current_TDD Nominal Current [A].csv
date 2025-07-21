@@ -1,0 +1,2 @@
+﻿Device Setup Result,Device Other Modbus Result
+"PASS, Device = Reference Current/0, Modbus = 0/Reference Current, AccuraSM = None","['FAIL, 주소 (4002, 1): 예상 60, 실제 0']"

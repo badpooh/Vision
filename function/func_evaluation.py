@@ -542,7 +542,8 @@ class Evaluation:
             address, words = ecm_address.value
             
             if title in ''.join(ocr_res[0]):
-                self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
+                if ecm_access_address:
+                    self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
                 current_modbus = self.connect_manager.setup_client.read_holding_registers(*ecm_address.value)
                 
                 high_word = current_modbus.registers[0]
@@ -555,47 +556,76 @@ class Evaluation:
                     if ocr_res[1] == setup_expected_value:
                         ### Devie UI, modbus, sm > pass / 설정값이 문자열
                         if sm_res:
-                            if eval_type == 'SELECTION':
-                                if high_word == modbus_ref and sm_condition == True:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True                         
-                                else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                            if setup_expected_value != "Infinite":
+                                if eval_type == 'SELECTION':
+                                    if high_word == modbus_ref and sm_condition == True:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
 
-                            elif eval_type == 'INTEGER':
-                                if high_word == int(modbus_ref)and sm_condition == True:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True                         
+                                elif eval_type == 'INTEGER':
+                                    if high_word == int(modbus_ref)and sm_condition == True:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                
+                                elif eval_type == 'FLOAT':
+                                    if high_word == float(modbus_ref)*10 and sm_condition == True:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                            elif setup_expected_value == "Infinite" and eval_type == 'INTEGER':
+                                setup_expected_value = 0
+                                if high_word == int(setup_expected_value) and sm_condition == True:
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', 
+                                    f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    result_condition_1 = True  
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', 
+                                    f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             
-                            elif eval_type == 'FLOAT':
-                                if high_word == float(modbus_ref)*10 and sm_condition == True:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True                         
-                                else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                            else:
+                                print("(AccuraSM) Test Mode Timeout[min] Error")
+
                         else:
-                            if eval_type == 'SELECTION':
-                                if high_word == modbus_ref:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True                         
-                                else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                            if setup_expected_value != "Infinite":
+                                if eval_type == 'SELECTION':
+                                    if high_word == modbus_ref:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
 
-                            elif eval_type == 'INTEGER':
-                                if high_word == int(modbus_ref):
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True                         
+                                elif eval_type == 'INTEGER':
+                                    if high_word == int(modbus_ref):
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                
+                                elif eval_type == 'FLOAT':
+                                    if high_word == float(modbus_ref)*10:
+                                        setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                        result_condition_1 = True                         
+                                    else:
+                                        setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+
+                            elif setup_expected_value == "Infinite" and eval_type == 'INTEGER':
+                                setup_expected_value = 0
+                                if high_word == int(setup_expected_value):
+                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', 
+                                    f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    result_condition_1 = True  
                                 else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', 
+                                    f'Modbus = {high_word}/{modbus_ref}', f'AccuraSM = {sm_res}']
                             
-                            elif eval_type == 'FLOAT':
-                                if high_word == float(modbus_ref)*10:
-                                    setup_result = [f'PASS', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
-                                    result_condition_1 = True                         
-                                else:
-                                    setup_result = [f'FAIL', f'Device = {ocr_res[1]}/{setup_expected_value}', f'Modbus = {high_word*0.1}/{modbus_ref}', f'AccuraSM = {sm_res}']
+                            else:
+                                print("(AccuraSM) Test Mode Timeout[min] Error")
 
                     else:
                         setup_result = [f'{ocr_res[1]} != {setup_expected_value}']
