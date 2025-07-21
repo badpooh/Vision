@@ -195,6 +195,8 @@ class TouchManager:
                     self.touch_menu(ConfigTouch.touch_btn_number_9.value)
                 elif digit == '.':
                     self.touch_menu(ConfigTouch.touch_btn_number_dot.value)
+                elif digit == '-':
+                    self.touch_menu(ConfigTouch.touch_btn_number_minus.value)
 
                 else:
                     print("input number touch error")

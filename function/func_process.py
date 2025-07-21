@@ -121,6 +121,10 @@ class TestProcess:
                 self.setup_test.m_s_network_advanced(base_save_path, search_pattern)
             elif test_name == 'm_s_test_mode':
                 self.setup_test.m_s_control_test_mode(base_save_path, search_pattern)
+            elif test_name == 'm_s_description':
+                self.setup_test.m_s_system_description(base_save_path, search_pattern)
+            elif test_name == 'm_s_locale':
+                self.setup_test.m_s_system_locale(base_save_path, search_pattern)
 
                 
             else:

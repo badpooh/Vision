@@ -223,7 +223,8 @@ class ModbusLabels:
             
             ### measurement setup ###
             address, words = target_addr.value
-            self.connect_manager.setup_client.read_holding_registers(*access_addr.value)
+            if access_addr:
+                self.connect_manager.setup_client.read_holding_registers(*access_addr.value)
             if words == 1:
                 self.connect_manager.setup_client.write_register(target_addr.value[0], bit16)
             elif words == 2:
@@ -231,7 +232,8 @@ class ModbusLabels:
             else:
                 print('words error?')
                 return
-            self.connect_manager.setup_client.write_register(access_addr.value[0], 1)
+            if access_addr:
+                self.connect_manager.setup_client.write_register(access_addr.value[0], 1)
                                                                                                         
     def device_current_time(self):
         self.response = self.connect_manager.setup_client.read_holding_registers(3060, 3)

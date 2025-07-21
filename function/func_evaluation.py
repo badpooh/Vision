@@ -9,6 +9,8 @@ import pandas as pd
 from collections import Counter
 from pymodbus.exceptions import ModbusIOException
 from pymodbus.pdu import ExceptionResponse
+from pymodbus.payload import BinaryPayloadDecoder
+from pymodbus.constants import Endian
 import time
 
 from function.func_ocr import PaddleOCRManager
@@ -545,8 +547,11 @@ class Evaluation:
                 if ecm_access_address:
                     self.connect_manager.setup_client.read_holding_registers(*ecm_access_address)
                 current_modbus = self.connect_manager.setup_client.read_holding_registers(*ecm_address.value)
+                decoder = BinaryPayloadDecoder.fromRegisters(current_modbus.registers, byteorder=Endian.BIG)
+                decoded_value = decoder.decode_16bit_int()
                 
-                high_word = current_modbus.registers[0]
+                # high_word = current_modbus.register[0]
+                high_word = decoded_value
                 if words == 2:
                     low_word = current_modbus.registers[1]
                     full_32 = (high_word << 16) | low_word  # unsigned 32bit

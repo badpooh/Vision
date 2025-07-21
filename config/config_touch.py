@@ -93,6 +93,7 @@ class ConfigTouch(Enum):
     touch_btn_number_9 = [430, 310]
     touch_btn_number_0 = [310, 370]
     touch_btn_number_dot = [370, 370]
+    touch_btn_number_minus = [430, 370]
     touch_btn_number_back = [490, 225]
     touch_btn_number_clear = [485, 340]
 

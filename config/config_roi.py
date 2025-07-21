@@ -200,11 +200,13 @@ class ConfigROI(Enum):
     s_timezone_offset_1 = ['Timezone Offset [min]']
     s_timezone_offset_2 = ('Timezone Offset [min]', ['-720', '840'])
     s_temperature_unit_1 = ['Temperature Unit']
-    s_temperature_unit_2 = ('Temperature Unit', ['Celsius', 'Fahrenheit'])
+    s_temperature_unit_2 = ('Temperature Unit', {'Celsius': 0, 'Fahrenheit': 1})
     s_energy_unit_1 = ['Energy Unit']
-    s_energy_unit_2 = ('Energy Unit', ['kWh', 'Wh'])
+    s_energy_unit_2 = ('Energy Unit', {'kWh': 0, 'Wh': 1})
     s_date_format_1 = ['Date Format']
-    s_date_format_2 = ('Date Format', ['YYY-MM-DD', 'YYY-DD-MM', 'YYY/DD/MM', 'MM.DD.YYYY', 'MM/DD/YYYY', 'MM-DD-YYYY', 'DD.MM.YYYY', 'DD/MM/YYYY', 'DD-MM-YYYY'])
+    s_date_format_2 = ('Date Format', {'YYYY-MM-DD': 0, 'YYYY-DD-MM': 1, 'YYYY/DD/MM': 2, 'MM.DD.YYYY': 3, 
+                                       'MM/DD/YYYY': 4, 'MM-DD-YYYY': 5, 'DD.MM.YYYY': 6, 'DD/MM/YYYY': 7, 'DD-MM-YYYY': 8 
+                                       })
     # local time
     s_year_1 = ['Year']
     s_year_2 = ('Year', ['1970', '2037'])
