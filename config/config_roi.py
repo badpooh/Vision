@@ -342,9 +342,9 @@ class Configs():
 
         self.view1_zone_1 = (175, 182, 298, 34)
         self.view1_zone_2 = (175, 217, 298, 34)
-        self.view2_zone_1 = (476, 182, 298, 34)
+        self.view2_zone_1 = (476, 182, 305, 34)
         self.view2_zone_2 = (476, 217, 298, 34)
-        self.view3_zone_1 = (175, 254, 298, 34)
+        self.view3_zone_1 = (175, 254, 305, 34)
         self.view3_zone_2 = (175, 289, 298, 34)
         self.view4_zone_1 = (476, 254, 298, 34)
         self.view4_zone_2 = (476, 289, 298, 34)

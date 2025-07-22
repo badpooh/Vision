@@ -2763,7 +2763,7 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_date_display_format,
 			access_address=ConfigMap.addr_locale_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_date_format_2.value[1])[2],
-			modbus_answer_key=ConfigROI.s_date_format_2.value[2]['YYY/DD/MM'],
+			modbus_answer_key=ConfigROI.s_date_format_2.value[2]['YYYY/DD/MM'],
 			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
