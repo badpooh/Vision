@@ -125,6 +125,10 @@ class TestProcess:
                 self.setup_test.m_s_system_description(base_save_path, search_pattern)
             elif test_name == 'm_s_locale':
                 self.setup_test.m_s_system_locale(base_save_path, search_pattern)
+            elif test_name == 'm_s_local_time':
+                self.setup_test.m_s_system_local_time(base_save_path, search_pattern)
+            elif test_name == 'm_s_summer_time':
+                self.setup_test.m_s_system_summer_time(base_save_path, search_pattern)
 
                 
             else:

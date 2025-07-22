@@ -221,20 +221,23 @@ class ConfigROI(Enum):
     s_second_1 = ['Second']
     s_second_2 = ('Second', ['0', '59'])
     # summer time
-    s_summer_time_mode_1 = ['Mode'] # 'Mode' 가 너무 일반적임, 'Summer Time Mode' 등 구체화 고려
-    s_summer_time_mode_2 = ('Summer Time Mode', ['Disable', 'Enable'])
+    s_summer_time_mode_1 = ['Summer Time'] # 'Mode' 가 너무 일반적임, 'Summer Time Mode' 등 구체화 고려
+    s_summer_time_mode_2 = ('Summer Time', {'Disable': 0, 'Enable': 1})
     s_summer_time_time_offset_1 = ['Time Offset [min]']
     s_summer_time_time_offset_2 = ('Time Offset [min]', ['0', '1439'])
     s_start_month_1 = ['Start Month']
-    s_start_month_2 = ('Start Month', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
+    s_start_month_2 = ('Start Month', {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
+                                        'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12})
     s_start_nth_weekday_1 = ['Start Nth Weekday']
-    s_start_nth_weekday_2 = ('Start Nth Weekday', ['1st', '2nd', '3rd', '4th', '5th'])
+    s_start_nth_weekday_2 = ('Start Nth Weekday', {'1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5})
     s_start_weekday_1 = ['Start Weekday']
-    s_start_weekday_2 = ('Start Weekday', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+    s_start_weekday_2 = ('Start Weekday', {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4,
+                                            'Friday': 5, 'Saturday': 6})
     s_start_minute_1 = ['Start Minute']
     s_start_minute_2 = ('Start Minute', ['0', '1439'])
     s_end_month_1 = ['End Month']
-    s_end_month_2 = ('End Month', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
+    s_end_month_2 = ('End Month', {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
+                                        'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12})
     s_end_nth_weekday_1 = ['End Nth Weekday']
     s_end_nth_weekday_2 = ('End Nth Weekday', ['1st', '2nd', '3rd', '4th', '5th'])
     s_end_weekday_1 = ['End Weekday']
@@ -245,7 +248,7 @@ class ConfigROI(Enum):
     # ntp
     # server ip address
     s_sync_mode_1 = ('ntp', ['Sync Mode'])
-    s_sync_mode_2 = ('Sync Mode', ['Disable', 'Auto', 'Periodic'])
+    s_sync_mode_2 = ('ntp', {'Disable': 0, 'Auto': 1, 'Periodic': 2})
     s_sync_period_1 = ['Sync Period [sec]']
     s_sync_period_2 = ('Sync Period [sec]', ['60', '999'])
     s_sync_max_drift_1 = ['Sync Max. Drift [ms]']
@@ -339,9 +342,9 @@ class Configs():
 
         self.view1_zone_1 = (175, 182, 298, 34)
         self.view1_zone_2 = (175, 217, 298, 34)
-        self.view2_zone_1 = (476, 182, 305, 34)
+        self.view2_zone_1 = (476, 182, 298, 34)
         self.view2_zone_2 = (476, 217, 298, 34)
-        self.view3_zone_1 = (175, 254, 305, 34)
+        self.view3_zone_1 = (175, 254, 298, 34)
         self.view3_zone_2 = (175, 289, 298, 34)
         self.view4_zone_1 = (476, 254, 298, 34)
         self.view4_zone_2 = (476, 289, 298, 34)
@@ -360,6 +363,22 @@ class Configs():
 
         self.ref_vol_zone_1 = (175, 361, 234, 34)
         self.ref_vol_zone_2 = (420, 361, 64, 34)
+        self.summertime_view1_zone_1 = (175, 182, 269, 34)
+        self.summertime_view1_zone_2 = (175, 217, 269, 34)
+        self.summertime_view2_zone_1 = (447, 182, 269, 34)
+        self.summertime_view2_zone_2 = (447, 217, 269, 34)
+        self.summertime_view3_zone_1 = (175, 254, 269, 34)
+        self.summertime_view3_zone_2 = (175, 289, 269, 34)
+        self.summertime_view4_zone_1 = (476, 254, 269, 34)
+        self.summertime_view4_zone_2 = (476, 289, 269, 34)
+        self.summertime_view5_zone_1 = (175, 326, 269, 34)
+        self.summertime_view5_zone_2 = (175, 361, 269, 34)
+        self.summertime_view6_zone_1 = (476, 326, 269, 34)
+        self.summertime_view6_zone_2 = (476, 361, 269, 34)
+        self.summertime_view7_zone_1 = (175, 398, 269, 34)
+        self.summertime_view7_zone_2 = (175, 433, 269, 34)
+        self.summertime_view8_zone_1 = (476, 398, 269, 34)
+        self.summertime_view8_zone_2 = (476, 433, 269, 34)
 
         def scale_coord(coords):
             """좌표 [x, y, w, h]에 n을 곱합니다."""
@@ -597,26 +616,26 @@ class Configs():
             ConfigROI.s_second_1: scale_coord(self.view6_zone_1),
             ConfigROI.s_second_2: scale_coord(self.view6_zone_2),
             #summer time
-            ConfigROI.s_summer_time_mode_1: scale_coord(self.view1_zone_1),
-            ConfigROI.s_summer_time_mode_2: scale_coord(self.view1_zone_2),
-            ConfigROI.s_summer_time_time_offset_1: scale_coord(self.view2_zone_1),
-            ConfigROI.s_summer_time_time_offset_2: scale_coord(self.view2_zone_2),
-            ConfigROI.s_start_month_1: scale_coord(self.view3_zone_1),
-            ConfigROI.s_start_month_2: scale_coord(self.view3_zone_2),
-            ConfigROI.s_start_nth_weekday_1: scale_coord(self.view4_zone_1),
-            ConfigROI.s_start_nth_weekday_2: scale_coord(self.view4_zone_2),
-            ConfigROI.s_start_weekday_1: scale_coord(self.view5_zone_1),
-            ConfigROI.s_start_weekday_2: scale_coord(self.view5_zone_2),
-            ConfigROI.s_start_minute_1: scale_coord(self.view6_zone_1),
-            ConfigROI.s_start_minute_2: scale_coord(self.view6_zone_2),
-            ConfigROI.s_end_month_1: scale_coord(self.view7_zone_1),
-            ConfigROI.s_end_month_2: scale_coord(self.view7_zone_2),
-            ConfigROI.s_end_nth_weekday_1: scale_coord(self.view8_zone_1),
-            ConfigROI.s_end_nth_weekday_2: scale_coord(self.view8_zone_2),
-            ConfigROI.s_end_weekday_1: scale_coord(self.view9_zone_1),
-            ConfigROI.s_end_weekday_2: scale_coord(self.view9_zone_2),
-            ConfigROI.s_end_minute_1: scale_coord(self.view10_zone_1),
-            ConfigROI.s_end_minute_2: scale_coord(self.view10_zone_2),
+            ConfigROI.s_summer_time_mode_1: scale_coord(self.summertime_view1_zone_1),
+            ConfigROI.s_summer_time_mode_2: scale_coord(self.summertime_view1_zone_2),
+            ConfigROI.s_summer_time_time_offset_1: scale_coord(self.summertime_view2_zone_1),
+            ConfigROI.s_summer_time_time_offset_2: scale_coord(self.summertime_view2_zone_2),
+            ConfigROI.s_start_month_1: scale_coord(self.summertime_view3_zone_1),
+            ConfigROI.s_start_month_2: scale_coord(self.summertime_view3_zone_2),
+            ConfigROI.s_start_nth_weekday_1: scale_coord(self.summertime_view4_zone_1),
+            ConfigROI.s_start_nth_weekday_2: scale_coord(self.summertime_view4_zone_2),
+            ConfigROI.s_start_weekday_1: scale_coord(self.summertime_view5_zone_1),
+            ConfigROI.s_start_weekday_2: scale_coord(self.summertime_view5_zone_2),
+            ConfigROI.s_start_minute_1: scale_coord(self.summertime_view6_zone_1),
+            ConfigROI.s_start_minute_2: scale_coord(self.summertime_view6_zone_2),
+            ConfigROI.s_end_month_1: scale_coord(self.summertime_view7_zone_1),
+            ConfigROI.s_end_month_2: scale_coord(self.summertime_view7_zone_2),
+            ConfigROI.s_end_nth_weekday_1: scale_coord(self.summertime_view8_zone_1),
+            ConfigROI.s_end_nth_weekday_2: scale_coord(self.summertime_view8_zone_2),
+            ConfigROI.s_end_weekday_1: scale_coord(self.summertime_view1_zone_1),
+            ConfigROI.s_end_weekday_2: scale_coord(self.summertime_view1_zone_2),
+            ConfigROI.s_end_minute_1: scale_coord(self.summertime_view2_zone_1),
+            ConfigROI.s_end_minute_2: scale_coord(self.summertime_view2_zone_2),
             #ntp
             ConfigROI.s_sync_mode_1: scale_coord(self.view2_zone_1),
             ConfigROI.s_sync_mode_2: scale_coord(self.view2_zone_2),

@@ -80,6 +80,8 @@ class ConfigTouch(Enum):
     touch_btn_popup_wide_9 = [270, 315]
     touch_btn_popup_wide_10 = [530, 315]
     touch_btn_popup_wide_11 = [270, 365]
+    touch_btn_popup_wide_12 = [530, 365]
+    
     
     ### popup number, enter/cancel 은 위 popup button와 공유
     touch_btn_number_1 = [310, 200]
@@ -127,6 +129,9 @@ class ConfigTouch(Enum):
     touch_btn_tdd_num_9 = [285, 335]
     touch_btn_tdd_num_0 = [345, 335]
 
+    ### 위아래 스크롤 (예> Summer time)
+    touch_btn_scroll_down = [750, 450]
+    touch_btn_scroll_up = [750, 200]
 
     ### touch 동작관련 address ###
     touch_addr_ui_test_mode = 57100

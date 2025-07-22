@@ -345,7 +345,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
 			modbus_answer_key=ConfigROI.s_vt_secondary_ll_vol_2.value[1][0],
-			eval_type=SelectType.type_integer.value,
+			eval_type=SelectType.type_float.value,
 			modbus_unit=1,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
@@ -366,7 +366,7 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_measurement_setup_access.value,
 			setup_answer_key=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
 			modbus_answer_key=ConfigROI.s_vt_secondary_ll_vol_2.value[1][1],
-			eval_type=SelectType.type_integer.value,
+			eval_type=SelectType.type_float.value,
 			modbus_unit=1,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_max.value,
 			roi_mask=ConfigROI.mask_m_s_meas_vt_secondary.value,
@@ -2598,16 +2598,16 @@ class SetupTest(QObject):
 		### 모두 AccuraSR은 변경해야됨
 		self.touch_manager.uitest_mode_start() 
 		
-		# self.touch_manager.btn_front_meter()
-		# self.touch_manager.btn_front_home()
-		# self.touch_manager.btn_front_setup()
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
+		self.touch_manager.btn_front_setup()
 
 		### timezone offset [min] 540 > -720
 		self.config_setup_action(
 			main_menu=ConfigTouch.touch_main_menu_5.value,
 			side_menu=ConfigTouch.touch_side_menu_2.value,
 			data_view=ConfigTouch.touch_data_view_1.value,
-			password=None,
+			password=True,
 			popup_btn=None,
 			number_input='-721',
 			apply_btn=True,
@@ -2911,6 +2911,1047 @@ class SetupTest(QObject):
 			access_address=ConfigMap.addr_locale_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_date_format_2.value[1])[0],
 			modbus_answer_key=ConfigROI.s_date_format_2.value[0]['YYYY-MM-DD'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+
+	def m_s_system_local_time(self, base_save_path, search_pattern):
+		### 모두 AccuraSR은 변경해야됨
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
+		self.touch_manager.btn_front_setup()
+
+		### local time  540 > -720   --- 주소를 모름
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_5.value,
+			side_menu=ConfigTouch.touch_side_menu_3.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input='1999',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_year_1, ConfigROI.s_year_2],
+			except_addr=ConfigMap.addr_locale_setup_access,
+			access_address=ConfigMap.addr_locale_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_timezone_offset_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_timezone_offset_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+	def m_s_system_summer_time(self, base_save_path, search_pattern):
+		### 모두 AccuraSR은 변경해야됨
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
+		self.touch_manager.btn_front_setup()
+
+		### summer time disable > enable
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_5.value,
+			side_menu=ConfigTouch.touch_side_menu_4.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_summer_time_mode_1, ConfigROI.s_summer_time_mode_2],
+			except_addr=ConfigMap.addr_summer_time,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_summer_time_mode_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_summer_time_mode_2.value[1]['Enable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### summer time enable > disable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_summer_time_mode_1, ConfigROI.s_summer_time_mode_2],
+			except_addr=ConfigMap.addr_summer_time,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_summer_time_mode_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_summer_time_mode_2.value[1]['Disable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### time offset 60 > 0
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_summer_time_time_offset_1, ConfigROI.s_summer_time_time_offset_2],
+			except_addr=ConfigMap.addr_summer_time_offset,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_summer_time_time_offset_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_summer_time_time_offset_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### time offset 0 > 1439
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='1440',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_summer_time_time_offset_1, ConfigROI.s_summer_time_time_offset_2],
+			except_addr=ConfigMap.addr_summer_time_offset,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_summer_time_time_offset_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_summer_time_time_offset_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_summer_time_setup_access, ConfigMap.addr_summer_time_offset, bit16=60)
+
+		####### Summer Time / Start Month 
+		key_options = ConfigROI.s_start_month_2.value[1]
+		key_sequence = list(key_options.keys())
+		popup_numbers = [1, 3, 5, 7, 9, 11, 2, 4, 6, 8, 10, 12]
+
+		# 주석에 표시될 'from' 월 시퀀스
+		log_source_sequence = ['March'] + key_sequence[:-1]  # ['March', 'January', 'February', ...]
+
+		for i, (from_key, popup_num) in enumerate(zip(log_source_sequence, popup_numbers)):
+			to_key = key_sequence[i] 
+
+			print(f"### Summer Time / Start Month {from_key} > {to_key}")
+
+			popup_btn_name = f'touch_btn_popup_wide_{popup_num}'
+			popup_btn_value = getattr(ConfigTouch, popup_btn_name).value
+
+			# 공통 함수 호출
+			self.config_setup_action(
+				main_menu=None,
+				side_menu=None,
+				data_view=ConfigTouch.touch_data_view_3.value,
+				password=None,
+				popup_btn=popup_btn_value,  # 동적으로 설정된 값
+				number_input=None,
+				apply_btn=True,
+				roi_keys=[ConfigROI.s_start_month_1, ConfigROI.s_start_month_2],
+				except_addr=ConfigMap.addr_start_month,
+				access_address=ConfigMap.addr_summer_time_setup_access.value,
+				setup_answer_key=to_key,  # list(month_options)[i]와 동일
+				modbus_answer_key=key_options[to_key], # 딕셔너리에서 월 이름으로 값 조회
+				eval_type=SelectType.type_selection.value,
+				modbus_unit=None,
+				template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+				roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+				search_pattern=search_pattern,
+				base_save_path=base_save_path
+			)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_summer_time_setup_access, ConfigMap.addr_start_month, bit16=3)
+		############
+
+		### start nth weekday 2nd > 3rd
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_3.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_nth_weekday_1, ConfigROI.s_start_nth_weekday_2],
+			except_addr=ConfigMap.addr_start_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_nth_weekday_2.value[1])[2],
+			modbus_answer_key=ConfigROI.s_start_nth_weekday_2.value[1]['1st'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start nth weekday 3rd > 4th
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_4.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_nth_weekday_1, ConfigROI.s_start_nth_weekday_2],
+			except_addr=ConfigMap.addr_start_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_nth_weekday_2.value[1])[3],
+			modbus_answer_key=ConfigROI.s_start_nth_weekday_2.value[1]['4th'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start nth weekday 4th > 5th
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_5.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_nth_weekday_1, ConfigROI.s_start_nth_weekday_2],
+			except_addr=ConfigMap.addr_start_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_nth_weekday_2.value[1])[4],
+			modbus_answer_key=ConfigROI.s_start_nth_weekday_2.value[1]['5th'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start nth weekday 5th > 1st
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_nth_weekday_1, ConfigROI.s_start_nth_weekday_2],
+			except_addr=ConfigMap.addr_start_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_nth_weekday_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_start_nth_weekday_2.value[1]['1st'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start nth weekday 1st > 2nd
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_nth_weekday_1, ConfigROI.s_start_nth_weekday_2],
+			except_addr=ConfigMap.addr_start_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_nth_weekday_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_start_nth_weekday_2.value[1]['2nd'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start weekday Sunday > Monday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_3.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_weekday_1, ConfigROI.s_start_weekday_2],
+			except_addr=ConfigMap.addr_start_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Monday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start weekday Monday > Tuesday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_5.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_weekday_1, ConfigROI.s_start_weekday_2],
+			except_addr=ConfigMap.addr_start_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[2],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Tuesday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start weekday Tuesday > Wednesday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_7.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_weekday_1, ConfigROI.s_start_weekday_2],
+			except_addr=ConfigMap.addr_start_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[3],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Wednesday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start weekday Wednesday > Thursday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_9.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_weekday_1, ConfigROI.s_start_weekday_2],
+			except_addr=ConfigMap.addr_start_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[4],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Thursday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start weekday Thursday > Friday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_11.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_weekday_1, ConfigROI.s_start_weekday_2],
+			except_addr=ConfigMap.addr_start_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[5],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Friday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start weekday Friday > Saturday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_weekday_1, ConfigROI.s_start_weekday_2],
+			except_addr=ConfigMap.addr_start_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[6],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Saturday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start minute 120 > 0
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_6.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_minute_1, ConfigROI.s_start_minute_2],
+			except_addr=ConfigMap.addr_start_minute,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_minute_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_start_minute_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### start minute 0 > 1439
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_6.value,
+			password=None,
+			popup_btn=None,
+			number_input='1440',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_minute_1, ConfigROI.s_start_minute_2],
+			except_addr=ConfigMap.addr_start_minute,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_minute_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_start_minute_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		####### Summer Time / End Month 
+		key_options = ConfigROI.s_end_month_2.value[1]
+		key_sequence = list(key_options.keys())
+		popup_numbers = [1, 3, 5, 7, 9, 11, 2, 4, 6, 8, 10, 12]
+
+		# 주석에 표시될 'from' 월 시퀀스
+		log_source_sequence = ['March'] + key_sequence[:-1]  # ['March', 'January', 'February', ...]
+
+		for i, (from_key, popup_num) in enumerate(zip(log_source_sequence, popup_numbers)):
+			to_key = key_sequence[i] 
+
+			print(f"### Summer Time / Start Month {from_key} > {to_key}")
+
+			popup_btn_name = f'touch_btn_popup_wide_{popup_num}'
+			popup_btn_value = getattr(ConfigTouch, popup_btn_name).value
+
+			# 공통 함수 호출
+			self.config_setup_action(
+				main_menu=None,
+				side_menu=None,
+				data_view=ConfigTouch.touch_data_view_7.value,
+				password=None,
+				popup_btn=popup_btn_value,  # 동적으로 설정된 값
+				number_input=None,
+				apply_btn=True,
+				roi_keys=[ConfigROI.s_end_month_1, ConfigROI.s_end_month_2],
+				except_addr=ConfigMap.addr_end_month,
+				access_address=ConfigMap.addr_summer_time_setup_access.value,
+				setup_answer_key=to_key,  # list(month_options)[i]와 동일
+				modbus_answer_key=key_options[to_key], # 딕셔너리에서 월 이름으로 값 조회
+				eval_type=SelectType.type_selection.value,
+				modbus_unit=None,
+				template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+				roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+				search_pattern=search_pattern,
+				base_save_path=base_save_path
+			)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_summer_time_setup_access, ConfigMap.addr_end_month, bit16=11)
+		############
+
+		### end nth weekday 1st > 2nd
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_7.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_nth_weekday_1, ConfigROI.s_end_nth_weekday_2],
+			except_addr=ConfigMap.addr_end_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_nth_weekday_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_end_nth_weekday_2.value[1]['2nd'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end nth weekday 2nd > 3rd
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_7.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_3.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_nth_weekday_1, ConfigROI.s_end_nth_weekday_2],
+			except_addr=ConfigMap.addr_end_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_nth_weekday_2.value[1])[2],
+			modbus_answer_key=ConfigROI.s_end_nth_weekday_2.value[1]['3rd'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end nth weekday 3rd > 4th
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_7.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_4.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_nth_weekday_1, ConfigROI.s_end_nth_weekday_2],
+			except_addr=ConfigMap.addr_end_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_nth_weekday_2.value[1])[3],
+			modbus_answer_key=ConfigROI.s_end_nth_weekday_2.value[1]['4th'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end nth weekday 4th > 5th
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_7.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_5.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_nth_weekday_1, ConfigROI.s_end_nth_weekday_2],
+			except_addr=ConfigMap.addr_end_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_nth_weekday_2.value[1])[4],
+			modbus_answer_key=ConfigROI.s_end_nth_weekday_2.value[1]['5th'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end nth weekday 5th > 1st
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_7.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_nth_weekday_1, ConfigROI.s_end_nth_weekday_2],
+			except_addr=ConfigMap.addr_end_nth_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_nth_weekday_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_end_nth_weekday_2.value[1]['1st'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end weekday Sunday > Monday
+		self.touch_manager.touch_menu(ConfigTouch.touch_btn_scroll_down.value)
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_3.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_weekday_1, ConfigROI.s_end_weekday_2],
+			except_addr=ConfigMap.addr_end_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_weekday_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_end_weekday_2.value[1]['Monday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end weekday Monday > Tuesday 
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_5.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_weekday_1, ConfigROI.s_end_weekday_2],
+			except_addr=ConfigMap.addr_end_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_weekday_2.value[1])[2],
+			modbus_answer_key=ConfigROI.s_end_weekday_2.value[1]['Tuesday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end weekday Tuesday > Wednesday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_7.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_weekday_1, ConfigROI.s_end_weekday_2],
+			except_addr=ConfigMap.addr_end_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_weekday_2.value[1])[3],
+			modbus_answer_key=ConfigROI.s_end_weekday_2.value[1]['Wednesday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end weekday Wednesday > Thursday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_9.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_weekday_1, ConfigROI.s_end_weekday_2],
+			except_addr=ConfigMap.addr_end_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_weekday_2.value[1])[4],
+			modbus_answer_key=ConfigROI.s_end_weekday_2.value[1]['Thursday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end weekday Thursday > Friday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_11.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_weekday_1, ConfigROI.s_end_weekday_2],
+			except_addr=ConfigMap.addr_end_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_weekday_2.value[1])[5],
+			modbus_answer_key=ConfigROI.s_end_weekday_2.value[1]['Friday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end weekday Friday > Saturday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_weekday_1, ConfigROI.s_end_weekday_2],
+			except_addr=ConfigMap.addr_end_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_weekday_2.value[1])[6],
+			modbus_answer_key=ConfigROI.s_end_weekday_2.value[1]['Saturday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end minute 120 > 0
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_minute_1, ConfigROI.s_end_minute_2],
+			except_addr=ConfigMap.addr_end_minute,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_minute_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_end_minute_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### end minute 0 > 1439
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_6.value,
+			password=None,
+			popup_btn=None,
+			number_input='1440',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_minute_1, ConfigROI.s_end_minute_2],
+			except_addr=ConfigMap.addr_end_minute,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_minute_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_end_minute_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+	def m_s_system_ntp(self, base_save_path, search_pattern):
+		### 모두 AccuraSR은 변경해야됨
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
+		self.touch_manager.btn_front_setup()
+
+		### Sync Mode Auto > Periodic
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_5.value,
+			side_menu=ConfigTouch.touch_side_menu_5.value,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=True,
+			popup_btn=ConfigTouch.touch_btn_popup_3.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sync_mode_1, ConfigROI.s_sync_mode_2],
+			except_addr=ConfigMap.addr_sync_mode,
+			access_address=ConfigMap.addr_ntp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_sync_mode_2.value[1])[2],
+			modbus_answer_key=ConfigROI.s_sync_mode_2.value[1]['Periodic'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Sync Mode Periodic > Disable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sync_mode_1, ConfigROI.s_sync_mode_2],
+			except_addr=ConfigMap.addr_sync_mode,
+			access_address=ConfigMap.addr_ntp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_sync_mode_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_sync_mode_2.value[1]['Disable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Sync Mode Disable > Auto
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sync_mode_1, ConfigROI.s_sync_mode_2],
+			except_addr=ConfigMap.addr_sync_mode,
+			access_address=ConfigMap.addr_ntp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_sync_mode_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_sync_mode_2.value[1]['Auto'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Sync Period 600 > 60
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='59',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sync_period_1, ConfigROI.s_sync_period_2],
+			except_addr=ConfigMap.addr_sync_period,
+			access_address=ConfigMap.addr_ntp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_sync_period_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_sync_period_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Sync Period 60 > 999
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=None,
+			number_input='999',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sync_period_1, ConfigROI.s_sync_period_2],
+			except_addr=ConfigMap.addr_sync_period,
+			access_address=ConfigMap.addr_ntp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_sync_period_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_sync_period_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Sync MAx. Drift 1 > 1001
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=None,
+			number_input='1001',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sync_max_drift_1, ConfigROI.s_sync_max_drift_2],
+			except_addr=ConfigMap.addr_sync_max_drift,
+			access_address=ConfigMap.addr_ntp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_sync_max_drift_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_sync_max_drift_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### Sync MAx. Drift 1000 > 1
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_4.value,
+			password=None,
+			popup_btn=None,
+			number_input='1',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_sync_max_drift_1, ConfigROI.s_sync_max_drift_2],
+			except_addr=ConfigMap.addr_sync_max_drift,
+			access_address=ConfigMap.addr_ntp_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_sync_max_drift_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_sync_max_drift_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+	def m_s_system_lcd_buzzer(self, base_save_path, search_pattern):
+		### 모두 AccuraSR은 변경해야됨
+		self.touch_manager.uitest_mode_start() 
+		
+		self.touch_manager.btn_front_meter()
+		self.touch_manager.btn_front_home()
+		self.touch_manager.btn_front_setup()
+
+		### lcd backlight timeout 300 > 999
+		self.config_setup_action(
+			main_menu=ConfigTouch.touch_main_menu_5.value,
+			side_menu=ConfigTouch.touch_side_menu_6.value,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=True,
+			popup_btn=None,
+			number_input='1001',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_lcd_backlight_timeout_1, ConfigROI.s_lcd_backlight_timeout_2],
+			except_addr=ConfigMap.addr_lcd_backlight_timeout,
+			access_address=ConfigMap.addr_lcd_buzzer_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_lcd_backlight_timeout_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_lcd_backlight_timeout_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### lcd backlight timeout 999 > 10
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=None,
+			number_input='9',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_lcd_backlight_timeout_1, ConfigROI.s_lcd_backlight_timeout_2],
+			except_addr=ConfigMap.addr_lcd_backlight_timeout,
+			access_address=ConfigMap.addr_lcd_buzzer_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_lcd_backlight_timeout_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_lcd_backlight_timeout_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_lcd_buzzer_setup_access, ConfigMap.addr_lcd_backlight_timeout, bit16=300)
+
+		### lcd backlight low level 10 > 30
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='31',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_lcd_backlight_low_level_1, ConfigROI.s_lcd_backlight_low_level_2],
+			except_addr=ConfigMap.addr_lcd_backlight_low_level,
+			access_address=ConfigMap.addr_lcd_buzzer_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_lcd_backlight_low_level_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_lcd_backlight_low_level_2.value[1][1],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### lcd backlight low level 30 > 0
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_2.value,
+			password=None,
+			popup_btn=None,
+			number_input='0',
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_lcd_backlight_low_level_1, ConfigROI.s_lcd_backlight_low_level_2],
+			except_addr=ConfigMap.addr_lcd_backlight_low_level,
+			access_address=ConfigMap.addr_lcd_buzzer_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_lcd_backlight_low_level_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_lcd_backlight_low_level_2.value[1][0],
+			eval_type=SelectType.type_integer.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_lcd_buzzer_setup_access, ConfigMap.addr_lcd_backlight_low_level, bit16=10)
+
+		### buzzer for button Enable > Disable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_buzzer_for_button_1, ConfigROI.s_buzzer_for_button_2],
+			except_addr=ConfigMap.addr_buzzer_for_button,
+			access_address=ConfigMap.addr_lcd_buzzer_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_buzzer_for_button_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_buzzer_for_button_2.value[1]['Disable'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
+		### buzzer for button Disable > Enable
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_3.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_2.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_buzzer_for_button_1, ConfigROI.s_buzzer_for_button_2],
+			except_addr=ConfigMap.addr_buzzer_for_button,
+			access_address=ConfigMap.addr_lcd_buzzer_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_buzzer_for_button_2.value[1])[1],
+			modbus_answer_key=ConfigROI.s_buzzer_for_button_2.value[1]['Enable'],
 			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
