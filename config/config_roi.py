@@ -370,16 +370,16 @@ class Configs():
         self.summertime_view2_zone_2 = (447, 217, 269, 34)
         self.summertime_view3_zone_1 = (175, 254, 269, 34)
         self.summertime_view3_zone_2 = (175, 289, 269, 34)
-        self.summertime_view4_zone_1 = (476, 254, 269, 34)
-        self.summertime_view4_zone_2 = (476, 289, 269, 34)
+        self.summertime_view4_zone_1 = (447, 254, 269, 34)
+        self.summertime_view4_zone_2 = (447, 289, 269, 34)
         self.summertime_view5_zone_1 = (175, 326, 269, 34)
         self.summertime_view5_zone_2 = (175, 361, 269, 34)
-        self.summertime_view6_zone_1 = (476, 326, 269, 34)
-        self.summertime_view6_zone_2 = (476, 361, 269, 34)
+        self.summertime_view6_zone_1 = (447, 326, 269, 34)
+        self.summertime_view6_zone_2 = (447, 361, 269, 34)
         self.summertime_view7_zone_1 = (175, 398, 269, 34)
         self.summertime_view7_zone_2 = (175, 433, 269, 34)
-        self.summertime_view8_zone_1 = (476, 398, 269, 34)
-        self.summertime_view8_zone_2 = (476, 433, 269, 34)
+        self.summertime_view8_zone_1 = (447, 398, 269, 34)
+        self.summertime_view8_zone_2 = (447, 433, 269, 34)
 
         def scale_coord(coords):
             """좌표 [x, y, w, h]에 n을 곱합니다."""

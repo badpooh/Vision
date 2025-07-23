@@ -3312,6 +3312,27 @@ class SetupTest(QObject):
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 		
+		### start weekday Saturday > Sunday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_5.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_start_weekday_1, ConfigROI.s_start_weekday_2],
+			except_addr=ConfigMap.addr_start_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Sundays'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
 		### start minute 120 > 0
 		self.config_setup_action(
 			main_menu=None,
@@ -3627,6 +3648,27 @@ class SetupTest(QObject):
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
 		
+		### end weekday Saturday > Sunday
+		self.config_setup_action(
+			main_menu=None,
+			side_menu=None,
+			data_view=ConfigTouch.touch_data_view_1.value,
+			password=None,
+			popup_btn=ConfigTouch.touch_btn_popup_wide_1.value,
+			number_input=None,
+			apply_btn=True,
+			roi_keys=[ConfigROI.s_end_weekday_1, ConfigROI.s_end_weekday_2],
+			except_addr=ConfigMap.addr_end_weekday,
+			access_address=ConfigMap.addr_summer_time_setup_access.value,
+			setup_answer_key=list(ConfigROI.s_end_weekday_2.value[1])[0],
+			modbus_answer_key=ConfigROI.s_end_weekday_2.value[1]['Sunday'],
+			eval_type=SelectType.type_selection.value,
+			modbus_unit=None,
+			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
+			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
+			search_pattern=search_pattern,
+			base_save_path=base_save_path)
+		
 		### end minute 120 > 0
 		self.config_setup_action(
 			main_menu=None,
@@ -3652,7 +3694,7 @@ class SetupTest(QObject):
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_6.value,
+			data_view=ConfigTouch.touch_data_view_2.value,
 			password=None,
 			popup_btn=None,
 			number_input='1440',
@@ -3668,6 +3710,7 @@ class SetupTest(QObject):
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_summer_time_setup_access, ConfigMap.addr_end_minute, bit16=120)
 		
 	def m_s_system_ntp(self, base_save_path, search_pattern):
 		### 모두 AccuraSR은 변경해야됨
@@ -3687,6 +3730,7 @@ class SetupTest(QObject):
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_sync_mode_1, ConfigROI.s_sync_mode_2],
+			compare_exc=1,
 			except_addr=ConfigMap.addr_sync_mode,
 			access_address=ConfigMap.addr_ntp_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_sync_mode_2.value[1])[2],
@@ -3708,6 +3752,7 @@ class SetupTest(QObject):
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_sync_mode_1, ConfigROI.s_sync_mode_2],
+			compare_exc=1,
 			except_addr=ConfigMap.addr_sync_mode,
 			access_address=ConfigMap.addr_ntp_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_sync_mode_2.value[1])[0],
@@ -3729,6 +3774,7 @@ class SetupTest(QObject):
 			number_input=None,
 			apply_btn=True,
 			roi_keys=[ConfigROI.s_sync_mode_1, ConfigROI.s_sync_mode_2],
+			compare_exc=1,
 			except_addr=ConfigMap.addr_sync_mode,
 			access_address=ConfigMap.addr_ntp_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_sync_mode_2.value[1])[1],
@@ -3781,6 +3827,7 @@ class SetupTest(QObject):
 			roi_mask=ConfigROI.mask_m_s_meas_min_meas_secondary_vol.value,
 			search_pattern=search_pattern,
 			base_save_path=base_save_path)
+		self.modbus_label.setup_target_initialize(ConfigMap.addr_ntp_setup_access, ConfigMap.addr_sync_period, bit16=600)
 		
 		### Sync MAx. Drift 1 > 1001
 		self.config_setup_action(
