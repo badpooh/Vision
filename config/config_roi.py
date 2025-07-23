@@ -239,9 +239,10 @@ class ConfigROI(Enum):
     s_end_month_2 = ('End Month', {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
                                         'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12})
     s_end_nth_weekday_1 = ['End Nth Weekday']
-    s_end_nth_weekday_2 = ('End Nth Weekday', ['1st', '2nd', '3rd', '4th', '5th'])
+    s_end_nth_weekday_2 = ('End Nth Weekday', {'1st': 0, '2nd': 1, '3rd': 2, '4th': 3, '5th': 4})
     s_end_weekday_1 = ['End Weekday']
-    s_end_weekday_2 = ('End Weekday', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+    s_end_weekday_2 = ('End Weekday', {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 
+                                       'Friday': 5, 'Saturday': 6})
     s_end_minute_1 = ['End Minute']
     s_end_minute_2 = ('End Minute', ['0', '1439'])
 
@@ -259,7 +260,7 @@ class ConfigROI(Enum):
     s_lcd_backlight_low_level_1 = ['LCD Backlight Low Level [%]']
     s_lcd_backlight_low_level_2 = ('LCD Backlight Low Level [%]', ['0', '30'])
     s_buzzer_for_button_1 = ['Buzzer for Button']
-    s_buzzer_for_button_2 = ('Buzzer for Button', ['Disable', 'Enable']) 
+    s_buzzer_for_button_2 = ('Buzzer for Button', {'Disable': 0, 'Enable': 1}) 
 
     color_main_menu_vol = [10, 70, 10, 10, 67, 136, 255]
     color_main_menu_curr = [170, 70, 10, 10, 67, 136, 255]
