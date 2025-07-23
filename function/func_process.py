@@ -129,6 +129,10 @@ class TestProcess:
                 self.setup_test.m_s_system_local_time(base_save_path, search_pattern)
             elif test_name == 'm_s_summer_time':
                 self.setup_test.m_s_system_summer_time(base_save_path, search_pattern)
+            elif test_name == 'm_s_ntp':
+                self.setup_test.m_s_system_ntp(base_save_path, search_pattern)
+            elif test_name == 'm_s_lcd_buzzer':
+                self.setup_test.m_s_system_lcd_buzzer(base_save_path, search_pattern)
 
                 
             else:
