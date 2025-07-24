@@ -239,7 +239,7 @@ class ConfigROI(Enum):
     s_end_month_2 = ('End Month', {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
                                         'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12})
     s_end_nth_weekday_1 = ['End Nth Weekday']
-    s_end_nth_weekday_2 = ('End Nth Weekday', {'1st': 0, '2nd': 1, '3rd': 2, '4th': 3, '5th': 4})
+    s_end_nth_weekday_2 = ('End Nth Weekday', {'1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5})
     s_end_weekday_1 = ['End Weekday']
     s_end_weekday_2 = ('End Weekday', {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 
                                        'Friday': 5, 'Saturday': 6})

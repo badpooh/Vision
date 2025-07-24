@@ -2956,7 +2956,7 @@ class SetupTest(QObject):
 		self.touch_manager.btn_front_home()
 		self.touch_manager.btn_front_setup()
 
-		### summer time disable > enable
+		## summer time disable > enable
 		self.config_setup_action(
 			main_menu=ConfigTouch.touch_main_menu_5.value,
 			side_menu=ConfigTouch.touch_side_menu_4.value,
@@ -3094,7 +3094,7 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_start_nth_weekday,
 			access_address=ConfigMap.addr_summer_time_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_start_nth_weekday_2.value[1])[2],
-			modbus_answer_key=ConfigROI.s_start_nth_weekday_2.value[1]['1st'],
+			modbus_answer_key=ConfigROI.s_start_nth_weekday_2.value[1]['3rd'],
 			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
@@ -3325,7 +3325,7 @@ class SetupTest(QObject):
 			except_addr=ConfigMap.addr_start_weekday,
 			access_address=ConfigMap.addr_summer_time_setup_access.value,
 			setup_answer_key=list(ConfigROI.s_start_weekday_2.value[1])[0],
-			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Sundays'],
+			modbus_answer_key=ConfigROI.s_start_weekday_2.value[1]['Sunday'],
 			eval_type=SelectType.type_selection.value,
 			modbus_unit=None,
 			template_path=ConfigImgRef.img_ref_meter_setup_meas_min.value,
@@ -3420,7 +3420,7 @@ class SetupTest(QObject):
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_7.value,
+			data_view=ConfigTouch.touch_data_view_8.value,
 			password=None,
 			popup_btn=ConfigTouch.touch_btn_popup_2.value,
 			number_input=None,
@@ -3441,7 +3441,7 @@ class SetupTest(QObject):
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_7.value,
+			data_view=ConfigTouch.touch_data_view_8.value,
 			password=None,
 			popup_btn=ConfigTouch.touch_btn_popup_3.value,
 			number_input=None,
@@ -3462,7 +3462,7 @@ class SetupTest(QObject):
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_7.value,
+			data_view=ConfigTouch.touch_data_view_8.value,
 			password=None,
 			popup_btn=ConfigTouch.touch_btn_popup_4.value,
 			number_input=None,
@@ -3483,7 +3483,7 @@ class SetupTest(QObject):
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_7.value,
+			data_view=ConfigTouch.touch_data_view_8.value,
 			password=None,
 			popup_btn=ConfigTouch.touch_btn_popup_5.value,
 			number_input=None,
@@ -3504,7 +3504,7 @@ class SetupTest(QObject):
 		self.config_setup_action(
 			main_menu=None,
 			side_menu=None,
-			data_view=ConfigTouch.touch_data_view_7.value,
+			data_view=ConfigTouch.touch_data_view_8.value,
 			password=None,
 			popup_btn=ConfigTouch.touch_btn_popup_1.value,
 			number_input=None,
