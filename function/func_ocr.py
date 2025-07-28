@@ -51,15 +51,15 @@ class PaddleOCRManager:
 
         # PaddleOCR 초기화 (모델 지정은 필요시 추가)
         # ocr = PaddleOCR(use_gpu=True, use_angle_cls=False, lang='en', use_space_char=True, show_log=False, rec_model_dir=rec_model_folder_path)
-        ocr = PaddleOCR(
+
+        
+        ocr = PaddleOCR(text_detection_model_name="PP-OCRv5_mobile_det",
+                        text_recognition_model_name="latin_PP-OCRv5_mobile_rec",
                         use_doc_orientation_classify=False,
                         use_doc_unwarping=False,
-                        use_textline_orientation=False,
-                        lang="en", 
-                        device="gpu",
-                        text_detection_model_name="PP-OCRv5_mobile_det",
-                        text_recognition_model_name="PP-OCRv5_mobile_rec",
-                        )
+                        use_textline_orientation=False)
+
+        # OCR 결과를 저장할 딕셔너리    
 
 
         ocr_results = {} # 최종 결과를 저장할 딕셔너리
