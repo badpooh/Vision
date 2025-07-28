@@ -85,7 +85,7 @@ class test:
             self.setup_client.write_register(ConfigMap.addr_measurement_setup_access.value[0], 1)
     
     def test001(self):
-        image_path = r"C:\rootech\AutoProgram\Vision\image_test\10.10.26.159_2025-04-14_17_37_57_M_S_EV_PQ_Curve.png"
+        image_path = r"C:\PNT\AutoProgram\Vision\image_test\10.10.26.159_2025-03-25_16_06_34_M_S_ME_Current.png"
         roi_keys = [ConfigROI.s_ct_primary_curr_1, ConfigROI.s_ct_primary_curr_2, ConfigROI.s_ct_secondary_curr_1, 
                     ConfigROI.s_ct_secondary_curr_2, ConfigROI.s_reference_curr_1, ConfigROI.s_reference_curr_2, 
                    ] # ConfigROI.s_tdd_nominal_curr_1, ConfigROI.s_tdd_nominal_curr_2, ConfigROI.s_min_meas_curr_1, ConfigROI.s_min_meas_curr_2, ConfigROI.s_tdd_reference_selection_1, ConfigROI.s_tdd_reference_selection_2,
